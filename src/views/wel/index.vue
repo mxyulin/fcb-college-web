@@ -17,7 +17,7 @@
               <img src="https://img.shields.io/badge/Fcb%20Author-Small%20Chill-ff69b4.svg" alt="Downloads"/>
             </a>
             <a target="_blank" href="https://fcbx.vip">
-              <img src="https://img.shields.io/badge/Copyright%20-@BladeX-%23ff3f59.svg" alt="Downloads"/>
+              <img src="https://img.shields.io/badge/Copyright%20-@Fcb-%23ff3f59.svg" alt="Downloads"/>
             </a>
           </p>
         </basic-container>
@@ -28,27 +28,27 @@
         <basic-container>
           <el-collapse v-model="activeNames" @change="handleChange">
             <el-collapse-item title="欢迎使用Fcb" name="1">
-              <div>1.Fcb是BladeX前端UI系统</div>
+              <div>1.Fcb是Fcb前端UI系统</div>
               <div>2.对现有的avue2.0、element-ui库进行二次封装</div>
               <div>3.100%兼容原生element-ui库</div>
               <div>4.基于json驱动的模块配置，打造最好用的vuejs中后台脚手架</div>
               <div>5.使用Fcb可以大幅度提升开发效率，不再为重复工作发愁</div>
             </el-collapse-item>
-            <el-collapse-item title="什么是BladeX" name="2">
-              <div>1.BladeX是一款精心设计的微服务架构，提供 SpringCloud 全套解决方案</div>
+            <el-collapse-item title="什么是Fcb" name="2">
+              <div>1.Fcb是一款精心设计的微服务架构，提供 SpringCloud 全套解决方案</div>
               <div>2.开源中国首批完美集成 SpringCloud Alibaba 系列组件的微服务架构</div>
-              <div>3.基于稳定生产的商业项目升级优化而来，更加贴近企业级的需求</div>
+              <div>3.基于稳定生产的商业项目升级优化而来，更加贴近的需求</div>
               <div>4.追求企业开发更加高效，部署更加方便，生产更加稳定</div>
               <div>5.GVP-码云最有价值开源项目</div>
-              <div>6.BladeX授权地址:<a target="_blank" href="https://fcbx.vip/#/vip">点击授权</a></div>
+              <div>6.Fcb授权地址:<a target="_blank" href="https://fcbx.vip/#/vip">点击授权</a></div>
             </el-collapse-item>
-            <el-collapse-item title="为何需要BladeX" name="3">
+            <el-collapse-item title="为何需要Fcb" name="3">
               <div>1.经历过较长的线上生产，积累了很多企业痛点的解决方案</div>
               <div>2.一套代码兼容MySql、Oracle、PostgreSQL、SqlServer、达梦，适应企业各种不同场景的需求</div>
               <div>3.集成了很多企业急切所需的例如多租户、Oauth2授权认证、工作流、分布式事务等等功能</div>
               <div>4.深度定制了Flowable工作流，完美支持SpringCloud分布式服务的场景，以远程调用的方式进行操作</div>
               <div>5.升级了核心驱动，新功能完全可以开箱即用，而开源版需要自己再花时间进行集成，需要花掉更多的时间成本</div>
-              <div>6.拥抱微服务时代，很多企业由于项目转型或升级，传统的技术已然不能满足，反而会花更多成本，而BladeX就是为此而生</div>
+              <div>6.拥抱微服务时代，很多企业由于项目转型或升级，传统的技术已然不能满足，反而会花更多成本，而Fcb就是为此而生</div>
               <div>7.同时提供SpringCloud版本和SpringBoot版本，两个版本的api可以与Sword和Fcb无缝对接，为小型项目至大型项目保驾护航</div>
               <div>8.授权购买即永久，源码没有混淆，完全开放，后续升级完全免费。企业只需花很少的钱即可获得一整套成熟的解决方案，你还在等什么？</div>
             </el-collapse-item>
@@ -80,7 +80,7 @@
               <div>25.未完待续...</div>
             </el-collapse-item>
             <el-collapse-item title="软件定制开发合作" name="5">
-              <div>1.接BladeX系列架构的定制服务</div>
+              <div>1.接Fcb系列架构的定制服务</div>
               <div>2.接3个月以内工期的react、vue、springboot、springcloud、app、小程序等软件定制服务</div>
               <div>3.有意向请联系唯一指定QQ:1272154962</div>
             </el-collapse-item>
@@ -93,7 +93,7 @@
             <div class="el-font-size">
               <span>产品名称</span>
               <el-divider direction="vertical"/>
-              <span><el-tag>BladeX企业级微服务开发平台</el-tag></span>
+              <span><el-tag>Fcb微服务开发平台</el-tag></span>
               <el-divider content-position="right"><i class="el-icon-star-off"/></el-divider>
               <span>账号密码</span>
               <el-divider direction="vertical"/>
@@ -128,7 +128,7 @@
               <el-divider direction="vertical"/>
               <span class="tag-group">
                 <el-tag type="success" effect="dark" style="cursor: pointer"
-                        onclick="window.open('https://gitee.com/smallc/SpringBlade')">开源版</el-tag>
+                        onclick="window.open('https://gitee.com/smallc/SpringFcb')">开源版</el-tag>
                 <el-divider direction="vertical"/>
                 <el-tag type="danger" effect="dark" style="cursor: pointer"
                         onclick="window.open('https://fcbx.vip/#/vip')">商业版</el-tag>
@@ -169,7 +169,7 @@
                 <div>17.[优化]TencentCosTemplate避免oom的情况</div>
                 <div>18.[优化]TreeNode类</div>
                 <div>19.[优化]Gateway鉴权逻辑</div>
-                <div>20.[修复]BladeRedis incr方法失效的问题</div>
+                <div>20.[修复]FcbRedis incr方法失效的问题</div>
                 <div>21.[修复]租户产品包更新后缓存未刷新的问题</div>
                 <div>22.[修复]绑定租户产品包后普通管理员权限配置丢失按钮选项的问题</div>
                 <div>23.[修复]流程设计器监听无法删除的问题</div>
@@ -298,7 +298,7 @@
                 <div>26.[修复]字典通用接口未返回id与parentId产生的bug</div>
                 <div>27.[脚本]启动脚本增加jvm配置</div>
                 <div>28.[脚本]修复report脚本部署逻辑</div>
-                <div>29.[移除]过时的BladeRedisCache，请用BladeRedis取代</div>
+                <div>29.[移除]过时的FcbRedisCache，请用FcbRedis取代</div>
               </el-collapse-item>
               <el-collapse-item title="2.8.0.RELEASE发布，集成Prometheus全方位监控方案" name="22">
                 <div>1.[升级]SpringCloud 至 Hoxton.SR10</div>
@@ -313,7 +313,7 @@
                 <div>10.[新增]基于宝塔系统的部署方案</div>
                 <div>11.[新增]Prometheus全方位监控方案</div>
                 <div>12.[新增]fcb-admin服务支持prometheus对nacos的服务发现</div>
-                <div>13.[新增]BladeX对接Prometheus部署脚本</div>
+                <div>13.[新增]Fcb对接Prometheus部署脚本</div>
                 <div>14.[新增]Fcb远程部署推送脚本</div>
                 <div>15.[新增]基于Sentinel的服务熔断方案</div>
                 <div>16.[新增]Mybatis-Plus添加OptimizeJoin配置参数</div>
@@ -503,7 +503,7 @@
                 <div>20.[优化]缓存清除逻辑，@CacheEvict统一修改为CacheUtil.clear</div>
                 <div>21.[优化]登录逻辑，前端对密码加密后再传递至鉴权接口</div>
                 <div>22.[优化]Oss上传接口，返回domain字段</div>
-                <div>23.[优化]BladeRedisCache命名为BladeRedis</div>
+                <div>23.[优化]FcbRedisCache命名为FcbRedis</div>
                 <div>24.[优化]控制台日志打印功能，规避MultipartFile读取报错</div>
                 <div>25.[优化]配置关键字enable统一为enabled</div>
                 <div>26.[优化]keyword日期处理</div>
@@ -520,15 +520,15 @@
                 <div>37.[优化]多租户插件新增修改逻辑，若指定tenantId为空则不进行操作</div>
                 <div>38.[优化]SmsBuilder、OssBuilder</div>
                 <div>39.[优化]Sentinel配置</div>
-                <div>40.[优化]XssFilter为全局的BladeRequestFilte</div>
-                <div>41.[优化]BladeX开发手册Linux部署章节讲解</div>
+                <div>40.[优化]XssFilter为全局的FcbRequestFilte</div>
+                <div>41.[优化]Fcb开发手册Linux部署章节讲解</div>
                 <div>42.[优化]Fcb相关配置，以适配Avue最新版API</div>
                 <div>43.[优化]Fcb相关配置内done与loading的顺序</div>
                 <div>44.[修复]用户基本信息修改的bug</div>
                 <div>45.[修复]QiniuTemplate的putFile循环调用的bug</div>
                 <div>46.[修复]日志框架获取RequestBody为空的bug</div>
                 <div>47.[修复]Fcb组件被复用导致没有刷新的bug</div>
-                <div>48.[删除]过时的BladeSecureUrlProperties</div>
+                <div>48.[删除]过时的FcbSecureUrlProperties</div>
                 <div>49.[删除]过时的XssUrlProperties</div>
                 <div>50.[删除]过时的RedisUtil</div>
               </el-collapse-item>
@@ -597,7 +597,7 @@
                 <div>2.[优化]用户管理增加左树右表功能</div>
                 <div>3.[优化]租户新增增加租户默认类型</div>
                 <div>4.[优化]多租户表对应实体继承TenantEntity</div>
-                <div>5.[优化]用于本地上传的BladeFile类更名为LocalFile防止冲突</div>
+                <div>5.[优化]用于本地上传的FcbFile类更名为LocalFile防止冲突</div>
                 <div>6.[优化]菜单新增逻辑</div>
                 <div>7.[优化]mybatis-plus默认配置的处理</div>
                 <div>8.[优化]租户过滤判断逻辑，删除多余的类</div>
@@ -619,8 +619,8 @@
                 <div>1.[新增]集成最新版ELK，增加分布式日志追踪功能</div>
                 <div>2.[新增]增加ELK一键部署docker脚本</div>
                 <div>3.[新增]抽象封装日志管理逻辑</div>
-                <div>4.[新增]BladeX-Biz增加easypoi的demo工程</div>
-                <div>5.[新增]BladeX-Biz增加websocket的demo工程</div>
+                <div>4.[新增]Fcb-Biz增加easypoi的demo工程</div>
+                <div>5.[新增]Fcb-Biz增加websocket的demo工程</div>
                 <div>6.[优化]minio文件策略</div>
                 <div>7.[新增]Sql条件构建类去除分页字段</div>
                 <div>8.[优化]sql打印功能</div>

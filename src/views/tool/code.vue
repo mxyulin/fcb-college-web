@@ -216,7 +216,7 @@
                 {
                   label: "作者信息",
                   prop: "author",
-                  value: "BladeX",
+                  value: "Fcb",
                   rules: [{
                     required: true,
                     message: "请输入作者",
@@ -286,7 +286,7 @@
               column: [
                 {
                   label: "基础业务",
-                  labelTip:'配置是否使用BladeX封装的BaseService解锁更多功能',
+                  labelTip:'配置是否使用Fcb封装的BaseService解锁更多功能',
                   prop: "baseMode",
                   type: 'radio',
                   dicUrl: "/api/fcb-system/dict/dictionary?code=yes_no",

@@ -3,7 +3,7 @@
  */
 export default {
   title: "fcb",
-  logo: "S",
+  logo: "FCB",
   key: 'fcb',//配置主键,目前用于存储
   indexTitle: 'Fcb Admin',
   clientId: 'fcb', // 客户端id
@@ -14,7 +14,7 @@ export default {
   switchMode: false, // 是否开启部门切换模式
   lockPage: '/lock',
   tokenTime: 3000,
-  tokenHeader: 'Blade-Auth',
+  tokenHeader: 'Fcb-Auth',
   //http的status默认放行列表
   statusWhiteList: [],
   //配置首页不可关闭
@@ -41,7 +41,7 @@ export default {
     }
   },
   // 第三方系统授权地址
-  authUrl: 'http://localhost/fcb-auth/oauth/render',
+  authUrl: 'http://localhost:1888/fcb-auth/oauth/render',
   // 报表设计器地址(cloud端口为8108,boot端口为80)
   reportUrl: 'http://localhost:8108/ureport',
   // 单点登录系统认证(fcb-auth服务的地)

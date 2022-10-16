@@ -78,7 +78,7 @@ export default {
   },
   login: {
     title: 'Login ',
-    info: 'BladeX Development Platform',
+    info: 'Fcb Development Platform',
     tenantId: 'Please input tenantId',
     username: 'Please input username',
     password: 'Please input a password',
