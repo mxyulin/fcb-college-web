@@ -5,9 +5,9 @@ export default {
   title: "fcb",
   logo: "FCB",
   key: 'fcb',//配置主键,目前用于存储
-  indexTitle: 'Fcb Admin',
-  clientId: 'fcb', // 客户端id
-  clientSecret: 'fcb_secret', // 客户端密钥
+  indexTitle: '辅成帮',
+  clientId: 'fcb_web', // 客户端id
+  clientSecret: 'fcb_web_secret', // 客户端密钥
   tenantMode: true, // 是否开启租户模式
   tenantId: "000000", // 管理组租户编号
   captchaMode: true, // 是否开启验证码模式
