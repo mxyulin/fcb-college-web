@@ -1,7 +1,7 @@
 module.exports = {
   //路径前缀
   publicPath: "/",
-  lintOnSave: true,
+  lintOnSave: false,
   productionSourceMap: false,
   chainWebpack: (config) => {
     //忽略的打包文件
