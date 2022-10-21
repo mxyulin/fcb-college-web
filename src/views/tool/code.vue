@@ -348,10 +348,6 @@
                   type: 'radio',
                   dicData: [
                     {
-                      label: "fcb",
-                      value: "fcb"
-                    },
-                    {
                       label: "element",
                       value: "element"
                     }
@@ -411,13 +407,13 @@
                 this.form.codeName = modelName;
               }
               if (validatenull(this.form.serviceName)) {
-                this.form.serviceName = `fcb-${modelCode}`;
+                this.form.serviceName = `${modelCode}`;
               }
               if (validatenull(this.form.pkName)) {
                 this.form.pkName = "id";
               }
               if (validatenull(this.form.packageName)) {
-                this.form.packageName = `org.springfcb.${modelCode}`;
+                this.form.packageName = `cn.gorun8.fcb.modules.${modelCode}`;
               }
               if (validatenull(this.form.subFkId) && !validatenull(this.form.tablePrefix)) {
                 this.form.subFkId = modelTable.replace(this.form.tablePrefix, "") + "_id";
