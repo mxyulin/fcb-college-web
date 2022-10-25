@@ -20,13 +20,13 @@
                @on-load="onLoad"
                @tree-load="treeLoad">
       <template slot="menuLeft">
-        <el-button type="danger"
+        <!--<el-button type="danger"
                    size="small"
                    icon="el-icon-delete"
                    v-if="permission.dept_delete"
                    plain
                    @click="handleDelete">删 除
-        </el-button>
+        </el-button>-->
       </template>
       <template slot-scope="scope" slot="menu">
         <el-button
@@ -81,7 +81,9 @@
           border: true,
           index: true,
           selection: true,
-          viewBtn: true,
+	   editBtn: true,
+          addBtn: false,
+          viewBtn: false,
           menuWidth: 300,
           dialogClickModal: false,
           column: [
