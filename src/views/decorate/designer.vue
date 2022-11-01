@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/decorate/decorate"; 
+  import {getList, getDetail, add, update, remove} from "@/api/decorate/designer"; 
   import {mapGetters} from "vuex";
 
 export default {
@@ -13,17 +13,6 @@ export default {
     return {
       // 弹框标题
       title: '',
-      
-      // // 查询信息
-      // query: {},
-      // // 分页信息
-      // page: {
-      //   currentPage: 1,
-      //   pageSize: 10,
-      //   total: 40
-      // },
-      // 表单数据
-      form: {},
       
     }
   },
@@ -33,13 +22,7 @@ export default {
   },
   computed: {
     ...mapGetters(["permission"]),
-    // ids() {
-    //   let ids = [];
-    //   this.selectionList.forEach(ele => {
-    //     ids.push(ele.id);
-    //   });
-    //   return ids.join(",");
-    // }
+
   },
   methods: {
     init() {
@@ -47,17 +30,7 @@ export default {
       //   this.statusData = res.data.data;
       // });
     },
-    // searchHide() {
-    //   this.search = !this.search;
-    // },
-    // searchChange() {
-    //   this.onLoad(this.page);
-    // },
-    // searchReset() {
-    //   this.query = {};
-    //   this.page.currentPage = 1;
-    //   this.onLoad(this.page);
-    // },
+
     handleSubmit() {
       // if (!this.form.id) {
       //   add(this.form).then(() => {
