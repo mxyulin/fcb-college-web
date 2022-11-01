@@ -1,5 +1,14 @@
 <template>
   <basic-container>
+    <el-row>
+  <el-col :span="24">
+    <el-alert
+    title="为了保证数据一致，请登录企业微信后台确认已经关闭【管理工具】-【通讯录同步】-【权限】-【开启手动编辑】功能!"
+    type="warning" :closable="false" show-icon>
+  </el-alert>
+    </el-col>
+</el-row>
+
     <avue-crud :option="option"
                :table-loading="loading"
                :data="data"
