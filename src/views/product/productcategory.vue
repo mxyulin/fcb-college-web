@@ -85,8 +85,8 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/product/productCategory";
-  import option from "@/const/product/productCategory";
+  import {getList, getDetail, add, update, remove} from "@/api/product/productcategory";
+  import option from "@/const/product/productcategory";
   import {mapGetters} from "vuex";
   import {getDictionary} from '@/api/system/dict'
 
