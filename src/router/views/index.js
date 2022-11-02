@@ -102,5 +102,13 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
+  },{
+    path: '/designer',
+    name: '设计模板',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
   }]
 }]
