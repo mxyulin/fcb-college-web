@@ -40,5 +40,4 @@
 ## 建议
 
 - [Windows查看某个端口被谁占用](https://www.runoob.com/w3cnote/windows-finds-port-usage.html)
-- 不要使用 node 升级工具`n`，`n`不支持
 
