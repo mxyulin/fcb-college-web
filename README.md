@@ -1,9 +1,7 @@
 # 项目研发笔记
 
-安装命令
-yarn install 
-运行
-yarn run serve
+- 安装命令`yarn install `
+- 运行命令`yarn run serve`
 
 ## 项目环境配置
 
