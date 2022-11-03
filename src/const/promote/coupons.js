@@ -50,10 +50,16 @@ export default {
     {
       label: "领取周期",
       prop: "gettime",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "有效期",
       prop: "usetime",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "描述",
@@ -63,18 +69,30 @@ export default {
     {
       label: "",
       prop: "usetimestart",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "",
       prop: "usetimeend",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "",
       prop: "gettimestart",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "",
       prop: "gettimeend",
+      format: "yyyy-MM-dd hh:mm:ss",
+      valueFormat: "yyyy-MM-dd hh:mm:ss",
+      search: true,
     },
     {
       label: "创建人",

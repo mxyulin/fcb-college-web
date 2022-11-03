@@ -22,6 +22,16 @@ export const getDetail = (id) => {
   })
 }
 
+export const getTree = (tenantId) => {
+  return request({
+    url: '/api/fcb-product/category/tree',
+    method: 'get',
+    params: {
+      tenantId,
+    }
+  })
+}
+
 export const remove = (ids) => {
   return request({
     url: '/api/fcb-product/category/remove',

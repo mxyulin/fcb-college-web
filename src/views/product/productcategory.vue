@@ -31,6 +31,8 @@
       <el-row>
         <!-- 列表模块 -->
         <el-table ref="table" v-loading="loading" :size="option.size" @selection-change="selectionChange" :data="data"
+                  row-key="id"
+                  :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
                   style="width: 100%"
                   :border="option.border">
           <el-table-column type="selection" v-if="option.selection" width="55" align="center"></el-table-column>
@@ -56,23 +58,38 @@
           </el-table-column>
         </el-table>
       </el-row>
-      <el-row>
-        <!-- 分页模块 -->
-        <el-pagination
-          align="right" background
-          @size-change="sizeChange"
-          @current-change="currentChange"
-          :current-page="page.currentPage"
-          :page-sizes="[10, 20, 30, 40, 50, 100]"
-          :page-size="page.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total">
-        </el-pagination>
-      </el-row>
       <!-- 表单模块 -->
       <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
         <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
           <!-- 表单字段 -->
+          <el-form-item label="" prop="title">
+            <el-input v-model="form.name" placeholder="请输入"/>
+          </el-form-item>
+          <el-form-item label="栏目类型" prop="type">
+              <el-select v-model="form.type" clearable placeholder="请选择栏目类型">
+                  <el-option
+                    v-for="item in typeData"
+                    :key="item.dictKey"
+                    :label="item.dictValue"
+                    :value="item.dictKey">
+                  </el-option>
+              </el-select>
+          </el-form-item>
+          <el-form-item label="图片" prop="title">
+            <el-input v-model="form.image" placeholder="请输入图片"/>
+          </el-form-item>
+          <el-form-item label="父ID" prop="title">
+            <el-input v-model="form.pid" placeholder="请输入父ID"/>
+          </el-form-item>
+          <el-form-item label="权重" prop="title">
+            <el-input v-model="form.weigh" placeholder="请输入权重"/>
+          </el-form-item>
+          <el-form-item label="描述" prop="title">
+            <el-input v-model="form.description" placeholder="请输入描述"/>
+          </el-form-item>
+          <el-form-item label="状态" prop="title">
+            <el-input v-model="form.status" placeholder="请输入状态"/>
+          </el-form-item>
         </el-form>
         <!-- 表单按钮 -->
         <span v-if="!view" slot="footer" class="dialog-footer">
@@ -85,10 +102,11 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/product/productcategory";
+  import {getList, getDetail, getTree, add, update, remove} from "@/api/product/productcategory";
   import option from "@/const/product/productcategory";
+  import {getDictionary} from '@/api/system/dict';
   import {mapGetters} from "vuex";
-  import {getDictionary} from '@/api/system/dict'
+  import {validatenull} from "@/util/validate";
 
 export default {
   data() {
@@ -111,6 +129,11 @@ export default {
         pageSize: 10,
         total: 40
       },
+      // 树型默认配置
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      },
       // 表单数据
       form: {},
       // 选择行
@@ -119,6 +142,8 @@ export default {
       option: option,
       // 表单列表
       data: [],
+      // 父节点列表
+      treeData: [],
     }
   },
   mounted() {
@@ -138,6 +163,9 @@ export default {
   methods: {
     init() {
     },
+    handleNodeClick(data) {
+      this.form.pid = data.id;
+    },
     searchHide() {
       this.search = !this.search;
     },
@@ -150,6 +178,9 @@ export default {
       this.onLoad(this.page);
     },
     handleSubmit() {
+      if (validatenull(this.form.pid)) {
+        this.form.pid = 0;
+      }
       if (!this.form.id) {
         add(this.form).then(() => {
           this.box = false;
@@ -252,11 +283,11 @@ export default {
     onLoad(page, params = {}) {
       this.loading = true;
       getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-        const data = res.data.data;
-        this.page.total = data.total;
-        this.data = data.records;
+        this.data = res.data.data;
         this.loading = false;
-        this.selectionClear();
+        getTree().then(res => {
+          this.treeData = res.data.data;
+        });
       });
     }
   }

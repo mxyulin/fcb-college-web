@@ -11,6 +11,24 @@
             <el-form-item label="字段">
               <el-input v-model="query.type" placeholder="请输入类型:cash=代金券,discount=折扣券"></el-input>
             </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettime" placeholder="请输入领取周期"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetime" placeholder="请输入有效期"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetimestart" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetimeend" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettimestart" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettimeend" placeholder="请输入"></el-input>
+            </el-form-item>
           </template>
           <!-- 查询按钮 -->
           <el-form-item>
@@ -99,25 +117,25 @@
             <el-input v-model="form.limit" placeholder="请输入每人限制"/>
           </el-form-item>
           <el-form-item label="领取周期" prop="gettime">
-            <el-input v-model="form.gettime" placeholder="请输入领取周期"/>
+            <el-date-picker v-model="form.gettime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择领取周期"></el-date-picker>
           </el-form-item>
           <el-form-item label="有效期" prop="usetime">
-            <el-input v-model="form.usetime" placeholder="请输入有效期"/>
+            <el-date-picker v-model="form.usetime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择有效期"></el-date-picker>
           </el-form-item>
           <el-form-item label="描述" prop="description">
             <el-input v-model="form.description" placeholder="请输入描述"/>
           </el-form-item>
           <el-form-item label="" prop="usetimestart">
-            <el-input v-model="form.usetimestart" placeholder="请输入"/>
+            <el-date-picker v-model="form.usetimestart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
           </el-form-item>
           <el-form-item label="" prop="usetimeend">
-            <el-input v-model="form.usetimeend" placeholder="请输入"/>
+            <el-date-picker v-model="form.usetimeend" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
           </el-form-item>
           <el-form-item label="" prop="gettimestart">
-            <el-input v-model="form.gettimestart" placeholder="请输入"/>
+            <el-date-picker v-model="form.gettimestart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
           </el-form-item>
           <el-form-item label="" prop="gettimeend">
-            <el-input v-model="form.gettimeend" placeholder="请输入"/>
+            <el-date-picker v-model="form.gettimeend" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
           </el-form-item>
         </el-form>
         <!-- 表单按钮 -->
