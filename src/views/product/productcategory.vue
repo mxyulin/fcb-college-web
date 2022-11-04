@@ -107,10 +107,10 @@
   </basic-container>
 </template>
 
-<script> 
+<script>
   import {getList, getDetail, getTree, add, update, remove} from "@/api/product/productcategory";
   import option from "@/const/product/productcategory";
-  import {getDictionary} from '@/api/system/dict'; 
+  import {getDictionary} from '@/api/system/dict';
   import {mapGetters} from "vuex";
   import {validatenull} from "@/util/validate";
 
