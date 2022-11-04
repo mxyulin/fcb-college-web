@@ -1,6 +1,7 @@
 <template>
   <basic-container>
     <div id="decorate-designer">
+<<<<<<< HEAD
       <div class="designer-template">
         <!-- <div class="title">
           设计师模板
@@ -55,11 +56,177 @@
           </div>
         </div>
       </el-dialog>
+=======
+    <div class="designer-template">
+        <div class="title">
+            设计师模板
+        </div>
+        <div class="temp-item">
+                        <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+            v-for="(item,index) in data" :key="index"
+                >
+                <div class="temp-item-img-designer">
+                    <img :src="item.image">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                        {{item.name}}
+                    </div>
+                    <div>
+                        备注：<span>{{item.memo}}</span>
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+            <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+                >
+                <div class="temp-item-img-designer">
+                    <img src="http://file.shopro.top/uploads/20210527/4b4b489beed3ce4ee6f913c9b8450581.png">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                        全品类
+                    </div>
+                    <div>
+                        备注：
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+            <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+                >
+                <div class="temp-item-img-designer">
+                    <img src="http://file.shopro.top/uploads/20210527/4b4b489beed3ce4ee6f913c9b8450581.png">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                         全品类
+                    </div>
+                    <div>
+                        备注：
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+            <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+                >
+                <div class="temp-item-img-designer">
+                    <img src="http://file.shopro.top/uploads/20210527/4b4b489beed3ce4ee6f913c9b8450581.png">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                         全品类
+                    </div>
+                    <div>
+                        备注：
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+            <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+                >
+                <div class="temp-item-img-designer">
+                    <img src="http://file.shopro.top/uploads/20210527/4b4b489beed3ce4ee6f913c9b8450581.png">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                         全品类
+                    </div>
+                    <div>
+                        备注：
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+            <div class="foreach-item foreach-item-designer temp-item-margin item-hover"
+                >
+                <div class="temp-item-img-designer">
+                    <img src="http://file.shopro.top/uploads/20210527/4b4b489beed3ce4ee6f913c9b8450581.png">
+                </div>
+                <div class="designer-bottom">
+                    <div class="designer-bottom-title">
+                        全品类
+                    </div>
+                    <div>
+                        备注：
+                    </div>
+                </div>
+                <div class="item-mask item-mask-designer">
+                    <!-- <div class="btn-common item-mask-item" @click="operation('preview',index,item.id)">
+                        预览模板
+                    </div> -->
+                    <div class="btn-common item-mask-item">
+                        使用模板
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 预览弹框 -->
+    <!-- <el-dialog title="模板预览" :visible.sync="previewDialog" :before-close="previewClose">
+        <div class="preview-body">
+            <div class="web-preview">
+                <iframe id="preview" :src="Fast.api.cdnurl(iframeSrc)" frameborder="1"
+                    height="600px"></iframe>
+            </div>
+            <div class="code-preview">
+                <div>
+                    <div class="template-title">{{previewData.name}}</div>
+                    <div class="template-company">{{previewData.memo}}</div>
+                    <div class="template-platform" v-if="previewData.platform">
+                        <img >
+                    </div>
+                </div>
+                <div class="wechart-code">
+                    <div class="code-item"><img class="code-item-img" :src="Fast.api.cdnurl(qrcodeSrc)" />
+                    <div class="code-title">微信扫描二维码即可预览</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </el-dialog> -->
+>>>>>>> ec199c5f8b058b53ad72461931e2a799e6e1347d
     </div>
   </basic-container>
 </template>
 
 <script>
+ 
 import { getList, setToUse } from "@/api/decorate/decorate";
 import { mapGetters } from "vuex";
 export default {
@@ -143,7 +310,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" scoped> 
 #decorate-designer {
   font-family: Source Han Sans SC;
   color: #fff; 
@@ -395,4 +562,5 @@ export default {
 [v-cloak] {
   display: none
 }
+
 </style>

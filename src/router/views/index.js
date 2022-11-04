@@ -109,7 +109,7 @@ export default [{
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
+      import( /* webpackChunkName: "views" */ '@/views/decorate/designer') 
   }]
 }, 
 // tyl-商品管理路由
@@ -140,5 +140,6 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
+ 
   }]
 }]
