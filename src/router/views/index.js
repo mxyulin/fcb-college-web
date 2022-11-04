@@ -112,17 +112,43 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
   },{
     path: '/decorate',
-    name: '设计模板',
+    name: '设计模板', 
     meta: {
       i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
-  }]
-}, 
+  }
+  ,{
+    path: '/coupons',
+    name: '优惠劵', 
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+    import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
+  }  
+   ,{
+    path: '/commissionagent',
+    name: '分销商',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commissionagent/commissionagent')
+  },{
+    path: '/commission',
+    name: '分销商基础设置',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/commission')
+  }
+]}, 
 // tyl-商品管理路由
 {
-    path: '/product',
+  path: '/product',
   component: Layout,
   redirect: '/product/index',
   children: [{
