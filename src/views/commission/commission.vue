@@ -141,7 +141,7 @@ import {
   add,
   update,
   remove,
-} from "@/api/decorate/designer";
+} from "@/api/commissionAgent/commissionAgent";
 import { mapGetters } from "vuex";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
@@ -150,12 +150,16 @@ export default {
     return {
       // 弹框标题
       title: "",
+      page: {
+        pageSize: 10,
+        currentPage: 1,
+        total: 0
+      },
     };
   },
   mounted() {
     this.init();
     this.onLoad(this.page);
-    console.log("aba")
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -194,7 +198,7 @@ export default {
       const that = this
       that.loading = true;
       getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
-        const data = res.data.data;
+        let data = res.data.data;
         console.log("data:",data)
         console.log("abc")
         // this.page.total = data.total;

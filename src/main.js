@@ -59,7 +59,6 @@ Vue.prototype.website = website;
 iconfontVersion.forEach(ele => {
   loadStyle(iconfontUrl.replace('$key', ele));
 });
-
 Vue.config.productionTip = false;
 
 new Vue({
