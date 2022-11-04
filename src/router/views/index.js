@@ -110,6 +110,14 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
+  },{
+    path: '/decorate',
+    name: '设计模板',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
   }]
 }, 
 // tyl-商品管理路由

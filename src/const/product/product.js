@@ -11,7 +11,7 @@ export default {
       display: false,
     },
     {
-      label: "商品类型:normal=实体商品,virtual=虚拟商品",
+      label: "商品类型",
       prop: "type",
       hide: true,
       search: true,
@@ -26,7 +26,7 @@ export default {
       prop: "subtitle",
     },
     {
-      label: "商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架",
+      label: "商品状态",
       prop: "status",
       search: true,
     },
@@ -100,7 +100,7 @@ export default {
       prop: "serviceIds",
     },
     {
-      label: "发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货",
+      label: "发货方式",
       prop: "dispatchType",
     },
     {

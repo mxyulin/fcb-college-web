@@ -87,7 +87,9 @@ export default {
     onLoad(page, params = {}) {
       const that = this;
       that.loading = true;
-      that.query["type"] = "shop"
+      that.query["type"] = "shop";
+      that.query["status"] = 1;
+      
       getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
         let data = res.data.data;
         that.page.total = data.total;
