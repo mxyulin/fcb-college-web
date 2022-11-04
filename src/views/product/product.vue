@@ -12,7 +12,7 @@
                 <el-form-item label="筛选条件">
                   <el-switch
                     v-model="chooseType"
-                    active-color="#7536D0"
+                    :active-color="primary"
                     inactive-color="#E9EBEF"
                   >
                   </el-switch>
@@ -109,7 +109,7 @@
             <el-radio-group
               v-model="activeStatus"
               :size="option.size"
-              fill="#7536D0"
+              fill="primary"
               class="sort-btn-group"
             >
               <el-radio-button label="all">全部</el-radio-button>
@@ -131,73 +131,302 @@
       </el-row>
       <!-- 列表模块 -->
       <el-row>
-        <el-table
-          ref="table"
-          v-loading="loading"
-          :size="option.size"
-          @selection-change="selectionChange"
-          :data="data"
-          style="width: 100%"
-          :border="option.border"
-        >
-          <el-table-column
-            type="selection"
-            v-if="option.selection"
-            width="55"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            type="expand"
-            v-if="option.expand"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            v-if="option.index"
-            label="#"
-            type="index"
-            width="50"
-            align="center"
+        <div v-loading="tableAjax">
+          <el-table
+            ref="multipleTable"
+            :data="goodsData"
+            tooltip-effect="dark"
+            style="width: 100%"
+            border
+            @selection-change="handleSelectionChange"
+            :row-class-name="tableRowClassName"
+            :cell-class-name="tableCellClassName"
+            :header-cell-class-name="tableCellClassName"
+            @row-dblclick="goodsOpt"
           >
-          </el-table-column>
-          <template v-for="(item, index) in option.column">
-            <!-- table字段 -->
-            <el-table-column
-              v-if="item.hide !== true"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :key="index"
-            >
+            <el-table-column type="selection" min-width="36"></el-table-column>
+            <el-table-column prop="id" label="ID" min-width="70">
+              <!-- 通过插槽 header 自定义表头 -->
+              <template slot="header">
+                <div class="display-flex">
+                  <div>ID</div>
+                  <!-- 排序箭头 -->
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color: sort == 'id' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('id', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color: sort == 'id' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('id', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
             </el-table-column>
-          </template>
-          <!-- 操作栏模块 -->
-          <el-table-column prop="menu" label="操作" :width="180" align="center">
-            <template slot-scope="{ row }">
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-view"
-                @click="handleView(row)"
-                >查看</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleEdit(row)"
-                >编辑</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-delete"
-                @click="rowDel(row)"
-                >删除</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
+            <el-table-column label="商品" min-width="330">
+              <template slot-scope="scope">
+                <div class="goods-name">
+                  <el-image
+                    style="width: 58px; height: 58px"
+                    :src="scope.row.image"
+                    :fit="contain"
+                    class="image-slot"
+                  >
+                    <div slot="error">
+                      <i class="el-icon-picture-outline"></i>
+                    </div>
+                  </el-image>
+                </div>
+                <div>
+                  <div
+                    class="ellipsis-item"
+                    style="margin-top: 8px; line-height: 1"
+                  >
+                    {{ scope.row.title }}
+                  </div>
+                  <div class="display-flex" style="margin-top: 13px">
+                    <span
+                      v-if="scope.row.is_sku == 1"
+                      style="color: #444; margin-right: 12px; line-height: 20px"
+                    >
+                      {{ scope.row.is_sku == 1 ? "多规格" : "" }}
+                    </span>
+                    <div
+                      v-if="scope.row.activity_type || scope.row.app_type"
+                      class="activity-type display-flex"
+                    >
+                      <div
+                        v-if="scope.row.app_type"
+                        class="activity-tags full-activity-tag"
+                      >
+                        {{ scope.row.app_type_text }}
+                      </div>
+                      <template
+                        v-for="(b, a) in scope.row.activity_type_text_arr"
+                      >
+                        <template v-if="a == 'groupon'">
+                          <div class="activity-tags groupon-activity-tag">
+                            拼团
+                          </div>
+                        </template>
+                        <div
+                          v-if="a == 'seckill'"
+                          class="activity-tags seckill-activity-tag"
+                        >
+                          {{ b }}
+                        </div>
+                        <div
+                          v-if="
+                            a == 'full_reduce' ||
+                            a == 'full_discount' ||
+                            a == 'free_shipping'
+                          "
+                          class="activity-tags full-activity-tag"
+                        >
+                          {{ b }}
+                        </div>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="price" label="价格" min-width="90">
+              <template slot="header">
+                <div class="display-flex">
+                  <div>价格</div>
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color:
+                          sort == 'price' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('price', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color:
+                          sort == 'price' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('price', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="sales" label="销量" min-width="100">
+              <template slot="header">
+                <div class="display-flex">
+                  <div>销量</div>
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color:
+                          sort == 'sales' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('sales', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color:
+                          sort == 'sales' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('sales', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="views" label="浏览量" min-width="90">
+              <template slot="header">
+                <div class="display-flex">
+                  <div>浏览量</div>
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color:
+                          sort == 'views' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('views', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color:
+                          sort == 'views' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('views', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column prop="stock" label="库存" min-width="100">
+              <template slot="header">
+                <div class="display-flex">
+                  <div>库存</div>
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color:
+                          sort == 'stock' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('stock', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color:
+                          sort == 'stock' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('stock', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column label="更新时间" min-width="148">
+            </el-table-column>
+            <el-table-column prop="weight" label="排序" min-width="80">
+              <template slot="header">
+                <div class="display-flex">
+                  <div>排序</div>
+                  <div class="display-flex sort-order">
+                    <i
+                      class="el-icon-sort-up icon-top"
+                      :style="{
+                        color:
+                          sort == 'weigh' && order == 'asc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('weigh', 'asc')"
+                    ></i>
+                    <i
+                      class="el-icon-sort-down icon-bottom"
+                      :style="{
+                        color:
+                          sort == 'weigh' && order == 'desc' ? '#7438d5' : '',
+                      }"
+                      @click="sortOrder('weigh', 'desc')"
+                    ></i>
+                  </div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="170">
+              <template slot-scope="scope">
+                <el-popover placement="bottom" width="120" trigger="hover">
+                  <div class="display-flex status-box">
+                    <div
+                      class="common-btn status-btn status-btn-1"
+                      v-if="scope.row.status != 'up'"
+                      @click="editStatus(scope.row.id, 'up')"
+                    >
+                      上架
+                    </div>
+                    <div
+                      class="common-btn status-btn status-btn-2"
+                      v-if="scope.row.status != 'down'"
+                      @click="editStatus(scope.row.id, 'down')"
+                    >
+                      下架
+                    </div>
+                    <div
+                      class="common-btn status-btn status-btn-3"
+                      v-if="scope.row.status != 'hidden'"
+                      @click="editStatus(scope.row.id, 'hidden')"
+                    >
+                      隐藏
+                    </div>
+                  </div>
+                  <span
+                    slot="reference"
+                    style="cursor: pointer; margin-right: 12px"
+                  >
+                    <span
+                      style="color: #7438d5"
+                      v-if="scope.row.status == 'up'"
+                      >{{ scope.row.status_text }}</span
+                    >
+                    <span
+                      style="color: #ff5959"
+                      v-if="scope.row.status == 'down'"
+                      >{{ scope.row.status_text }}</span
+                    >
+                    <span
+                      style="color: #999"
+                      v-if="scope.row.status == 'hidden'"
+                      >{{ scope.row.status_text }}</span
+                    >
+                  </span>
+                </el-popover>
+                <span class="edit-text" @click="goodsOpt('edit', scope.row.id)"
+                  >编辑
+                </span>
+                <span class="copy-text" @click="goodsOpt('copy', scope.row.id)"
+                  >复制
+                </span>
+                <span class="del-text" @click="goodsOpt('del', scope.row.id)"
+                  >删除</span
+                >
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-row>
+      <el-row> </el-row>
       <!-- 分页模块 -->
       <el-row class="pagenation">
         <div class="avue-crud__menu">
@@ -207,19 +436,22 @@
               type="primary"
               :size="option.size"
               @click="xxx"
-            >上架</el-button>
+              >上架</el-button
+            >
             <el-button
               :plain="true"
               type="warning"
               :size="option.size"
               @click="xxx"
-            >下架</el-button>
+              >下架</el-button
+            >
             <el-button
               :plain="true"
               type="danger"
               :size="option.size"
               @click="xxx"
-            >删除</el-button>
+              >删除</el-button
+            >
           </div>
           <div class="avue-crud-right">
             <el-pagination
@@ -237,7 +469,7 @@
           </div>
         </div>
       </el-row>
-      <!-- 表单模块 -->
+      <!-- 表单模块（弹窗） -->
       <el-dialog
         :title="title"
         :visible.sync="box"
@@ -342,7 +574,6 @@
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
 import { mapGetters } from "vuex";
-import { getDictionary } from "@/api/system/dict";
 
 export default {
   data() {
@@ -372,7 +603,27 @@ export default {
       // 表单配置
       option: option,
       // 表单列表
-      data: [],
+      goodsData: [
+        {
+          id: 1,
+          price: "12",
+          sales: 12,
+          views: 12,
+          stock: 12,
+          weight: 12,
+          image:
+            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
+          createTime: "2016-05-02",
+          title: "test",
+          is_sku: 1,
+          activity_type: true,
+          app_type: false,
+          app_type_text: "",
+          status: "up",
+          tatus_text: "",
+          activity_type_text_arr: "",
+        },
+      ],
       // 是否展示筛选面板
       chooseType: true,
       // 搜索关键字
@@ -519,7 +770,7 @@ export default {
       ).then((res) => {
         const data = res.data.data;
         this.page.total = data.total;
-        this.data = data.records;
+        // this.goodsData = data.records;
         this.loading = false;
         this.selectionClear();
       });
@@ -533,12 +784,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+// 引入product源码样式
+@import "./style/product";
+
+// 重写 el-pagination 边距
 .el-pagination {
   margin-top: 20px;
-}
-
-#colors() {
-  primary: #7536d0;
 }
 
 // 重写 el-input-group 前后修饰元素
@@ -549,30 +800,7 @@ export default {
   padding: 0;
 }
 
-// 公共flex
-.display-flex {
-  display: flex;
-  align-items: center;
-}
-
-// 公共按钮样式
-.common-btn {
-  height: 32px;
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-}
-
-// 按钮激活
-.choose-btn-active {
-  background-color: #7536d0;
-  border: none;
-  color: #fff;
-}
-
+// 组件样式
 .avue-crud {
   .topMenu {
     margin-bottom: 10px;

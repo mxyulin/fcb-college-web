@@ -33,7 +33,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/test')
+      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
   }]
 }, {
   path: '/dict-horizontal',
@@ -102,35 +102,22 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
-  }]
-}, 
-// tyl-商品管理路由
-{
+  }, {
     path: '/product',
-  component: Layout,
-  redirect: '/product/index',
-  children: [{
-    path: 'index',
     name: '商品管理',
     meta: {
-      i18n: 'system'
+      i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/product/product')
-  }]
-},
-// tyl-商品分类路由
-{
-  path: '/productcategory',
-  component: Layout,
-  redirect: '/productcategory/index',
-  children: [{
-    path: 'index',
+  }, {
+    path: '/productcategory',
     name: '商品分类',
     meta: {
-      i18n: 'system'
+      i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
   }]
-}]
+}, 
+]
