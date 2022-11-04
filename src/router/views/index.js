@@ -110,7 +110,32 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  }]
+  },{
+    path: '/coupons',
+    name: '优惠劵',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
+  },{
+    path: '/commissionAgent',
+    name: '分销商',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commissionAgent/commissionAgent')
+  },{
+    path: '/commission',
+    name: '分销商基础设置',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/commission')
+  }
+]
 }, 
 // tyl-商品管理路由
 {
