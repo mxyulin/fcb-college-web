@@ -90,7 +90,7 @@
                 </el-input>
               </el-form-item>
             
-              <el-form-item label="发布平台">
+              <el-form-item label="支持平台">
                 <el-checkbox-group v-model="form.platform">
                   <el-checkbox label="wxMiniProgram">微信小程序</el-checkbox>
                   <el-checkbox label="wxOfficialAccount">微信公众号</el-checkbox>
@@ -141,6 +141,8 @@ export default {
       view: false,
       // 查询信息
       query: {},
+      //选择的平台
+      platformArray:[],
       // 分页信息
       page: {
         currentPage: 1,
@@ -148,7 +150,7 @@ export default {
         total: 40
       },
       // 表单数据
-      form: {name:'',memo:'',platform:''},
+      form: {name:'',memo:'',platform:[]},
       // 表单配置
       option: option,
       // 表单列表
@@ -160,10 +162,7 @@ export default {
     this.onLoad(this.page);
   },
   computed: {
-    ...mapGetters(["permission"]), 
-    title() {
-      return this.form.id ? '编辑模板' : '新建模板';
-    }
+    ...mapGetters(["permission"]),  
   },
   methods: {
     init() {
@@ -173,20 +172,30 @@ export default {
     },
 
     handleSubmit() {
-      if (!this.form.id) {
-        add(this.form).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
+      const that = this;
+      if(!that.form.platform || that.form.platform.length < 1){
+        that.$message({
+            type: "warning",
+            message: "请至少要选择平台!"
+          });  
+        return ;
+      }
+
+      that.form.platform = that.form.platform.join(",");
+      if (!that.form.id) {
+        add(that.form).then(() => {
+          that.box = false;
+          that.onLoad(that.page);
+          that.$message({
             type: "success",
             message: "操作成功!"
           });
         });
       } else {
-        update(this.form).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
+        update(that.form).then(() => {
+          that.box = false;
+          that.onLoad(that.page);
+          that.$message({
             type: "success",
             message: "操作成功!"
           });
@@ -194,24 +203,24 @@ export default {
       }
     },
     handleAdd() {
-      this.title = '新增'
-      this.form = {}
-      this.box = true
+      this.title = '新增模板';
+      this.form = {name:'',memo:'',platform:[]};
+      this.box = true;
     },
     getPlatform(platform) {
       if (!platform) { return ""; }
       let names = [];
 
-      if (platform.indexOf("H5")) {
+      if (platform.indexOf("H5")>=0) {
         names.push(" H5 ");
       }
-      if (platform.indexOf("wxOfficialAccount")) {
+      if (platform.indexOf("wxOfficialAccount")>=0) {
         names.push("公众号");
       }
-      if (platform.indexOf("wxMiniProgram")) {
+      if (platform.indexOf("wxMiniProgram")>=0) {
         names.push("微信小程序");
       }
-      if (platform.indexOf("App")) {
+      if (platform.indexOf("App")>=0) {
         names.push("APP");
       }
 
@@ -230,10 +239,13 @@ export default {
         });
     },
     handleEdit(id) {
-      this.title = '编辑'
-      this.box = true
+      const that = this;
+      that.title = '编辑模板'
+      that.box = true
       getDetail(id).then(res => {
-        this.form = res.data.data;
+        that.form = res.data.data;
+        let platform = that.form.platform;
+        that.form.platform = platform.split(",");
       });
     },
     handleDecorate(id){
@@ -296,9 +308,15 @@ export default {
       getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {         
         const data = res.data.data;
         that.page.total = data.total;
-        that.templateList = data.records;
-        that.loading = false; 
-        console.log(that.templateList);
+        let records = data.records;
+
+        records.forEach(item => {
+          let platform = item.platform;
+           item.platform = platform.split(",");
+         });
+
+        that.templateList = records;
+        that.loading = false;  
       });
     }
   }

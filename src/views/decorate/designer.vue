@@ -134,16 +134,16 @@ export default {
       if (!platform) { return ""; }
       let names = [];
 
-      if (platform.indexOf("H5")) {
+      if (platform.indexOf("H5")>=0) {
         names.push(" H5 ");
       }
-      if (platform.indexOf("wxOfficialAccount")) {
+      if (platform.indexOf("wxOfficialAccount")>=0) {
         names.push("公众号");
       }
-      if (platform.indexOf("wxMiniProgram")) {
+      if (platform.indexOf("wxMiniProgram")>=0) {
         names.push("微信小程序");
       }
-      if (platform.indexOf("App")) {
+      if (platform.indexOf("App")>=0) {
         names.push("APP");
       }
 
