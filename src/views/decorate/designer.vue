@@ -1,60 +1,90 @@
 <template>
   <basic-container>
-    <div id="decorate-designer">
-      <div class="designer-template">
-        <!-- <div class="title">
-          设计师模板
-        </div> -->
-        <div class="temp-item">
-          <div class="foreach-item foreach-item-designer temp-item-margin item-hover" v-for="(item, index) in records"
-            :key="index">
-            <div class="temp-item-img-designer">
-              <img :src="item.image">
+    <div class="avue-crud">
+      <el-row>
+        <el-alert
+        title="使用模板后，客户端重启才会生效!"
+        type="info"
+        show-icon  :closable="false">
+      </el-alert>
+      </el-row>
+
+      <el-row>
+        <!-- 列表模块 -->
+        <div id="decorate-index" v-cloak>
+          <div class="my-template" style="margin-bottom:20px;">
+            <div class="temp-item" v-if="templateList.length">
+              <div class="temp-item-margin item-hover" v-for="(item, index) in templateList" :key="index">
+                <div class="foreach-item">
+                  <div class="foreach-item-title">
+                    <div class="item-title-left">
+                      {{ item.name }}
+                    </div>
+                    <el-tag type="success" size="mini" v-if="item.status == 1" effect="plain">正在使用</el-tag> 
+
+                  </div>
+                  <div class="temp-item-img">
+                    <img v-if="item.image" :src="item.image">
+                  </div>
+                  <div class="temp-item-pla">
+                    <div class="display-flex">
+                      <span class="tip">支持平台：</span><span class="tip-body">{{ getPlatform(item.platform) }}</span>
+                    </div>
+                    <div class="display-flex" style="margin-top:6px">
+                      <span class="tip">备注：</span> <span class="tip-body">{{ item.memo }}</span>
+                    </div>
+                    <div class="display-flex" style="margin-top:6px">
+                      <span class="tip">更新时间：</span>
+                      <span class="tip-body">{{ item.updateTime }}</span>
+                    </div>
+                  </div>
+                  <div class="item-mask">
+                    <div class="item-mask-body">
+                      <div class="btn-common item-mask-item" @click="onPreviewShow(index, item.id)">
+                        预览模板
+                      </div>
+                      <div class="btn-common item-mask-item" @click="onSubmitToUse(index, item.id)">
+                        使用模板
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="designer-bottom">
-              <div class="designer-bottom-title">
-                {{ item.name }}
-              </div>
-              <div>
-                平台：<span>{{ getPlatform(item.platform) }}</span>
-              </div>
-              <div>
-                备注：<span>{{ item.memo }}</span>
-              </div>
-            </div>
-            <div class="item-mask item-mask-designer">
-              <div class="btn-common item-mask-item" @click="onPreviewShow(index, item.id)">
-                预览模板
-              </div>
-              <div class="btn-common item-mask-item" @click="onSubmitToUse(index,item.id)">
-                使用模板
-              </div>
-            </div>
+            <el-empty v-else description="没有模板"></el-empty>
           </div>
-        </div>
-      </div>
-      <!-- 预览弹框 -->
-      <el-dialog title="模板预览" :visible.sync="previewDialog" :before-close="onPreviewClose">
-        <div class="preview-body">
-          <div class="web-preview">
-            <iframe id="preview" src="" frameborder="1" height="600px"></iframe>
-          </div><!--Fast.api.cdnurl(iframeSrc)-->
-          <div class="code-preview">
-            <div>
-              <div class="template-title">{{ previewData.name }}</div>
-              <div class="template-company">{{ previewData.memo }}</div>
-              <div class="template-platform" v-if="previewData.platform">
-                <img>
+
+
+          <el-dialog title="模板预览" :visible.sync="previewDialog" :before-close="onPreviewClose" append-to-body>
+            <div class="preview-body">
+              <div class="web-preview">
+                <iframe id="preview" src="" frameborder="1" height="600px"></iframe>
+              </div>
+              <!--Fast.api.cdnurl(iframeSrc)-->
+              <div class="code-preview">
+                <div>
+                  <div class="template-title">{{ previewData.name }}</div>
+                  <div class="template-company">{{ previewData.memo }}</div>
+                  <div class="template-platform" v-if="previewData.platform">
+                    <img>
+                  </div>
+                </div>
+                <div class="wechart-code">
+                  <!---Fast.api.cdnurl(qrcodeSrc)--->
+                  <div class="code-item"><img class="code-item-img" src="" />
+                    <div class="code-title">微信扫描二维码即可预览</div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="wechart-code"><!---Fast.api.cdnurl(qrcodeSrc)--->
-              <div class="code-item"><img class="code-item-img" src="" />
-                <div class="code-title">微信扫描二维码即可预览</div>
-              </div>
-            </div>
-          </div>
+          </el-dialog>
         </div>
-      </el-dialog>
+
+      </el-row>
+
+
+
     </div>
   </basic-container>
 </template>
@@ -65,7 +95,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      records: [],
+      templateList: [],
       query: {},
       loading: true,
       page: {
@@ -74,7 +104,7 @@ export default {
         total: 0
       },
       previewDialog: false,
-      previewData:{}
+      previewData: {}
     }
   },
   mounted() {
@@ -89,13 +119,14 @@ export default {
       that.loading = true;
       that.query["type"] = "shop";
       that.query["status"] = 1;
-      
+
       getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
         let data = res.data.data;
         that.page.total = data.total;
         that.page.total = data.total;
-        that.records = data.records;
+        that.templateList = data.records;
         that.loading = false;
+        debugger;
       });
     },
 
@@ -119,7 +150,7 @@ export default {
       return names.join(" , ");
 
     },
-    onSubmitToUse(index,id) {
+    onSubmitToUse(index, id) {
       const that = this;
       let item = that.records[index];
       setToUse(item).then(() => {
@@ -132,7 +163,7 @@ export default {
       })
     },
 
-    onPreviewShow(index, id) { 
+    onPreviewShow(index, id) {
       const that = this;
       that.previewDialog = true;
       that.previewData = that.records[index];
@@ -146,9 +177,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#decorate-designer {
+#decorate-index {
   font-family: Source Han Sans SC;
-  color: #fff; 
+  color: #fff;
+  background: #fff;
+  border-radius: 10px 10px 0px 0px;
 }
 
 .btn-common {
@@ -161,65 +194,61 @@ export default {
   font-size: 12px;
   color: #fff;
   cursor: pointer;
+  display: block;
 }
 
-.title {
-  color: #444;
-  height: 48px;
-  line-height: 48px;
-  padding: 0 22px;
-  font-weight: 600;
-  font-style: 14px;
-}
+
 
 .temp-item {
-  /* height: 510px; */
   // background: #F7F7FA;
-  border-radius: 10px;
-  padding: 0px 0 20px 18px;
-  margin: 0 12px;
+  // border-radius: 10px;
+  // padding: 0px 18px 20px 0;
+  // margin: 0 12px;
   display: flex;
   flex-wrap: wrap;
 }
 
+
+
 .foreach-item {
-  min-width: 260px;
+  // width: 260px;
   height: 450px;
   background: #fff;
+  border: 1px solid #eee;
   border-radius: 4px;
   padding: 0 12px;
   position: relative;
-}
-
-.foreach-item-designer {
-  padding: 0
+  overflow: hidden;
 }
 
 .temp-item-margin {
-  margin-right: 18px;
+  margin-left: 18px;
   margin-top: 20px;
-  overflow: hidden;
 }
 
 .item-mask {
   position: absolute;
   left: 0;
-  top: 0;
+  top: 40px;
   width: 100%;
   min-width: 260px;
-  height: 450px;
+  height: 410px;
   background: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
   display: none;
-  padding: 122px 80px;
 }
 
-.item-mask-designer {
-  padding: 184px 80px;
+.item-mask-body {
+  height: 410px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0);
+  flex-direction: column;
 }
 
 .foreach-item-title {
-
   font-size: 14px;
   height: 40px;
   display: flex;
@@ -228,8 +257,12 @@ export default {
 }
 
 .item-title-left {
-
   color: #444;
+  cursor: pointer;
+}
+
+.item-title-left:hover {
+  color: #7438D5;
 }
 
 .status-release {
@@ -240,9 +273,7 @@ export default {
   color: #FF6017;
 }
 
-.status-norelease {
-  color: #666;
-}
+
 
 .item-hover:hover .item-mask {
   display: block;
@@ -250,6 +281,9 @@ export default {
 
 .item-mask-item {
   margin-bottom: 20px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .item-mask-item:hover {
@@ -257,44 +291,87 @@ export default {
   border-color: #7438D5;
 }
 
+.item-mask-item img {
+  margin-right: 12px;
+}
+
 .item-mask-item:last-child {
   margin-bottom: 0;
 }
 
+.item-mask-buy {
+  background: #7438D5;
+  border: none;
+}
+
 .temp-item-img {
   width: 236px;
-  height: 340px;
+  /* height: 408px; */
 }
 
-.temp-item-img-designer {
-  width: 260px;
-  /* height: 450px; */
-  position: relative;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border: 1px solid #d7dae2;
-}
-
-.temp-item-img-designer img {
+.temp-item-img img {
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.designer-bottom {
+.temp-item-pla {
   color: #fff;
-  padding: 14px;
-  font-size: 12px;
+  padding: 10px 0 12px;
   position: absolute;
-  width: 100%;
-  bottom: 0px;
-  background: rgba(0, 0, 0, 0.3);
-  height: 72px;
+  bottom: 0;
+  width: 266px;
+  margin-left: -12px;
+  background: rgba(0, 0, 0, 0.5);
 }
 
-.designer-bottom-title {
-  margin-bottom: 8px;
-  color: #fff;
-  font-size: 16px;
+// .el-dialog {
+//   width: 500px;
+//   /* height: 330px; */
+// }
+
+.el-dialog__header {
+  border-radius: 10px 10px 0 0;
+}
+
+@keyframes go {
+  0% {
+    transform: rotateZ(0);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
+
+.display-flex {
+  display: flex;
+}
+
+.tip {
+  display: block;
+  width: 68px;
+  text-align: justify;
+  text-align-last: justify;
+  font-size: 13px !important;
+  flex-shrink: 0;
+  padding-left: 10px;
+}
+
+.tip-body {
+  text-align: justify;
+  text-align-last: justify;
+  font-size: 13px !important;
+  flex-shrink: 0;
+
+}
+
+.el-form-item:last-child {
+  margin-bottom: 0px;
+}
+
+[v-cloak] {
+  display: none
 }
 
 /* 预览弹框 */
@@ -320,7 +397,7 @@ export default {
 }
 
 .web-preview {
-  height: 594px;
+  height: 300px;
   width: 300px;
   background: url('/assets/addons/shopro/img/decorate/preview_bg.png');
   padding: 18px;
@@ -388,13 +465,5 @@ export default {
 
 .el-dialog__headerbtn .el-dialog__close {
   font-size: 18px;
-}
-
-.el-dialog__headerbtn .el-dialog__close:hover {
-  color: #7438D5;
-}
-
-[v-cloak] {
-  display: none
 }
 </style>

@@ -24,7 +24,7 @@
               <div class="temp-item-margin item-hover" v-for="(item, index) in templateList" :key="index">
                 <div class="foreach-item">
                   <div class="foreach-item-title">
-                    <div class="item-title-left" @click="operation('edit', item.id)">
+                    <div class="item-title-left" @click="handleEdit(item.id)">
                       {{ item.name }}
                     </div> 
                     <el-tag type="success" size="mini" v-if="item.status == 1"  effect="plain">已发布</el-tag>
