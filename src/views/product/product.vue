@@ -10,22 +10,14 @@
               <el-form :inline="true" :size="option.size" :model="query">
                 <!-- 面板开关 -->
                 <el-form-item label="筛选条件">
-                  <el-switch
-                    v-model="chooseType"
-                    active-color="#7536D0"
-                    inactive-color="#E9EBEF"
-                  >
+                  <el-switch v-model="chooseType" active-color="#7536D0" inactive-color="#E9EBEF">
                   </el-switch>
                 </el-form-item>
               </el-form>
             </div>
             <div class="avue-right">
-              <el-input
-                :size="option.size"
-                placeholder="请输入标题"
-                suffix-icon="el-icon-search"
-                v-model="searchKey"
-              ></el-input>
+              <el-input :size="option.size" placeholder="请输入标题" suffix-icon="el-icon-search" v-model="searchKey">
+              </el-input>
             </div>
           </div>
         </el-row>
@@ -35,32 +27,20 @@
               <div class="container">
                 <el-row class="display-flex">
                   <div class="lable">活动类别</div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `all` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('all')"
-                  >
+                  <div class="pure-btn common-btn" :class="activeType == `all` ? `choose-btn-active` : ``"
+                    @click="changeActiveType('all')">
                     全部
                   </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `group` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('group')"
-                  >
+                  <div class="pure-btn common-btn" :class="activeType == `group` ? `choose-btn-active` : ``"
+                    @click="changeActiveType('group')">
                     拼团
                   </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `seckill` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('seckill')"
-                  >
+                  <div class="pure-btn common-btn" :class="activeType == `seckill` ? `choose-btn-active` : ``"
+                    @click="changeActiveType('seckill')">
                     秒杀
                   </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `score` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('score')"
-                  >
+                  <div class="pure-btn common-btn" :class="activeType == `score` ? `choose-btn-active` : ``"
+                    @click="changeActiveType('score')">
                     积分
                   </div>
                 </el-row>
@@ -92,26 +72,10 @@
         <div class="avue-crud__menu">
           <!-- 头部左侧按钮模块 -->
           <div class="avue-crud__left">
-            <el-button
-              :size="option.size"
-              icon="el-icon-refresh"
-              @click="searchChange"
-              class="refresh-btn"
-            ></el-button>
-            <el-button
-              :size="option.size"
-              type="primary"
-              icon="el-icon-plus"
-              @click="handleAdd"
-              class="create-btn"
-              >新增</el-button
-            >
-            <el-radio-group
-              v-model="activeStatus"
-              :size="option.size"
-              fill="#7536D0"
-              class="sort-btn-group"
-            >
+            <el-button :size="option.size" icon="el-icon-refresh" @click="searchChange" class="refresh-btn"></el-button>
+            <el-button :size="option.size" type="primary" icon="el-icon-plus" @click="handleAdd" class="create-btn">新增
+            </el-button>
+            <el-radio-group v-model="activeStatus" :size="option.size" fill="#7536D0" class="sort-btn-group">
               <el-radio-button label="all">全部</el-radio-button>
               <el-radio-button label="up">已上架</el-radio-button>
               <el-radio-button label="down">已下架</el-radio-button>
@@ -120,80 +84,30 @@
           </div>
           <!-- 头部右侧按钮模块 -->
           <div class="avue-crud__right">
-            <el-button
-              :size="option.size"
-              icon="el-icon-delete"
-              @click="recyclebin"
-              >回收站</el-button
-            >
+            <el-button :size="option.size" icon="el-icon-delete" @click="recyclebin">回收站</el-button>
           </div>
         </div>
       </el-row>
       <!-- 列表模块 -->
       <el-row>
-        <el-table
-          ref="table"
-          v-loading="loading"
-          :size="option.size"
-          @selection-change="selectionChange"
-          :data="data"
-          style="width: 100%"
-          :border="option.border"
-        >
-          <el-table-column
-            type="selection"
-            v-if="option.selection"
-            width="55"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            type="expand"
-            v-if="option.expand"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            v-if="option.index"
-            label="#"
-            type="index"
-            width="50"
-            align="center"
-          >
+        <el-table ref="table" v-loading="loading" :size="option.size" @selection-change="selectionChange" :data="data"
+          style="width: 100%" :border="option.border">
+          <el-table-column type="selection" v-if="option.selection" width="55" align="center"></el-table-column>
+          <el-table-column type="expand" v-if="option.expand" align="center"></el-table-column>
+          <el-table-column v-if="option.index" label="#" type="index" width="50" align="center">
           </el-table-column>
           <template v-for="(item, index) in option.column">
             <!-- table字段 -->
-            <el-table-column
-              v-if="item.hide !== true"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :key="index"
-            >
+            <el-table-column v-if="item.hide !== true" :prop="item.prop" :label="item.label" :width="item.width"
+              :key="index">
             </el-table-column>
           </template>
           <!-- 操作栏模块 -->
           <el-table-column prop="menu" label="操作" :width="180" align="center">
             <template slot-scope="{ row }">
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-view"
-                @click="handleView(row)"
-                >查看</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleEdit(row)"
-                >编辑</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-delete"
-                @click="rowDel(row)"
-                >删除</el-button
-              >
+              <el-button :size="option.size" type="text" icon="el-icon-view" @click="handleView(row)">查看</el-button>
+              <el-button :size="option.size" type="text" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
+              <el-button :size="option.size" type="text" icon="el-icon-delete" @click="rowDel(row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -202,65 +116,24 @@
       <el-row class="pagenation">
         <div class="avue-crud__menu">
           <div class="avue-crud__left">
-            <el-button
-              :plain="true"
-              type="primary"
-              :size="option.size"
-              @click="xxx"
-            >上架</el-button>
-            <el-button
-              :plain="true"
-              type="warning"
-              :size="option.size"
-              @click="xxx"
-            >下架</el-button>
-            <el-button
-              :plain="true"
-              type="danger"
-              :size="option.size"
-              @click="xxx"
-            >删除</el-button>
+            <el-button :plain="true" type="primary" :size="option.size" @click="xxx">上架</el-button>
+            <el-button :plain="true" type="warning" :size="option.size" @click="xxx">下架</el-button>
+            <el-button :plain="true" type="danger" :size="option.size" @click="xxx">删除</el-button>
           </div>
           <div class="avue-crud-right">
-            <el-pagination
-              align="right"
-              background
-              @size-change="sizeChange"
-              @current-change="currentChange"
-              :current-page="page.currentPage"
-              :page-sizes="[10, 20, 30, 40, 50, 100]"
-              :page-size="page.pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="page.total"
-            >
+            <el-pagination align="right" background @size-change="sizeChange" @current-change="currentChange"
+              :current-page="page.currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" :page-size="page.pageSize"
+              layout="total, sizes, prev, pager, next, jumper" :total="page.total">
             </el-pagination>
           </div>
         </div>
       </el-row>
       <!-- 表单模块 -->
-      <el-dialog
-        :title="title"
-        :visible.sync="box"
-        width="50%"
-        :before-close="beforeClose"
-        append-to-body
-      >
-        <el-form
-          :disabled="view"
-          :size="option.size"
-          ref="form"
-          :model="form"
-          label-width="80px"
-        >
+      <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
+        <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
           <!-- 表单字段 -->
-          <el-form-item
-            label="商品类型:normal=实体商品,virtual=虚拟商品"
-            prop="type"
-          >
-            <el-input
-              v-model="form.type"
-              placeholder="请输入商品类型:normal=实体商品,virtual=虚拟商品"
-            />
+          <el-form-item label="商品类型:normal=实体商品,virtual=虚拟商品" prop="type">
+            <el-input v-model="form.type" placeholder="请输入商品类型:normal=实体商品,virtual=虚拟商品" />
           </el-form-item>
           <el-form-item label="标题" prop="title">
             <el-input v-model="form.title" placeholder="请输入标题" />
@@ -268,14 +141,8 @@
           <el-form-item label="副标题" prop="subtitle">
             <el-input v-model="form.subtitle" placeholder="请输入副标题" />
           </el-form-item>
-          <el-form-item
-            label="商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架"
-            prop="status"
-          >
-            <el-input
-              v-model="form.status"
-              placeholder="请输入商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架"
-            />
+          <el-form-item label="商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架" prop="status">
+            <el-input v-model="form.status" placeholder="请输入商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架" />
           </el-form-item>
           <el-form-item label="所属分类" prop="categoryIds">
             <el-input v-model="form.categoryIds" placeholder="请输入所属分类" />
@@ -304,14 +171,9 @@
           <el-form-item label="服务标签" prop="serviceIds">
             <el-input v-model="form.serviceIds" placeholder="请输入服务标签" />
           </el-form-item>
-          <el-form-item
-            label="发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货"
-            prop="dispatchType"
-          >
-            <el-input
-              v-model="form.dispatchType"
-              placeholder="请输入发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货"
-            />
+          <el-form-item label="发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货" prop="dispatchType">
+            <el-input v-model="form.dispatchType"
+              placeholder="请输入发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货" />
           </el-form-item>
           <el-form-item label="发货模板" prop="dispatchIds">
             <el-input v-model="form.dispatchIds" placeholder="请输入发货模板" />
@@ -319,19 +181,9 @@
         </el-form>
         <!-- 表单按钮 -->
         <span v-if="!view" slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            icon="el-icon-circle-check"
-            :size="option.size"
-            @click="handleSubmit"
-            >提 交</el-button
-          >
-          <el-button
-            icon="el-icon-circle-close"
-            :size="option.size"
-            @click="box = false"
-            >取 消</el-button
-          >
+          <el-button type="primary" icon="el-icon-circle-check" :size="option.size" @click="handleSubmit">提 交
+          </el-button>
+          <el-button icon="el-icon-circle-close" :size="option.size" @click="box = false">取 消</el-button>
         </span>
       </el-dialog>
     </div>
@@ -341,8 +193,7 @@
 <script>
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
-import { mapGetters } from "vuex";
-import { getDictionary } from "@/api/system/dict";
+import { mapGetters } from "vuex"; 
 
 export default {
   data() {
@@ -398,7 +249,7 @@ export default {
     },
   },
   methods: {
-    init() {},
+    init() { },
     searchHide() {
       this.search = !this.search;
     },
@@ -532,7 +383,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<!-- <style lang="less" scoped>
 .el-pagination {
   margin-top: 20px;
 }
@@ -624,4 +475,4 @@ export default {
     }
   }
 }
-</style>
+</style> -->

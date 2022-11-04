@@ -103,8 +103,8 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/decorate/appDecorate";
-  import option from "@/const/decorate/appDecorate";
+  import {getList, getDetail, add, update, remove} from "@/api/decorate/decorate";
+  import option from "@/const/decorate/decorate";
   import {mapGetters} from "vuex";
   import {getDictionary} from '@/api/system/dict'
 
