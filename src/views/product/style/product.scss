@@ -2,6 +2,19 @@
   color: #444;
 }
 
+// 重写 el-pagination 边距
+.el-pagination {
+  margin-top: 20px;
+}
+
+// 重写 el-input-group 前后修饰元素
+/deep/ .el-input-group__append,
+.el-input-group__prepend {
+  width: 30px;
+  text-align: center;
+  padding: 0;
+}
+
 .el-pagination,
 .el-pagination__total,
 .el-input__inner,
@@ -205,42 +218,10 @@
   margin-left: -5px;
 }
 
-.edit-text,
-.copy-text,
-.del-text {
-  cursor: pointer;
-  color: #444;
-}
-
-.copy-text {
-  margin: 0 14px;
-}
-
-.edit-text:hover {
-  color: #7438D5;
-}
-
-.copy-text:hover {
-  color: #01CFA1;
-}
-
-.del-text:hover {
-  color: #FF5959;
-}
-
-// .el-button--primary,
-// .el-button--primary:hover {
-//   background: #7438D5 !important;
-//   border-color: #7438D5 !important;
-//   color: #fff;
-// }
-
 .el-popover {
   left: 46px;
   top: 10px;
 }
-
-
 
 .custom-table {
   padding: 20px 20px 30px;

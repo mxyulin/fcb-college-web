@@ -2,7 +2,7 @@ import request from '@/router/axios';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/fcb-product/category/list',
+    url: '/api/fcb-promote/coupons/list',
     method: 'get',
     params: {
       ...params,
@@ -14,7 +14,7 @@ export const getList = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/fcb-product/category/detail',
+    url: '/api/fcb-promote/coupons/detail',
     method: 'get',
     params: {
       id
@@ -22,19 +22,9 @@ export const getDetail = (id) => {
   })
 }
 
-export const getTree = (tenantId) => {
-  return request({
-    url: '/api/fcb-product/category/tree',
-    method: 'get',
-    params: {
-      tenantId,
-    }
-  })
-}
-
 export const remove = (ids) => {
   return request({
-    url: '/api/fcb-product/category/remove',
+    url: '/api/fcb-promote/coupons/remove',
     method: 'post',
     params: {
       ids,
@@ -44,7 +34,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/fcb-product/category/submit',
+    url: '/api/fcb-promote/coupons/submit',
     method: 'post',
     data: row
   })
@@ -52,7 +42,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/fcb-product/category/submit',
+    url: '/api/fcb-promote/coupons/submit',
     method: 'post',
     data: row
   })

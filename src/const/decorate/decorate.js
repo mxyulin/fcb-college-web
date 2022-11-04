@@ -12,36 +12,34 @@ export default {
       hide: true,
     },
     {
-      label: "",
+      label: "租户ID",
+      prop: "tenantId",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "模板名称",
       prop: "name",
     },
     {
-      label: "栏目类型",
+      label: "页面分类:shop=商城,custom=自定义,preview=临时预览",
       prop: "type",
-      hide: true,
     },
     {
       label: "图片",
       prop: "image",
     },
     {
-      label: "父ID",
-      prop: "pid",
+      label: "备注",
+      prop: "memo",
     },
     {
-      label: "权重",
-      prop: "weigh",
-      hide: true,
-    },
-    {
-      label: "描述",
-      prop: "description",
-      hide: true,
-    },
-    {
-      label: "状态",
+      label: "状态 normal=0, hidden=1 ",
       prop: "status",
-      hide: true,
+    },
+    {
+      label: "适用平台:H5=H5,wxOfficialAccount=微信公众号网页,wxMiniProgram=微信小程序,App=App,preview=预览",
+      prop: "platform",
     },
     {
       label: "创建人",
@@ -70,6 +68,12 @@ export default {
     {
       label: "修改时间",
       prop: "updateTime",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "是否已删除",
+      prop: "isDeleted",
       display: false,
       hide: true,
     },

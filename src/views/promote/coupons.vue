@@ -5,6 +5,30 @@
         <!-- 查询模块 -->
         <el-form :inline="true" :size="option.size" :model="query">
           <template>
+            <el-form-item label="字段">
+              <el-input v-model="query.name" placeholder="请输入名称"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.type" placeholder="请输入类型:cash=代金券,discount=折扣券"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettime" placeholder="请输入领取周期"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetime" placeholder="请输入有效期"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetimestart" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.usetimeend" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettimestart" placeholder="请输入"></el-input>
+            </el-form-item>
+            <el-form-item label="字段">
+              <el-input v-model="query.gettimeend" placeholder="请输入"></el-input>
+            </el-form-item>
           </template>
           <!-- 查询按钮 -->
           <el-form-item>
@@ -31,8 +55,6 @@
       <el-row>
         <!-- 列表模块 -->
         <el-table ref="table" v-loading="loading" :size="option.size" @selection-change="selectionChange" :data="data"
-                  row-key="id"
-                  :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
                   style="width: 100%"
                   :border="option.border">
           <el-table-column type="selection" v-if="option.selection" width="55" align="center"></el-table-column>
@@ -58,15 +80,28 @@
           </el-table-column>
         </el-table>
       </el-row>
+      <el-row>
+        <!-- 分页模块 -->
+        <el-pagination
+          align="right" background
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="page.currentPage"
+          :page-sizes="[10, 20, 30, 40, 50, 100]"
+          :page-size="page.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="page.total">
+        </el-pagination>
+      </el-row>
       <!-- 表单模块 -->
       <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
         <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
           <!-- 表单字段 -->
-          <el-form-item label="" prop="title">
-            <el-input v-model="form.name" placeholder="请输入"/>
+          <el-form-item label="名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入名称"/>
           </el-form-item>
-          <el-form-item label="栏目类型" prop="type">
-              <el-select v-model="form.type" clearable placeholder="请选择栏目类型">
+          <el-form-item label="类型:cash=代金券,discount=折扣券" prop="type">
+              <el-select v-model="form.type" clearable placeholder="请选择类型:cash=代金券,discount=折扣券">
                   <el-option
                     v-for="item in typeData"
                     :key="item.dictKey"
@@ -75,26 +110,32 @@
                   </el-option>
               </el-select>
           </el-form-item>
-          <el-form-item label="图片" prop="title">
-            <el-input v-model="form.image" placeholder="请输入图片"/>
+          <el-form-item label="库存" prop="stock">
+            <el-input v-model="form.stock" placeholder="请输入库存"/>
           </el-form-item>
-          <el-form-item label="父ID" prop="parentId">
-              <el-tree
-                :data="treeData"
-                v-model="form.parentId"
-                placeholder="请选择父ID"
-                :props="defaultProps"
-                @node-click="handleNodeClick">
-              </el-tree>
+          <el-form-item label="每人限制" prop="limit">
+            <el-input v-model="form.limit" placeholder="请输入每人限制"/>
           </el-form-item>
-          <el-form-item label="权重" prop="title">
-            <el-input v-model="form.weigh" placeholder="请输入权重"/>
+          <el-form-item label="领取周期" prop="gettime">
+            <el-date-picker v-model="form.gettime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择领取周期"></el-date-picker>
           </el-form-item>
-          <el-form-item label="描述" prop="title">
+          <el-form-item label="有效期" prop="usetime">
+            <el-date-picker v-model="form.usetime" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择有效期"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="描述" prop="description">
             <el-input v-model="form.description" placeholder="请输入描述"/>
           </el-form-item>
-          <el-form-item label="状态" prop="title">
-            <el-input v-model="form.status" placeholder="请输入状态"/>
+          <el-form-item label="" prop="usetimestart">
+            <el-date-picker v-model="form.usetimestart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="" prop="usetimeend">
+            <el-date-picker v-model="form.usetimeend" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="" prop="gettimestart">
+            <el-date-picker v-model="form.gettimestart" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="" prop="gettimeend">
+            <el-date-picker v-model="form.gettimeend" type="datetime" value-format="yyyy-MM-dd HH:mm:ss" placeholder="请选择"></el-date-picker>
           </el-form-item>
         </el-form>
         <!-- 表单按钮 -->
@@ -108,11 +149,10 @@
 </template>
 
 <script>
-  import {getList, getDetail, getTree, add, update, remove} from "@/api/product/productcategory";
-  import option from "@/const/product/productcategory";
-  import {getDictionary} from '@/api/system/dict';
+  import {getList, getDetail, add, update, remove} from "@/api/promote/coupons";
+  import option from "@/const/promote/coupons";
   import {mapGetters} from "vuex";
-  import {validatenull} from "@/util/validate";
+  import {getDictionary} from '@/api/system/dict'
 
 export default {
   data() {
@@ -135,11 +175,6 @@ export default {
         pageSize: 10,
         total: 40
       },
-      // 树型默认配置
-      defaultProps: {
-        children: 'children',
-        label: 'name'
-      },
       // 表单数据
       form: {},
       // 选择行
@@ -148,8 +183,6 @@ export default {
       option: option,
       // 表单列表
       data: [],
-      // 父节点列表
-      treeData: [],
     }
   },
   mounted() {
@@ -169,9 +202,6 @@ export default {
   methods: {
     init() {
     },
-    handleNodeClick(data) {
-      this.form.parentId = data.id;
-    },
     searchHide() {
       this.search = !this.search;
     },
@@ -184,9 +214,6 @@ export default {
       this.onLoad(this.page);
     },
     handleSubmit() {
-      if (validatenull(this.form.parentId)) {
-        this.form.parentId = 0;
-      }
       if (!this.form.id) {
         add(this.form).then(() => {
           this.box = false;
@@ -289,11 +316,11 @@ export default {
     onLoad(page, params = {}) {
       this.loading = true;
       getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-        this.data = res.data.data;
+        const data = res.data.data;
+        this.page.total = data.total;
+        this.data = data.records;
         this.loading = false;
-        getTree().then(res => {
-          this.treeData = res.data.data;
-        });
+        this.selectionClear();
       });
     }
   }

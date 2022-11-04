@@ -1,8 +1,5 @@
-import menu from './menu';
-import oauth from './oauth';
+import product from '@/mock/product/product';
 import param from './param';
-import product from './product';
-import user from './user';
 
 /**
  * 模拟数据mock
@@ -12,12 +9,12 @@ import user from './user';
 
 const options = {mock: false};
 
-user(options);
+// user(options);
 
-menu(options);
+// menu(options);
 
-oauth(options);
+// oauth(options);
 
 param(options);
 
-product(options)
+product( { mock: true} )

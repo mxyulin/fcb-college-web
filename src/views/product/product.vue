@@ -35,34 +35,36 @@
               <div class="container">
                 <el-row class="display-flex">
                   <div class="lable">活动类别</div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `all` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('all')"
-                  >
-                    全部
-                  </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `group` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('group')"
-                  >
-                    拼团
-                  </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `seckill` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('seckill')"
-                  >
-                    秒杀
-                  </div>
-                  <div
-                    class="pure-btn common-btn"
-                    :class="activeType == `score` ? `choose-btn-active` : ``"
-                    @click="changeActiveType('score')"
-                  >
-                    积分
-                  </div>
+                  <el-radio-group v-model="activeType" size="small">
+                    <el-radio
+                      v-model="activeType"
+                      label="all"
+                      border
+                      fill="primary"
+                      >全部</el-radio
+                    >
+                    <el-radio
+                      v-model="activeType"
+                      label="group"
+                      border
+                      fill="primary"
+                      >拼团</el-radio
+                    >
+                    <el-radio
+                      v-model="activeType"
+                      label="seckill"
+                      border
+                      fill="primary"
+                      >秒杀</el-radio
+                    >
+                    <el-radio
+                      v-model="activeType"
+                      label="score"
+                      border
+                      fill="primary"
+                      >积分</el-radio
+                    >
+                  </el-radio-group>
                 </el-row>
                 <el-row class="display-flex">
                   <div class="lable">价格区间</div>
@@ -339,6 +341,11 @@
               </template>
             </el-table-column>
             <el-table-column label="更新时间" min-width="148">
+              <template slot-scope="scope">
+                <div>
+                  {{ scope.row.createTime }}
+                </div>
+              </template>
             </el-table-column>
             <el-table-column prop="weight" label="排序" min-width="80">
               <template slot="header">
@@ -412,44 +419,55 @@
                     >
                   </span>
                 </el-popover>
-                <span class="edit-text" @click="goodsOpt('edit', scope.row.id)"
-                  >编辑
-                </span>
-                <span class="copy-text" @click="goodsOpt('copy', scope.row.id)"
-                  >复制
-                </span>
-                <span class="del-text" @click="goodsOpt('del', scope.row.id)"
-                  >删除</span
-                >
+                  <el-button
+                    class="el-button-text"
+                    type="text"
+                    @click="goodsOpt('edit', scope.row.id)"
+                    >编辑
+                  </el-button>
+                  <el-button
+                    class="el-button-text"
+                    type="text"
+                    @click="goodsOpt('copy', scope.row.id)"
+                    >复制
+                  </el-button>
+                  <el-button
+                    class="el-button-text"
+                    type="text"
+                    @click="goodsOpt('del', scope.row.id)"
+                    >删除</el-button
+                  >
               </template>
             </el-table-column>
           </el-table>
         </div>
       </el-row>
       <el-row> </el-row>
-      <!-- 分页模块 -->
+      <!-- 上架 + 分页模块 -->
       <el-row class="pagenation">
         <div class="avue-crud__menu">
           <div class="avue-crud__left">
             <el-button
-              :plain="true"
+              plain
               type="primary"
               :size="option.size"
-              @click="xxx"
+              @click="goodsOpt('up', null)"
+              v-if="activeStatus != 'up'"
               >上架</el-button
             >
             <el-button
-              :plain="true"
+              plain
               type="warning"
               :size="option.size"
-              @click="xxx"
+              @click="goodsOpt('down', null)"
+              v-if="activeStatus != 'down'"
               >下架</el-button
             >
             <el-button
-              :plain="true"
+              plain
               type="danger"
               :size="option.size"
-              @click="xxx"
+              @click="goodsOpt('del', null)"
               >删除</el-button
             >
           </div>
@@ -602,6 +620,18 @@ export default {
       selectionList: [],
       // 表单配置
       option: option,
+      // 是否展示筛选面板
+      chooseType: true,
+      // 搜索关键字
+      searchKey: "",
+      // 最低价格
+      priceFrist: 0,
+      // 最高价格
+      priceLast: 0,
+      // 哪个活动分类按钮被激活
+      activeType: "all",
+      // 哪个排序按钮被激活
+      activeStatus: "all",
       // 表单列表
       goodsData: [
         {
@@ -624,14 +654,6 @@ export default {
           activity_type_text_arr: "",
         },
       ],
-      // 是否展示筛选面板
-      chooseType: true,
-      // 搜索关键字
-      searchKey: "",
-      // 激活哪个分类按钮
-      activeType: "all",
-      // 激活哪个排序按钮
-      activeStatus: "",
     };
   },
   mounted() {
@@ -775,32 +797,15 @@ export default {
         this.selectionClear();
       });
     },
-    // 切换被激活的按钮
-    changeActiveType(activeType) {
-      this.activeType = activeType;
-    },
   },
 };
 </script>
 
-<style lang="less" scoped>
-// 引入product源码样式
+<style lang="scss" scoped>
+// 引入 product 源码样式
 @import "./style/product";
 
-// 重写 el-pagination 边距
-.el-pagination {
-  margin-top: 20px;
-}
-
-// 重写 el-input-group 前后修饰元素
-/deep/ .el-input-group__append,
-.el-input-group__prepend {
-  width: 30px;
-  text-align: center;
-  padding: 0;
-}
-
-// 组件样式
+// 组件单独样式
 .avue-crud {
   .topMenu {
     margin-bottom: 10px;
@@ -851,5 +856,10 @@ export default {
       }
     }
   }
+}
+
+/deep/ .el-button-text-444 {
+  cursor: pointer;
+  color: #444;
 }
 </style>
