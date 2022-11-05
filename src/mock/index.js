@@ -17,4 +17,4 @@ const options = {mock: false};
 
 param(options);
 
-product( { mock: true} )
+product(options)

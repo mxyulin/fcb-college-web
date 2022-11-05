@@ -1,11 +1,12 @@
+import product from '@/store/modules/product'
 import Vue from 'vue'
 import Vuex from 'vuex'
-import user from './modules/user'
-import common from './modules/common'
-import tags from './modules/tags'
-import logs from './modules/logs'
-import dict from './modules/dict'
 import getters from './getters'
+import common from './modules/common'
+import dict from './modules/dict'
+import logs from './modules/logs'
+import tags from './modules/tags'
+import user from './modules/user'
 
 Vue.use(Vuex)
 const store = new Vuex.Store({
@@ -14,7 +15,8 @@ const store = new Vuex.Store({
     common,
     logs,
     tags,
-    dict
+    dict,
+    product
   },
   getters,
 })

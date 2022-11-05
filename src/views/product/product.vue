@@ -23,9 +23,10 @@
               <el-input
                 :size="option.size"
                 placeholder="请输入标题"
-                suffix-icon="el-icon-search"
                 v-model="searchKey"
-              ></el-input>
+              >
+              <el-button slot="append" icon="el-icon-search" type="primary"></el-button>
+              </el-input>
             </div>
           </div>
         </el-row>
@@ -632,7 +633,7 @@ export default {
       activeType: "all",
       // 哪个排序按钮被激活
       activeStatus: "all",
-      // 表单列表
+      // 商品列数据
       goodsData: [
         {
           id: 1,
@@ -783,18 +784,20 @@ export default {
       this.page.pageSize = pageSize;
       this.onLoad(this.page);
     },
-    onLoad(page, params = {}) {
-      this.loading = true;
-      getList(
+    onLoad(page, params) {
+      let that = this;
+      that.loading = true;
+      this.$store.dispatch("product/grtList", (
         page.currentPage,
         page.pageSize,
-        Object.assign(params, this.query)
-      ).then((res) => {
-        const data = res.data.data;
-        this.page.total = data.total;
-        // this.goodsData = data.records;
-        this.loading = false;
-        this.selectionClear();
+        Object.assign(params, that.query)
+      ))
+      .then((res) => {
+        let data = res.data.data;
+        that.page.total = data.total;
+        // that.goodsData = data.records;
+        that.loading = false;
+        that.selectionClear();
       });
     },
   },
