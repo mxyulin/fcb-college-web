@@ -23,6 +23,7 @@ module.exports = {
   //开发模式反向代理配置，生产模式请使用Nginx部署并配置反向代理
   devServer: {
     port: 1888,
+    disableHostCheck: true,
     proxy: {
       '/api': {
         //本地服务接口地址

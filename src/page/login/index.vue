@@ -16,12 +16,6 @@
           <br>
           <span>超级管理员账号: admin / admin</span>
           <br>
-          <span>人事账号: hr / hr</span>
-          <br>
-          <span>经理账号: manager / manager</span>
-          <br>
-          <span>老板账号: boss / boss</span>
-          <br>
           <span>----------------------------------------------</span>
           <br>
           <span>普通租户编号：详见租户管理模块</span>
