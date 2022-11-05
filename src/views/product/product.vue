@@ -23,46 +23,34 @@
               <el-input
                 :size="option.size"
                 placeholder="请输入标题"
-                v-model="searchKey"
+                v-model="query.searchKey"
+                @blur="getGoodsData"
               >
-              <el-button slot="append" icon="el-icon-search" type="primary"></el-button>
+                <el-button
+                  slot="append"
+                  icon="el-icon-search"
+                  type="primary"
+                ></el-button>
               </el-input>
             </div>
           </div>
         </el-row>
+        <!-- 查询面板 -->
         <el-collapse-transition>
           <el-row :hidden="!chooseType">
             <div class="filter">
               <div class="container">
                 <el-row class="display-flex">
                   <div class="lable">活动类别</div>
-                  <el-radio-group v-model="activeType" size="small">
-                    <el-radio
-                      v-model="activeType"
-                      label="all"
-                      border
-                      fill="primary"
-                      >全部</el-radio
-                    >
-                    <el-radio
-                      v-model="activeType"
-                      label="group"
-                      border
-                      fill="primary"
+                  <el-radio-group v-model="query.activeType" size="small">
+                    <el-radio label="all" border fill="primary">全部</el-radio>
+                    <el-radio label="group" border fill="primary"
                       >拼团</el-radio
                     >
-                    <el-radio
-                      v-model="activeType"
-                      label="seckill"
-                      border
-                      fill="primary"
+                    <el-radio label="seckill" border fill="primary"
                       >秒杀</el-radio
                     >
-                    <el-radio
-                      v-model="activeType"
-                      label="score"
-                      border
-                      fill="primary"
+                    <el-radio label="score" border fill="primary"
                       >积分</el-radio
                     >
                   </el-radio-group>
@@ -70,20 +58,30 @@
                 <el-row class="display-flex">
                   <div class="lable">价格区间</div>
                   <div class="choose-price">
-                    <el-input v-model="priceFrist" :size="option.size">
+                    <el-input v-model="query.priceFrist" :size="option.size">
                       <template slot="append">元</template>
                     </el-input>
                   </div>
                   <div class="choose-price-line">-</div>
                   <div class="choose-price">
-                    <el-input v-model="priceLast" :size="option.size">
+                    <el-input v-model="query.priceLast" :size="option.size">
                       <template slot="append">元</template>
                     </el-input>
                   </div>
                 </el-row>
                 <el-row class="display-flex">
-                  <el-button type="primary" :size="option.size">筛选</el-button>
-                  <el-button type="warning" :size="option.size">清空</el-button>
+                  <el-button
+                    type="primary"
+                    :size="option.size"
+                    @click="getGoodsData"
+                    >筛选</el-button
+                  >
+                  <el-button
+                    type="warning"
+                    :size="option.size"
+                    @click="searchReset"
+                    >清空</el-button
+                  >
                 </el-row>
               </div>
             </div>
@@ -98,7 +96,7 @@
             <el-button
               :size="option.size"
               icon="el-icon-refresh"
-              @click="searchChange"
+              @click="getGoodsData"
               class="refresh-btn"
             ></el-button>
             <el-button
@@ -134,9 +132,9 @@
       </el-row>
       <!-- 列表模块 -->
       <el-row>
-        <div v-loading="tableAjax">
+        <div v-loading="loading">
           <el-table
-            ref="multipleTable"
+            ref="table"
             :data="goodsData"
             tooltip-effect="dark"
             style="width: 100%"
@@ -211,7 +209,8 @@
                       >
                         {{ scope.row.app_type_text }}
                       </div>
-                      <template
+                      <!-- 暂不使用 -->
+                      <!-- <template
                         v-for="(b, a) in scope.row.activity_type_text_arr"
                       >
                         <template v-if="a == 'groupon'">
@@ -235,7 +234,7 @@
                         >
                           {{ b }}
                         </div>
-                      </template>
+                      </template> -->
                     </div>
                   </div>
                 </div>
@@ -375,79 +374,74 @@
             </el-table-column>
             <el-table-column fixed="right" label="操作" min-width="170">
               <template slot-scope="scope">
-                <el-popover placement="bottom" width="120" trigger="hover">
+                <el-popover placement="bottom" trigger="hover" width="120">
                   <div class="display-flex status-box">
-                    <div
-                      class="common-btn status-btn status-btn-1"
+                    <el-button
+                      plain
+                      type="primary"
+                      class="common-btn status-btn"
                       v-if="scope.row.status != 'up'"
                       @click="editStatus(scope.row.id, 'up')"
                     >
                       上架
-                    </div>
-                    <div
-                      class="common-btn status-btn status-btn-2"
+                    </el-button>
+                    <el-button
+                      plain
+                      type="warning"
+                      class="common-btn status-btn"
                       v-if="scope.row.status != 'down'"
                       @click="editStatus(scope.row.id, 'down')"
                     >
                       下架
-                    </div>
-                    <div
-                      class="common-btn status-btn status-btn-3"
+                    </el-button>
+                    <el-button
+                      plain
+                      type="info"
+                      class="common-btn status-btn"
                       v-if="scope.row.status != 'hidden'"
                       @click="editStatus(scope.row.id, 'hidden')"
                     >
                       隐藏
-                    </div>
+                    </el-button>
                   </div>
                   <span
                     slot="reference"
-                    style="cursor: pointer; margin-right: 12px"
+                    style="cursor: pointer; margin-right: 5px"
                   >
+                    <el-button type="text" v-if="scope.row.status == 'up'"
+                      >{{ scope.row.status_text }}
+                    </el-button>
                     <span
-                      style="color: #7438d5"
-                      v-if="scope.row.status == 'up'"
-                      >{{ scope.row.status_text }}</span
-                    >
-                    <span
-                      style="color: #ff5959"
+                      style="color: #e6a23c"
                       v-if="scope.row.status == 'down'"
-                      >{{ scope.row.status_text }}</span
-                    >
+                      >{{ scope.row.status_text }}
+                    </span>
                     <span
                       style="color: #999"
                       v-if="scope.row.status == 'hidden'"
-                      >{{ scope.row.status_text }}</span
-                    >
+                      >{{ scope.row.status_text }}
+                    </span>
                   </span>
                 </el-popover>
-                  <el-button
-                    class="el-button-text"
-                    type="text"
-                    @click="goodsOpt('edit', scope.row.id)"
-                    >编辑
-                  </el-button>
-                  <el-button
-                    class="el-button-text"
-                    type="text"
-                    @click="goodsOpt('copy', scope.row.id)"
-                    >复制
-                  </el-button>
-                  <el-button
-                    class="el-button-text"
-                    type="text"
-                    @click="goodsOpt('del', scope.row.id)"
-                    >删除</el-button
-                  >
+                <span class="edit-text" @click="goodsOpt('edit', scope.row.id)"
+                  >编辑
+                </span>
+                <span class="copy-text" @click="goodsOpt('copy', scope.row.id)"
+                  >复制
+                </span>
+                <span class="del-text" @click="goodsOpt('del', scope.row.id)"
+                  >删除</span
+                >
               </template>
             </el-table-column>
           </el-table>
         </div>
       </el-row>
-      <el-row> </el-row>
-      <!-- 上架 + 分页模块 -->
-      <el-row class="pagenation">
-        <div class="avue-crud__menu">
-          <div class="avue-crud__left">
+      <!-- 底部 -->
+      <el-row>
+        <div class="bottomMenu">
+          <!-- 上架下架 -->
+          <div class="display-flex">
             <el-button
               plain
               type="primary"
@@ -472,20 +466,18 @@
               >删除</el-button
             >
           </div>
-          <div class="avue-crud-right">
-            <el-pagination
-              align="right"
-              background
-              @size-change="sizeChange"
-              @current-change="currentChange"
-              :current-page="page.currentPage"
-              :page-sizes="[10, 20, 30, 40, 50, 100]"
-              :page-size="page.pageSize"
-              layout="total, sizes, prev, pager, next, jumper"
-              :total="page.total"
-            >
-            </el-pagination>
-          </div>
+          <!-- 分页模块 -->
+          <el-pagination
+            background
+            @size-change="sizeChange"
+            @current-change="currentChange"
+            :current-page="page.currentPage"
+            :page-sizes="[10, 20, 30, 40, 50, 100]"
+            :page-size="page.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="page.total"
+          >
+          </el-pagination>
         </div>
       </el-row>
       <!-- 表单模块（弹窗） -->
@@ -593,6 +585,8 @@
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
 import { mapGetters } from "vuex";
+// 引入 mock 数据
+import result from "./mock.json";
 
 export default {
   data() {
@@ -607,8 +601,19 @@ export default {
       loading: true,
       // 是否为查看模式
       view: false,
+      // 上架状态
+      activeStatus: "all",
       // 查询信息
-      query: {},
+      query: {
+        // 活动类别
+        activeType: "all",
+        // 最低价格
+        priceFrist: 0,
+        // 最高价格
+        priceLast: 0,
+        // 搜索关键字
+        searchKey: "",
+      },
       // 分页信息
       page: {
         currentPage: 1,
@@ -622,44 +627,14 @@ export default {
       // 表单配置
       option: option,
       // 是否展示筛选面板
-      chooseType: true,
-      // 搜索关键字
-      searchKey: "",
-      // 最低价格
-      priceFrist: 0,
-      // 最高价格
-      priceLast: 0,
-      // 哪个活动分类按钮被激活
-      activeType: "all",
-      // 哪个排序按钮被激活
-      activeStatus: "all",
-      // 商品列数据
-      goodsData: [
-        {
-          id: 1,
-          price: "12",
-          sales: 12,
-          views: 12,
-          stock: 12,
-          weight: 12,
-          image:
-            "https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg",
-          createTime: "2016-05-02",
-          title: "test",
-          is_sku: 1,
-          activity_type: true,
-          app_type: false,
-          app_type_text: "",
-          status: "up",
-          tatus_text: "",
-          activity_type_text_arr: "",
-        },
-      ],
+      chooseType: false,
+      // 商品源数据
+      goodsData: [],
     };
   },
   mounted() {
     this.init();
-    this.onLoad(this.page);
+    this.getGoodsData(this.page);
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -672,23 +647,35 @@ export default {
     },
   },
   methods: {
+    // 初始化
     init() {},
+    //
     searchHide() {
       this.search = !this.search;
     },
-    searchChange() {
-      this.onLoad(this.page);
-    },
+    // 重置搜查询信息
     searchReset() {
-      this.query = {};
+      this.query = {
+        // 活动类别
+        activeType: "all",
+        // 哪个排序按钮被激活
+        activeStatus: "all",
+        // 最低价格
+        priceFrist: 0,
+        // 最高价格
+        priceLast: 0,
+        // 搜索关键字
+        searchKey: "",
+      };
       this.page.currentPage = 1;
-      this.onLoad(this.page);
+      this.getGoodsData(this.page);
     },
+    // 提交表单
     handleSubmit() {
       if (!this.form.id) {
         add(this.form).then(() => {
           this.box = false;
-          this.onLoad(this.page);
+          this.getGoodsData(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -697,7 +684,7 @@ export default {
       } else {
         update(this.form).then(() => {
           this.box = false;
-          this.onLoad(this.page);
+          this.getGoodsData(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -705,11 +692,13 @@ export default {
         });
       }
     },
+    // 增加商品
     handleAdd() {
       this.title = "新增";
       this.form = {};
       this.box = true;
     },
+    // 编辑商品
     handleEdit(row) {
       this.title = "编辑";
       this.box = true;
@@ -717,6 +706,7 @@ export default {
         this.form = res.data.data;
       });
     },
+    // 查看商品详情
     handleView(row) {
       this.title = "查看";
       this.view = true;
@@ -725,6 +715,7 @@ export default {
         this.form = res.data.data;
       });
     },
+    // 删除所有选中行
     handleDelete() {
       if (this.selectionList.length === 0) {
         this.$message.warning("请选择至少一条数据");
@@ -740,13 +731,14 @@ export default {
         })
         .then(() => {
           this.selectionClear();
-          this.onLoad(this.page);
+          this.getGoodsData(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
           });
         });
     },
+    // 删除当前行
     rowDel(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
@@ -757,7 +749,7 @@ export default {
           return remove(row.id);
         })
         .then(() => {
-          this.onLoad(this.page);
+          this.getGoodsData(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -778,27 +770,49 @@ export default {
     },
     currentChange(currentPage) {
       this.page.currentPage = currentPage;
-      this.onLoad(this.page);
+      this.getGoodsData(this.page);
     },
     sizeChange(pageSize) {
       this.page.pageSize = pageSize;
-      this.onLoad(this.page);
+      this.getGoodsData(this.page);
     },
-    onLoad(page, params) {
+    // 获取商品数据
+    getGoodsData(page, params = {}) {
       let that = this;
       that.loading = true;
-      this.$store.dispatch("product/grtList", (
+      getList(
         page.currentPage,
         page.pageSize,
         Object.assign(params, that.query)
-      ))
-      .then((res) => {
+      ).then((res) => {
         let data = res.data.data;
         that.page.total = data.total;
+        // 获取假数据
+        that.goodsData = result.data.records;
         // that.goodsData = data.records;
         that.loading = false;
         that.selectionClear();
       });
+    },
+    // 防抖函数（限制用户操作过快造成程序卡顿等问题）
+    debounce(handle, delay) {
+      let time = null;
+      return () => {
+        let that = this,
+          args = arguments;
+        clearTimeout(time);
+        time = setTimeout(() => {
+          handle.apply(that, args);
+        }, delay);
+      };
+    },
+  },
+  watch: {
+    // 根据上架状态获取数据
+    activeStatus() {
+      let that = this;
+      let { activeStatus } = that;
+      that.getGoodsData(that.page, { activeStatus });
     },
   },
 };
@@ -851,18 +865,22 @@ export default {
       margin-right: 40px;
     }
   }
-  .pagenation {
-    .avue-crud__menu {
-      align-items: flex-end;
-      button.el-button {
-        margin-right: 20px;
-      }
+  .bottomMenu {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 20px;
+    min-height: 80px;
+    button.el-button {
+      margin-right: 20px;
     }
   }
 }
+</style>
 
-/deep/ .el-button-text-444 {
-  cursor: pointer;
-  color: #444;
+<style lang="scss">
+// 重写 el-popover 样式，组件平行，需单独内联样式
+div.el-popover {
+  min-width: 120px !important;
 }
 </style>

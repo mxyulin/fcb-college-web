@@ -1,4 +1,3 @@
-import product from '@/store/modules/product'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import getters from './getters'
@@ -16,7 +15,6 @@ const store = new Vuex.Store({
     logs,
     tags,
     dict,
-    product
   },
   getters,
 })
