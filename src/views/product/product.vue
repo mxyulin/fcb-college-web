@@ -134,11 +134,11 @@
       <el-row>
         <div v-loading="loading">
           <el-table
+            stripe
             ref="table"
             :data="goodsData"
             tooltip-effect="dark"
             style="width: 100%"
-            border
             @selection-change="handleSelectionChange"
             :row-class-name="tableRowClassName"
             :cell-class-name="tableCellClassName"
