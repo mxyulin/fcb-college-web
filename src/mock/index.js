@@ -19,5 +19,5 @@ const options = {mock: false};
 // oauth(options);
 
 // param(options);
-commission(options)
-decorate(options)
+// commission(options)
+// decorate(options)

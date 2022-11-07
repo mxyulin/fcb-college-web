@@ -303,16 +303,16 @@ export default {
       this.page.pageSize = pageSize;
       this.onLoad(this.page);
     },
-    onLoad(page, params = {}) {
-      this.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-        const data = res.data.data;
-        this.page.total = data.total;
-        this.data = data.records;
-        this.loading = false;
-        this.selectionClear();
-      });
-    }
+    // onLoad(page, params = {}) {
+    //   this.loading = true;
+    //   getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
+    //     const data = res.data.data;
+    //     this.page.total = data.total;
+    //     this.data = data.records;
+    //     this.loading = false;
+    //     this.selectionClear();
+    //   });
+    // }
   }
 };
 </script>
