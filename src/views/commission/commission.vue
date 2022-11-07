@@ -141,7 +141,7 @@ import {
   add,
   update,
   remove,
-} from "@/api/commissionagent/commissionagent";
+} from "@/api/commission/commissionagent";
 import { mapGetters } from "vuex";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)

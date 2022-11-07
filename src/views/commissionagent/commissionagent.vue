@@ -139,7 +139,7 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/commissionagent/commissionagent";
+  import {getList, getDetail, add, update, remove} from "@/api/commission/commissionagent";
   import option from "@/const/commissionagent/commissionagent";
   import {mapGetters} from "vuex";
   import {getDictionary} from '@/api/system/dict'
