@@ -348,15 +348,11 @@
                   type: 'radio',
                   dicData: [
                     {
-                      label: "saber",
-                      value: "saber"
-                    },
-                    {
                       label: "element",
                       value: "element"
                     }
                   ],
-                  value: "saber",
+                  value: "fcb",
                   hide: true,
                   rules: [{
                     required: true,
@@ -411,7 +407,7 @@
                 this.form.codeName = modelName;
               }
               if (validatenull(this.form.serviceName)) {
-                this.form.serviceName = `fcb-${modelCode}`;
+                this.form.serviceName = `${modelCode}`;
               }
               if (validatenull(this.form.pkName)) {
                 this.form.pkName = "id";

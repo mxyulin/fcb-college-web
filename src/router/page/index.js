@@ -11,18 +11,6 @@ export default [{
     isAuth: false
   }
 },
-{
-  path: '/cp_auto_login',
-  name: '企业微信自动登录',
-  component: () =>
-    import( '@/page/login/cp_auto_login'),
-  meta: {
-    keepAlive: false,
-    isTab: false,
-    isAuth: false
-  }
-},
-
   {
     path: '/lock',
     name: '锁屏页',

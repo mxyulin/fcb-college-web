@@ -1,103 +1,24 @@
 <template>
   <basic-container>
+    <Query />
     <div class="avue-crud">
-      <!-- 顶部菜单 -->
-      <el-row class="topMenu">
-        <!-- 查询模块 -->
-        <el-row>
-          <div class="avue-crud__menu">
-            <div class="avue-crud__left">
-              <el-form :inline="true" :size="option.size" :model="query">
-                <!-- 面板开关 -->
-                <el-form-item label="筛选条件">
-                  <el-switch
-                    v-model="chooseType"
-                    :active-color="primary"
-                    inactive-color="#E9EBEF"
-                  >
-                  </el-switch>
-                </el-form-item>
-              </el-form>
-            </div>
-            <div class="avue-right">
-              <el-input
-                :size="option.size"
-                placeholder="请输入标题"
-                v-model="query.searchKey"
-                @blur="getGoodsData"
-              >
-                <el-button
-                  slot="append"
-                  icon="el-icon-search"
-                  type="primary"
-                ></el-button>
-              </el-input>
-            </div>
-          </div>
-        </el-row>
-        <!-- 查询面板 -->
-        <el-collapse-transition>
-          <el-row :hidden="!chooseType">
-            <div class="filter">
-              <div class="container">
-                <el-row class="display-flex">
-                  <div class="lable">活动类别</div>
-                  <el-radio-group v-model="query.activeType" size="small">
-                    <el-radio label="all" border fill="primary">全部</el-radio>
-                    <el-radio label="group" border fill="primary"
-                      >拼团</el-radio
-                    >
-                    <el-radio label="seckill" border fill="primary"
-                      >秒杀</el-radio
-                    >
-                    <el-radio label="score" border fill="primary"
-                      >积分</el-radio
-                    >
-                  </el-radio-group>
-                </el-row>
-                <el-row class="display-flex">
-                  <div class="lable">价格区间</div>
-                  <div class="choose-price">
-                    <el-input v-model="query.priceFrist" :size="option.size">
-                      <template slot="append">元</template>
-                    </el-input>
-                  </div>
-                  <div class="choose-price-line">-</div>
-                  <div class="choose-price">
-                    <el-input v-model="query.priceLast" :size="option.size">
-                      <template slot="append">元</template>
-                    </el-input>
-                  </div>
-                </el-row>
-                <el-row class="display-flex">
-                  <el-button
-                    type="primary"
-                    :size="option.size"
-                    @click="getGoodsData"
-                    >筛选</el-button
-                  >
-                  <el-button
-                    type="warning"
-                    :size="option.size"
-                    @click="searchReset"
-                    >清空</el-button
-                  >
-                </el-row>
-              </div>
-            </div>
-          </el-row>
-        </el-collapse-transition>
-      </el-row>
       <!-- 列表菜单 -->
       <el-row class="listMenu">
         <div class="avue-crud__menu">
           <!-- 头部左侧按钮模块 -->
           <div class="avue-crud__left">
+            <el-switch
+              v-model="chooseType"
+              :active-color="primary"
+              inactive-color="#E9EBEF"
+            >
+            </el-switch>
             <el-button
               :size="option.size"
               icon="el-icon-refresh"
               @click="getGoodsData"
               class="refresh-btn"
+              circle
             ></el-button>
             <el-button
               :size="option.size"
@@ -113,10 +34,10 @@
               fill="primary"
               class="sort-btn-group"
             >
-              <el-radio-button label="all">全部</el-radio-button>
-              <el-radio-button label="up">已上架</el-radio-button>
-              <el-radio-button label="down">已下架</el-radio-button>
-              <el-radio-button label="hidden">已隐藏</el-radio-button>
+              <el-radio-button :label="3">全部</el-radio-button>
+              <el-radio-button :label="1">已上架</el-radio-button>
+              <el-radio-button :label="2">已下架</el-radio-button>
+              <el-radio-button :label="0">已隐藏</el-radio-button>
             </el-radio-group>
           </div>
           <!-- 头部右侧按钮模块 -->
@@ -125,6 +46,7 @@
               :size="option.size"
               icon="el-icon-delete"
               @click="recyclebin"
+              disabled
               >回收站</el-button
             >
           </div>
@@ -140,101 +62,105 @@
             tooltip-effect="dark"
             style="width: 100%"
             @selection-change="handleSelectionChange"
+            @row-dblclick="goodsOpt"
             :row-class-name="tableRowClassName"
             :cell-class-name="tableCellClassName"
             :header-cell-class-name="tableCellClassName"
-            @row-dblclick="goodsOpt"
           >
             <el-table-column type="selection" min-width="36"></el-table-column>
-            <el-table-column prop="id" label="ID" min-width="70">
-              <!-- 通过插槽 header 自定义表头 -->
+            <el-table-column prop="weight" label="排序" min-width="80">
               <template slot="header">
                 <div class="display-flex">
-                  <div>ID</div>
-                  <!-- 排序箭头 -->
+                  <div>排序</div>
                   <div class="display-flex sort-order">
                     <i
                       class="el-icon-sort-up icon-top"
                       :style="{
-                        color: sort == 'id' && order == 'asc' ? '#7438d5' : '',
+                        color:
+                          sort == 'weigh' && order == 'asc' ? '#7438d5' : '',
                       }"
-                      @click="sortOrder('id', 'asc')"
+                      @click="sortOrder('weigh', 'asc')"
                     ></i>
                     <i
                       class="el-icon-sort-down icon-bottom"
                       :style="{
-                        color: sort == 'id' && order == 'desc' ? '#7438d5' : '',
+                        color:
+                          sort == 'weigh' && order == 'desc' ? '#7438d5' : '',
                       }"
-                      @click="sortOrder('id', 'desc')"
+                      @click="sortOrder('weigh', 'desc')"
                     ></i>
                   </div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="商品" min-width="330">
+            <el-table-column label="商品" min-width="150">
               <template slot-scope="scope">
-                <div class="goods-name">
-                  <el-image
-                    style="width: 58px; height: 58px"
-                    :src="scope.row.image"
-                    fit="contain"
-                    class="image-slot"
-                  >
-                    <div slot="error">
-                      <i class="el-icon-picture-outline"></i>
-                    </div>
-                  </el-image>
-                </div>
-                <div>
-                  <div
-                    class="ellipsis-item"
-                    style="margin-top: 8px; line-height: 1"
-                  >
-                    {{ scope.row.title }}
-                  </div>
-                  <div class="display-flex" style="margin-top: 13px">
-                    <span
-                      v-if="scope.row.isSku == 1"
-                      style="color: #444; margin-right: 12px; line-height: 20px"
+                <div class="display-flex goods-name">
+                  <!-- 商品图 -->
+                  <div>
+                    <el-image
+                      style="width: 58px; height: 58px"
+                      :src="scope.row.image"
+                      fit="contain"
+                      class="image-slot"
                     >
-                      {{ scope.row.isSku == 1 ? "多规格" : "" }}
-                    </span>
-                    <div
-                      v-if="scope.row.activity_type || scope.row.app_type"
-                      class="activity-type display-flex"
-                    >
-                      <div
-                        v-if="scope.row.app_type"
-                        class="activity-tags full-activity-tag"
-                      >
-                        {{ scope.row.app_type_text }}
+                      <div slot="error">
+                        <i class="el-icon-picture-outline"></i>
                       </div>
-                      <!-- 暂不使用 -->
-                      <!-- <template
-                        v-for="(b, a) in scope.row.activity_type_text_arr"
+                    </el-image>
+                  </div>
+                  <!-- 商品名和规格 -->
+                  <div>
+                    <div
+                      class="ellipsis-item"
+                      style="margin-top: 8px; line-height: 1"
+                    >
+                      {{ scope.row.title }}
+                    </div>
+                    <div style="margin-top: 13px">
+                      <span
+                        v-if="scope.row.isSku == 1"
+                        style="color: #444; margin-right: 12px; line-height: 20px"
                       >
-                        <template v-if="a == 'groupon'">
-                          <div class="activity-tags groupon-activity-tag">
-                            拼团
-                          </div>
-                        </template>
+                        {{ scope.row.isSku == 1 ? "多规格" : "" }}
+                      </span>
+                      <div
+                        v-if="scope.row.activity_type || scope.row.app_type"
+                        class="activity-type display-flex"
+                      >
                         <div
-                          v-if="a == 'seckill'"
-                          class="activity-tags seckill-activity-tag"
-                        >
-                          {{ b }}
-                        </div>
-                        <div
-                          v-if="
-                            a == 'full_reduce' ||
-                            a == 'full_discount' ||
-                            a == 'free_shipping'
-                          "
+                          v-if="scope.row.app_type"
                           class="activity-tags full-activity-tag"
                         >
-                          {{ b }}
+                          {{ scope.row.app_type_text }}
                         </div>
-                      </template> -->
+                        <!-- 暂不使用 -->
+                        <!-- <template
+                          v-for="(b, a) in scope.row.activity_type_text_arr"
+                        >
+                          <template v-if="a == 'groupon'">
+                            <div class="activity-tags groupon-activity-tag">
+                              拼团
+                            </div>
+                          </template>
+                          <div
+                            v-if="a == 'seckill'"
+                            class="activity-tags seckill-activity-tag"
+                          >
+                            {{ b }}
+                          </div>
+                          <div
+                            v-if="
+                              a == 'full_reduce' ||
+                              a == 'full_discount' ||
+                              a == 'free_shipping'
+                            "
+                            class="activity-tags full-activity-tag"
+                          >
+                            {{ b }}
+                          </div>
+                        </template> -->
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -347,39 +273,10 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="weight" label="排序" min-width="80">
-              <template slot="header">
-                <div class="display-flex">
-                  <div>排序</div>
-                  <div class="display-flex sort-order">
-                    <i
-                      class="el-icon-sort-up icon-top"
-                      :style="{
-                        color:
-                          sort == 'weigh' && order == 'asc' ? '#7438d5' : '',
-                      }"
-                      @click="sortOrder('weigh', 'asc')"
-                    ></i>
-                    <i
-                      class="el-icon-sort-down icon-bottom"
-                      :style="{
-                        color:
-                          sort == 'weigh' && order == 'desc' ? '#7438d5' : '',
-                      }"
-                      @click="sortOrder('weigh', 'desc')"
-                    ></i>
-                  </div>
-                </div>
-              </template>
-            </el-table-column>
             <el-table-column fixed="right" label="操作" min-width="240">
               <template slot-scope="scope">
                 <!-- 上架的下拉菜单 -->
-                <el-popover
-                  placement="bottom"
-                  trigger="hover"
-                  width="100"
-                >
+                <el-popover placement="bottom" trigger="hover" width="100">
                   <div class="display-flex status-box">
                     <el-button
                       plain
@@ -442,11 +339,7 @@
                   >编辑
                 </el-button>
                 <!-- 复制 -->
-                <el-button
-                  type="text"
-                  icon="el-icon-s-order"
-                  >复制
-                </el-button>
+                <el-button type="text" icon="el-icon-s-order">复制 </el-button>
                 <!-- 删除 -->
                 <el-button
                   type="text"
@@ -543,7 +436,6 @@
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
-                
               >
               </el-option>
             </el-select>
@@ -566,31 +458,34 @@
               <el-input v-model.number="form.price" placeholder="请输入价格" />
             </el-form-item>
             <el-form-item label="原价" prop="originalPrice">
-              <el-input v-model.number="form.originalPrice" placeholder="请输入原价" />
+              <el-input
+                v-model.number="form.originalPrice"
+                placeholder="请输入原价"
+              />
             </el-form-item>
           </div>
           <div class="display-flex">
-            <el-form-item
-              label="是否多规格"
-              prop="isSku"
-            >
-            <el-radio-group v-model="form.isSku">
-              <el-radio :label="true" border>是</el-radio>
-              <el-radio :label="false" border>否</el-radio>
-            </el-radio-group>
+            <el-form-item label="是否多规格" prop="isSku">
+              <el-radio-group v-model="form.isSku">
+                <el-radio :label="true" border>是</el-radio>
+                <el-radio :label="false" border>否</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item label="显示销量" prop="showSales">
-              <el-input v-model.number="form.showSales" placeholder="请输入显示销量" />
+              <el-input
+                v-model.number="form.showSales"
+                placeholder="请输入显示销量"
+              />
             </el-form-item>
           </div>
           <el-form-item label="服务标签" prop="serviceIds">
             <el-input v-model="form.serviceIds" placeholder="请输入服务标签" />
           </el-form-item>
-          <el-form-item
-            label="发货方式"
-            prop="dispatchType"
-          >
-            <el-select v-model="form.dispatchType" :placeholder="form.dispatchType">
+          <el-form-item label="发货方式" prop="dispatchType">
+            <el-select
+              v-model="form.dispatchType"
+              :placeholder="form.dispatchType"
+            >
               <el-option
                 v-for="item in dispatchTypes"
                 :key="item.value"
@@ -601,7 +496,10 @@
             </el-select>
           </el-form-item>
           <el-form-item label="发货模板" prop="dispatchIds">
-            <el-input v-model="form.dispatchIds" placeholder="请输入发货模板"></el-input>
+            <el-input
+              v-model="form.dispatchIds"
+              placeholder="请输入发货模板"
+            ></el-input>
           </el-form-item>
         </el-form>
         <!-- 表单按钮 -->
@@ -628,10 +526,12 @@
 <script>
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
+import Query from "@/views/product/childen/query"
 import { mapGetters } from "vuex";
 
 export default {
   components: {
+    Query,
   },
   data() {
     return {
@@ -645,8 +545,8 @@ export default {
       loading: true,
       // 是否为查看模式
       view: false,
-      // 上架状态
-      activeStatus: "all",
+      // 上架状态(3是全部展示)
+      activeStatus: 3,
       // 查询信息
       query: {
         // 活动类别
@@ -695,35 +595,66 @@ export default {
       // 表单验证规则
       rules: {
         type: [
-          { required: true, message: '请至少选择一个商品分类', trigger: 'change' },
+          {
+            required: true,
+            message: "请至少选择一个商品分类",
+            trigger: "change",
+          },
         ],
         title: [
-          { required: true, message: '请输入商品标题', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+          { required: true, message: "请输入商品标题", trigger: "blur" },
+          {
+            min: 1,
+            max: 100,
+            message: "长度在 1 到 100 个字符",
+            trigger: "blur",
+          },
         ],
         subtitle: [
-          { required: true, message: '请输入商品副标题', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+          { required: true, message: "请输入商品副标题", trigger: "blur" },
+          {
+            min: 1,
+            max: 100,
+            message: "长度在 1 到 100 个字符",
+            trigger: "blur",
+          },
         ],
         status: [
-          { type: 'number', required: true, message: '请至少选择一个商品状态', trigger: 'change' },
+          {
+            type: "number",
+            required: true,
+            message: "请至少选择一个商品状态",
+            trigger: "change",
+          },
         ],
-        price: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' },
-        ],
+        price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
         originalPrice: [
-          { required: true, message: '请输入商品原价', trigger: 'blur' },
+          { required: true, message: "请输入商品原价", trigger: "blur" },
         ],
         isSku: [
-          { type: 'boolean', required: true, message: '请至少选择一个选项', trigger: 'change' },
+          {
+            type: "boolean",
+            required: true,
+            message: "请至少选择一个选项",
+            trigger: "change",
+          },
         ],
         showSales: [
-          { type: 'number', required: true, message: '请输入显示销量', trigger: 'blur' },
+          {
+            type: "number",
+            required: true,
+            message: "请输入显示销量",
+            trigger: "blur",
+          },
         ],
         dispatchType: [
-          { required: true, message: '请至少选择一个发货方式', trigger: 'change' },
-        ]
-      }
+          {
+            required: true,
+            message: "请至少选择一个发货方式",
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   computed: {
@@ -737,17 +668,17 @@ export default {
     },
   },
   watch: {
-    // 根据上架排序状态获取数据
+    // 根据上架状态获取数据
     activeStatus() {
-      let that = this;
-      let { activeStatus } = that;
-      that.getGoodsData(that.page, { activeStatus });
+      this.getGoodsData(this.page);
     },
   },
   methods: {
-    // 初始化
-    init() {
+    test() {
+      console.log("测试");
     },
+    // 初始化
+    init() {},
     //
     searchHide() {
       this.search = !this.search;
@@ -757,8 +688,6 @@ export default {
       this.query = {
         // 活动类别
         activeType: "all",
-        // 哪个排序按钮被激活
-        activeStatus: "all",
         // 最低价格
         priceFrist: 0,
         // 最高价格
@@ -772,34 +701,35 @@ export default {
     // 提交表单
     handleSubmit(formName) {
       let that = this;
-      that.$refs[formName].validate()
-      .then(() => {
-        if (!that.form.id) {
-          add(that.form).then(() => {
-            that.box = false;
-            that.getGoodsData(that.page);
-            that.$message({
-              type: "success",
-              message: "操作成功！",
+      that.$refs[formName]
+        .validate()
+        .then(() => {
+          if (!that.form.id) {
+            add(that.form).then(() => {
+              that.box = false;
+              that.getGoodsData(that.page);
+              that.$message({
+                type: "success",
+                message: "操作成功！",
+              });
             });
-          });
-        } else {
-          update(that.form).then(() => {
-            that.box = false;
-            that.getGoodsData(that.page);
-            that.$message({
-              type: "success",
-              message: "操作成功！",
+          } else {
+            update(that.form).then(() => {
+              that.box = false;
+              that.getGoodsData(that.page);
+              that.$message({
+                type: "success",
+                message: "操作成功！",
+              });
             });
+          }
+        })
+        .catch(() => {
+          that.$message({
+            type: "error",
+            message: "操作失败!",
           });
-        }
-      })
-      .catch(() => {
-        that.$message({
-          type: "error",
-          message: "操作失败!",
         });
-      })
     },
     // 增加商品
     handleAdd() {
@@ -888,6 +818,7 @@ export default {
     // 获取商品数据
     getGoodsData(page, params = {}) {
       let that = this;
+      let { activeStatus } = that;
       that.loading = true;
       getList(
         page.currentPage,
@@ -896,7 +827,15 @@ export default {
       ).then((res) => {
         let data = res.data.data;
         that.page.total = data.total;
-        that.goodsData = data.records;
+        // 全部
+        if (activeStatus == 3) {
+          that.goodsData = data.records;
+        } else {
+          // 非全部
+          that.goodsData = data.records.filter((good) => {
+            return good.status == activeStatus;
+          });
+        }
         that.loading = false;
         that.selectionClear();
       });
@@ -906,11 +845,15 @@ export default {
       let that = this;
       // 提交数据
       update({ id, status }).then((res) => {
-        if (res.code == 200) {
+        if (res.data.code == 200) {
           // 上架状态更新后获取最新列表数据
           that.getGoodsData(that.page);
         }
       });
+    },
+    //
+    goodsOpt() {
+      console.log("测试");
     },
   },
   mounted() {
@@ -922,43 +865,11 @@ export default {
 
 <style lang="scss" scoped>
 // 引入 product 源码样式
-@import "./style/product";
+@import "@/views/product/styles/product";
 
 // 组件单独样式
 .avue-crud {
-  .topMenu {
-    margin-bottom: 10px;
-    .filter {
-      .container {
-        position: relative;
-        .el-row {
-          height: 50px;
-          line-height: 50px;
-          .lable {
-            margin-right: 14px;
-            font-size: 14px;
-            text-align: right;
-            vertical-align: middle;
-            color: #606266;
-            box-sizing: border-box;
-            margin-right: 12px;
-          }
-          .pure-btn {
-            width: 80px;
-            border: 1px solid #e6e6e6;
-            margin-right: 10px;
-            height: 30px;
-          }
-          .choose-price {
-            width: 140px;
-          }
-          .choose-price-line {
-            margin: 0 14px;
-          }
-        }
-      }
-    }
-  }
+
   .listMenu {
     .refresh-btn {
       margin-right: 20px;

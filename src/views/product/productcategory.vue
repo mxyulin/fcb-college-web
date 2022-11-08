@@ -236,7 +236,7 @@ import {
 import option from "@/const/product/productcategory";
 import { mapGetters } from "vuex";
 import { validatenull } from "@/util/validate";
- 
+
 export default {
   data() {
     return {
