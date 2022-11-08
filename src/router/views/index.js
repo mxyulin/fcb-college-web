@@ -104,13 +104,12 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
  
   },{
-    path: '/designer',
+    path: '/decorate',
     name: '设计模板',
     meta: {
       i18n: 'work'
     },
     component: () =>
- 
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
   },{
     path: '/decorate',
@@ -123,7 +122,7 @@ export default [{
   }
   ,{
     path: '/coupons',
-    name: '优惠劵', 
+    name: '优惠劵',
     meta: {
       i18n: 'work'
     },
@@ -137,15 +136,15 @@ export default [{
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commissionagent/commissionagent')
+      import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
   },{
-    path: '/commission',
+    path: '/commissionconfig',
     name: '分销商基础设置',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commission')
+      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
   }
 ]},   
 // tyl-商品管理路由
@@ -169,7 +168,6 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
- 
   }]
 }, 
 ]
