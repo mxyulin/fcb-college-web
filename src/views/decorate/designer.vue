@@ -169,7 +169,7 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/decorate/designer"; 
+//   import {getList, getDetail, add, update, remove} from "@/api/decorate/decorate"; 
   import {mapGetters} from "vuex";
   import data from "../../mock/designer/designer"
 export default {

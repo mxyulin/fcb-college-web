@@ -42,11 +42,7 @@
             <el-radio-group v-model="configData.invite_lock">
               <el-radio label="share">点击分享链接</el-radio>
               <el-radio label="pay">首次支付</el-radio>
-              <el-radio
-                label="agent"
-                :disabled="configData.become_agent.type == 'child_user_count_1'"
-                >成为子分销商</el-radio
-              >
+              <el-radio label="agent">成为子分销商</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="分销商审核：">
@@ -81,7 +77,7 @@
           <el-form-item label="成为分销商条件：">
             <el-radio-group
               v-model="configData.become_agent.type"
-              @change="changeBecomeAgentType(configData.become_agent.type)"
+              @change="changeBecomeAgentType"
             >
               <!-- @change="changeBecomeAgentType" -->
               <el-radio label="apply">自助申请</el-radio>
@@ -100,7 +96,6 @@
                   <div
                     class="goods-add"
                     style="margin: 5px 0"
-                    @click="addGoods"
                   >
                     {{
                       configData.become_agent.value ? "重新选择" : "选择商品"
@@ -179,7 +174,7 @@
                   </div>
                 </div>
               </el-form-item>
-
+              <!-- 累计消费消费累计金额 -->
               <el-form-item
                 label="消费累计金额："
                 v-if="configData.become_agent.type == 'consume'"
@@ -195,33 +190,15 @@
                   </el-input>
                 </div>
               </el-form-item>
-              <el-form-item
-                label="邀请下级用户满："
-                v-if="configData.become_agent.type == 'child_user_count_1'"
-              >
-                <div class="display-flex" style="width: 320px; height: 40px">
-                  <el-input
-                    v-model="configData.become_agent.value"
-                    size="small"
-                    type="number"
-                  >
-                    <template slot="append">人</template>
-                  </el-input>
-                </div>
+
+              <!-- 邀请下级用户满 -->
+              <el-form-item>
               </el-form-item>
             </div>
           </el-collapse-transition>
 
-          <!-- <el-form-item label="消费累计金额：">
-            <div class="display-flex" style="width: 320px; height: 40px">
-              <el-input size="small" type="number">
-                <template slot="append">元</template>
-              </el-input>
-            </div>
-          </el-form-item> -->
-
           <el-form-item label="完善资料：">
-            <el-radio-group v-model="needAgentForm" @change="changeAgentForm">
+            <el-radio-group v-model="needAgentForm" >
               <el-radio
                 label="0"
                 :disabled="configData.become_agent.type == 'apply'"
@@ -233,11 +210,12 @@
               成为分销商条件如果选择自助申请，完善资料必须选择需要
             </div>
           </el-form-item>
+          
           <el-collapse-transition>
-            <div v-if="needAgentForm == 1">
+            <!-- <div v-if="needAgentForm == 1">
               <el-form-item label="表单背景图：">
                 <div class="bgimage-add-container" @click="bgimageAdd">
-                  <!-- <el-image
+                  <el-image
                     v-if="configData.agent_form.background_image"
                     :src="
                       Fast.api.cdnurl(configData.agent_form.background_image)
@@ -247,7 +225,7 @@
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline"></i>
                     </div>
-                  </el-image> -->
+                  </el-image>
                   <div
                     class="bgimage-add"
                     v-if="!configData.agent_form.background_image"
@@ -289,7 +267,7 @@
                             : '',
                       }"
                     >
-                      <!-- <div
+                      <div
                         class="become-register-row"
                         v-for="(item, rindex,i) in configData.agent_form.content"
                         :key="i"
@@ -339,7 +317,7 @@
                           
                           </div>
                         </div>
-                      </div> -->
+                      </div>
                     </draggable>
                   </div>
                   <div>
@@ -373,14 +351,14 @@
                   </el-form-item>
                 </div>
               </el-collapse-transition>
-            </div>
+            </div> -->
           </el-collapse-transition>
         </div>
 
 
 
 
-
+        <!-- 结算条件 -->
         <div class="form-group-area">
           <div class="shopro-form-group-title">
             <div class="shopro-form-group-title-line"></div>
@@ -426,13 +404,7 @@
 </template>
 
 <script>
-import {
-  getList,
-  getDetail,
-  add,
-  update,
-  remove,
-} from "@/api/commissionagent/commissionagent";
+import {getList, getDetail, add, update, remove} from "@/api/commission/commissionconfig"
 import { mapGetters } from "vuex";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
@@ -452,17 +424,18 @@ export default {
         self_buy: "0",
         invite_lock: "share",
         agent_check: "0",
-        upgrade_check: "0",
         upgrade_jump: "0",
-        upgrade_display: "0",
+        upgrade_check: "0",
         become_agent: {
           type: "apply",
-          value: "",
+          value: "",//传递金额
         },
-        agent_form: {
-          background_image: "",
-          content: [],
-        },
+        needAgentForm: "1",
+
+        // agent_form: {
+        //   background_image: "",
+        //   content: [],
+        // },
         apply_protocol: "0",
 
         commission_price_type: "goods_price",
@@ -492,62 +465,40 @@ export default {
     tipClose() {
       this.tipshow = !this.tipshow;
     },
-    changeAgentForm(value) {
-      if (value == 0) {
-        this.configData.agent_form = "0";
-      } else {
-        this.configData.agent_form = {
-          background_image: "",
-          content: [
-            {
-              name: "",
-              type: "",
-            },
-          ],
-        };
-      }
-    },
-    changeBecomeAgentType(value) {
-      if (value == "apply") {
-        this.needAgentForm = "1";
-        if (this.configData.agent_form == 0) {
-          this.configData.agent_form = {
-            background_image: "",
-            content: [
-              {
-                name: "",
-                type: "",
-              },
-            ],
-          };
-        }
-      }
-      this.configData.become_agent.value = "";
-    },
+    // changeAgentForm(value) {
+    //   if (value == 0) {
+    //     this.configData.agent_form = "0";
+    //   } else {
+    //     this.configData.agent_form = {
+    //       background_image: "",
+    //       content: [
+    //         {
+    //           name: "",
+    //           type: "",
+    //         },
+    //       ],
+    //     };
+    //   }
+    // },
+    // changeBecomeAgentType(value) {
+    //   if (value == "apply") {
+    //     this.needAgentForm = "1";
+    //     if (this.configData.agent_form == 0) {
+    //       this.configData.agent_form = {
+    //         background_image: "",
+    //         content: [
+    //           {
+    //             name: "",
+    //             type: "",
+    //           },
+    //         ],
+    //       };
+    //     }
+    //   }
+    //   this.configData.become_agent.value = "";
+    // },
     
-    addGoods() {
-      let that = this;
-      let params = {
-        multiple: true,
-        type: "",
-        ids: that.configData.become_agent.value
-          ? that.configData.become_agent.value
-          : "",
-      };
-      shoproSelectGoods(params, "选择商品")
-        .then((data) => {
-          if (data.data.length > 0) {
-            let idsArr = [];
-            data.data.forEach((goods) => {
-              idsArr.push(goods.id);
-            });
-            that.configData.become_agent.value = idsArr.join(",");
-            that.goodsDetail = data.data;
-          }
-        })
-        .catch((error) => {});
-      return false;
-    },
+    
     init() {
       // console.log(this)
       // getDictionary({code: 'yes_no'}).then(res => {
@@ -581,17 +532,18 @@ export default {
       console.log("消息");
       // const that = this;
       // that.loading = true;
-      // getList(
-      //   page.currentPage,
-      //   page.pageSize,
-      //   Object.assign(params, that.query)
-      // ).then((res) => {
-      //   let data = res.data.data;
-      //   // this.page.total = data.total;
-      //   // this.data = data.records;
-      //   // this.loading = false;
-      //   // this.selectionClear();
-      // });
+      getList(
+        page.currentPage,
+        page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        let data = res.data.data;
+        console.log("data:",data)
+        // this.page.total = data.total;
+        // this.data = data.records;
+        // this.loading = false;
+        // this.selectionClear();
+      });
     },
   },
 };
