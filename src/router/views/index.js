@@ -103,13 +103,13 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
   },{
-    path: '/designer',
+    path: '/decorate',
     name: '设计模板',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
+      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
   },{
     path: '/coupons',
     name: '优惠劵',
