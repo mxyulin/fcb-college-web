@@ -2,7 +2,7 @@ export default {
   size: 'small',
   expand: false,
   index: true,
-  border: true,
+  border: false,
   selection: true,
   column: [
     {
@@ -12,8 +12,9 @@ export default {
       hide: true,
     },
     {
-      label: "",
+      label: "分类名",
       prop: "name",
+      hide: false,
     },
     {
       label: "栏目类型",
@@ -21,12 +22,14 @@ export default {
       hide: true,
     },
     {
-      label: "图片",
+      label: "分类图片",
       prop: "image",
+      hide: false,
     },
     {
       label: "父ID",
       prop: "pid",
+      hide: true,
     },
     {
       label: "权重",
@@ -36,7 +39,7 @@ export default {
     {
       label: "描述",
       prop: "description",
-      hide: true,
+      hide: false,
     },
     {
       label: "状态",
@@ -59,7 +62,7 @@ export default {
       label: "创建时间",
       prop: "createTime",
       display: false,
-      hide: true,
+      hide: false,
     },
     {
       label: "修改人",

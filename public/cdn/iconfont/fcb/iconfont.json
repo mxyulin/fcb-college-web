@@ -1,0 +1,93 @@
+{
+  "id": "2265480",
+  "name": "college-admin",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11982667",
+      "name": "hide, invisible, hidden",
+      "font_class": "hideinvisiblehidden",
+      "unicode": "e9cf",
+      "unicode_decimal": 59855
+    },
+    {
+      "icon_id": "12579386",
+      "name": "move-down",
+      "font_class": "move-down",
+      "unicode": "e748",
+      "unicode_decimal": 59208
+    },
+    {
+      "icon_id": "12579387",
+      "name": "move-up",
+      "font_class": "move-up",
+      "unicode": "e749",
+      "unicode_decimal": 59209
+    },
+    {
+      "icon_id": "10224246",
+      "name": "树",
+      "font_class": "tree",
+      "unicode": "e68a",
+      "unicode_decimal": 59018
+    },
+    {
+      "icon_id": "1984287",
+      "name": "试题篮",
+      "font_class": "question",
+      "unicode": "e6e7",
+      "unicode_decimal": 59111
+    },
+    {
+      "icon_id": "4547285",
+      "name": "微课",
+      "font_class": "weike",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "6455763",
+      "name": "组件",
+      "font_class": "manth-charts",
+      "unicode": "e965",
+      "unicode_decimal": 59749
+    },
+    {
+      "icon_id": "10381593",
+      "name": "组件",
+      "font_class": "components",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "9997725",
+      "name": "文本框",
+      "font_class": "text",
+      "unicode": "e659",
+      "unicode_decimal": 58969
+    },
+    {
+      "icon_id": "2226339",
+      "name": "撤销",
+      "font_class": "chexiao",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
+    },
+    {
+      "icon_id": "11180372",
+      "name": "重做",
+      "font_class": "cz",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "15998078",
+      "name": "保存 线性",
+      "font_class": "save",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    }
+  ]
+}
