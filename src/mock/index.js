@@ -1,6 +1,6 @@
-import param from './user'; 
-import param from './menu'; 
-import param from './auth'; 
+import user from './user'; 
+import menu from './menu'; 
+import oauth from './oauth'; 
 import param from './param'; 
 
 import decorate from "./decorate/decorate"
