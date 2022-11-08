@@ -177,7 +177,7 @@
                   <el-image
                     style="width: 58px; height: 58px"
                     :src="scope.row.image"
-                    :fit="contain"
+                    fit="contain"
                     class="image-slot"
                   >
                     <div slot="error">
@@ -194,10 +194,10 @@
                   </div>
                   <div class="display-flex" style="margin-top: 13px">
                     <span
-                      v-if="scope.row.is_sku == 1"
+                      v-if="scope.row.isSku == 1"
                       style="color: #444; margin-right: 12px; line-height: 20px"
                     >
-                      {{ scope.row.is_sku == 1 ? "多规格" : "" }}
+                      {{ scope.row.isSku == 1 ? "多规格" : "" }}
                     </span>
                     <div
                       v-if="scope.row.activity_type || scope.row.app_type"
@@ -343,7 +343,7 @@
             <el-table-column label="更新时间" min-width="148">
               <template slot-scope="scope">
                 <div>
-                  {{ scope.row.createTime }}
+                  {{ scope.row.updateTime }}
                 </div>
               </template>
             </el-table-column>
@@ -372,16 +372,21 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="170">
+            <el-table-column fixed="right" label="操作" min-width="240">
               <template slot-scope="scope">
-                <el-popover placement="bottom" trigger="hover" width="120">
+                <!-- 上架的下拉菜单 -->
+                <el-popover
+                  placement="bottom"
+                  trigger="hover"
+                  width="100"
+                >
                   <div class="display-flex status-box">
                     <el-button
                       plain
                       type="primary"
                       class="common-btn status-btn"
-                      v-if="scope.row.status != 'up'"
-                      @click="editStatus(scope.row.id, 'up')"
+                      v-if="scope.row.status != 1"
+                      @click="updateStatus(scope.row.id, 1)"
                     >
                       上架
                     </el-button>
@@ -389,8 +394,8 @@
                       plain
                       type="warning"
                       class="common-btn status-btn"
-                      v-if="scope.row.status != 'down'"
-                      @click="editStatus(scope.row.id, 'down')"
+                      v-if="scope.row.status != 2"
+                      @click="updateStatus(scope.row.id, 2)"
                     >
                       下架
                     </el-button>
@@ -398,39 +403,56 @@
                       plain
                       type="info"
                       class="common-btn status-btn"
-                      v-if="scope.row.status != 'hidden'"
-                      @click="editStatus(scope.row.id, 'hidden')"
+                      v-if="scope.row.status != 0"
+                      @click="updateStatus(scope.row.id, 0)"
                     >
                       隐藏
                     </el-button>
                   </div>
+                  <!-- 上架按钮 -->
                   <span
                     slot="reference"
                     style="cursor: pointer; margin-right: 5px"
                   >
-                    <el-button type="text" v-if="scope.row.status == 'up'"
-                      >{{ scope.row.status_text }}
+                    <el-button
+                      icon="icon-move-up"
+                      type="text"
+                      v-if="scope.row.status == 1"
+                      >上架
                     </el-button>
-                    <span
-                      style="color: #e6a23c"
-                      v-if="scope.row.status == 'down'"
-                      >{{ scope.row.status_text }}
-                    </span>
-                    <span
-                      style="color: #999"
-                      v-if="scope.row.status == 'hidden'"
-                      >{{ scope.row.status_text }}
-                    </span>
+                    <el-button
+                      icon="icon-move-down"
+                      type="text"
+                      v-if="scope.row.status == 2"
+                      >下架
+                    </el-button>
+                    <el-button
+                      icon="icon-hideinvisiblehidden"
+                      type="text"
+                      v-if="scope.row.status == 0"
+                      >隐藏
+                    </el-button>
                   </span>
                 </el-popover>
-                <span class="edit-text" @click="goodsOpt('edit', scope.row.id)"
+                <!-- 编辑 -->
+                <el-button
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleEdit(scope.row)"
                   >编辑
-                </span>
-                <span class="copy-text" @click="goodsOpt('copy', scope.row.id)"
+                </el-button>
+                <!-- 复制 -->
+                <el-button
+                  type="text"
+                  icon="el-icon-s-order"
                   >复制
-                </span>
-                <span class="del-text" @click="goodsOpt('del', scope.row.id)"
-                  >删除</span
+                </el-button>
+                <!-- 删除 -->
+                <el-button
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="rowDel(scope.row)"
+                  >删除</el-button
                 >
               </template>
             </el-table-column>
@@ -491,73 +513,95 @@
         <el-form
           :disabled="view"
           :size="option.size"
-          ref="form"
+          ref="goodsForm"
           :model="form"
-          label-width="80px"
+          label-width="100px"
+          :rules="rules"
         >
           <!-- 表单字段 -->
-          <el-form-item
-            label="商品类型:normal=实体商品,virtual=虚拟商品"
-            prop="type"
-          >
-            <el-input
-              v-model="form.type"
-              placeholder="请输入商品类型:normal=实体商品,virtual=虚拟商品"
-            />
+          <el-form-item label="商品分类" prop="type">
+            <el-select v-model="form.type" :placeholder="form.type">
+              <el-option
+                v-for="item in goodsType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="标题" prop="title">
+          <el-form-item label="商品标题" prop="title">
             <el-input v-model="form.title" placeholder="请输入标题" />
           </el-form-item>
-          <el-form-item label="副标题" prop="subtitle">
+          <el-form-item label="商品副标题" prop="subtitle">
             <el-input v-model="form.subtitle" placeholder="请输入副标题" />
           </el-form-item>
-          <el-form-item
-            label="商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架"
-            prop="status"
-          >
-            <el-input
-              v-model="form.status"
-              placeholder="请输入商品状态: 0:hidden=隐藏商品,1:up=上架,2:down=下架"
-            />
-          </el-form-item>
-          <el-form-item label="所属分类" prop="categoryIds">
-            <el-input v-model="form.categoryIds" placeholder="请输入所属分类" />
+          <el-form-item label="商品状态" prop="status">
+            <el-select v-model.number="form.status" :placeholder="form.status">
+              <el-option
+                v-for="item in goodsStatus"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+                
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="商品主图" prop="image">
-            <el-input v-model="form.image" placeholder="请输入商品主图" />
+            <el-input v-model="form.image" placeholder="请输入商品主图地址" />
           </el-form-item>
           <el-form-item label="轮播图" prop="images">
             <el-input v-model="form.images" placeholder="请输入轮播图" />
           </el-form-item>
           <el-form-item label="图文详情" prop="content">
-            <el-input v-model="form.content" placeholder="请输入图文详情" />
+            <el-input
+              type="textarea"
+              v-model="form.content"
+              placeholder="请输入图文详情"
+            />
           </el-form-item>
-          <el-form-item label="价格" prop="price">
-            <el-input v-model="form.price" placeholder="请输入价格" />
-          </el-form-item>
-          <el-form-item label="原价" prop="originalPrice">
-            <el-input v-model="form.originalPrice" placeholder="请输入原价" />
-          </el-form-item>
-          <el-form-item label="是否多规格" prop="isSku">
-            <el-input v-model="form.isSku" placeholder="请输入是否多规格" />
-          </el-form-item>
-          <el-form-item label="显示销量" prop="showSales">
-            <el-input v-model="form.showSales" placeholder="请输入显示销量" />
-          </el-form-item>
+          <div class="display-flex">
+            <el-form-item label="价格" prop="price">
+              <el-input v-model.number="form.price" placeholder="请输入价格" />
+            </el-form-item>
+            <el-form-item label="原价" prop="originalPrice">
+              <el-input v-model.number="form.originalPrice" placeholder="请输入原价" />
+            </el-form-item>
+          </div>
+          <div class="display-flex">
+            <el-form-item
+              label="是否多规格"
+              prop="isSku"
+            >
+            <el-radio-group v-model="form.isSku">
+              <el-radio :label="true" border>是</el-radio>
+              <el-radio :label="false" border>否</el-radio>
+            </el-radio-group>
+            </el-form-item>
+            <el-form-item label="显示销量" prop="showSales">
+              <el-input v-model.number="form.showSales" placeholder="请输入显示销量" />
+            </el-form-item>
+          </div>
           <el-form-item label="服务标签" prop="serviceIds">
             <el-input v-model="form.serviceIds" placeholder="请输入服务标签" />
           </el-form-item>
           <el-form-item
-            label="发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货"
+            label="发货方式"
             prop="dispatchType"
           >
-            <el-input
-              v-model="form.dispatchType"
-              placeholder="请输入发货方式:express=物流快递,selfetch=用户自提,store=商家配送,autosend=自动发货"
-            />
+            <el-select v-model="form.dispatchType" :placeholder="form.dispatchType">
+              <el-option
+                v-for="item in dispatchTypes"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="发货模板" prop="dispatchIds">
-            <el-input v-model="form.dispatchIds" placeholder="请输入发货模板" />
+            <el-input v-model="form.dispatchIds" placeholder="请输入发货模板"></el-input>
           </el-form-item>
         </el-form>
         <!-- 表单按钮 -->
@@ -566,7 +610,7 @@
             type="primary"
             icon="el-icon-circle-check"
             :size="option.size"
-            @click="handleSubmit"
+            @click="handleSubmit('goodsForm')"
             >提 交</el-button
           >
           <el-button
@@ -585,10 +629,10 @@
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
 import { mapGetters } from "vuex";
-// 引入 mock 数据
-import result from "./mock.json";
 
 export default {
+  components: {
+  },
   data() {
     return {
       // 弹框标题
@@ -630,11 +674,57 @@ export default {
       chooseType: false,
       // 商品源数据
       goodsData: [],
+      // 所有商品分类
+      goodsType: [
+        { label: "实体商品", value: "normal" },
+        { label: "虚拟商品", value: "virtual" },
+      ],
+      // 所有商品状态
+      goodsStatus: [
+        { label: "上架", value: 1 },
+        { label: "下架", value: 2 },
+        { label: "隐藏", value: 0 },
+      ],
+      // 所有发货方式
+      dispatchTypes: [
+        { label: "物流快递", value: "express" },
+        { label: "用户自提", value: "selfetch" },
+        { label: "商家配送", value: "store" },
+        { label: "自动发货", value: "autosend" },
+      ],
+      // 表单验证规则
+      rules: {
+        type: [
+          { required: true, message: '请至少选择一个商品分类', trigger: 'change' },
+        ],
+        title: [
+          { required: true, message: '请输入商品标题', trigger: 'blur' },
+          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+        ],
+        subtitle: [
+          { required: true, message: '请输入商品副标题', trigger: 'blur' },
+          { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+        ],
+        status: [
+          { type: 'number', required: true, message: '请至少选择一个商品状态', trigger: 'change' },
+        ],
+        price: [
+          { required: true, message: '请输入商品价格', trigger: 'blur' },
+        ],
+        originalPrice: [
+          { required: true, message: '请输入商品原价', trigger: 'blur' },
+        ],
+        isSku: [
+          { type: 'boolean', required: true, message: '请至少选择一个选项', trigger: 'change' },
+        ],
+        showSales: [
+          { type: 'number', required: true, message: '请输入显示销量', trigger: 'blur' },
+        ],
+        dispatchType: [
+          { required: true, message: '请至少选择一个发货方式', trigger: 'change' },
+        ]
+      }
     };
-  },
-  mounted() {
-    this.init();
-    this.getGoodsData(this.page);
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -646,9 +736,18 @@ export default {
       return ids.join(",");
     },
   },
+  watch: {
+    // 根据上架排序状态获取数据
+    activeStatus() {
+      let that = this;
+      let { activeStatus } = that;
+      that.getGoodsData(that.page, { activeStatus });
+    },
+  },
   methods: {
     // 初始化
-    init() {},
+    init() {
+    },
     //
     searchHide() {
       this.search = !this.search;
@@ -671,36 +770,46 @@ export default {
       this.getGoodsData(this.page);
     },
     // 提交表单
-    handleSubmit() {
-      if (!this.form.id) {
-        add(this.form).then(() => {
-          this.box = false;
-          this.getGoodsData(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!",
+    handleSubmit(formName) {
+      let that = this;
+      that.$refs[formName].validate()
+      .then(() => {
+        if (!that.form.id) {
+          add(that.form).then(() => {
+            that.box = false;
+            that.getGoodsData(that.page);
+            that.$message({
+              type: "success",
+              message: "操作成功！",
+            });
           });
-        });
-      } else {
-        update(this.form).then(() => {
-          this.box = false;
-          this.getGoodsData(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!",
+        } else {
+          update(that.form).then(() => {
+            that.box = false;
+            that.getGoodsData(that.page);
+            that.$message({
+              type: "success",
+              message: "操作成功！",
+            });
           });
+        }
+      })
+      .catch(() => {
+        that.$message({
+          type: "error",
+          message: "操作失败!",
         });
-      }
+      })
     },
     // 增加商品
     handleAdd() {
-      this.title = "新增";
+      this.title = "新增商品";
       this.form = {};
       this.box = true;
     },
     // 编辑商品
     handleEdit(row) {
-      this.title = "编辑";
+      this.title = "编辑商品";
       this.box = true;
       getDetail(row.id).then((res) => {
         this.form = res.data.data;
@@ -787,33 +896,26 @@ export default {
       ).then((res) => {
         let data = res.data.data;
         that.page.total = data.total;
-        // 获取假数据
-        that.goodsData = result.data.records;
-        // that.goodsData = data.records;
+        that.goodsData = data.records;
         that.loading = false;
         that.selectionClear();
       });
     },
-    // 防抖函数（限制用户操作过快造成程序卡顿等问题）
-    debounce(handle, delay) {
-      let time = null;
-      return () => {
-        let that = this,
-          args = arguments;
-        clearTimeout(time);
-        time = setTimeout(() => {
-          handle.apply(that, args);
-        }, delay);
-      };
+    // 更新上架状态
+    updateStatus(id, status) {
+      let that = this;
+      // 提交数据
+      update({ id, status }).then((res) => {
+        if (res.code == 200) {
+          // 上架状态更新后获取最新列表数据
+          that.getGoodsData(that.page);
+        }
+      });
     },
   },
-  watch: {
-    // 根据上架状态获取数据
-    activeStatus() {
-      let that = this;
-      let { activeStatus } = that;
-      that.getGoodsData(that.page, { activeStatus });
-    },
+  mounted() {
+    this.init();
+    this.getGoodsData(this.page);
   },
 };
 </script>
@@ -879,8 +981,8 @@ export default {
 </style>
 
 <style lang="scss">
-// 重写 el-popover 样式，组件平行，需单独内联样式
-div.el-popover {
-  min-width: 120px !important;
+// *el-popover 与 app 组件平行，故不能限制样式的作用域（不能写 scoped）
+.el-popover {
+  min-width: 120px;
 }
 </style>

@@ -1,7 +1,7 @@
 # 项目研发笔记
 
-- 安装命令`yarn install `
-- 运行命令`yarn run serve`
+- 安装项目依赖命令`yarn install`
+- 运行项目命令`yarn run serve`
 
 ## 项目环境配置
 
@@ -35,9 +35,7 @@
 - `node`版本问题原因可能所在：`Node.js v17.x`关闭了 SSL 提供程序中的一个安全漏洞[stackoverflow回答](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported)
   - 解决办法：最稳妥有效的办法是回退安装[Node.js 16.x](https://nodejs.org/download/release/v16.18.0/)。
 - 组件不渲染：是因为需要使用`<basic-container></basic-container>`作为每个组件的容器。
-- 项目内暂时不支持子组件开发，原因未知。
 
 ## 建议
 
 - [Windows查看某个端口被谁占用](https://www.runoob.com/w3cnote/windows-finds-port-usage.html)
-

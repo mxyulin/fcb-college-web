@@ -27,22 +27,6 @@
   font-size: 12px;
 }
 
-.edit-text:hover {
-  color: #7438D5;
-}
-.edit-text, .copy-text, .del-text {
-  cursor: pointer;
-  color: #444;
-}
-
-.copy-text:hover {
-  color: #01CFA1;
-}
-
-.del-text:hover {
-  color: #FF5959;
-}
-
 .el-input__inner,
 .el-input__icon {
   line-height: 32px;
@@ -219,10 +203,11 @@
   margin-left: -5px;
 }
 
-.el-popover {
-  left: 46px;
-  top: 10px;
-}
+// .el-popover, .el-popper, .popper-box {
+//   max-width: 80px !important;
+//   left: 46px;
+//   top: 10px;
+// }
 
 .custom-table {
   padding: 20px 20px 30px;

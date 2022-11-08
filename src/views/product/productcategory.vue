@@ -258,7 +258,7 @@ export default {
         pageSize: 10,
         total: 40,
       },
-      // 树型默认配置
+      // 树型组件默认配置
       defaultProps: {
         children: "children",
         label: "name",
