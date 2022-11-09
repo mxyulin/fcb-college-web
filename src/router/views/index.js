@@ -33,7 +33,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
+      import( /* webpackChunkName: "views" */ '@/views/util/test')
   }]
 }, {
   path: '/dict-horizontal',
@@ -102,34 +102,31 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
- 
   },{
     path: '/decorate',
-    name: '设计模板',
+    name: '模板管理',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
+  },{
+    path: '/designer',
+    name: '设计师模板',
     meta: {
       i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
   },{
-    path: '/decorate',
-    name: '设计模板', 
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
-  }
-  ,{
     path: '/coupons',
     name: '优惠劵',
     meta: {
       i18n: 'work'
     },
     component: () =>
-    import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  }  
-   ,{
+      import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
+  },{
     path: '/commissionagent',
     name: '分销商',
     meta: {
@@ -145,29 +142,13 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  }
-]},   
-// tyl-商品管理路由
-{
-  path: '/product',
-  component: Layout,
-  redirect: '/product/index',
-  children: [{
-    path: 'index',
-    name: '商品管理',
+  },{
+    path: '/background',
+    name: '商品',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/product')
-  }, {
-    path: '/productcategory',
-    name: '商品分类',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
+      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/background')
   }]
-}, 
-]
+}]
