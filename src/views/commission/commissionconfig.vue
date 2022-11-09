@@ -177,23 +177,25 @@
                   <div style="border: 1px solid #e6e6e6">
                     <div class="become-register-row become-register-row-title">
                       <div class="become-register-row-item">表单类型</div>
-                      <div
-                        class="
-                          become-register-row-item
-                          become-register-row-item-center
-                        "
-                      >
-                        表单名称
+                      <div class="become-register-row-item become-register-row-item-center">表单名称</div>
+                      <div class="become-register-row-item become-register-row-item-last">操作</div>
+                    </div>
+                    <div class="become-register-row">
+                      <div>
+                        <el-select v-model="select" slot="prepend" placeholder="请选择">
+                          <el-option label="餐厅名" value="1"></el-option>
+                          <el-option label="订单号" value="2"></el-option>
+                          <el-option label="用户电话" value="3"></el-option>
+                        </el-select>
                       </div>
-                      <div
-                        class="
-                          become-register-row-item become-register-row-item-last
-                        "
-                      >
-                        操作
+                      <div>
+                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                      </div>
+                      <div>
+                        <span>删除</span>
                       </div>
                     </div>
-                    <draggable
+                    <!-- <draggable
                       :list="configData.agent_form.content"
                       v-bind="$attrs"
                       :options="defaultOption"
@@ -256,7 +258,8 @@
                           </div>
                         </div>
                       </div>
-                    </draggable>
+                    </draggable> -->
+
                   </div>
                   <div>
                     <div class="become_register_add-button">
@@ -389,6 +392,8 @@ export default {
       needApplyProtocol: "0",
       needAgentForm: "1",
 
+      input:'',
+      select:'',
       // 模拟数据
       initData: [],
       isf: false,
