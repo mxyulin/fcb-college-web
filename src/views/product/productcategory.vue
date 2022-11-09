@@ -1,7 +1,7 @@
 <template>
   <basic-container>
     <div class="avue-crud">
-      <!-- t头部功能菜单 -->
+      <!-- 头部功能菜单 -->
       <el-row>
         <div class="avue-crud__menu">
           <!-- 头部左侧按钮模块 -->

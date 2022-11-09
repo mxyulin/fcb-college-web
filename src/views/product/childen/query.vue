@@ -2,7 +2,7 @@
   <!-- 查询模块 -->
   <div :hidden="!search">
     <el-form :inline="true" :size="option.size">
-      <el-row :gutter="0" type="flex" justify="start" align="center">
+      <el-row :gutter="0" type="flex" justify="start" align="top">
         <!-- 活动类别 -->
         <el-col :span="4">
           <el-form-item label="活动类别">
@@ -46,13 +46,12 @@
           </el-form-item>
         </el-col>
         <!-- 搜索商品 -->
-        <el-col :span="6">
-          <el-form-item label="搜索商品">
+        <el-col :span="5">
+          <el-form-item label="商品">
             <el-input
               :size="option.size"
               placeholder="请输入关键词"
               v-model="query.searchKey"
-              @blur="getGoodsData"
             >
             </el-input>
           </el-form-item>
@@ -60,9 +59,9 @@
         <!-- 按钮组 -->
         <el-col :span="4">
           <el-button
-            type="primary" 
+            type="primary"
             :size="option.size"
-            @click="getGoodsData"
+            @click="searchChange"
             icon="el-icon-search"
             >搜索</el-button
           >
@@ -80,28 +79,21 @@
 </template>
 
 <script>
-import { getList } from "@/api/product/product";
-import option from "@/const/product/product";
 import { mapGetters } from "vuex";
+import option from "@/const/product/product";
 import { validatenull } from "@/util/validate";
 
 export default {
-  /* 
-   * 父组件传来的数据 page
-   * 其他子组件传来的数据 activeStatus
-  */
+  /*
+   * 父组件传来的数据 page, search
+   * 父组件绑定的事件 getGoodsData
+   */
   name: "Query",
-  props: ["page", ],
+  props: ["page", "search"],
   data() {
     return {
-      // 是否展示查询模块
-      search: true,
-      // 加载中
-      loading: true,
       // 表单配置
       option: option,
-      // 
-      page: page,
       // 查询信息
       query: {},
       // 活动类别
@@ -111,60 +103,25 @@ export default {
         { label: "秒杀", value: 2 },
         { label: "积分", value: 3 },
       ],
-      // 表单列表
-      data: [],
-      // 父节点列表
-      treeData: [],
     };
   },
   computed: {
     ...mapGetters(["permission"]),
-    ids() {
-      let ids = [];
-      this.selectionList.forEach((ele) => {
-        ids.push(ele.id);
-      });
-      return ids.join(",");
-    },
   },
   methods: {
     init() {},
+    // 条件查询
     searchChange() {
-      this.onLoad(this.page);
+      this.$emit("getGoodsData", Object.assign({}, this.query));
     },
+    // 重置查询条件
     searchReset() {
       this.query = {};
       this.page.currentPage = 1;
-      this.onLoad(this.page);
-    },
-    // 获取商品数据
-    getGoodsData(params = {}) {
-      let that = this;
-      let { activeStatus, page: { currentPage, pageSize }, goodsData, query } = that;
-      that.loading = true;
-      getList(
-        currentPage,
-        pageSize,
-        Object.assign(params, query)
-      ).then((res) => {
-        let data = res.data.data;
-        that.page.total = data.total;
-        // 全部
-        if (activeStatus == 3) {
-          that.goodsData = data.records;
-        } else {
-          // 非上架、下架、隐藏
-          that.goodsData = data.records.filter((good) => {
-            return good.status == activeStatus;
-          });
-        }
-        that.loading = false;
-        that.selectionClear();
-      });
+      this.$emit("getGoodsData");
     },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
