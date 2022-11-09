@@ -39,3 +39,4 @@
 ## 建议
 
 - [Windows查看某个端口被谁占用](https://www.runoob.com/w3cnote/windows-finds-port-usage.html)
+- 接口返回的`code`码在`res.data.code`中，而不是`res.code`。
