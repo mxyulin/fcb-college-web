@@ -144,11 +144,35 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
   },{
     path: '/background',
-    name: '商品',
+    name: '背景',
     meta: {
       i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/background')
+  },{
+    path: '/agreement',
+    name: '商品',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/agreement')
+  },{
+    path: '/commodity',
+    name: '商品',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/commodity')
+  },{
+    path: '/product',
+    name: 'product',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/product/product')
   }]
 }]

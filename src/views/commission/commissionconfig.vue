@@ -21,7 +21,10 @@
           </div>
 
           <el-form-item label="分销层级：">
-            <el-radio-group v-model="configData.commission_level" fill="#8322ff">
+            <el-radio-group
+              v-model="configData.commission_level"
+              fill="#8322ff"
+            >
               <el-radio label="0">关闭</el-radio>
               <el-radio label="1">一级</el-radio>
               <el-radio label="2">二级</el-radio>
@@ -88,10 +91,14 @@
                 label="选择商品："
                 v-if="configData.become_agent.type == 'goods'"
               >
-                <el-button class="goods-add" type="text" @click="centerDialogVisible = true" style="margin: 5px 0"
+                <el-button
+                  class="goods-add"
+                  type="text"
+                  @click="centerDialogVisible = true"
+                  style="margin: 5px 0"
                   >{{
-                      configData.become_agent.value ? "重新选择" : "选择商品"
-                    }}</el-button
+                    configData.become_agent.value ? "重新选择" : "选择商品"
+                  }}</el-button
                 >
 
                 <el-dialog
@@ -173,96 +180,49 @@
                 </div>
               </el-form-item>
               <el-form-item label="表单内容：">
-                <div style="max-width: 632px">
+                <div style="max-width: 642px">
                   <div style="border: 1px solid #e6e6e6">
                     <div class="become-register-row become-register-row-title">
                       <div class="become-register-row-item">表单类型</div>
-                      <div class="become-register-row-item become-register-row-item-center">表单名称</div>
-                      <div class="become-register-row-item become-register-row-item-last">操作</div>
+                      <div class="become-register-row-item">表单名称</div>
+                      <div class="become-register-row-item-last">
+                        <span>操作</span>
+                      </div>
                     </div>
-                    <div class="become-register-row">
-                      <div>
-                        <el-select v-model="select" slot="prepend" placeholder="请选择">
+                    <div
+                      v-if="this.from"
+                      class="become-register-row become-register-row-box"
+                    >
+                      <div class="become-register-row-item">
+                        <el-select
+                          class="become-register-row-item-input"
+                          v-model="select"
+                          slot="prepend"
+                          placeholder="请选择"
+                        >
                           <el-option label="餐厅名" value="1"></el-option>
                           <el-option label="订单号" value="2"></el-option>
                           <el-option label="用户电话" value="3"></el-option>
                         </el-select>
                       </div>
-                      <div>
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                      <div class="become-register-row-item">
+                        <el-input
+                          class="become-register-row-item-input"
+                          v-model="input"
+                          placeholder="请输入内容"
+                        ></el-input>
                       </div>
-                      <div>
-                        <span>删除</span>
+                      <div class="become-register-row-item-last">
+                        <span
+                          class="become-register-row-item-last-red"
+                          @click="fromfalse"
+                          >删除</span
+                        >
                       </div>
                     </div>
-                    <!-- <draggable
-                      :list="configData.agent_form.content"
-                      v-bind="$attrs"
-                      :options="defaultOption"
-                      :style="{
-                        borderTop:
-                          configData.agent_form.content &&
-                          configData.agent_form.content.length > 0
-                            ? '1px solid #e6e6e6'
-                            : '',
-                      }"
-                    >
-                      <div
-                        class="become-register-row"
-                        v-for="(item, rindex, i) in configData.agent_form
-                          .content"
-                        :key="i"
-                      >
-                        <div class="seat-item">可放在此处</div>
-                        <div class="become_register-contaoner">
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-esp
-                            "
-                          >
-                            <el-select v-model="item.type" size="small">
-                              <el-option
-                                v-for="item in become_register_options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                              >
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-center
-                              become-register-row-item-esp
-                            "
-                          >
-                            <el-input
-                              v-model="item.name"
-                              size="small"
-                            ></el-input>
-                          </div>
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-last
-                            "
-                          >
-                            <span
-                              class="become_register_delete"
-                              @click="becomeRegisterDelete(rindex)"
-                              >删除</span
-                            >
-                            <i id="draggableHandle" class="el-icon-rank"></i>
-                          </div>
-                        </div>
-                      </div>
-                    </draggable> -->
-
                   </div>
                   <div>
-                    <div class="become_register_add-button">
+                    <div class="become_register_add-button" @click="fromture">
                       <i class="el-icon-plus"></i>追加
                     </div>
                   </div>
@@ -288,7 +248,15 @@
                           size="small"
                         ></el-input>
                       </div>
-                      <div class="apply_protocol-select">选择</div>
+                      <div @click="centerDialogVisiblethree = true" class="apply_protocol-select">选择</div>
+
+                      <el-dialog
+                        :visible.sync="centerDialogVisiblethree"
+                        width="80%"
+                        height="60%"
+                      >
+                        <agreement></agreement>
+                      </el-dialog>
                     </div>
                   </el-form-item>
                 </div>
@@ -335,7 +303,7 @@
         </div>
       </el-form>
       <div class="shopro-submit-container">
-        <div class="shopro-default-button">重置</div>
+        <div class="shopro-default-button" @click="formRestore">重置</div>
         <div class="shopro-submit-button">保存</div>
       </div>
     </div>
@@ -351,15 +319,17 @@ import {
   remove,
 } from "@/api/commission/commissionconfig";
 import { mapGetters } from "vuex";
-import commodity from './commissionconfig/commodity.vue'
-import background from './commissionconfig/background.vue'
+import commodity from "./commissionconfig/commodity.vue";
+import background from "./commissionconfig/background.vue";
+import agreement from "./commissionconfig/agreement.vue"
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
 export default {
-  components :{commodity,background},
+  components: { commodity, background,agreement },
   data() {
     return {
       centerDialogVisible: false,
+      centerDialogVisiblethree:false,
       // 弹框标题
       title: "",
       page: {
@@ -389,11 +359,34 @@ export default {
         refund_commission_reward: "0",
         refund_commission_order: "0",
       },
+      configDatatwo: {
+        commission_level: "1",
+        self_buy: "0",
+        invite_lock: "share",
+        agent_check: "0",
+        upgrade_jump: "0",
+        upgrade_check: "0",
+        become_agent: {
+          type: "apply",
+          value: "", //传递值
+        },
+        agent_form: {
+          background_image: "",
+          content: [],
+        },
+        apply_protocol: "0",
+        commission_price_type: "goods_price",
+        commission_event: "payed",
+        refund_commission_reward: "0",
+        refund_commission_order: "0",
+      },
       needApplyProtocol: "0",
       needAgentForm: "1",
 
-      input:'',
-      select:'',
+      input: "",
+      select: "",
+      from: false,
+
       // 模拟数据
       initData: [],
       isf: false,
@@ -407,6 +400,15 @@ export default {
     ...mapGetters(["permission"]),
   },
   methods: {
+    formRestore() {
+      this.configData = this.configDatatwo;
+    },
+    fromture() {
+      this.from = true;
+    },
+    fromfalse() {
+      this.from = false;
+    },
     tipClose() {
       this.tipshow = !this.tipshow;
     },
@@ -512,15 +514,12 @@ export default {
 }
 
 .become-register-row-item {
+  box-sizing: border-box;
   width: 260px;
   min-width: 260px;
-  padding: 0 20px;
+  padding-left: 20px;
+  height: 44px;
   line-height: 44px;
-}
-
-.become-register-row-item-center {
-  width: 240px;
-  min-width: 240px;
 }
 
 .become-register-row-title .become-register-row-item {
@@ -532,6 +531,12 @@ export default {
   min-width: 130px;
   display: flex;
   align-items: center;
+}
+.become-register-row-item-last-red {
+  color: red;
+}
+.become-register-row-item-input {
+  width: 200px;
 }
 
 .become_register-contaoner {
@@ -550,36 +555,9 @@ export default {
   margin-right: 6px;
 }
 
-.become_register_delete {
-  color: #ff5959;
-  cursor: pointer;
-}
-
 .become-register-row-frist {
   width: 90px;
   color: rgba(0, 0, 0, 0);
-}
-
-#draggableHandle {
-  cursor: move;
-  margin-left: 18px;
-  font-size: 16px;
-}
-
-.seat-item {
-  display: none;
-  padding: 0 20px;
-  color: #7438d5;
-  height: 44px;
-  line-height: 44px;
-}
-
-.sortable-ghost .seat-item {
-  display: block;
-}
-
-.sortable-ghost .become_register-contaoner {
-  display: none;
 }
 
 .apply_protocol-select {
@@ -768,11 +746,6 @@ export default {
 .form-group-area-last {
   padding-bottom: 20px;
 }
-.become-register-row-item-esp {
-  line-height: 32px;
-  display: flex;
-  align-items: center;
-}
 .el-dialog {
   width: 900px;
 }
@@ -849,16 +822,4 @@ export default {
   align-items: center;
   width: 400px;
 }
-
-
-.el-radio__input.is-checked + .el-radio__label {
-    
-  color: #fd7624 !important;
-}
-.el-radio__input.is-checked .el-radio__inner {
-    
-  background: #fd7624 !important;
-  border-color: #fd7624 !important;
-}
-.right{ width: 40%; border-bottom: 1px solid #cacaca; /deep/{ .el-radio{  .el-radio__label{ color: #000 !important; } .el-radio__input{ margin-bottom: px(5); &.is-checked { .el-radio__inner{ background-color:#28D4C1; border-color:#28D4C1; } } .el-radio__inner{ &:hover{ border-color:#28D4C1; } } } } } }
 </style>
