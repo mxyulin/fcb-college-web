@@ -109,9 +109,9 @@
 <script>
 import { getList, getDetail, add, update, remove } from "@/api/product/product";
 import option from "@/const/product/product";
-import Query from "@/views/product/childen/query";
-import Table from "@/views/product/childen/table";
-import Form from "@/views/product/childen/form";
+import Query from "@/views/product/components/query";
+import Table from "@/views/product/components/table";
+import Form from "@/views/product/components/form";
 import { mapGetters } from "vuex";
 
 export default {
