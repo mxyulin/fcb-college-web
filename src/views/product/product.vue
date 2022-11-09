@@ -325,11 +325,21 @@ export default {
         that.$message.warning("请选择至少一条数据");
         return;
       }
-      if ( action == "up" ) {
-        let result = await slectionsUpdate(that.ids, 1);
-        console.log("", result);
+      // 状态码
+      let statusCode = action == "up" ? 1 : 2;
+      let result = await slectionsUpdate(that.ids, statusCode);
+      if (result.data.code == 200) {
+        that.getGoodsData();
+        return that.$message({
+          type: "success",
+          message: "操作成功！",
+        });
       }
-    }
+      return that.$message({
+        type: "error",
+        message: "操作失败！",
+      });
+    },
   },
   // 页面初始化
   mounted() {
