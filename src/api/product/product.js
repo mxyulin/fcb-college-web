@@ -48,3 +48,10 @@ export const update = (row) => {
   })
 }
 
+export const slectionsUpdate = (ids, status) => {
+  return request({
+    url: '/api/fcb-product/product/shelfstatus',
+    method: 'post',
+    data: { ids, status }
+  })
+}

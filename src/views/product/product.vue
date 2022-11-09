@@ -59,14 +59,19 @@
       @selectionChange="selectionChange"
     />
     <!-- 底部模块 -->
-    <el-row :gutter="0" type="flex" justify="space-between" style="margin-top: 20px">
+    <el-row
+      :gutter="0"
+      type="flex"
+      justify="space-between"
+      style="margin-top: 20px"
+    >
       <!-- 底部按钮组 -->
       <el-col :span="12">
         <el-button
           plain
           type="primary"
           :size="option.size"
-          @click="selectionsAction('up')"
+          @click="slectedAction('up')"
           v-if="activeStatus != 1"
           >上架</el-button
         >
@@ -74,7 +79,7 @@
           plain
           type="warning"
           :size="option.size"
-          @click="selectionsAction('down')"
+          @click="slectedAction('down')"
           v-if="activeStatus != 2"
           >下架</el-button
         >
@@ -102,12 +107,27 @@
       </el-col>
     </el-row>
     <!-- 表单模块 -->
-    <Form :title="title" :box="box" :form="form" :view="view" @beforeClose="beforeClose"/>
+    <Form
+      ref="form"
+      :title="title"
+      :box="box"
+      :form="form"
+      :view="view"
+      @beforeClose="beforeClose"
+      @handleSubmit="handleSubmit"
+    />
   </basic-container>
 </template>
 
 <script>
-import { getList, getDetail, add, update, remove } from "@/api/product/product";
+import {
+  getList,
+  getDetail,
+  add,
+  update,
+  remove,
+  slectionsUpdate,
+} from "@/api/product/product";
 import option from "@/const/product/product";
 import Query from "@/views/product/components/query";
 import Table from "@/views/product/components/table";
@@ -118,7 +138,7 @@ export default {
   components: {
     Query,
     Table,
-    Form
+    Form,
   },
   data() {
     return {
@@ -175,13 +195,13 @@ export default {
     // 提交表单
     handleSubmit(formName) {
       let that = this;
-      that.$refs[formName]
+      that.$refs["form"].$refs[formName]
         .validate()
         .then(() => {
           if (!that.form.id) {
             add(that.form).then(() => {
               that.box = false;
-              that.getGoodsData(that.page);
+              that.getGoodsData();
               that.$message({
                 type: "success",
                 message: "操作成功！",
@@ -190,7 +210,7 @@ export default {
           } else {
             update(that.form).then(() => {
               that.box = false;
-              that.getGoodsData(that.page);
+              that.getGoodsData();
               that.$message({
                 type: "success",
                 message: "操作成功！",
@@ -232,7 +252,7 @@ export default {
     beforeClose(done) {
       this.form = {};
       this.view = false;
-      this.box =false;
+      this.box = false;
       done();
     },
     // 保存已选列表
@@ -298,6 +318,18 @@ export default {
           });
         });
     },
+    // 选中行上架 or 下架
+    async slectedAction(action) {
+      let that = this;
+      if (that.selectionList.length === 0) {
+        that.$message.warning("请选择至少一条数据");
+        return;
+      }
+      if ( action == "up" ) {
+        let result = await slectionsUpdate(that.ids, 1);
+        console.log("", result);
+      }
+    }
   },
   // 页面初始化
   mounted() {
