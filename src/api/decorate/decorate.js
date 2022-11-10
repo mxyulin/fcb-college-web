@@ -56,10 +56,3 @@ export const setToUse = (param) => {
   })
 }
 
-export const copy = (param) => {
-  return request({
-    url: '/api/fcb-decorate/copy',
-    method: 'post',
-    data: param
-  })
-}

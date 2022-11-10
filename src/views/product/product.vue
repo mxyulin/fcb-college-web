@@ -59,19 +59,27 @@
       @selectionChange="selectionChange"
     />
     <!-- 底部模块 -->
+<<<<<<< HEAD
     <el-row
       :gutter="0"
       type="flex"
       justify="space-between"
       style="margin-top: 20px"
     >
+=======
+    <el-row :gutter="0" type="flex" justify="space-between" style="margin-top: 20px">
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
       <!-- 底部按钮组 -->
       <el-col :span="12">
         <el-button
           plain
           type="primary"
           :size="option.size"
+<<<<<<< HEAD
           @click="slectedAction('up')"
+=======
+          @click="selectionsAction('up')"
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
           v-if="activeStatus != 1"
           >上架</el-button
         >
@@ -79,7 +87,11 @@
           plain
           type="warning"
           :size="option.size"
+<<<<<<< HEAD
           @click="slectedAction('down')"
+=======
+          @click="selectionsAction('down')"
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
           v-if="activeStatus != 2"
           >下架</el-button
         >
@@ -107,6 +119,7 @@
       </el-col>
     </el-row>
     <!-- 表单模块 -->
+<<<<<<< HEAD
     <Form
       ref="form"
       :title="title"
@@ -116,6 +129,9 @@
       @beforeClose="beforeClose"
       @handleSubmit="handleSubmit"
     />
+=======
+    <Form :title="title" :box="box" :form="form" :view="view" @beforeClose="beforeClose"/>
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
   </basic-container>
 </template>
 
@@ -129,16 +145,26 @@ import {
   slectionsUpdate,
 } from "@/api/product/product";
 import option from "@/const/product/product";
+<<<<<<< HEAD
 import Query from "@/views/product/components/query";
 import Table from "@/views/product/components/table";
 import Form from "@/views/product/components/form";
+=======
+import Query from "@/views/product/childen/query";
+import Table from "@/views/product/childen/table";
+import Form from "@/views/product/childen/form";
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     Query,
     Table,
+<<<<<<< HEAD
     Form,
+=======
+    Form
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
   },
   data() {
     return {
@@ -195,13 +221,21 @@ export default {
     // 提交表单
     handleSubmit(formName) {
       let that = this;
+<<<<<<< HEAD
       that.$refs["form"].$refs[formName]
+=======
+      that.$refs[formName]
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
         .validate()
         .then(() => {
           if (!that.form.id) {
             add(that.form).then(() => {
               that.box = false;
+<<<<<<< HEAD
               that.getGoodsData();
+=======
+              that.getGoodsData(that.page);
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
               that.$message({
                 type: "success",
                 message: "操作成功！",
@@ -210,7 +244,11 @@ export default {
           } else {
             update(that.form).then(() => {
               that.box = false;
+<<<<<<< HEAD
               that.getGoodsData();
+=======
+              that.getGoodsData(that.page);
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
               that.$message({
                 type: "success",
                 message: "操作成功！",
@@ -252,7 +290,11 @@ export default {
     beforeClose(done) {
       this.form = {};
       this.view = false;
+<<<<<<< HEAD
       this.box = false;
+=======
+      this.box =false;
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
       done();
     },
     // 保存已选列表
@@ -318,6 +360,7 @@ export default {
           });
         });
     },
+<<<<<<< HEAD
     // 选中行上架 or 下架
     async slectedAction(action) {
       let that = this;
@@ -340,6 +383,8 @@ export default {
         message: "操作失败！",
       });
     },
+=======
+>>>>>>> 1486c59667ec9a680906d771fde3bea53ada9362
   },
   // 页面初始化
   mounted() {

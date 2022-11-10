@@ -1,148 +1,128 @@
 <template>
   <basic-container>
     <div class="avue-crud">
+      <el-row :hidden="!search" style="padding:5px">
+        <!-- 查询模块 -->
+        <el-form :inline="true" :size="option.size" :model="query">
+          <template>
+          </template>
+          <!-- 查询按钮 -->
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" @click="searchChange">搜索</el-button>
+            <el-button icon="el-icon-delete" @click="searchReset()">清空</el-button>
+          </el-form-item>
+        </el-form>
+      </el-row>
       <el-row>
         <div class="avue-crud__menu">
           <!-- 头部左侧按钮模块 -->
           <div class="avue-crud__left">
             <el-button :size="option.size" type="primary" icon="el-icon-plus" @click="handleAdd">新增</el-button>
-            
+            <el-button :size="option.size" type="danger" icon="el-icon-delete" @click="handleDelete" plain>删除
+            </el-button>
           </div>
           <!-- 头部右侧按钮模块 -->
           <div class="avue-crud__right">
             <el-button :size="option.size" icon="el-icon-refresh" @click="searchChange" circle></el-button>
+            <el-button :size="option.size" icon="el-icon-search" @click="searchHide" circle></el-button>
           </div>
         </div>
       </el-row>
-
       <el-row>
         <!-- 列表模块 -->
-        <div id="decorate-index" v-cloak>
-          <div class="my-template">
-            
-            <div class="temp-item"  v-if="templateList.length" >                       
-              <div class="temp-item-margin item-hover" v-for="(item, index) in templateList" :key="index">
-                <div class="foreach-item">
-                  <div class="foreach-item-title">
-                    <div class="item-title-left" @click="handleEdit(item.id)">
-                      {{ item.name }}
-                    </div> 
-                    <el-tag type="success" size="mini" v-if="item.status == 1"  effect="plain">已发布</el-tag>
-                    <el-tag type="danger" size="mini" v-if="item.status == 0"  effect="plain">未发布</el-tag>
-
-                  </div>
-                  <div class="temp-item-img">
-                    <img v-if="item.image" :src="item.image">
-                  </div>
-                  <div class="temp-item-pla">
-                    <div class="display-flex">                      
-                        <span class="tip">支持平台：</span><span class="tip-body">{{getPlatform(item.platform)}}</span>
-                    </div>
-                    <div class="display-flex" style="margin-top:6px">
-                      <span class="tip">备注：</span> <span class="tip-body">{{ item.memo }}</span>
-                    </div>
-                    <div class="display-flex" style="margin-top:6px">
-                      <span class="tip">更新时间：</span>
-                      <span class="tip-body">{{ item.updateTime}}</span> 
-                    </div>
-                  </div>
-                  <div class="item-mask">
-                    <div class="item-mask-body">
-                      <div class="btn-common item-mask-item" @click="handleDecorate(item.id)">
-                        <img src="/assets/addons/shopro/img/decorate/decorate-btn.png" alt="">装修
-                      </div>
-                      <div class="btn-common item-mask-item" @click="handleEdit(item.id)">
-                        <img src="/assets/addons/shopro/img/decorate/edit-btn.png" alt="">编辑
-                      </div>
-                      <div v-if="item.status != 1" class="btn-common item-mask-item"
-                        @click="handleRelease(item.id)"> 
-                        <img src="/assets/addons/shopro/img/decorate/release-btn.png" alt="">发布
-                      </div>
-                      <div v-if="item.status == 1" class="btn-common item-mask-item"
-                        @click="handleDown(item.id)">
-                        <img src="/assets/addons/shopro/img/decorate/down-btn.png" alt="">下架
-                      </div>
-                      <div class="btn-common item-mask-item" @click="handleCopy(item.id)">
-                        <img src="/assets/addons/shopro/img/decorate/copy-btn.png" alt="">复制
-                      </div>
-                      <div v-if="item.status != 'normal'" class="btn-common item-mask-item"
-                        @click="handleRemove(item.id)">
-                        <img src="/assets/addons/shopro/img/decorate/delete-btn.png" alt="">删除
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <el-empty  v-else description="没有模板"></el-empty> 
-          </div>
-
-          <!-- 表单模块 -->
-          <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
-            <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
-              <!-- 表单字段 -->
-              <el-form-item label="模板名称" prop="name">
-                <el-input type="text" placeholder="最多可输入10个字" v-model="form.name" maxlength="10">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="备注" prop="memo">
-                <el-input type="text" placeholder="最多可输入12个字" v-model="form.memo" maxlength="12">
-                </el-input>
-              </el-form-item>
-            
-              <el-form-item label="支持平台">
-                <el-checkbox-group v-model="form.platform">
-                  <el-checkbox label="wxMiniProgram">微信小程序</el-checkbox>
-                  <el-checkbox label="wxOfficialAccount">微信公众号</el-checkbox>
-                  <el-checkbox label="H5">H5</el-checkbox>
-                  <el-checkbox label="App">App</el-checkbox>
-                </el-checkbox-group>  
-              </el-form-item> 
-            </el-form>
-            <!-- 表单按钮 -->
-            <span v-if="!view" slot="footer" class="dialog-footer">
-              <el-button type="primary" icon="el-icon-circle-check" :size="option.size" @click="handleSubmit">提 交
-              </el-button>
-              <el-button icon="el-icon-circle-close" :size="option.size" @click="box = false">取 消</el-button>
-            </span>
-          </el-dialog>
-        </div>
-
+        <el-table ref="table" v-loading="loading" :size="option.size" @selection-change="selectionChange" :data="data"
+                  style="width: 100%"
+                  :border="option.border">
+          <el-table-column type="selection" v-if="option.selection" width="55" align="center"></el-table-column>
+          <el-table-column type="expand" v-if="option.expand" align="center"></el-table-column>
+          <el-table-column v-if="option.index" label="#" type="index" width="50" align="center">
+          </el-table-column>
+          <template v-for="(item,index) in option.column">
+            <!-- table字段 -->
+            <el-table-column v-if="item.hide!==true"
+                             :prop="item.prop"
+                             :label="item.label"
+                             :width="item.width"
+                             :key="index">
+            </el-table-column>
+          </template>
+          <!-- 操作栏模块 -->
+          <el-table-column prop="menu" label="操作" :width="180" align="center">
+            <template slot-scope="{row}">
+              <el-button :size="option.size" type="text" icon="el-icon-view" @click="handleView(row)">查看</el-button>
+              <el-button :size="option.size" type="text" icon="el-icon-edit" @click="handleEdit(row)">编辑</el-button>
+              <el-button :size="option.size" type="text" icon="el-icon-delete" @click="rowDel(row)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </el-row>
-
-      <el-row style="margin-bottom:20px;">
+      <el-row>
         <!-- 分页模块 -->
-        <el-pagination align="right" background @size-change="sizeChange" @current-change="currentChange"
-          :current-page="page.currentPage" :page-sizes="[10, 20, 30, 40, 50, 100]" :page-size="page.pageSize"
-          layout="total, sizes, prev, pager, next, jumper" :total="page.total">
+        <el-pagination
+          align="right" background
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="page.currentPage"
+          :page-sizes="[10, 20, 30, 40, 50, 100]"
+          :page-size="page.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="page.total">
         </el-pagination>
-
       </el-row>
-
+      <!-- 表单模块 -->
+      <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
+        <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
+          <!-- 表单字段 -->
+          <el-form-item label="模板名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入模板名称"/>
+          </el-form-item>
+          <el-form-item label="页面分类:shop=商城,custom=自定义,preview=临时预览" prop="type">
+            <el-input v-model="form.type" placeholder="请输入页面分类:shop=商城,custom=自定义,preview=临时预览"/>
+          </el-form-item>
+          <el-form-item label="图片" prop="image">
+            <el-input v-model="form.image" placeholder="请输入图片"/>
+          </el-form-item>
+          <el-form-item label="备注" prop="memo">
+            <el-input v-model="form.memo" placeholder="请输入备注"/>
+          </el-form-item>
+          <el-form-item label="状态 normal=0, hidden=1 " prop="status">
+            <el-input v-model="form.status" placeholder="请输入状态 normal=0, hidden=1 "/>
+          </el-form-item>
+          <el-form-item label="适用平台:H5=H5,wxOfficialAccount=微信公众号网页,wxMiniProgram=微信小程序,App=App,preview=预览" prop="platform">
+            <el-input v-model="form.platform" placeholder="请输入适用平台:H5=H5,wxOfficialAccount=微信公众号网页,wxMiniProgram=微信小程序,App=App,preview=预览"/>
+          </el-form-item>
+        </el-form>
+        <!-- 表单按钮 -->
+        <span v-if="!view" slot="footer" class="dialog-footer">
+          <el-button type="primary" icon="el-icon-circle-check" :size="option.size" @click="handleSubmit">提 交</el-button>
+          <el-button icon="el-icon-circle-close" :size="option.size" @click="box = false">取 消</el-button>
+        </span>
+      </el-dialog>
     </div>
   </basic-container>
 </template>
 
 <script>
-import { getList, getDetail, add, update, remove ,copy} from "@/api/decorate/decorate";
-import option from "@/const/decorate/decorate";
-import { mapGetters } from "vuex";
+  import {getList, getDetail, add, update, remove} from "@/api/decorate/decorate";
+  import option from "@/const/decorate/decorate";
+  import {mapGetters} from "vuex";
+  import {getDictionary} from '@/api/system/dict'
 
 export default {
   data() {
     return {
       // 弹框标题
-      title: '新建模板',
+      title: '',
       // 是否展示弹框
       box: false,
+      // 是否显示查询
+      search: true,
       // 加载中
       loading: true,
       // 是否为查看模式
       view: false,
       // 查询信息
       query: {},
-      //选择的平台
-      platformArray:[],
       // 分页信息
       page: {
         currentPage: 1,
@@ -150,11 +130,13 @@ export default {
         total: 40
       },
       // 表单数据
-      form: {name:'',memo:'',platform:[]},
+      form: {},
+      // 选择行
+      selectionList: [],
       // 表单配置
       option: option,
       // 表单列表
-      templateList: [],
+      data: [],
     }
   },
   mounted() {
@@ -162,40 +144,44 @@ export default {
     this.onLoad(this.page);
   },
   computed: {
-    ...mapGetters(["permission"]),  
+    ...mapGetters(["permission"]),
+    ids() {
+      let ids = [];
+      this.selectionList.forEach(ele => {
+        ids.push(ele.id);
+      });
+      return ids.join(",");
+    }
   },
   methods: {
     init() {
     },
+    searchHide() {
+      this.search = !this.search;
+    },
     searchChange() {
       this.onLoad(this.page);
     },
-
+    searchReset() {
+      this.query = {};
+      this.page.currentPage = 1;
+      this.onLoad(this.page);
+    },
     handleSubmit() {
-      const that = this;
-      if(!that.form.platform || that.form.platform.length < 1){
-        that.$message({
-            type: "warning",
-            message: "请至少要选择平台!"
-          });  
-        return ;
-      }
-
-      that.form.platform = that.form.platform.join(",");
-      if (!that.form.id) {
-        add(that.form).then(() => {
-          that.box = false;
-          that.onLoad(that.page);
-          that.$message({
+      if (!this.form.id) {
+        add(this.form).then(() => {
+          this.box = false;
+          this.onLoad(this.page);
+          this.$message({
             type: "success",
             message: "操作成功!"
           });
         });
       } else {
-        update(that.form).then(() => {
-          that.box = false;
-          that.onLoad(that.page);
-          that.$message({
+        update(this.form).then(() => {
+          this.box = false;
+          this.onLoad(this.page);
+          this.$message({
             type: "success",
             message: "操作成功!"
           });
@@ -203,34 +189,40 @@ export default {
       }
     },
     handleAdd() {
-      this.title = '新增模板';
-      this.form = {name:'',memo:'',platform:[]};
+      this.title = '新增'
+      this.form = {}
+      this.box = true
+    },
+    handleEdit(row) {
+      this.title = '编辑'
+      this.box = true
+      getDetail(row.id).then(res => {
+        this.form = res.data.data;
+      });
+    },
+    handleView(row) {
+      this.title = '查看'
+      this.view = true;
       this.box = true;
+      getDetail(row.id).then(res => {
+        this.form = res.data.data;
+      });
     },
-    getPlatform(platform) {
-      if (!platform) { return ""; }
-      let names = [];
-
-      if (platform.indexOf("H5")>=0) {
-        names.push(" H5 ");
+    handleDelete() {
+      if (this.selectionList.length === 0) {
+        this.$message.warning("请选择至少一条数据");
+        return;
       }
-      if (platform.indexOf("wxOfficialAccount")>=0) {
-        names.push("公众号");
-      }
-      if (platform.indexOf("wxMiniProgram")>=0) {
-        names.push("微信小程序");
-      }
-      if (platform.indexOf("App")>=0) {
-        names.push("APP");
-      }
-
-      return names.join(" , ");
-
-    },
-
-    handleCopy(id){
-      copy({id:id}).then(() => {
-          this.box = false;
+      this.$confirm("确定将选择数据删除?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          return remove(this.ids);
+        })
+        .then(() => {
+          this.selectionClear();
           this.onLoad(this.page);
           this.$message({
             type: "success",
@@ -238,47 +230,14 @@ export default {
           });
         });
     },
-    handleEdit(id) {
-      const that = this;
-      that.title = '编辑模板'
-      that.box = true
-      getDetail(id).then(res => {
-        that.form = res.data.data;
-        let platform = that.form.platform;
-        that.form.platform = platform.split(",");
-      });
-    },
-    handleDecorate(id){
-
-    }, 
-    handleRelease(id){
-        update({id:id,status:1}).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-        })
-    }, 
-    handleDown(id){
-      update({id:id,status:0}).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-        })
-    },
-    handleRemove(id) {
+    rowDel(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          return remove(id);
+          return remove(row.id);
         })
         .then(() => {
           this.onLoad(this.page);
@@ -292,7 +251,14 @@ export default {
       done()
       this.form = {};
       this.view = false;
-    }, 
+    },
+    selectionChange(list) {
+      this.selectionList = list;
+    },
+    selectionClear() {
+      this.selectionList = [];
+      this.$refs.table.clearSelection();
+    },
     currentChange(currentPage) {
       this.page.currentPage = currentPage;
       this.onLoad(this.page);
@@ -302,21 +268,13 @@ export default {
       this.onLoad(this.page);
     },
     onLoad(page, params = {}) {
-      const that = this;
-      that.loading = true;
-      that.query["type"] = "shop";
-      getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {         
+      this.loading = true;
+      getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
         const data = res.data.data;
-        that.page.total = data.total;
-        let records = data.records;
-
-        records.forEach(item => {
-          let platform = item.platform;
-           item.platform = platform.split(",");
-         });
-
-        that.templateList = records;
-        that.loading = false;  
+        this.page.total = data.total;
+        this.data = data.records;
+        this.loading = false;
+        this.selectionClear();
       });
     }
   }
@@ -326,202 +284,5 @@ export default {
 <style lang="scss" scoped>
 .el-pagination {
   margin-top: 20px;
-}
-
-#decorate-index {
-  font-family: Source Han Sans SC;
-  color: #fff;
-  background: #fff;
-  border-radius: 10px 10px 0px 0px; 
-}
-
-.btn-common {
-  width: 100px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  border: 1px solid #fff;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #fff;
-  cursor: pointer;
-  display: block;
-}
-
- 
-
-.temp-item {
-  // background: #F7F7FA;
-  // border-radius: 10px;
-  // padding: 0px 18px 20px 0;
-  // margin: 0 12px;
-  display: flex;
-  flex-wrap: wrap;
-}
-
- 
-
-.foreach-item {
-  // width: 260px;
-  height: 450px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  padding: 0 12px;
-  position: relative;
-  overflow: hidden;
-}
-
-.temp-item-margin {
-  margin-left: 18px;
-  margin-top: 20px;
-}
-
-.item-mask {
-  position: absolute;
-  left: 0;
-  top: 40px;
-  width: 100%;
-  min-width: 260px;
-  height: 410px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 4px;
-  display: none;
-}
-
-.item-mask-body {
-  height: 410px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0);
-  flex-direction: column;
-}
-
-.foreach-item-title {
-  font-size: 14px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.item-title-left {
-  color: #444;
-  cursor: pointer;
-}
-
-.item-title-left:hover {
-  color: #7438D5;
-}
-
-.status-release {
-  color: #7438D5;
-}
-
-.status-cancel {
-  color: #FF6017;
-}
-
- 
-
-.item-hover:hover .item-mask {
-  display: block;
-}
-
-.item-mask-item {
-  margin-bottom: 20px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-}
-
-.item-mask-item:hover {
-  background: #7438D5;
-  border-color: #7438D5;
-}
-
-.item-mask-item img {
-  margin-right: 12px;
-}
-
-.item-mask-item:last-child {
-  margin-bottom: 0;
-}
-
-.item-mask-buy {
-  background: #7438D5;
-  border: none;
-}
-
-.temp-item-img {
-  width: 236px;
-  /* height: 408px; */
-}
-
-.temp-item-img img {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.temp-item-pla {
-  color: #fff;
-  padding: 10px 0 12px;
-  position: absolute;
-  bottom: 0;
-  width: 266px;
-  margin-left: -12px;
-  background: rgba(0, 0, 0, 0.5);
-}
-
-// .el-dialog {
-//   width: 500px;
-//   /* height: 330px; */
-// }
-
-.el-dialog__header {
-  border-radius: 10px 10px 0 0;
-}
-   
-@keyframes go {
-  0% {
-    transform: rotateZ(0);
-  }
-
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-
-.display-flex {
-  display: flex;
-}
-
-.tip {
-  display: block;
-  width: 68px;
-  text-align: justify;
-  text-align-last: justify;
-  font-size: 13px !important;
-  flex-shrink: 0;
-  padding-left:10px;
-}
-
-.tip-body{
-  text-align: justify;
-  text-align-last: justify;
-  font-size: 13px !important;
-  flex-shrink: 0;
-  
-}
- 
-.el-form-item:last-child {
-  margin-bottom: 0px;
-}
-
-[v-cloak] {
-  display: none
 }
 </style>

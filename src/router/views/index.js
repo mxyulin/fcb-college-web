@@ -102,58 +102,8 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
- 
-  },{
-    path: '/decorate',
-    name: '设计模板',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  },{
-    path: '/decorate',
-    name: '设计模板', 
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
-  }
-  ,{
-    path: '/coupons',
-    name: '优惠劵',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-    import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  }  
-   ,{
-    path: '/commissionagent',
-    name: '分销商',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
-  },{
-    path: '/commissionconfig',
-    name: '分销商基础设置',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  }
-]},   
-// tyl-商品管理路由
-{
-  path: '/product',
-  component: Layout,
-  redirect: '/product/index',
-  children: [{
-    path: 'index',
+  }, {
+    path: '/product',
     name: '商品管理',
     meta: {
       i18n: 'work'
