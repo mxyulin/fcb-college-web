@@ -103,10 +103,10 @@
 
                 <el-dialog
                   :visible.sync="centerDialogVisible"
-                  width="60%"
+                  width="80%"
                   center
                 >
-                  <background></background>
+                  <commodity></commodity>
                   <span>需要注意的是内容是默认不居中的</span>
                   <span slot="footer" class="dialog-footer">
                     <el-button @click="centerDialogVisible = false"
@@ -162,8 +162,8 @@
           <el-collapse-transition>
             <div v-if="needAgentForm == 1">
               <el-form-item label="表单背景图：">
-                <div class="bgimage-add-container" @click="bgimageAdd">
-                  <el-image
+                <div class="bgimage-add-container"  @click="centerbackground = true">
+                  <el-image 
                     v-if="configData.agent_form.background_image"
                     fit="contain"
                   >
@@ -171,6 +171,8 @@
                       <i class="el-icon-picture-outline"></i>
                     </div>
                   </el-image>
+
+
                   <div
                     class="bgimage-add"
                     v-if="!configData.agent_form.background_image"
@@ -178,7 +180,26 @@
                     <i class="el-icon-plus"></i>
                   </div>
                 </div>
+                  <el-dialog
+                  :visible.sync="centerbackground"
+                  width="80%"
+                  center>
+                  <background></background>
+                  <span>需要注意的是内容是默认不居中的</span>
+                  <span slot="footer" class="dialog-footer">
+                    <el-button @click="centerbackground = false"
+                      >取 消</el-button
+                    >
+                    <el-button
+                      type="primary"
+                      @click="centerbackground = false"
+                      >确 定</el-button
+                    >
+                  </span>
+                </el-dialog>
               </el-form-item>
+
+
               <el-form-item label="表单内容：">
                 <div style="max-width: 642px">
                   <div style="border: 1px solid #e6e6e6">
@@ -190,13 +211,13 @@
                       </div>
                     </div>
                     <div
-                      v-if="this.from"
+                      v-if="this.listfrom"
                       class="become-register-row become-register-row-box"
                     >
                       <div class="become-register-row-item">
                         <el-select
                           class="become-register-row-item-input"
-                          v-model="select"
+                          v-model="numselect"
                           slot="prepend"
                           placeholder="请选择"
                         >
@@ -208,7 +229,7 @@
                       <div class="become-register-row-item">
                         <el-input
                           class="become-register-row-item-input"
-                          v-model="input"
+                          v-model="frominput"
                           placeholder="请输入内容"
                         ></el-input>
                       </div>
@@ -319,24 +340,19 @@ import {
   remove,
 } from "@/api/commission/commissionconfig";
 import { mapGetters } from "vuex";
-import commodity from "./commissionconfig/commodity.vue";
-import background from "./commissionconfig/background.vue";
-import agreement from "./commissionconfig/agreement.vue"
+import commodity from "./figchildren/commodity.vue";
+import background from "./figchildren/background.vue";
+import agreement from "./figchildren/agreement.vue"
+import option from "@/const/commissionagent/commissionagent.js"
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
 export default {
   components: { commodity, background,agreement },
   data() {
     return {
+      centerbackground:false,
       centerDialogVisible: false,
       centerDialogVisiblethree:false,
-      // 弹框标题
-      title: "",
-      page: {
-        pageSize: 10,
-        currentPage: 1,
-        total: 0,
-      },
       tipshow: true,
       configData: {
         commission_level: "1",
@@ -383,18 +399,45 @@ export default {
       needApplyProtocol: "0",
       needAgentForm: "1",
 
-      input: "",
-      select: "",
-      from: false,
+      frominput: "",
+      numselect: "",
+      listfrom: false,
 
       // 模拟数据
       initData: [],
       isf: false,
+
+
+
+      // // 弹框标题
+      // title: '新建模板',
+      // // 是否展示弹框
+      // box: false,
+      // // 加载中
+      // loading: true,
+      // // 是否为查看模式
+      // view: false,
+      // // 查询信息
+      // query: {},
+      // //选择的平台
+      // platformArray:[],
+      // // 分页信息
+      // page: {
+      //   currentPage: 1,
+      //   pageSize: 10,
+      //   total: 40
+      // },
+      // // 表单数据
+      // form: {name:'',memo:'',platform:[]},
+      // // 表单配置
+      // option: option,
+      // // 表单列表
+      // templateList: [],
     };
   },
   mounted() {
     this.init();
-    this.onLoad(this.page);
+    this.onLoad();
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -404,10 +447,10 @@ export default {
       this.configData = this.configDatatwo;
     },
     fromture() {
-      this.from = true;
+      this.listfrom = true;
     },
     fromfalse() {
-      this.from = false;
+      this.listfrom = false;
     },
     tipClose() {
       this.tipshow = !this.tipshow;
@@ -423,9 +466,6 @@ export default {
       if (value == "apply") {
         that.needAgentForm = "1";
       }
-    },
-    bgimageAdd() {
-      let that = this;
     },
     changeApplyProtocol(value) {
       if (value == "0") {
@@ -467,359 +507,26 @@ export default {
       // }
     },
 
-    onLoad(page, params = {}) {
-      // console.log("消息");
-      // const that = this;
+    onLoad( params = {}) {
+      // let that = this;
       // that.loading = true;
       // getList(
-      //   page.currentPage,
-      //   page.pageSize,
-      //   Object.assign(params, that.query)
+      //   that.page.currentPage,
+      //   that.page.pageSize,
+      //   params
       // ).then((res) => {
-      //   let data = res.data.data;
-      //   console.log("res", data);
-      //   that.page.total = data.total;
-      //   that.data = data.records;
-      //   that.loading = false;
-      //   that.selectionClear();
+      //   console.log('res',res)
+      //   // that.page.total = res.data.total;
+      //   // that.data = res.data.records;
+      //   // that.loading = false;
+      //   // that.selectionClear();
       // });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-#indexPage {
-  border-radius: 10px 10px 0px 0px;
-  color: #444;
-  font-weight: 500;
-  position: relative;
-}
-.el-form-item {
-  padding: 0 0 0 100px;
-}
-
-.el-form-item {
-  margin-bottom: 16px;
-}
-
-.become-register-row {
-  display: flex;
-  font-size: 13px;
-}
-
-.become-register-row-title {
-  background: #f9f9f9;
-  border: none;
-}
-
-.become-register-row-item {
-  box-sizing: border-box;
-  width: 260px;
-  min-width: 260px;
-  padding-left: 20px;
-  height: 44px;
-  line-height: 44px;
-}
-
-.become-register-row-title .become-register-row-item {
-  line-height: 40px;
-}
-
-.become-register-row-item-last {
-  width: 130px;
-  min-width: 130px;
-  display: flex;
-  align-items: center;
-}
-.become-register-row-item-last-red {
-  color: red;
-}
-.become-register-row-item-input {
-  width: 200px;
-}
-
-.become_register-contaoner {
-  display: flex;
-}
-
-.become_register_add-button {
-  cursor: pointer;
-  color: #7438d5;
-  width: 60px;
-  margin-top: 16px;
-  font-size: 13px;
-}
-
-.become_register_add-button i {
-  margin-right: 6px;
-}
-
-.become-register-row-frist {
-  width: 90px;
-  color: rgba(0, 0, 0, 0);
-}
-
-.apply_protocol-select {
-  color: #7438d5;
-  cursor: pointer;
-  margin-left: 20px;
-}
-.shopro-submit-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: calc(100% - 300px);
-  height: 60px;
-  padding: 0 16px;
-  position: fixed;
-  bottom: 0px;
-  right: 16px;
-  background-color: #ffffff;
-}
-
-.shopro-submit-button {
-  width: 88px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  background: #7438d5;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.shopro-default-button {
-  width: 88px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-  color: #7438d5;
-}
-
-.title-tip {
-  color: #999;
-  line-height: 13px;
-  font-size: 13px;
-  font-weight: 400;
-  margin-top: 14px;
-}
-
-.bgimage-add-container {
-  border: 1px solid #e6e6e6;
-  width: 80px;
-  height: 80px;
-  border-radius: 5px;
-}
-
-.bgimage-add {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  color: #999;
-}
-
-.goods-add {
-  width: 80px;
-  height: 30px;
-  border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-  background: #7438d5;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-form-item__label,
-.el-radio__label,
-.el-input,
-.el-select-dropdown__item {
-  font-size: 13px;
-}
-
-.form-group-area {
-  border-radius: 4px;
-  margin-bottom: 60px;
-}
-.shopro-form-group-title {
-  height: 50px;
-  display: flex;
-  align-items: center;
-
-  color: black;
-  font-weight: 600;
-  box-sizing: border-box;
-}
-.shopro-form-group-title-href,
-.shopro-form-group-title-href:hover,
-.shopro-form-group-title-href:focus {
-  color: #7438d5;
-}
-.shopro-form-group-title-agreement {
-  height: 38px;
-  line-height: 38px;
-  background: #f1ebfa;
-  font-size: 12px;
-  color: #444;
-  padding: 0 20px;
-  margin: 0 20px 20px 32px;
-  width: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 4px;
-}
-.shopro-form-group-title-line {
-  width: 2px;
-  height: 18px;
-  background: #7438d5;
-  margin: 0 10px 0 10px;
-}
-.shopro-goods-header {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  background: #f9f9f9;
-}
-
-.shopro-goods-body {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  border-top: 1px solid #e6e6e6;
-}
-
-.shopro-goods-title {
-  width: 280px;
-  min-width: 280px;
-  display: flex;
-  height: 50px;
-  align-items: center;
-  padding: 0 20px;
-}
-
-.shopro-goods-stock {
-  width: 120px;
-  min-width: 120px;
-}
-
-.shopro-goods-opt {
-  width: 160px;
-  min-width: 160px;
-}
-
-.shopro-goods-image {
-  width: 36px;
-  height: 36px;
-
-  border: 1px solid #e6e6e6;
-  box-sizing: border-box;
-  border-radius: 2px;
-  margin-right: 12px;
-}
-
-.shopro-goods-add-button {
-  cursor: pointer;
-  color: #7438d5;
-  font-size: 13px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 20px;
-}
-
-.shopro-goods-add-button i {
-  margin-right: 6px;
-}
-.shopro-goods-id {
-  width: 70px;
-  padding: 0 10px;
-  text-align: center;
-  flex-shrink: 0;
-}
-.form-group-area-last {
-  padding-bottom: 20px;
-}
-.el-dialog {
-  width: 900px;
-}
-.el-dialog__wrapper {
-  background: rgba(43, 43, 43, 0.05);
-  backdrop-filter: blur(2px);
-}
-.configis-upgrade-image {
-  width: 900px;
-  height: 580px;
-  background: #ffffff;
-  border-radius: 4px;
-  position: relative;
-}
-.configis-upgrade-image img {
-  width: 100%;
-  height: 100%;
-}
-.el-dialog__body {
-  padding: 0;
-}
-.el-dialog__header {
-  height: 0;
-  padding: 0;
-}
-.configis-upgrade-button {
-  position: absolute;
-  bottom: 162px;
-  right: 360px;
-}
-.configis-upgrade-button-upgrade {
-  width: 110px;
-  height: 34px;
-  background: #8322ff;
-  border-radius: 2px;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 12px;
-  color: #ffffff;
-  margin-left: 42px;
-  cursor: pointer;
-}
-.configis-upgrade-button-upgrade .icon-right {
-  margin-left: 12px;
-  width: 18px;
-  height: 18px;
-}
-.configis-upgrade-button-refresh {
-  color: #86818e;
-  font-size: 12px;
-  cursor: pointer;
-}
-.configis-upgrade-button-refresh .el-icon-refresh-right {
-  margin-right: 6px;
-  font-size: 14px;
-}
-.configis-upgrade-close {
-  position: absolute;
-  top: 53px;
-  right: 58px;
-  font-size: 20px;
-  color: #7f7a87;
-  cursor: pointer;
-}
-
-[v-cloak] {
-  display: none;
-}
-.el-card__body {
-  padding: 0;
-}
-.display-flex {
-  display: flex;
-  align-items: center;
-  width: 400px;
-}
+<style lang="scss" scoped src="@/views/commission/style/commissionconfig.scss"></style>
+<style lang="scss">
+// 当要改变element样式时用
 </style>

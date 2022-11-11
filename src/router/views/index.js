@@ -149,15 +149,15 @@ export default [{
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/background')
+      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/background')
   },{
     path: '/agreement',
-    name: '商品',
+    name: '协议',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/agreement')
+      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/agreement')
   },{
     path: '/commodity',
     name: '商品',
@@ -165,7 +165,7 @@ export default [{
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig/commodity')
+      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/commodity')
   },{
     path: '/product',
     name: 'product',
