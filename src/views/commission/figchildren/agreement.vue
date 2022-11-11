@@ -64,12 +64,30 @@
         stripe="ture"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="id" label="id" width="180"> </el-table-column>
-        <el-table-column prop="title" label="标题" width="180"></el-table-column>
-        <el-table-column prop="oldtime" label="创建时间"> </el-table-column>
-        <el-table-column prop="newtiem" label="更新时间"> </el-table-column>
-        <el-table-column label="操作"> <div>butten</div> </el-table-column>
+        <el-table-column prop="id" label="id" > </el-table-column>
+        <el-table-column prop="title" label="标题" ></el-table-column>
+        <el-table-column prop="oldtime" label="创建时间" > </el-table-column>
+        <el-table-column prop="newtiem" label="更新时间" > </el-table-column>
+        <el-table-column label="操作" > <div>butten</div> </el-table-column>
       </el-table>
+
+
+
+      <el-table
+    :data="tableData"
+    style="width: 100%">
+    <el-table-column
+      label="日期"
+      width="180">
+      <template slot-scope="scope">
+        <i class="el-icon-time"></i>
+        <span style="margin-left: 10px">{{ scope.row.date }}</span>
+      </template>
+    </el-table-column>
+  </el-table>
+
+
+
     </div>
 </template>
 
@@ -135,6 +153,12 @@ export default {
           newtiem: "2022-12-11 13：32：42",
         },
       ],
+
+      tableData: [{
+          date: '2016-05-02',
+          name: '王小虎',
+          address: '上海市普陀区金沙江路 1518 弄'
+        }, ]
     };
   },
   mounted() {},
@@ -150,7 +174,7 @@ export default {
 
 <style lang="scss" scoped>
 #commodity {
-  background-color: #fff;
+  background-color: #ffffff;
   min-width: 800px;
   margin: 0 auto;
 }

@@ -33,12 +33,8 @@
         stripe="ture"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="id" label="id" width="180"> </el-table-column>
-        <el-table-column
-          prop="title"
-          label="标题"
-          width="180"
-        ></el-table-column>
+        <el-table-column prop="id" label="id" > </el-table-column>
+        <el-table-column prop="title" label="标题"></el-table-column>
         <el-table-column prop="oldtime" label="创建时间"> </el-table-column>
         <el-table-column prop="newtiem" label="更新时间"> </el-table-column>
         <el-table-column label="操作"> <div>butten</div> </el-table-column>

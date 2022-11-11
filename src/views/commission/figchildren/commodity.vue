@@ -6,21 +6,10 @@
       <el-tree
         :data="ditydata"
         :props="defauditydata"
+        @node-click="commodityclick"
       ></el-tree>
 
 
-      <!-- 树标题 -->
-      <el-tree
-        :data="treetilel"
-        :props="defaultProps"
-        @node-click="handleNodeClick"
-      ></el-tree>
-
-      <el-tree
-        :data="treedata"
-        :props="defe"
-        @node-click="handleNodeClick"
-      ></el-tree>
     </div>
 
     <div class="commodity-content">
@@ -47,11 +36,11 @@
         stripe="ture"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="id" label="id" width="200"> </el-table-column>
-        <el-table-column prop="title" label="标题" width="200"></el-table-column>
-        <el-table-column prop="oldtime" label="创建时间" width="200"> </el-table-column>
-        <el-table-column prop="newtiem" label="更新时间" width="200"> </el-table-column>
-        <el-table-column label="操作" width="200"> <div>butten</div> </el-table-column>
+        <el-table-column prop="id" label="id" > </el-table-column>
+        <el-table-column prop="title" label="标题" ></el-table-column>
+        <el-table-column prop="oldtime" label="创建时间" > </el-table-column>
+        <el-table-column prop="newtiem" label="更新时间" > </el-table-column>
+        <el-table-column label="操作" > <div>butten</div> </el-table-column>
       </el-table>
       </div>
       
@@ -61,6 +50,7 @@
 
 <script>
 import { getList, getDetail, add, update, remove,getTree } from "@/api/product/productcategory";
+import {getListByCategory} from "@/api/product/product";
 import option from "@/const/product/productcategory";
 export default {
   data() {
@@ -72,86 +62,13 @@ export default {
         label: "name",
       },
 
-      // 树标题模拟数据
-      treetilel: [
-        {
-          label: "商品分类一级",
-          children: [
-            {
-              label: "二级 1-1",
-              children: [
-                {
-                  label: "三级 1-2-1",
-                  children: [
-                    {
-                      label: "四级 1-1-1-1",
-                    },
-                    {
-                      label: "四级 1-1-1-1",
-                    },
-                  ],
-                },
-              ],
-            },
-            {
-              label: "二级 2-1",
-              children: [
-                {
-                  label: "三级 1-1-1",
-                  children: [
-                    {
-                      label: "四级 1-1-1-1",
-                    },
-                    {
-                      label: "四级 1-1-1-1",
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
 
-
-      // 树的模拟数据
-      treedata:[
-        {
-          name:'老子1',
-          children:[
-            {
-              name:'老子12',
-              children:[
-                {
-                  name:'老子121'
-                },
-                {
-                  name:'老子122'
-                },
-              ]
-            },
-            {
-              name:'老子21',
-              children:[
-                {
-                  name:'老子223'
-                  },
-              ]
-            },
-          ]
-        },
-      ],
 
 
       defe:{
         children: "children",
         label: "name",
       },
-      defaultProps: {
-        children: "children",
-        label: "label",
-      },
-
 
       // 模拟数据
       datas: [
@@ -207,6 +124,12 @@ export default {
 
       commissiondata: 1,
       //
+      page2: {
+        currentPage: 3,
+        pageSize: 10,
+        total: 40
+      },
+      loading2:false,
 
       // 下方为请求所需的变量
       // 弹框标题
@@ -223,7 +146,7 @@ export default {
       platformArray:[],
       // 分页信息
       page: {
-        currentPage: 2,
+        currentPage: 3,
         pageSize: 10,
         total: 40
       },
@@ -238,7 +161,8 @@ export default {
   
   mounted () {
     // this.init();
-    this.getcommoditydata();;
+    this.getcommoditydata();
+    this.getproductdata();
   },
   computed: {
 
@@ -255,23 +179,25 @@ export default {
     //   // console.log('da:',da);
     // },
     // 请求数据
-    getcommoditydata(params = {}){
+    commodityclick(indenxclick){
+      console.log(indenxclick)
+      
+    },
+    getproductdata(){
+      let that= this;
+      that.loading2=true;
+      getListByCategory(that.page2.currentPage, that.page2.pageSize, that.page2.params).then((res) => {
+         console.log('prodact',res)
+      });
+    },
+    getcommoditydata(){
       let that= this;
       let {commissiondata} = that
       that.loading=true;
-      getList(that.page.currentPage, that.page.pageSize, params).then((res) => {
-         this.ditydata = res.data.data.slice(8)
-         
-        // let sss = res.data;
-        console.log('真数组:',res.data.data)
-        console.log('假数组',that.treetilel)
-        console.log('真数组:',that.ditydata)
-        
+      getList(that.page.currentPage, that.page.pageSize, that.page.params).then((res) => {
+         that.ditydata = res.data.data.slice(8)
+         console.log('数据',res)
       });
-      // getTree( ).then((res) => {
-      //   let bbb = res.data;
-      //   console.log('dataa:',bbb)
-      // });
     }
   },
 };
@@ -282,12 +208,15 @@ export default {
   margin: 0 auto;
   display: flex;
   background-color: #ffffff;
+  width: 100%;
 }
 .commodity-classification {
-  min-width: 200px;
+  min-width: 160px;
 }
 .commodity-content {
-  max-width: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 640px;
   border-left:1px solid #e6e6e6;
   padding: 10px;
 }

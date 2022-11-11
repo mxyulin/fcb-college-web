@@ -339,6 +339,9 @@ import {
   update,
   remove,
 } from "@/api/commission/commissionconfig";
+
+
+
 import { mapGetters } from "vuex";
 import commodity from "./figchildren/commodity.vue";
 import background from "./figchildren/background.vue";
@@ -508,19 +511,19 @@ export default {
     },
 
     onLoad( params = {}) {
-      // let that = this;
-      // that.loading = true;
-      // getList(
-      //   that.page.currentPage,
-      //   that.page.pageSize,
-      //   params
-      // ).then((res) => {
-      //   console.log('res',res)
-      //   // that.page.total = res.data.total;
-      //   // that.data = res.data.records;
-      //   // that.loading = false;
-      //   // that.selectionClear();
-      // });
+      let that = this;
+      that.loading = true;
+      getList(
+        that.page.currentPage,
+        that.page.pageSize,
+        params
+      ).then((res) => {
+        console.log('res',res)
+        // that.page.total = res.data.total;
+        // that.data = res.data.records;
+        // that.loading = false;
+        // that.selectionClear();
+      });
     },
   },
 };
