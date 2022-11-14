@@ -103,76 +103,21 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
   },{
-    path: '/decorate',
-    name: '模板管理',
+    path: '/add',
+    name: 'add',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
-  },{
-    path: '/designer',
-    name: '设计师模板',
+      import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/add.vue')
+  },
+  ,{
+    path: '/edit',
+    name: 'edit',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  },{
-    path: '/coupons',
-    name: '优惠劵',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  },{
-    path: '/commissionagent',
-    name: '分销商',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
-  },{
-    path: '/commissionconfig',
-    name: '分销商基础设置',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  },{
-    path: '/background',
-    name: '背景',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/background')
-  },{
-    path: '/agreement',
-    name: '协议',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/agreement')
-  },{
-    path: '/commodity',
-    name: '商品',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/commodity')
-  },{
-    path: '/product',
-    name: 'product',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/product')
-  }]
+      import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/edit.vue')
+  },]
 }]

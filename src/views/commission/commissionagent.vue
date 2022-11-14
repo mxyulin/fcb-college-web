@@ -471,7 +471,7 @@ import {
   update,
   remove,
 } from "@/api/commission/commissionagent";
-import option from "@/const/commissionagent/commissionagent";
+import option from "@/const/commission/commissionagent";
 import { mapGetters } from "vuex";
 import { getDictionary } from "@/api/system/dict";
 
