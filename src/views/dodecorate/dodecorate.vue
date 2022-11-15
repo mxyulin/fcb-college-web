@@ -179,7 +179,6 @@
                     :style="{
                       left: idx * 20 + 'px',
                       top: idx * 20 + 'px',
-                      'z-index': popupIndex == idx ? 2000 : 100,
                     }"
                     :src="popup.image"
                     fit="contain"
@@ -554,92 +553,86 @@ export default {
       // !未知对象Config
       homeData: [],
       userData: [],
-      // tabbarData: Config.templateData.tabbar
-      //   ? Config.templateData.tabbar
-      //   : [
-      //       {
-      //         type: "tabbar",
-      //         name: "底部导航",
-      //         content: {
-      //           style: 1,
-      //           color: "#000",
-      //           activeColor: "#999",
-      //           bgcolor: "#fff",
-      //           list: [
-      //             {
-      //               name: "标题",
-      //               image: "",
-      //               activeImage: "",
-      //               path: "",
-      //               path_name: "",
-      //               path_type: 1,
-      //               selected: false,
-      //             },
-      //             {
-      //               name: "标题",
-      //               image: "",
-      //               activeImage: "",
-      //               path: "",
-      //               path_name: "",
-      //               path_type: 1,
-      //               selected: false,
-      //             },
-      //             {
-      //               name: "标题",
-      //               image: "",
-      //               activeImage: "",
-      //               path: "",
-      //               path_name: "",
-      //               path_type: 1,
-      //               selected: false,
-      //             },
-      //             {
-      //               name: "标题",
-      //               image: "",
-      //               activeImage: "",
-      //               path: "",
-      //               path_name: "",
-      //               path_type: 1,
-      //               selected: false,
-      //             },
-      //           ],
-      //         },
-      //       },
-      //     ],
-      // popupData: Config.templateData.popup
-      //   ? Config.templateData.popup
-      //   : [
-      //       {
-      //         type: "popup",
-      //         name: "弹窗提醒",
-      //         content: {
-      //           list: [
-      //             {
-      //               name: "",
-      //               style: 1,
-      //               image: "",
-      //               btnimage: "",
-      //               path: "",
-      //               path_name: "",
-      //               path_type: 1,
-      //             },
-      //           ],
-      //         },
-      //       },
-      //     ],
-      // floatButtonData: Config.templateData["float-button"]
-      //   ? Config.templateData["float-button"]
-      //   : [
-      //       {
-      //         type: "float-button",
-      //         name: "悬浮按钮",
-      //         content: {
-      //           image: "",
-      //           list: [],
-      //         },
-      //       },
-      //     ],
-      // customData: Config.templateData.custom ? Config.templateData.custom : [],
+      tabbarData: [
+        {
+          type: "tabbar",
+          name: "底部导航",
+          content: {
+            style: 1,
+            color: "#000",
+            activeColor: "#999",
+            bgcolor: "#fff",
+            list: [
+              {
+                name: "标题",
+                image: "",
+                activeImage: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+                selected: false,
+              },
+              {
+                name: "标题",
+                image: "",
+                activeImage: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+                selected: false,
+              },
+              {
+                name: "标题",
+                image: "",
+                activeImage: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+                selected: false,
+              },
+              {
+                name: "标题",
+                image: "",
+                activeImage: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+                selected: false,
+              },
+            ],
+          },
+        },
+      ],
+      popupData: [
+        {
+          type: "popup",
+          name: "弹窗提醒",
+          content: {
+            list: [
+              {
+                name: "",
+                style: 1,
+                image: "",
+                btnimage: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+              },
+            ],
+          },
+        },
+      ],
+      floatButtonData: [
+        {
+          type: "float-button",
+          name: "悬浮按钮",
+          content: {
+            image: "",
+            list: [],
+          },
+        },
+      ],
+      customData: [],
       decorate_id: new URLSearchParams(location.search).get("id"),
       popupIndex: null,
       isfloat: false,

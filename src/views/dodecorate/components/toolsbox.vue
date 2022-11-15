@@ -16,7 +16,8 @@
               :class="ite.type"
               @click.stop="selectTools(ite.type)"
             >
-              <img :src="ite.image" />
+              <el-link type="primary" :underline="false" :icon="ite.icon"></el-link>
+              <!-- <img :src="ite.image" /> -->
               <div class="menu-item-tip">{{ ite.name }}</div>
             </div>
           </template>
@@ -50,48 +51,42 @@ export default {
             {
               name: "轮播图",
               type: "banner",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/banner.png",
+              icon: "icon-carousel",
               flag: false,
               show: "common",
             },
             {
               name: "菜单组",
               type: "menu",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/menu.png",
+              icon: "icon-caidan1",
               flag: false,
               show: "common",
             },
             {
               name: "广告魔方",
               type: "adv",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv.png",
+              icon: "icon-guanggao",
               flag: false,
               show: "common",
             },
             {
               name: "标题栏",
               type: "title-block",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/title-block.png",
+              icon: "icon-biaoti",
               flag: false,
               show: "home",
             },
             {
               name: "宫格导航",
               type: "grid-list",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/grid-list.png",
+              icon: "icon-jiugongge",
               flag: false,
               show: "user",
             },
             {
               name: "列表导航",
               type: "nav-list",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/nav-list.png",
+              icon: "icon-ziyuan",
               flag: false,
               show: "user",
             },
@@ -104,24 +99,21 @@ export default {
             {
               name: "商品分类",
               type: "goods-group",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/goods-group.png",
+              icon: "icon-shangpin",
               flag: false,
               show: "home",
             },
             {
               name: "分类选项卡",
               type: "category-tabs",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/category_tabs.png",
+              icon: "icon-xuanxiangqia",
               flag: false,
               show: "home",
             },
             {
               name: "自定义商品",
               type: "goods-list",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/goods-list.png",
+              icon: "icon-zidingyishuju",
               flag: false,
               show: "common",
             },
@@ -134,31 +126,27 @@ export default {
             {
               name: "优惠券",
               type: "coupons",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/coupon.png",
+              icon: "icon-wodeyouhuiquan",
               flag: false,
               show: "home",
             },
             {
               name: "拼团",
               type: "groupon",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/groupon.png",
+              icon: "icon-gengduopintuan",
               show: "home",
             },
             {
               name: "秒杀",
               type: "seckill",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/secKill.png",
+              icon: "icon-miaosha1",
               flag: false,
               show: "home",
             },
             {
               name: "小程序直播",
               type: "live",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/live.png",
+              icon: "icon-xianchangzhibo",
               flag: false,
               show: "home",
             },
@@ -171,32 +159,28 @@ export default {
             {
               name: "搜索框",
               type: "search",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/search.png",
+              icon: "icon-sousuo",
               flag: false,
               show: "home",
             },
             {
               name: "富文本",
               type: "rich-text",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/rich-text.png",
+              icon: "icon-fuwenbenkuang",
               flag: false,
               show: "common",
             },
             {
               name: "订单卡片",
               type: "order-card",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/order-card.png",
+              icon: "icon-dingdan",
               flag: false,
               show: "user",
             },
             {
               name: "资产卡片",
               type: "wallet-card",
-              image:
-                "https://demo.shopro.top/assets/addons/shopro/img/decorate/wallet-card.png",
+              icon: "icon-zichanguanli-",
               flag: false,
               show: "user",
             },
