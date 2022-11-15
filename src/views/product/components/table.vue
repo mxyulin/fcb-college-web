@@ -193,7 +193,7 @@ export default {
    * 父组件绑定的事件 getGoodsData, selectionChange, handleEdit
    */
   name: "Table",
-  props: ["goodsData"],
+  props: ["goodsData", "loading"],
   data() {
     return {
       // 表单配置

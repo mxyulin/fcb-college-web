@@ -1,4 +1,4 @@
-import Layout from '@/page/index/'
+import Layout from '@/page/index/';
 
 export default [{
   path: '/wel',
@@ -102,34 +102,34 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
- 
-  },{
-    path: '/decorate',
-    name: '设计模板',
+
+  }, {
+    path: '/designer',
+    name: '设计师模板',
     meta: {
       i18n: 'work'
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  },{
+  }, {
     path: '/decorate',
-    name: '设计模板', 
+    name: '模板管理',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
+      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate'),
   }
-  ,{
+    , {
     path: '/coupons',
     name: '优惠劵',
     meta: {
       i18n: 'work'
     },
     component: () =>
-    import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  }  
-   ,{
+      import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
+  }
+    , {
     path: '/commissionagent',
     name: '分销商',
     meta: {
@@ -137,7 +137,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
-  },{
+  }, {
     path: '/commissionconfig',
     name: '分销商基础设置',
     meta: {
@@ -145,29 +145,14 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  }
-]},   
-// tyl-商品管理路由
-{
-  path: '/product',
-  component: Layout,
-  redirect: '/product/index',
-  children: [{
-    path: 'index',
-    name: '商品管理',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/product')
   }, {
-    path: '/productcategory',
-    name: '商品分类',
+    path: '/decorate/dodecorate',
+    name: '店铺装修',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
-  }]
-}, 
-]
+      import(/* webpackChunkName: "views" */ '@/views/dodecorate/dodecorate'),
+  }
+  ]
+}]

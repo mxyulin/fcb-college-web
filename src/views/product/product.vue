@@ -57,6 +57,7 @@
       @getGoodsData="getGoodsData"
       @handleEdit="handleEdit"
       @selectionChange="selectionChange"
+      :loading="loading"
     />
     <!-- 底部模块 -->
     <el-row
