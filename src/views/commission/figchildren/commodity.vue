@@ -49,7 +49,8 @@
 </template>
 
 <script>
-import { getList, getDetail, add, update, remove,getTree } from "@/api/product/productcategory";
+import { getList} from "@/api/product/productcategory";
+// 树元素标题绑定表
 import {getListByCategory} from "@/api/product/product";
 import option from "@/const/product/productcategory";
 export default {
@@ -57,6 +58,7 @@ export default {
     return {
       // 真数据
       ditydata: [],
+      ditydatab: [],
       defauditydata:{
         children: "children",
         label: "name",
@@ -121,41 +123,35 @@ export default {
           newtiem: "2022-12-11 13：32：42",
         },
       ],
-
       commissiondata: 1,
-      //
-      page2: {
-        currentPage: 3,
-        pageSize: 10,
-        total: 40
-      },
-      loading2:false,
 
-      // 下方为请求所需的变量
+
       // 弹框标题
-      title: '',
+      title: "",
       // 是否展示弹框
       box: false,
+      // 是否显示查询
+      search: true,
       // 加载中
       loading: true,
       // 是否为查看模式
       view: false,
       // 查询信息
       query: {},
-      //选择的平台
-      platformArray:[],
       // 分页信息
       page: {
-        currentPage: 3,
+        currentPage: 1,
         pageSize: 10,
-        total: 40
+        total: 40,
       },
       // 表单数据
-      form: {name:'',memo:'',platform:[]},
+      form: {},
+      // 选择行
+      selectionList: [],
       // 表单配置
       option: option,
       // 表单列表
-      templateList: [],
+      data: [],
     };
   },
   
@@ -180,25 +176,47 @@ export default {
     // },
     // 请求数据
     commodityclick(indenxclick){
-      console.log(indenxclick)
-      
+      console.log(indenxclick) 
     },
-    getproductdata(){
-      let that= this;
-      that.loading2=true;
-      getListByCategory(that.page2.currentPage, that.page2.pageSize, that.page2.params).then((res) => {
-         console.log('prodact',res)
+    // getproductdata(){
+    //   let that= this;
+    //   that.loading2=true;
+    //   getListByCategory(that.page2.currentPage, that.page2.pageSize, that.page2.params).then((res) => {
+    //      console.log('prodact',res)
+    //   });
+    // },
+
+    getcommoditydata(page, params = {}) {
+      let that = this;
+      that.loading = true;
+      getList(
+        that.page.currentPage,
+        that.page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        that.ditydata = res.data.data.slice(8)
+        console.log("data1:",res)
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
       });
     },
-    getcommoditydata(){
-      let that= this;
-      let {commissiondata} = that
-      that.loading=true;
-      getList(that.page.currentPage, that.page.pageSize, that.page.params).then((res) => {
-         that.ditydata = res.data.data.slice(8)
-         console.log('数据',res)
+    // Request method 'GET' not supported
+    getproductdata(page, params = {}) {
+      let that = this;
+      that.loading = true;
+      getListByCategory(
+        that.page.currentPage,
+        that.page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        that.ditydatab = res
+        console.log("data2:",res)
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
       });
-    }
+    },
   },
 };
 </script>

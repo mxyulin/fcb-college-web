@@ -1,0 +1,214 @@
+#indexPage {
+    font-family: Source Han Sans SC;
+    padding: 0 20px 20px;
+    background: #fff;
+    border-radius: 10px 10px 0px 0px;
+}
+
+
+.shopro-screen-container {
+    padding-top: 20px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.shopro-reset-button {
+    margin-right: 20px;
+    width: 78px;
+    height: 32px;
+    line-height: 32px;
+    color: #888;
+    background: #ffffff;
+    border: 1px solid #999999;
+}
+.shopro-screen-button {
+    width: 78px;
+    height: 32px;
+    line-height: 32px;
+    background: #6e3dc8;
+    color: #fff;
+}
+
+.title {
+    height: 58px;
+    line-height: 58px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.btn-common {
+    width: 80px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 4px;
+    font-size: 13px;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.btn-box {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.create-btn {
+    background: #7536D0;
+    color: #fff;
+    width: 100px;
+    height: 32px;
+    line-height: 32px;
+}
+
+.operation-status {
+    color: #7438D5;
+    margin-right: 14px;
+    cursor: pointer;
+}
+
+.table-header-bgcolor th {
+    background-color: #f9f9f9 !important;
+    padding: 8px 0;
+}
+
+.table-header-bgcolor th .cell {
+    font-weight: 400;
+    color: #444;
+}
+
+/* 搜索 筛选 */
+.screen-con {
+    display: flex;
+}
+
+.header-input-item {
+    margin-right: 30px;
+    margin-bottom: 14px;
+    width: 242px;
+}
+
+.header-input-item .header-input-tip {
+    margin-right: 14px;
+}
+
+.header-input-item .el-input {
+    width: 176px;
+}
+
+.shopro-pagination-container {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // padding: 30px 20px 0;
+}
+
+.multiple-set-acitve-1,
+.multiple-set-acitve-2,
+.multiple-set-acitve-3 {
+    cursor: pointer;
+    margin-right: 14px;
+    width: 60px;
+    font-size: 14px;
+}
+
+.multiple-set-acitve .multiple-set-acitve-1 {
+    color: #60CC9E;
+}
+
+.multiple-set-acitve .multiple-set-acitve-2 {
+    color: #ED655F;
+}
+
+.multiple-set-acitve .multiple-set-acitve-3 {
+    color: #7438D5
+}
+
+
+.shopro-pagination-container .shopro-edit-text {
+    color: inherit;
+}
+
+.shopro-refresh-button {
+    margin-bottom: 20px;
+    margin-right: 20px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e6e6e6;
+    font-size: 14px;
+    color: #999;
+    margin-right: 14px;
+}
+
+.el-checkbox__inner:focus {
+    border: none;
+    outline: none;
+}
+
+.el-table--border th:first-child .cell {
+    padding-left: 5px;
+}
+
+.multiple-set-item {
+    color: #ccc;
+}
+
+.shopro-table-container .table-image {
+    width: 60px;
+    height: 60px;
+}
+
+.el-table td,
+.el-table th {
+    padding: 10px 0 9px;
+}
+
+[v-cloak] {
+    display: none
+}
+
+
+.shopro-button {
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+}
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+.display-center-a{
+    
+}
+
+.shopro-screen-container .shopro-screen-item {
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+
+.shopro-screen-container .shopro-screen-item:last-of-type {
+    margin-right: 0px;
+}
+.shopro-screen-container .shopro-screen-tip {
+    margin-right: 14px;
+    font-size: 14px;
+    color: #333333;
+    width: 60px;
+}
+.shopro-screen-container .shopro-screen-condition {
+    width: 176px;
+}
+.shopro-screen-item-button {
+    margin-bottom: 20px;
+}
+.shopro-button {
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

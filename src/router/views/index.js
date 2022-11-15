@@ -112,12 +112,12 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/add.vue')
   },
   ,{
-    path: '/edit',
-    name: 'edit',
+    path: '/commodity',
+    name: '分销商设置子页',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/edit.vue')
+      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/commodity.vue')
   },]
 }]

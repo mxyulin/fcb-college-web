@@ -100,8 +100,9 @@
                     configData.become_agent.value ? "重新选择" : "选择商品"
                   }}</el-button
                 >
-
+                <!-- append-to-body="ture"  解决el-dialog点击后的朦胧层 -->
                 <el-dialog
+                  append-to-body="ture"
                   :visible.sync="centerDialogVisible"
                   width="80%"
                   center
