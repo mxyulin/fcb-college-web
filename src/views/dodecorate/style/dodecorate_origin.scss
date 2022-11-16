@@ -168,7 +168,7 @@
 
 .decorate-center-container {
   width: 375px;
-  height: 100%;
+  height: calc(100% - 60px);
   overflow: hidden;
   overflow-y: auto;
   background: #f6f6f6;
@@ -1390,11 +1390,11 @@
   font-size: 16px;
   font-family: PingFang SC;
   font-weight: 600;
-  color: #fff;
+  color: rgb(236, 221, 221);
   position: absolute;
   z-index: 10;
   top: 30px;
-  padding: 0 12px;
+  // padding: 0 12px;
 }
 
 .header-input {

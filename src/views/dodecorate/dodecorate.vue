@@ -5,9 +5,9 @@
     style="height: calc(100vh - 129px)"
     v-loading="loading"
   >
-    <el-header>
+    <el-heade height="40px">
       <!-- 顶部按钮组 -->
-      <el-row :gutter="0" type="flex" justify="space-between">
+      <el-row :gutter="0" type="flex" justify="space-between" align="center">
         <el-col :span="21">
           <div class="title-msg">店铺装修</div>
         </el-col>
@@ -16,8 +16,8 @@
           <el-button type="primary" :size="option.size">保存</el-button>
         </el-col>
       </el-row>
-    </el-header>
-    <el-container style="height: calc(100vh - 229px)">
+    </el-heade>
+    <el-container style="height: calc(100vh - 200px)">
       <!-- 左边栏 -->
       <el-aside
         v-if="
@@ -34,7 +34,7 @@
           @showForm="showForm"
         />
       </el-aside>
-      <!-- 装修区画布 -->
+      <!-- 组件装修区 -->
       <el-main class="center-body">
         <!-- 首页和个人中心 -->
         <div
@@ -61,7 +61,7 @@
               {{ customName }}
             </div>
           </div>
-          <!-- 自定义状态栏 -->
+          <!-- 个人中心状态栏 -->
           <div
             v-if="fromtype == 'custom'"
             style="position: relative; z-index: 100"
@@ -82,13 +82,14 @@
               src="https://demo.shopro.top//assets/addons/shopro/img/decorate/zujian.png"
             />
           </div>
-          <!-- 拖放模块 -->
+          <!-- 拖放组件 -->
           <Draggable
             :fromtype="fromtype"
             :isPageType="isPageType"
             :templateData="templateData"
             :templateForm="templateForm"
             :centerSelect="centerSelect"
+            :shoproName="shoproName"
             @centerDel="centerDel"
             @showForm="showForm"
           />
@@ -97,7 +98,6 @@
         <div
           v-if="isPageType == 'tabbar'"
           class="item decorate-center-container"
-          :style="{ height: isPageType == 'tabbar' ? '90%' : '100%' }"
         >
           <div
             class="tabbar-body-item"
@@ -261,7 +261,9 @@
         </div>
       </el-main>
       <!-- 右边栏 -->
-      <el-aside class="right-container" width="350px"> 工具面板 </el-aside>
+      <el-aside class="right-container" width="350px"> 
+        <ToolsForm :centerSelect="centerSelect" :templateForm="templateForm"/>
+      </el-aside>
     </el-container>
   </basic-container>
 </template>
@@ -269,230 +271,111 @@
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import ToolsBox from "@/views/dodecorate/components/toolsbox";
 import Draggable from "@/views/dodecorate/components/draggable";
+import ToolsBox from "@/views/dodecorate/components/toolsbox";
+import ToolsForm from "@/views/dodecorate/components/toolsform";
 
 export default {
   components: {
     ToolsBox,
     Draggable,
+    ToolsForm
   },
   data() {
     return {
-      // 页面配置
+      // 全局组件配置
       option: option,
       // v-loading 状态
       loading: false,
-      // 表单类型
-      fromtype: new URLSearchParams(location.search).get("type"),
+
+      // 底部按钮组
+      pageTypeList: [
+        {
+          name: "首页",
+          type: "home",
+        },
+        {
+          name: "个人中心",
+          type: "user",
+        },
+        {
+          name: "底部导航",
+          type: "tabbar",
+        },
+        {
+          name: "弹窗提醒",
+          type: "popup",
+        },
+        {
+          name: "悬浮按钮",
+          type: "float-button",
+        },
+      ],
       // 装修类型
       isPageType: "home",
-      // 定制名
-      customName: new URLSearchParams(location.search).get("name"),
-      // 模板列表数据
-      templateData: [],
-      // 工具的表单数据
-      templateForm: {},
-      // ?选项卡选择
+      // 模板组装数据，首页带一个顶部 banner 初始数据
+      templateData: [
+        {
+          name: "轮播图",
+          type: "banner",
+          content: {
+            name: "",
+            style: 1,
+            height: 520,
+            radius: 0,
+            x: 0,
+            y: 0,
+            list: [
+              {
+                name: "",
+                bgcolor: "",
+                image: "",
+                path: "",
+                path_name: "",
+                path_type: 1,
+              },
+            ],
+          },
+        },
+      ],
+      // 模板索引
       centerSelect: null,
-      menuOption: {
-        group: {
-          name: "draggableName",
-          pull: "clone",
-          put: false,
-        },
-        ghostClass: "sortable-ghost",
-        fallbackClass: "clone-item",
-        fallbackOnBody: true,
-      },
-      defaultOption: {
-        filter: ".undraggable",
-        animation: 100,
-        group: {
-          name: "draggableName",
-        },
-        ghostClass: "sortable-ghost",
-        fallbackClass: "clone-item",
-        dragClass: "dragin-item",
-      },
-      saveHtml: null,
-
-      decorateContent: "",
+      // 模板的表单数据
+      templateForm: {},
+      // 
       group: "changepull",
-      // toolsBox: [
-      //   {
-      //     name: "图文",
-      //     show: "common",
-      //     data: [
-      //       {
-      //         name: "轮播图",
-      //         type: "banner",
-      //         image: "/assets/addons/shopro/img/decorate/banner.png",
-      //         flag: false,
-      //         show: "common",
-      //       },
-      //       {
-      //         name: "菜单组",
-      //         type: "menu",
-      //         image: "/assets/addons/shopro/img/decorate/menu.png",
-      //         flag: false,
-      //         show: "common",
-      //       },
-      //       {
-      //         name: "广告魔方",
-      //         type: "adv",
-      //         image: "/assets/addons/shopro/img/decorate/adv.png",
-      //         flag: false,
-      //         show: "common",
-      //       },
-      //       {
-      //         name: "标题栏",
-      //         type: "title-block",
-      //         image: "/assets/addons/shopro/img/decorate/title-block.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "宫格导航",
-      //         type: "grid-list",
-      //         image: "/assets/addons/shopro/img/decorate/grid-list.png",
-      //         flag: false,
-      //         show: "user",
-      //       },
-      //       {
-      //         name: "列表导航",
-      //         type: "nav-list",
-      //         image: "/assets/addons/shopro/img/decorate/nav-list.png",
-      //         flag: false,
-      //         show: "user",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: "商品组",
-      //     show: "common",
-      //     data: [
-      //       {
-      //         name: "商品分类",
-      //         type: "goods-group",
-      //         image: "/assets/addons/shopro/img/decorate/goods-group.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "分类选项卡",
-      //         type: "category-tabs",
-      //         image: "/assets/addons/shopro/img/decorate/category_tabs.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "自定义商品",
-      //         type: "goods-list",
-      //         image: "/assets/addons/shopro/img/decorate/goods-list.png",
-      //         flag: false,
-      //         show: "common",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: "活动营销",
-      //     show: "home",
-      //     data: [
-      //       {
-      //         name: "优惠券",
-      //         type: "coupons",
-      //         image: "/assets/addons/shopro/img/decorate/coupon.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "拼团",
-      //         type: "groupon",
-      //         image: "/assets/addons/shopro/img/decorate/groupon.png",
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "秒杀",
-      //         type: "seckill",
-      //         image: "/assets/addons/shopro/img/decorate/secKill.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "小程序直播",
-      //         type: "live",
-      //         image: "/assets/addons/shopro/img/decorate/live.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     name: "其他",
-      //     show: "common",
-      //     data: [
-      //       {
-      //         name: "搜索框",
-      //         type: "search",
-      //         image: "/assets/addons/shopro/img/decorate/search.png",
-      //         flag: false,
-      //         show: "home",
-      //       },
-      //       {
-      //         name: "富文本",
-      //         type: "rich-text",
-      //         image: "/assets/addons/shopro/img/decorate/rich-text.png",
-      //         flag: false,
-      //         show: "common",
-      //       },
-      //       {
-      //         name: "订单卡片",
-      //         type: "order-card",
-      //         image: "/assets/addons/shopro/img/decorate/order-card.png",
-      //         flag: false,
-      //         show: "user",
-      //       },
-      //       {
-      //         name: "资产卡片",
-      //         type: "wallet-card",
-      //         image: "/assets/addons/shopro/img/decorate/wallet-card.png",
-      //         flag: false,
-      //         show: "user",
-      //       },
-      //     ],
-      //   },
-      // ],
+      // 广告魔方数据
       advStyleImage: [
         {
-          src: "/assets/addons/shopro/img/decorate/adv_01.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_01.png",
           num: 1,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_02.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_02.png",
           num: 2,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_03.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_03.png",
           num: 3,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_04.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_04.png",
           num: 3,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_05.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_05.png",
           num: 3,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_06.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_06.png",
           num: 3,
         },
         {
-          src: "/assets/addons/shopro/img/decorate/adv_07.png",
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_07.png",
           num: 5,
         },
       ],
+      // 标题栏样式
       titleBlock: {
         isSelected: false,
         data: [
@@ -519,40 +402,41 @@ export default {
         ],
         currentImage: "",
       },
+
+      /* 模板预览 */
       httpsDlocked: true,
+      // 小程序预览来源
       iframeSrc: "",
+      // 二维码来源
       qrcodeSrc: "",
+      // 微信码来源
       wxacodeSrc: "",
+      // 模板预览标题
       iframeTitle: "",
+      // 模板预览版权
       iframeCopyright: [],
+      // 模板预览平台
       iframePlatform: "",
+      // 模板预览开关
       previewDialog: false,
       advdrawer: false,
-      pageTypeList: [
-        {
-          name: "首页",
-          type: "home",
-        },
+      // 模板预览 ID（用于获取模板预览相关数据）
+      // decorate_id: new URLSearchParams(location.search).get("id"),
+
+      /* 装修区模板 */
+      homeData: [
+      ],
+      userData: [
         {
           name: "个人中心",
           type: "user",
-        },
-        {
-          name: "底部导航",
-          type: "tabbar",
-        },
-        {
-          name: "弹窗提醒",
-          type: "popup",
-        },
-        {
-          name: "悬浮按钮",
-          type: "float-button",
+          content: {
+            name: "",
+            style: 2,
+            image: "",
+          },
         },
       ],
-      // !未知对象Config
-      homeData: [],
-      userData: [],
       tabbarData: [
         {
           type: "tabbar",
@@ -633,11 +517,44 @@ export default {
         },
       ],
       customData: [],
-      decorate_id: new URLSearchParams(location.search).get("id"),
+      // 弹窗索引
       popupIndex: null,
+      // 悬浮按钮状态
       isfloat: false,
-      shoproName: "",
-      saveLoading: false,
+      // 表单类型（shop & custom）
+      fromtype: "shop",
+      // 商城名
+      shoproName: "辅成帮",
+      // 定制名（未用）
+      customName: "",
+
+      /* 暂时不用 */
+      //#region 
+      // * 源码 draggable 组件配置
+      // menuOption: {
+      //   group: {
+      //     name: "draggableName",
+      //     pull: "clone",
+      //     put: false,
+      //   },
+      //   ghostClass: "sortable-ghost",
+      //   fallbackClass: "clone-item",
+      //   fallbackOnBody: true,
+      // },
+      // defaultOption: {
+      //   filter: ".undraggable",
+      //   animation: 100,
+      //   group: {
+      //     name: "draggableName",
+      //   },
+      //   ghostClass: "sortable-ghost",
+      //   fallbackClass: "clone-item",
+      //   dragClass: "dragin-item",
+      // },
+      // ?缓存整个装修
+      // saveHtml: null,
+      // decorateContent: "",
+      //#endregion
     };
   },
   computed: {
@@ -649,7 +566,6 @@ export default {
       });
       return ids.join(",");
     },
-    //
   },
   watch: {
     templateData: {
@@ -659,18 +575,22 @@ export default {
       },
     },
     isPageType(newVal, oldVal) {
+      // 重置弹窗索引
       this.popupIndex = null;
       // 如果是第二次切换装修类型
       if (oldVal) {
         this.cachePreData(oldVal);
       }
-      this.cacheTemplateDate(newVal);
+      this.loadTemplateDate(newVal);
       if (newVal != "home") {
+        // 选择第一个组件
         this.centerSelect = 0;
       } else {
         if (this.homeData.length > 0) {
+          // 选择第一个组件
           this.centerSelect = 0;
         } else {
+          // 没有组件初始化 centerSelect
           this.centerSelect = null;
         }
       }
@@ -703,11 +623,14 @@ export default {
     },
     // 底部导航栏选择
     tabbarSelected(index) {
-      this.templateData[0].content.list.forEach((i) => {
-        i.selected = false;
+      let that = this;
+      that.templateData[0].content.list.forEach((i) => {
+        // i.selected = false;
+        that.$set(i, "selected", false);
       });
-      this.$set(this.templateData[0].content.list[index], "selected", true);
-      this.$forceUpdate();
+      // that.templateData[0].content.list[index].selected = true;
+      that.$set(that.templateData[0].content.list[index], "selected", true);
+      // that.$forceUpdate();
     },
     // 缓存上一次装修数据
     cachePreData(type) {
@@ -730,8 +653,8 @@ export default {
           break;
       }
     },
-    // templateData 加载当前装修类型的数据
-    cacheTemplateDate(type) {
+    // templateData 加载当前装修组件数据
+    loadTemplateDate(type) {
       let that = this;
       switch (type) {
         case "home":
@@ -752,7 +675,8 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+  },
 };
 </script>
 

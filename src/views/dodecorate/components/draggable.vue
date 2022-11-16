@@ -12,7 +12,7 @@
         :key="index"
       >
         <div class="seat-item">可放在此处</div>
-        <!-- 装修 -->
+        <!-- 装修布局 -->
         <div class="compotent-item-container">
           <!-- search -->
           <div
@@ -40,6 +40,7 @@
               background: centerSelect == 0 ? 'rgba(238,238,238,1)' : '#f6f6f6',
             }"
           >
+            <!-- 悬浮的标题和搜索 -->
             <div
               v-if="index == 0 && fromtype == 'shop'"
               class="header-name display-flex"
@@ -1256,6 +1257,7 @@
               </el-image>
             </template>
           </div>
+          <!-- 分类选项卡 -->
           <div
             v-if="
               compotent.type == 'category-tabs' &&
@@ -1625,6 +1627,7 @@
             >
             </el-image>
           </div>
+          <!-- 用户卡片 -->
           <div
             class="undraggable"
             :class="index == centerSelect ? 'selected' : ''"
@@ -1649,6 +1652,7 @@
               v-if="compotent.content.style == 1"
             />
           </div>
+          <!-- 删除组件 -->
           <div
             v-if="
               (index == centerSelect &&
@@ -1675,11 +1679,11 @@ import option from "@/const/decorate/dodecorate";
 
 export default {
   /*
-   * 父组件传来的数据 templateData isPageType templateForm centerSelect fromtype
+   * 父组件传来的数据 templateData isPageType templateForm centerSelect fromtype shoproName
    * 父组件绑定的事件 centerDel showForm
    */
   name: "Draggable",
-  props: ["templateData", "isPageType", "templateForm", "centerSelect", "fromtype"],
+  props: ["templateData", "isPageType", "templateForm", "centerSelect", "fromtype", "shoproName"],
   data() {
     return {
       // 表单配置
@@ -1707,7 +1711,8 @@ export default {
       this.$emit("showForm", idx)
     }
   },
-  mounted() {},
+  mounted() {
+  },
 };
 </script>
 
