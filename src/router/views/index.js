@@ -23,7 +23,7 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
   }]
 }, {
-  path: '/test',
+  path: '/logs',
   component: Layout,
   redirect: '/test/index',
   children: [{
@@ -103,71 +103,6 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
  
-  },{
-    path: '/decorate',
-    name: '设计模板',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  },{
-    path: '/decorate',
-    name: '设计模板', 
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate')
-  }
-  ,{
-    path: '/coupons',
-    name: '优惠劵',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-    import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  }  
-   ,{
-    path: '/commissionagent',
-    name: '分销商',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
-  },{
-    path: '/commissionconfig',
-    name: '分销商基础设置',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  }
-]},   
-// tyl-商品管理路由
-{
-  path: '/product',
-  component: Layout,
-  redirect: '/product/index',
-  children: [{
-    path: 'index',
-    name: '商品管理',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/product')
-  }, {
-    path: '/productcategory',
-    name: '商品分类',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/product/productcategory')
-  }]
-}, 
-]
+  } 
+]}
+ ]
