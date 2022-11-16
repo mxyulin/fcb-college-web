@@ -1,0 +1,32 @@
+#commodity {
+  margin: 0 auto;
+  display: flex;
+  background-color: #ffffff;
+  width: 100%;
+}
+.commodity-classification {
+  min-width: 160px;
+}
+.commodity-content {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 640px;
+  border-left: 1px solid #e6e6e6;
+  padding: 10px;
+}
+.search {
+  display: flex;
+}
+.search-input {
+  margin-right: 10px;
+}
+
+.commodity-table {
+  background-color: #f9f9f9;
+}
+
+.shopro-pagination-container {
+  padding: 30px 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}

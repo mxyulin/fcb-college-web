@@ -478,6 +478,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         const data = res.data.data;
+        console.log('data',res)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;

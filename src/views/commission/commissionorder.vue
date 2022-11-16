@@ -8,7 +8,14 @@
             <i class="el-icon-refresh"></i>
           </div>
         </div>
-        <div class="screen-item">
+
+        <!-- <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+        <div class="shopro-screen-condition">
+        </div>
+        </div> -->
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+        <div class="shopro-screen-condition">
           <el-input
             placeholder="请输入内容"
             v-model="searchForm.form_1_value"
@@ -21,19 +28,15 @@
               placeholder="请选择"
             >
               <el-option label="下单用户ID" value="buyer_id"></el-option>
-              <el-option
-                label="下单用户昵称"
-                value="buyer_nickname"
-              ></el-option>
-              <el-option
-                label="下单用户手机号"
-                value="buyer_mobile"
-              ></el-option>
+              <el-option label="下单用户昵称" value="buyer_nickname"></el-option>
+              <el-option label="下单用户手机号" value="buyer_mobile"></el-option>
             </el-select>
           </el-input>
         </div>
+        </div>
 
-        <div class="screen-item">
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+        <div class="shopro-screen-condition">
           <el-input
             placeholder="请输入内容"
             v-model="searchForm.form_2_value"
@@ -57,8 +60,11 @@
             </el-select>
           </el-input>
         </div>
+        </div>
 
-        <div class="screen-item">
+        
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+        <div class="shopro-screen-condition">
           <el-input
             placeholder="请输入内容"
             v-model="searchForm.form_3_value"
@@ -85,19 +91,38 @@
             </el-select>
           </el-input>
         </div>
-
-        <div class="screen-item">
-          <div class="screen-item-tip">订单号</div>
-          <div class="screen-item-botton">
-            <el-input
-              placeholder="请输入订单号"
-              v-model="searchForm.order_sn"
-              class="screen-item-input"
-              size="small"
-            >
-            </el-input>
-          </div>
         </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+        <div class="shopro-screen-condition">
+          <el-input
+            placeholder="请输入内容"
+            v-model="searchForm.form_3_value"
+            class="screen-item-select"
+            size="small"
+          >
+            <el-select
+              v-model="searchForm.form_3_key"
+              slot="prepend"
+              placeholder="请选择"
+            >
+              <el-option
+                label="分佣用户ID"
+                value="commission_user_id"
+              ></el-option>
+              <el-option
+                label="分佣用户昵称"
+                value="commission_nickname"
+              ></el-option>
+              <el-option
+                label="分佣用户手机号"
+                value="commission_mobile"
+              ></el-option>
+            </el-select>
+          </el-input>
+        </div>
+        </div>
+
 
         <div class="screen-item screen-item-time">
           <div class="screen-item-tip">下单时间</div>
@@ -1350,6 +1375,7 @@ export default {
     },
 
     init() {},
+    // 有报错
     // onLoad(page, params = {}) {
     //   const that = this;
     //   that.loading = true;
@@ -1359,6 +1385,7 @@ export default {
     //     Object.assign(params, that.query)
     //   ).then((res) => {
     //     const data = res.data.data;
+    //     console.log('data',res)
     //     // that.page.total = data.total;
     //     // that.data = data.records;
     //     // that.loading = false;

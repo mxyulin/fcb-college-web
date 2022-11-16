@@ -26,26 +26,27 @@
           </el-switch>
         </div>
 
-        <div class="display-flex shopro-screen-item">
-          <el-input
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="shopro-screen-condition">
+            <el-input
+            v-model="searchForm.form_1_value"
             placeholder="请输入内容"
             class="screen-item-select"
             size="small"
           >
             <el-select
+              v-model="searchForm.form_1_key"
               slot="prepend"
               placeholder="请选择"
             >
               <el-option label="分销用户ID" value="agent_id"></el-option>
-              <el-option
-                label="分销用户昵称"
-              ></el-option>
-              <el-option
-                label="分销用户手机号"
-              ></el-option>
+              <el-option label="分销用户昵称" value="b"></el-option>
+              <el-option label="分销用户手机号" value="c"></el-option>
             </el-select>
           </el-input>
+          </div>
         </div>
+
 
         <div class="display-flex shopro-screen-item">
           <div class="shopro-screen-tip">操作人类型</div>
@@ -53,6 +54,7 @@
             <el-select
               placeholder="请选择动态类型"
               size="small"
+              v-model="searchForm.oper_type"
             >
               <el-option
                 v-for="(type,index) in this.operTypeOptions"
@@ -65,12 +67,12 @@
           </div>
         </div>
 
-        <div
-          class="display-flex shopro-screen-item"
-          v-if="
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague"
+        v-if="
             this.searchForm.oper_type == 'user' || this.searchForm.oper_type == 'admin'
           "
         >
+          <div class="shopro-screen-condition">
           <el-input
             placeholder="请输入内容"
             v-model="searchForm.form_2_value"
@@ -91,6 +93,7 @@
               ></el-option>
             </el-select>
           </el-input>
+          </div>
         </div>
 
         <div class="display-flex shopro-screen-item">
@@ -128,6 +131,7 @@
             </el-select>
           </div>
         </div>
+        
         <div class="display-flex shopro-screen-item-button">
           <div class="shopro-button shopro-reset-button">
             重置
@@ -247,8 +251,10 @@ export default {
   data() {
     return {
       searchForm: {
+
         form_1_key: "agent_id",
         form_1_value: "",
+
         form_2_key: "oper_id",
         form_2_value: "",
 
@@ -275,7 +281,15 @@ export default {
           value: "system",
         },
       ],
-      logOptions: [],
+      logOptions: [
+        {name:'全部',type:'all'},
+        {name:'分销商',type:'2'},
+        {name:'等级变动',type:'3'},
+        {name:'分销业绩',type:'4'},
+        {name:'团队',type:'5'},
+        {name:'佣金',type:'6'},
+        {name:'绑定关系',type:'7'},
+      ],
       really_status: "",
 
       // 弹框标题
@@ -334,16 +348,17 @@ export default {
     onLoad(page, params = {}) {
       const that = this;
       that.loading = true;
-      // getList(
-      //   page.currentPage,
-      //   page.pageSize,
-      //   Object.assign(params, that.query)
-      // ).then((res) => {
-      //   const data = res.data.data;
-      //   // that.page.total = data.total;
-      //   // that.data = data.records;
-      //   // that.loading = false;
-      // });
+      getList(
+        page.currentPage,
+        page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        const data = res.data.data;
+        console.log('data',res)
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
+      });
     },
   },
 };

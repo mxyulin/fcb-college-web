@@ -182,6 +182,7 @@
                   </div>
                 </div>
                   <el-dialog
+                  append-to-body="ture"  
                   :visible.sync="centerbackground"
                   width="80%"
                   center>
@@ -273,6 +274,7 @@
                       <div @click="centerDialogVisiblethree = true" class="apply_protocol-select">选择</div>
 
                       <el-dialog
+                        append-to-body="ture"  
                         :visible.sync="centerDialogVisiblethree"
                         width="80%"
                         height="60%"

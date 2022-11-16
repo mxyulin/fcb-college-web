@@ -412,6 +412,7 @@ export default {
   },
   methods: {
     init() {},
+    // 有报错
     // onLoad(page, params = {}) {
     //   const that = this;
     //   that.loading = true;
@@ -420,6 +421,7 @@ export default {
     //     page.pageSize,
     //     Object.assign(params, that.query)
     //   ).then((res) => {
+    //     console.log('data',res)
     //     const data = res.data.data;
     //     // that.page.total = data.total;
     //     // that.data = data.records;

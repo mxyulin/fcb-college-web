@@ -12,7 +12,7 @@
         <div class="shopro-add-button" @click="operationa()">
           <i class="el-icon-plus"></i>添加等级
         </div>
-        <el-dialog :visible.sync="operation" width="60%"  center>
+        <el-dialog append-to-body="ture"   :visible.sync="operation" width="60%"  center>
           <!-- <addvue></addvue> -->
           <editvue></editvue>
         </el-dialog>
@@ -84,7 +84,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-dialog :visible.sync="operationb" width="60%"  center>
+      <el-dialog append-to-body="ture"   :visible.sync="operationb" width="60%"  center>
           <addvue></addvue>
       </el-dialog>
     </div>
@@ -214,6 +214,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         const data = res.data.data;
+        console.log('data',res)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;

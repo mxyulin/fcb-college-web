@@ -20,6 +20,11 @@
 
 .shopro-reset-button {
     margin-right: 20px;
+    width: 78px;
+    height: 32px;
+    color: #888;
+    background: #ffffff;
+    border: 1px solid #999999;
 }
 
 .title {
@@ -210,11 +215,12 @@
     display: flex;
     align-items: center;
 }
-.shopro-screen-item {
+.shopro-screen-container .shopro-screen-item {
     margin-right: 30px;
     margin-bottom: 20px;
 }
-.shopro-screen-item:last-of-type {
+
+.shopro-screen-container .shopro-screen-item:last-of-type {
     margin-right: 0px;
 }
 .shopro-screen-tip {
@@ -226,7 +232,7 @@
     justify-content: flex-end;
     margin-right: 10px;
 }
-.shopro-screen-condition {
+.shopro-screen-container .shopro-screen-condition {
     width: 176px;
 }
 .shopro-screen-item-button {
@@ -245,4 +251,12 @@
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
+}
+
+.shopro-screen-item-vague .shopro-screen-condition {
+    width: 282px;
+}
+
+.shopro-screen-item-vague .el-select {
+    width: 140px;
 }

@@ -1,5 +1,6 @@
 <template>
   <basic-container>
+    <!-- 分销商 -->
     <div id="agentIndex" v-cloak v-loading="isAjax">
       <!-- 最上面的tab -->
       <div class="shopro-tabs-container">
@@ -39,32 +40,43 @@
             </el-input>
           </div>
         </div>
+        
         <div class="display-flex shopro-screen-item">
           <div class="shopro-screen-tip">分销商等级</div>
           <div class="shopro-screen-condition">
-            <el-select v-model="searchForm.level" placeholder="请选择" size="small">
+            <el-select
+              v-model="searchForm.level"
+              placeholder="请选择"
+              size="small"
+            >
               <el-option
                 v-for="item in agentLevelList"
                 :key="item.level"
-                :value="item.level"
+                :label="item.level"
+                :value="item.value"
               >
                 <span>{{ item.level }}</span>
               </el-option>
             </el-select>
           </div>
         </div>
+
         <div
           class="display-flex shopro-screen-item"
           v-if="activeTabsName != 'pending'"
         >
           <div class="shopro-screen-tip">审核状态</div>
           <div class="shopro-screen-condition">
-            <el-select v-model="searchForm.status" placeholder="请选择" size="small">
-              <el-option 
-              v-for="item in agentStatusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+            <el-select
+              v-model="searchForm.status"
+              placeholder="请选择"
+              size="small"
+            >
+              <el-option
+                v-for="item in agentStatusOptions"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
               >
                 <!-- <span>{{liem.label}}</span> -->
               </el-option>
@@ -345,7 +357,6 @@
           </el-table-column>
         </el-table>
 
-        <!-- 待升级 -->
         <el-table
           v-if="activeTabsName == '1'"
           :data="listData3"
@@ -521,20 +532,22 @@ export default {
       // agentLevelList: [],
       // 模拟数据
       agentLevelList: [
-        { level: "等级1" },
-        { level: "等级2" },
-        { level: "等级3" },
-        { level: "等级4" },
-        { level: "等级5" },
-        { level: "等级6" },
+        { level: "等级1", value: "all" },
+        { level: "等级2", value: "2" },
+        { level: "等级3", value: "3" },
+        { level: "等级4", value: "4" },
+        { level: "等级5", value: "5" },
+        { level: "等级6", value: "6" },
       ],
       // form搜索
       searchForm: {
         status: "all",
         level: "all",
         updatetime: [],
+        
         form_1_key: "user_id",
         form_1_value: "",
+
         level_status: "all",
       },
       searchFormInit: {
@@ -681,7 +694,6 @@ export default {
           parent_agent: "3",
         },
       ],
-
       // 自带生成元素
       // 弹框标题
       title: "",
@@ -708,7 +720,7 @@ export default {
       // 表单配置
       option: option,
       // 表单列表
-      data: [],
+      datas: [],
     };
   },
   mounted() {
@@ -779,6 +791,7 @@ export default {
         this.form = res.data.data;
       });
     },
+
     handleDelete() {
       if (this.selectionList.length === 0) {
         this.$message.warning("请选择至少一条数据");
@@ -801,6 +814,7 @@ export default {
           });
         });
     },
+
     rowDel(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
@@ -838,17 +852,22 @@ export default {
       this.page.pageSize = pageSize;
       this.onLoad(this.page);
     },
+
     onLoad(page, params = {}) {
-      // this.loading = true;
-      // getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-      //   let data = res.data.data;
-      //   console.log('data1',data)
-      //   console.log('data2',res)
-      //   // this.page.total = data.total;
-      //   // this.data = data.records;
-      //   // this.loading = false;
-      //   // this.selectionClear();
-      // });
+      this.loading = true;
+      getList(
+        page.currentPage,
+        page.pageSize,
+        Object.assign(params, this.query)
+      ).then((res) => {
+        this.datas = res.data.data.records
+        console.log("data1", res);
+        // console.log("data2", res.data.data.records);
+        // this.page.total = data.total;
+        // this.data = data.records;
+        // this.loading = false;
+        // this.selectionClear();
+      });
     },
   },
 };

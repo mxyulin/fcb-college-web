@@ -8,8 +8,6 @@
         :props="defauditydata"
         @node-click="commodityclick"
       ></el-tree>
-
-
     </div>
 
     <div class="commodity-content">
@@ -29,29 +27,41 @@
 
       <div>
         <el-table
-        class="commodity-table"
-        :data="datas"
-        height="400"
-        style="width: 100%"
-        stripe="ture"
-        :row-class-name="tableRowClassName"
-      >
-        <el-table-column prop="id" label="id" > </el-table-column>
-        <el-table-column prop="title" label="标题" ></el-table-column>
-        <el-table-column prop="oldtime" label="创建时间" > </el-table-column>
-        <el-table-column prop="newtiem" label="更新时间" > </el-table-column>
-        <el-table-column label="操作" > <div>butten</div> </el-table-column>
-      </el-table>
+          class="commodity-table"
+          :data="datas"
+          height="400"
+          style="width: 100%"
+          stripe="ture"
+          :row-class-name="tableRowClassName"
+        >
+          <el-table-column prop="id" label="id"> </el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="oldtime" label="创建时间"> </el-table-column>
+          <el-table-column prop="newtiem" label="更新时间"> </el-table-column>
+          <el-table-column label="操作"> <div>butten</div> </el-table-column>
+        </el-table>
+        <div class="shopro-pagination-container">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="limit"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalPage"
+          >
+          </el-pagination>
+        </div>
+
       </div>
-      
     </div>
   </div>
 </template>
 
 <script>
-import { getList} from "@/api/product/productcategory";
+import { getList } from "@/api/product/productcategory";
 // 树元素标题绑定表
-import {getListByCategory} from "@/api/product/product";
+import { getListByCategory } from "@/api/product/product";
 import option from "@/const/product/productcategory";
 export default {
   data() {
@@ -59,15 +69,12 @@ export default {
       // 真数据
       ditydata: [],
       ditydatab: [],
-      defauditydata:{
+      defauditydata: {
         children: "children",
         label: "name",
       },
 
-
-
-
-      defe:{
+      defe: {
         children: "children",
         label: "name",
       },
@@ -125,7 +132,6 @@ export default {
       ],
       commissiondata: 1,
 
-
       // 弹框标题
       title: "",
       // 是否展示弹框
@@ -154,29 +160,27 @@ export default {
       data: [],
     };
   },
-  
-  mounted () {
+
+  mounted() {
     // this.init();
     this.getcommoditydata();
     this.getproductdata();
   },
-  computed: {
+  computed: {},
 
-  },
-  
-  watch:{
+  watch: {
     // commissiondata(){
     //   this.getcommoditydata();
     // }
   },
-  
+
   methods: {
     // handleNodeClick(da) {
     //   // console.log('da:',da);
     // },
     // 请求数据
-    commodityclick(indenxclick){
-      console.log(indenxclick) 
+    commodityclick(indenxclick) {
+      console.log(indenxclick);
     },
     // getproductdata(){
     //   let that= this;
@@ -194,8 +198,8 @@ export default {
         that.page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        that.ditydata = res.data.data.slice(8)
-        console.log("data1:",res)
+        that.ditydata = res.data.data.slice(8);
+        // console.log("data1:", res);
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
@@ -205,9 +209,13 @@ export default {
     getproductdata(page, params = {}) {
       let that = this;
       that.loading = true;
+      // let currentPage = 1
+      // let pageSize = 1
       getListByCategory(
         that.page.currentPage,
         that.page.pageSize,
+        // currentPage,
+        // pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
         that.ditydatab = res
@@ -221,31 +229,6 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-#commodity {
-  margin: 0 auto;
-  display: flex;
-  background-color: #ffffff;
-  width: 100%;
-}
-.commodity-classification {
-  min-width: 160px;
-}
-.commodity-content {
-  box-sizing: border-box;
-  width: 100%;
-  min-width: 640px;
-  border-left:1px solid #e6e6e6;
-  padding: 10px;
-}
-.search{
-  display: flex;
-}
-.search-input{
-  margin-right: 10px;
-}
+<style scoped lang="scss" src="@/views/commission/style/commodity.scss"></style>
 
-.commodity-table{
-  background-color: #f9f9f9;
-}
-</style>
+<style lang="scss"></style>
