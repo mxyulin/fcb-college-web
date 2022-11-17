@@ -2,32 +2,7 @@
   <!-- 组件表单模块 -->
   <div class="decorate-right" v-if="centerSelect!=null">
       <div class="decorate-right-header">
-          <img :src="`https://demo.shopro.top/assets/addons/shopro/img/decorate/${templateForm.type}.png`" />
-          <!-- <img v-if="templateForm.type=='banner'" src="/assets/addons/shopro/img/decorate/banner.png" />
-          <img v-if="templateForm.type=='menu'" src="/assets/addons/shopro/img/decorate/menu.png" />
-          <img v-if="templateForm.type=='adv'" src="/assets/addons/shopro/img/decorate/adv.png" />
-          <img v-if="templateForm.type=='title-block'"
-              src="/assets/addons/shopro/img/decorate/title-block.png" />
-          <img v-if="templateForm.type=='grid-list'" src="/assets/addons/shopro/img/decorate/grid-list.png" />
-          <img v-if="templateForm.type=='nav-list'" src="/assets/addons/shopro/img/decorate/nav-list.png" />
-          <img v-if="templateForm.type=='goods-group'"
-              src="/assets/addons/shopro/img/decorate/goods-group.png" />
-          <img v-if="templateForm.type=='category-tabs'"
-              src="/assets/addons/shopro/img/decorate/category_tabs.png" />
-          <img v-if="templateForm.type=='goods-list'"
-              src="/assets/addons/shopro/img/decorate/goods-list.png" />
-          <img v-if="templateForm.type=='coupons'" src="/assets/addons/shopro/img/decorate/coupon.png" />
-          <img v-if="templateForm.type=='groupon'" src="/assets/addons/shopro/img/decorate/groupon.png" />
-          <img v-if="templateForm.type=='seckill'" src="/assets/addons/shopro/img/decorate/secKill.png" />
-          <img v-if="templateForm.type=='live'" src="/assets/addons/shopro/img/decorate/live.png" />
-          <img v-if="templateForm.type=='rich-text'" src="/assets/addons/shopro/img/decorate/rich-text.png" />
-          <img v-if="templateForm.type=='user'" src="/assets/addons/shopro/img/decorate/user.png" />
-          <img v-if="templateForm.type=='nav-bg'" src="/assets/addons/shopro/img/decorate/tabbar.png" />
-          <img v-if="templateForm.type=='popup'" src="/assets/addons/shopro/img/decorate/popup.png" />
-          <img v-if="templateForm.type=='tabbar'" src="/assets/addons/shopro/img/decorate/tabbar.png" />
-          <img v-if="templateForm.type=='float-button'"
-              src="/assets/addons/shopro/img/decorate/float-button.png" /> -->
-          <span v-if="templateForm.type!='order-card' && templateForm.type!='wallet-card'"
+            <span v-if="templateForm.type!='order-card' && templateForm.type!='wallet-card'"
               class="decorate-right-header-title">
               {{templateForm.name}}
           </span>
@@ -1621,8 +1596,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-import option from "@/const/product/product";
 import { validatenull } from "@/util/validate";
+import option from "@/const/decorate/dodecorate";
+import draggable from 'vuedraggable';
 
 export default {
   /*
@@ -1630,6 +1606,9 @@ export default {
    * 父组件绑定的事件
    */
   name: "ToolsForm",
+  comments: {
+    draggable,
+  },
   props: ["templateForm", "centerSelect"],
   data() {
     return {

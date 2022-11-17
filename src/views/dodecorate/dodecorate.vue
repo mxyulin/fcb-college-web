@@ -83,7 +83,7 @@
             />
           </div>
           <!-- 拖放组件 -->
-          <Draggable
+          <AppLayout
             :fromtype="fromtype"
             :isPageType="isPageType"
             :templateData="templateData"
@@ -274,14 +274,14 @@
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import Draggable from "@/views/dodecorate/components/draggable";
+import AppLayout from "@/views/dodecorate/components/applayout";
 import ToolsBox from "@/views/dodecorate/components/toolsbox";
 import ToolsForm from "@/views/dodecorate/components/toolsform";
 
 export default {
   components: {
     ToolsBox,
-    Draggable,
+    AppLayout,
     ToolsForm,
   },
   data() {
@@ -321,6 +321,7 @@ export default {
         {
           name: "轮播图",
           type: "banner",
+          icon: "icon-carousel",
           content: {
             name: "",
             style: 1,

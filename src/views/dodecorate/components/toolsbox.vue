@@ -213,19 +213,25 @@ export default {
         showStatus == this.isPageType
       );
     },
-    // ?选择工具模块
+    // !选择工具模块
     selectTools(type) {
-      let form = this.cloneComponent(type);
+      let that = this;
+      let form = that.cloneComponent(type);
       let flag = false;
-      // *templateData 的数据来自后面数组拼接
+      // let flag = that.templateData.every((item) => {
+      //   return item.type == "category-tabs";
+      // });
+      // ?最后一个 i.type 就决定了 flag ，所以为何要遍历数组，
+      // ?利用 templateData[templateData.length-1] 不就行了？
       this.templateData.forEach((i) => {
         if (i.type == "category-tabs") {
           flag = true;
         }
       });
+
       /* 非分类选项卡 */
       if (this.centerSelect == null) {
-        // 简单props数据可写
+        // *简单props数据可写
         this.centerSelect = this.templateData.length;
         if (type != "category-tabs" && this.templateData.length > 1) {
           this.centerSelect = this.templateData.length;
