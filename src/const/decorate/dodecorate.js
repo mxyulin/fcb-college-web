@@ -1,5 +1,5 @@
 export default {
-  size: 'small',
+  size: 'mini',
   expand: false,
   index: true,
   border: true,

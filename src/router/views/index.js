@@ -33,7 +33,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
+      import( /* webpackChunkName: "views" */ '@/views/test.vue')
   }]
 }, {
   path: '/dict-horizontal',

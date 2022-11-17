@@ -23,7 +23,7 @@
         v-if="
           isPageType == 'home' || isPageType == 'user' || fromtype == 'custom'
         "
-        class="decorate-left"
+        class="decorate-left el-aside-left"
         width="265px"
       >
         <ToolsBox
@@ -82,7 +82,7 @@
               src="https://demo.shopro.top//assets/addons/shopro/img/decorate/zujian.png"
             />
           </div>
-          <!-- 拖放组件 -->
+          <!-- App布局模块 -->
           <AppLayout
             :fromtype="fromtype"
             :isPageType="isPageType"
@@ -262,9 +262,12 @@
       <!-- 右边栏 -->
       <el-aside class="right-container" width="350px">
         <ToolsForm
-          :centerSelect="centerSelect"
-          :templateForm="templateForm"
           :fromtype="fromtype"
+          :templateForm="templateForm"
+          :popupIndex.sync="popupIndex"
+          :centerSelect.sync="centerSelect"
+          :templateData.sync="templateData"
+          :isfloat.sync="isfloat"
         />
       </el-aside>
     </el-container>
@@ -683,4 +686,12 @@ export default {
 <style lang="scss" scoped>
 @import "@/views/dodecorate/style/dodecorate_layout";
 @import "@/views/dodecorate/style/dodecorate_origin";
+</style>
+
+<style lang="scss">
+* {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
 </style>
