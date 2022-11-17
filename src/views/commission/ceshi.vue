@@ -1,67 +1,220 @@
 <template>
-    <div>
-        <!-- <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-        </div>
-        </div> -->
-        <!-- 测试页面 -->
-        <div class="shopro-button shopro-screen-button" @click="ad">提交</div>
+  <div id="commodity">
+    <!-- 商品 -->
+    <div class="commodity-classification">
+      <el-tree
+        :data="treedata"
+        :props="defauditydata"
+        @node-click="commodityclick"
+      ></el-tree>
     </div>
+
+    <div class="commodity-content">
+      <div class="search">
+        <el-input
+          class="search-input"
+          v-model="search"
+          placeholder="请输入内容id"
+        ></el-input>
+        <el-button class="search-drop-down">默</el-button>
+        <el-button
+          @click="judgeiftop"
+          class="search-iftop"
+          icon="el-icon-search"
+        ></el-button>
+      </div>
+
+      <div>
+        <el-table
+          class="commodity-table"
+          :data="datas"
+          height="400"
+          style="width: 100%"
+          stripe="ture"
+          :row-class-name="tableRowClassName"
+        >
+          <el-table-column prop="id" label="id"> </el-table-column>
+          <el-table-column prop="title" label="标题"></el-table-column>
+          <el-table-column prop="oldtime" label="创建时间"> </el-table-column>
+          <el-table-column prop="newtiem" label="更新时间"> </el-table-column>
+          <el-table-column label="操作"> <div>butten</div> </el-table-column>
+        </el-table>
+        <div class="shopro-pagination-container">
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 20, 30, 40]"
+            :page-size="limit"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="totalPage"
+          >
+          </el-pagination>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                key: value
-                
-      // dafa: {
-      //   level:'1',
-      //   parent_agent_id:'1',
-      //   total_income:'1',
-      //   order_money:'1',
-      //   child_order_money_1:'1',
-      //   child_order_money_2:'1',
-      //   child_order_money:'1',
-      //   order_count:'1',
-      //   child_order_count_1:'1',
-      //   child_order_count_2:'1',
-      //   child_order_count:'1',
-      //   child_agent_count_1:'1',
-      //   child_agent_count_2:'1',
-      //   child_agent_count:'1',
-      //   upgrade_lock:'1',
-      //   apply_num:'1',
-      //   level_status:'1',
-      //   createDept: "3458",
-      //   createUser: "12",
-      //   id: "78",
-      //   isDeleted: 0,
-      //   status: 1,
-      //   tenantId: "1",
-      //   updateUser: "678",
-      // },
-            }
-        },
-    }
-</script>
-//   ad() {
-//       add({ ...this.dafa })
-//         .then((res) => {
-//           if (res.data.code == 200) {
-//             this.$message({
-//               type: "success",
-//               message: "成功提交表单！",
-//             });
-//           }
-//         })
-//         .catch((err) => {
-//           this.$message({
-//             type: "error",
-//             message: "提交表单失败！",
-//           });
-//         });
-//     },
-<style lang="scss" scoped>
+import { getList } from "@/api/product/productcategory";
+// 树元素标题绑定表
+import { getListByCategory } from "@/api/product/product";
+import option from "@/const/product/productcategory";
+export default {
+  data() {
+    return {
+      // 真数据
+      treedata: [],
+      ditydatab: [],
+      defauditydata: {
+        children: "children",
+        label: "name",
+      },
 
-</style>
+      defe: {
+        children: "children",
+        label: "name",
+      },
+
+      // 模拟数据
+      datas: [
+        {
+          id: 1,
+          title: "哦豁1",
+          oldtime: "2022-11-08 13：32：42",
+          newtiem: "2022-12-09 13：32：42",
+        },
+        {
+          id: 2,
+          title: "哦豁2",
+          oldtime: "2022-11-02 13：32：42",
+          newtiem: "2022-12-10 13：32：42",
+        },
+        {
+          id: 3,
+          title: "哦豁3",
+          oldtime: "2022-11-03 13：32：42",
+          newtiem: "2022-12-07 13：32：42",
+        },
+        {
+          id: 4,
+          title: "哦豁4",
+          oldtime: "2022-11-04 13：32：42",
+          newtiem: "2022-12-11 13：32：42",
+        },
+        {
+          id: 5,
+          title: "哦豁4",
+          oldtime: "2022-11-04 13：32：42",
+          newtiem: "2022-12-11 13：32：42",
+        },
+        {
+          id: 5,
+          title: "哦豁4",
+          oldtime: "2022-11-04 13：32：42",
+          newtiem: "2022-12-11 13：32：42",
+        },
+        {
+          id: 5,
+          title: "哦豁4",
+          oldtime: "2022-11-04 13：32：42",
+          newtiem: "2022-12-11 13：32：42",
+        },
+        {
+          id: 5,
+          title: "哦豁4",
+          oldtime: "2022-11-04 13：32：42",
+          newtiem: "2022-12-11 13：32：42",
+        },
+      ],
+      commissiondata: 1,
+      dityindex: '33',
+
+      // 弹框标题
+      title: "",
+      // 是否展示弹框
+      box: false,
+      // 是否显示查询
+      search: true,
+      // 加载中
+      loading: true,
+      // 是否为查看模式
+      view: false,
+      // 查询信息
+      query: {},
+      // 分页信息
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 40,
+      },
+      // 表单数据
+      form: {},
+      // 选择行
+      selectionList: [],
+      // 表单配置
+      option: option,
+      // 表单列表
+      data: [],
+    };
+  },
+
+  mounted() {
+    // this.init();
+    this.getcommoditydata();
+    // {"categoryIds":"31"}
+    // this.getproductdata();
+
+  },
+  computed: {},
+
+  watch: {
+  },
+
+  methods: {
+    commodityclick(node) {
+      // dityindex = indenxclick.parentId
+      // debugger;
+      this.getproductdata(node.id)
+      // console.log(this.dityindex)
+    },
+
+    getcommoditydata(page, params = {}) {
+      let that = this;
+      that.loading = true;
+      getList(
+        that.page.currentPage,
+        that.page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        that.treedata = res.data.data.slice(8);
+      });
+    },
+    getproductdata(id) {
+      let that = this;
+      let params ={'categoryIds':id};
+      that.loading = true;
+      getListByCategory(
+        that.page.currentPage,
+        that.page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        that.ditydatab = res.data.data.records
+        console.log("data2:",res)
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
+      });
+    },
+    clickcommdity(a){
+      console.log("aa",a)
+    }
+  },
+};
+</script>
+
+<style scoped lang="scss" src="@/views/commission/style/commodity.scss"></style>
+
+<style lang="scss"></style>

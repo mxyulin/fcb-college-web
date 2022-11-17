@@ -110,8 +110,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/add.vue')
-  },
-  ,{
+  },{
     path: '/commodity',
     name: '分销商设置子页',
     meta: {
@@ -119,5 +118,14 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/commodity.vue')
+  },
+  {
+    path: '/ceshi',
+    name: '测试页面',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/ceshi.vue')
   },]
 }]

@@ -108,7 +108,7 @@
                   center
                 >
                   <commodity></commodity>
-                  <span>需要注意的是内容是默认不居中的</span>
+                  <!-- <span>需要注意的是内容是默认不居中的</span>
                   <span slot="footer" class="dialog-footer">
                     <el-button @click="centerDialogVisible = false"
                       >取 消</el-button
@@ -118,7 +118,7 @@
                       @click="centerDialogVisible = false"
                       >确 定</el-button
                     >
-                  </span>
+                  </span> -->
                 </el-dialog>
               </el-form-item>
               <!-- 累计消费消费累计金额 -->
@@ -187,17 +187,6 @@
                   width="80%"
                   center>
                   <background></background>
-                  <span>需要注意的是内容是默认不居中的</span>
-                  <span slot="footer" class="dialog-footer">
-                    <el-button @click="centerbackground = false"
-                      >取 消</el-button
-                    >
-                    <el-button
-                      type="primary"
-                      @click="centerbackground = false"
-                      >确 定</el-button
-                    >
-                  </span>
                 </el-dialog>
               </el-form-item>
 

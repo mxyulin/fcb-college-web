@@ -2,9 +2,8 @@
   <div id="commodity">
     <!-- 商品 -->
     <div class="commodity-classification">
-      <!-- 真数据 -->
       <el-tree
-        :data="ditydata"
+        :data="treedata"
         :props="defauditydata"
         @node-click="commodityclick"
       ></el-tree>
@@ -28,18 +27,20 @@
       <div>
         <el-table
           class="commodity-table"
-          :data="datas"
+          :data="ditydatab"
           height="400"
           style="width: 100%"
           stripe="ture"
           :row-class-name="tableRowClassName"
         >
           <el-table-column prop="id" label="id"> </el-table-column>
-          <el-table-column prop="title" label="标题"></el-table-column>
-          <el-table-column prop="oldtime" label="创建时间"> </el-table-column>
-          <el-table-column prop="newtiem" label="更新时间"> </el-table-column>
+          <el-table-column prop="content" label="标题"></el-table-column>
+          <el-table-column prop="updateTime" label="创建时间"> </el-table-column>
+          <el-table-column prop="createTime" label="更新时间"> </el-table-column>
           <el-table-column label="操作"> <div>butten</div> </el-table-column>
         </el-table>
+
+
         <div class="shopro-pagination-container">
           <el-pagination
             @size-change="handleSizeChange"
@@ -67,7 +68,7 @@ export default {
   data() {
     return {
       // 真数据
-      ditydata: [],
+      treedata: [],
       ditydatab: [],
       defauditydata: {
         children: "children",
@@ -130,14 +131,13 @@ export default {
           newtiem: "2022-12-11 13：32：42",
         },
       ],
-      commissiondata: 1,
 
       // 弹框标题
       title: "",
       // 是否展示弹框
       box: false,
       // 是否显示查询
-      search: true,
+      search: '',
       // 加载中
       loading: true,
       // 是否为查看模式
@@ -164,31 +164,19 @@ export default {
   mounted() {
     // this.init();
     this.getcommoditydata();
-    this.getproductdata();
+    // {"categoryIds":"31"}
+    // this.getproductdata();
+
   },
   computed: {},
 
   watch: {
-    // commissiondata(){
-    //   this.getcommoditydata();
-    // }
   },
 
   methods: {
-    // handleNodeClick(da) {
-    //   // console.log('da:',da);
-    // },
-    // 请求数据
-    commodityclick(indenxclick) {
-      console.log(indenxclick);
+    commodityclick(node) {
+      this.getproductdata(node.id)
     },
-    // getproductdata(){
-    //   let that= this;
-    //   that.loading2=true;
-    //   getListByCategory(that.page2.currentPage, that.page2.pageSize, that.page2.params).then((res) => {
-    //      console.log('prodact',res)
-    //   });
-    // },
 
     getcommoditydata(page, params = {}) {
       let that = this;
@@ -198,33 +186,27 @@ export default {
         that.page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        that.ditydata = res.data.data.slice(8);
-        // console.log("data1:", res);
-        // that.page.total = data.total;
-        // that.data = data.records;
-        // that.loading = false;
+        that.treedata = res.data.data.slice(8);
       });
     },
-    // Request method 'GET' not supported
-    getproductdata(page, params = {}) {
+    getproductdata(id) {
       let that = this;
+      let params ={'categoryIds':id};
       that.loading = true;
-      // let currentPage = 1
-      // let pageSize = 1
       getListByCategory(
         that.page.currentPage,
         that.page.pageSize,
-        // currentPage,
-        // pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        that.ditydatab = res
-        console.log("data2:",res)
+        that.ditydatab = res.data.data.records
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });
     },
+    clickcommdity(a){
+      console.log("aa",a)
+    }
   },
 };
 </script>

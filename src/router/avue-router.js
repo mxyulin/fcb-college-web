@@ -22,7 +22,6 @@ RouterPlugin.install = function (vue, option = {}) {
     })
     return result.join('&');
   }
-
   this.$router.$avueRouter = {
     //全局配置
     $website: this.$store.getters.website,
