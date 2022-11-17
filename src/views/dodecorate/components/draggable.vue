@@ -1679,17 +1679,17 @@ import option from "@/const/decorate/dodecorate";
 
 export default {
   /*
-   * 父组件传来的数据 templateData isPageType templateForm centerSelect fromtype shoproName
+   * 父组件传来的数据 templateData isPageType templateForm centerSelect fromtype
    * 父组件绑定的事件 centerDel showForm
    */
   name: "Draggable",
-  props: ["templateData", "isPageType", "templateForm", "centerSelect", "fromtype", "shoproName"],
+  props: ["templateData", "isPageType", "templateForm", "centerSelect", "fromtype"],
   data() {
     return {
       // 表单配置
       option: option,
-      // 商品名称
-      shoproName: "",
+      // 商城名
+      shoproName: "辅成帮",
     };
   },
   computed: {

@@ -224,11 +224,11 @@
   margin-bottom: 10px;
 }
 
-.decorate-right {
-  height: calc(100vh - 129px);
-  overflow: auto;
-  overflow-x: hidden;
-}
+// .decorate-right {
+//   height: calc(100vh - 129px);
+//   overflow: auto;
+//   overflow-x: hidden;
+// }
 
 .decorate-right-header {
   padding: 8px 10px;
@@ -435,6 +435,8 @@
 .right-container-iframe {
   display: flex;
   justify-content: center;
+  overflow: auto;
+  overflow-x: hidden;
 }
 
 #preview {
@@ -447,7 +449,8 @@
 
 .right-container {
   background: #fff;
-  height: calc(100vh - 130px);
+  // height: calc(100vh - 130px);
+  height: 100%;
   width: 350px;
 }
 
@@ -1011,16 +1014,17 @@
   justify-content: center;
 }
 
-.decorate-center-container-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
+/* 滚动条自定义 */
+// .decorate-center-container-scrollbar::-webkit-scrollbar {
+//   width: 6px;
+// }
 
-.decorate-center-container-scrollbar::-webkit-scrollbar-thumb {
-  width: 6px;
-  background: #ccc;
-  height: 20px;
-  border-radius: 3px;
-}
+// .decorate-center-container-scrollbar::-webkit-scrollbar-thumb {
+//   width: 6px;
+//   background: #ccc;
+//   height: 20px;
+//   border-radius: 3px;
+// }
 
 .center-body .el-row {
   width: 100%;

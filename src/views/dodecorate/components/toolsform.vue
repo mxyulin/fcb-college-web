@@ -1,6 +1,6 @@
 <template>
   <!-- 组件表单模块 -->
-  <div class="decorate-right decorate-center-container-scrollbar" v-if="centerSelect!=null">
+  <div class="decorate-right" v-if="centerSelect!=null">
       <div class="decorate-right-header">
           <img :src="`https://demo.shopro.top/assets/addons/shopro/img/decorate/${templateForm.type}.png`" />
           <!-- <img v-if="templateForm.type=='banner'" src="/assets/addons/shopro/img/decorate/banner.png" />

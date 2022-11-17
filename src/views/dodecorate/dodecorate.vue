@@ -89,7 +89,6 @@
             :templateData="templateData"
             :templateForm="templateForm"
             :centerSelect="centerSelect"
-            :shoproName="shoproName"
             @centerDel="centerDel"
             @showForm="showForm"
           />
@@ -261,8 +260,12 @@
         </div>
       </el-main>
       <!-- 右边栏 -->
-      <el-aside class="right-container" width="350px"> 
-        <ToolsForm :centerSelect="centerSelect" :templateForm="templateForm"/>
+      <el-aside class="right-container" width="350px">
+        <ToolsForm
+          :centerSelect="centerSelect"
+          :templateForm="templateForm"
+          :fromtype="fromtype"
+        />
       </el-aside>
     </el-container>
   </basic-container>
@@ -279,7 +282,7 @@ export default {
   components: {
     ToolsBox,
     Draggable,
-    ToolsForm
+    ToolsForm,
   },
   data() {
     return {
@@ -342,7 +345,7 @@ export default {
       centerSelect: null,
       // 模板的表单数据
       templateForm: {},
-      // 
+      //
       group: "changepull",
       // 广告魔方数据
       advStyleImage: [
@@ -424,8 +427,7 @@ export default {
       // decorate_id: new URLSearchParams(location.search).get("id"),
 
       /* 装修区模板 */
-      homeData: [
-      ],
+      homeData: [],
       userData: [
         {
           name: "个人中心",
@@ -523,13 +525,11 @@ export default {
       isfloat: false,
       // 表单类型（shop & custom）
       fromtype: "shop",
-      // 商城名
-      shoproName: "辅成帮",
       // 定制名（未用）
       customName: "",
 
       /* 暂时不用 */
-      //#region 
+      //#region
       // * 源码 draggable 组件配置
       // menuOption: {
       //   group: {
@@ -675,8 +675,7 @@ export default {
       }
     },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
