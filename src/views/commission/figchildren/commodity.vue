@@ -16,7 +16,6 @@
           v-model="search"
           placeholder="请输入内容id"
         ></el-input>
-        <el-button class="search-drop-down">默</el-button>
         <el-button
           @click="judgeiftop"
           class="search-iftop"
@@ -24,7 +23,7 @@
         ></el-button>
       </div>
 
-      <div>
+      <div class="level">
         <el-table
           class="commodity-table"
           :data="ditydatab"
@@ -35,23 +34,32 @@
         >
           <el-table-column prop="id" label="id"> </el-table-column>
           <el-table-column prop="content" label="标题"></el-table-column>
-          <el-table-column prop="updateTime" label="创建时间"> </el-table-column>
-          <el-table-column prop="createTime" label="更新时间"> </el-table-column>
+          <el-table-column prop="updateTime" label="创建时间">
+          </el-table-column>
+          <el-table-column prop="createTime" label="更新时间">
+          </el-table-column>
           <el-table-column label="操作"> <div>butten</div> </el-table-column>
         </el-table>
 
+        <div class="shopro-flexh">
 
-        <div class="shopro-pagination-container">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="limit"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
-          >
-          </el-pagination>
+          <div class="shopro-pagination-container">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-sizes="[10, 20, 30, 40]"
+              :page-size="limit"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="totalPage"
+            >
+            </el-pagination>
+          </div>
+
+          <div class="shopro-submit-container">
+            <div class="shopro-submit-button">保存</div>
+          </div>
+
         </div>
 
       </div>
@@ -137,7 +145,7 @@ export default {
       // 是否展示弹框
       box: false,
       // 是否显示查询
-      search: '',
+      search: "",
       // 加载中
       loading: true,
       // 是否为查看模式
@@ -166,16 +174,14 @@ export default {
     this.getcommoditydata();
     // {"categoryIds":"31"}
     // this.getproductdata();
-
   },
   computed: {},
 
-  watch: {
-  },
+  watch: {},
 
   methods: {
     commodityclick(node) {
-      this.getproductdata(node.id)
+      this.getproductdata(node.id);
     },
 
     getcommoditydata(page, params = {}) {
@@ -191,26 +197,31 @@ export default {
     },
     getproductdata(id) {
       let that = this;
-      let params ={'categoryIds':id};
+      let params = { categoryIds: id };
       that.loading = true;
       getListByCategory(
         that.page.currentPage,
         that.page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        that.ditydatab = res.data.data.records
+        that.ditydatab = res.data.data.records;
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });
     },
-    clickcommdity(a){
-      console.log("aa",a)
-    }
+    clickcommdity(a) {
+      console.log("aa", a);
+    },
   },
 };
 </script>
 
 <style scoped lang="scss" src="@/views/commission/style/commodity.scss"></style>
 
-<style lang="scss"></style>
+<style lang="scss">
+.level .el-table th.el-table__cell {
+  background-color: #fafafa;
+  color: #444444;
+  font-size: 13px;
+}</style>

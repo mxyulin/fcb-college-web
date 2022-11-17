@@ -316,7 +316,6 @@
         </div>
       </el-form>
       <div class="shopro-submit-container">
-        <div class="shopro-default-button" @click="formRestore">重置</div>
         <div class="shopro-submit-button">保存</div>
       </div>
     </div>
@@ -523,4 +522,5 @@ export default {
 <style lang="scss" scoped src="@/views/commission/style/commissionconfig.scss"></style>
 <style lang="scss">
 // 当要改变element样式时用
+
 </style>

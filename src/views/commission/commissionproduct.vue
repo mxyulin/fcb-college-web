@@ -413,21 +413,21 @@ export default {
   methods: {
     init() {},
     // 有报错
-    // onLoad(page, params = {}) {
-    //   const that = this;
-    //   that.loading = true;
-    //   getList(
-    //     page.currentPage,
-    //     page.pageSize,
-    //     Object.assign(params, that.query)
-    //   ).then((res) => {
-    //     console.log('data',res)
-    //     const data = res.data.data;
-    //     // that.page.total = data.total;
-    //     // that.data = data.records;
-    //     // that.loading = false;
-    //   });
-    // },
+    onLoad(page, params = {}) {
+      const that = this;
+      that.loading = true;
+      getList(
+        page.currentPage,
+        page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        console.log('data',res)
+        const data = res.data.data;
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
+      });
+    },
   },
 };
 </script>
