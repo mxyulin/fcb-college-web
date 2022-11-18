@@ -147,79 +147,82 @@
       <div class="shopro-table-container">
         <el-table :data="listData" style="width: 100%" border stripe="true" :cell-class-name="tableCellClassName"
             :header-cell-class-name="tableCellClassName">
-
-            <el-table-column prop="id" label="ID" width="70">
+           
+            <el-table-column prop="tenanId" label="动态筛选" min-width="100">
+              
             </el-table-column>
-            
-            <el-table-column prop="event_text" label="动态筛选" min-width="100">
-            </el-table-column>
-
-
             <el-table-column label="分销商" width="160">
                 <template slot-scope="scope">
-                    <el-popover placement="bottom" trigger="hover" width="180">
+                      <div class="active-cursor-line">
+                          {{scope.row.event}}
+                      </div>
+                    <!-- <el-popover placement="bottom"  width="180">
                         <div class="popover-container">
                             <div class="display-flex">
                                 <div class="display-flex">
                                     <div class="popover-tip">用户ID</div>：
                                 </div>
-                                <div class="active-cursor-line" @click="openAgentProfile(scope.row.agent_id)">
-                                    {{scope.row.agent.id}}
+                                <div class="active-cursor-line">
+                                    {{scope.row.event}}
                                 </div>
                             </div>
                             <div class="display-flex" v-if="scope.row.agent && scope.row.agent.mobile">
                                 <div class="display-flex">
                                     <div class="popover-tip">手机号</div>：
                                 </div>
-                                <div>{{scope.row.agent.mobile}}</div>
+                                <div></div>
                             </div>
                         </div>
                         <div class="display-flex" slot="reference" v-if="scope.row.agent">
                             <div class="table-image">
-                                <el-image :src="Fast.api.cdnurl(scope.row.agent.avatar)" fit="contain">
+                                <el-image fit="contain">
                                     <div slot="error" class="image-slot">
                                         <i class="el-icon-picture-outline"></i>
                                     </div>
                                 </el-image>
                             </div>
-                            <div class="ellipsis-item">{{scope.row.agent.nickname}}</div>
+                            <div class="ellipsis-item"></div>
                         </div>
-                    </el-popover>
-                    <div v-if="!scope.row.agent">-</div>
+                    </el-popover> -->
+                    <!-- <div v-if="!scope.row.agent">-</div> -->
                 </template>
             </el-table-column>
             <el-table-column prop="remark" label="内容" width="400">
             </el-table-column>
-            <el-table-column prop="oper_type_text" label="操作人类型" width="100">
+            <el-table-column prop="operId" label="操作人类型" width="100">
             </el-table-column>
             <el-table-column label="操作人" width="160">
                 <template slot-scope="scope">
-                    <div class="display-flex" v-if="scope.row.oper">
+                  <div>
+                    {{scope.row.operType}}
+                  </div>
+                    <!-- <div class="display-flex" v-if="scope.row.oper">
                         <div class="table-image">
-                            <el-image :src="Fast.api.cdnurl(scope.row.oper.avatar)" fit="contain">
+                            <el-image fit="contain">
                                 <div slot="error" class="image-slot">
                                     <i class="el-icon-picture-outline"></i>
                                 </div>
                             </el-image>
                         </div>
-                        <div class="ellipsis-item">{{scope.row.oper.nickname}}</div>
-                    </div>
-                    <div v-if="!scope.row.oper">系统</div>
+                        <div class="ellipsis-item">{{scope.row.operType}}</div>
+                    </div> -->
+                    <!-- <div v-if="!scope.row.oper">系统</div> -->
                 </template>
             </el-table-column>
             <el-table-column label="动态时间" width="160">
                 <template slot-scope="scope">
                     <div>
-                        {{moment(scope.row.createtime*1000).format("YYYY-MM-DD HH:mm:ss")}}
+                        <!-- {{scope.row.createtime*1000).format("YYYY-MM-DD HH:mm:ss")}} -->
+                        {{scope.row.updateTime}}
                     </div>
                 </template>
             </el-table-column>
             <el-table-column label="操作" fixed="right" min-width="80">
-                <template slot-scope="scope">
+                <template>
                     <div class="operation-status">
-                        <span v-if="['order','reward','share','agent','level'].includes(scope.row.event)"
-                            @click="operation(scope.row.event,scope.row)">详情</span>
-                        <span v-else>-</span>
+                        <span 
+                          >详情</span>
+                        <!-- <span>-</span> -->
                     </div>
                 </template>
             </el-table-column>
@@ -291,7 +294,16 @@ export default {
         {name:'绑定关系',type:'7'},
       ],
       really_status: "",
-
+      listData:[
+        {
+          tenanId:'动态筛选',
+          event :'分销商',
+          remark:'内容',
+          operId:'操作人类型',
+          operType:'操作人',
+          updateTime:'动态时间',
+        }
+      ],
       // 弹框标题
       title: "",
       // 是否展示弹框
@@ -353,8 +365,8 @@ export default {
         page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        const data = res.data.data;
-        console.log('data',res)
+        that.listData = res.data.data.records;
+        // console.log('log数据：',res)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;

@@ -127,7 +127,7 @@
                   </el-image> -->
                 </div>
                 <div class="ellipsis-item">
-                  {{ scope.row.name }}
+                  {{ scope.row.tenantId }}
                 </div>
               </div>
             </template>
@@ -136,7 +136,7 @@
           <el-table-column label="手机号" width="120">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.phone }}
+                {{ scope.row.applyInfo }}
               </div>
             </template>
           </el-table-column>
@@ -155,7 +155,7 @@
           <el-table-column label="累计佣金" min-width="100">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_income
+                {{ scope.row.totallncome
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -164,7 +164,7 @@
           <el-table-column label="消费金额" min-width="100">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_consume
+                {{ scope.row.orderMoney
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -173,7 +173,7 @@
           <el-table-column label="上级分销商" min-width="140">
             <template slot-scope="scope">
               <div class="ellipsis-item theme-cursor">
-                {{ scope.row.parent_agent }}
+                {{ scope.row.childAgentLevel }}
               </div>
             </template>
           </el-table-column>
@@ -182,7 +182,7 @@
             <template slot-scope="scope">
               <div>
                 <span
-                  >{{ scope.row.child_user_count_1 }}
+                  >{{ scope.row.childOrderCount }}
                   <span class="unit-tip-item">人</span>
                 </span>
               </div>
@@ -192,7 +192,7 @@
           <el-table-column label="创建时间" width="150">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.createtime }}
+                {{ scope.row.createTime }}
               </div>
             </template>
           </el-table-column>
@@ -213,7 +213,7 @@
         <!-- 代审核 -->
         <el-table
           v-if="activeTabsName == 'pending'"
-          :data="listData2"
+          :data="listData"
           border
           stripe
           :cell-class-name="tableCellClassName2"
@@ -229,7 +229,7 @@
                   </el-image> -->
                 </div>
                 <div class="ellipsis-item">
-                  {{ scope.row.name }}
+                  {{ scope.row.tenantId }}
                 </div>
               </div>
             </template>
@@ -238,7 +238,8 @@
           <el-table-column label="资料审核" width="160">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.phone }}
+                
+                {{ scope.row.level }}
               </div>
             </template>
           </el-table-column>
@@ -257,7 +258,7 @@
           <el-table-column label="上级分销商" min-width="140">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_income
+                {{ scope.row.childAgentLevel
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -266,7 +267,7 @@
           <el-table-column label="消费金额" width="140">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_consume
+                {{ scope.row.orderMoney
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -275,7 +276,7 @@
           <el-table-column label="推广人数" width="140">
             <template slot-scope="scope">
               <div class="ellipsis-item theme-cursor">
-                {{ scope.row.parent_agent }}
+                {{ scope.row.level }}
               </div>
             </template>
           </el-table-column>
@@ -294,7 +295,7 @@
           <el-table-column label="更新时间" width="150">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.createtime }}
+                {{ scope.row.updateTime }}
               </div>
             </template>
           </el-table-column>
@@ -302,7 +303,7 @@
           <el-table-column label="创建时间" width="150">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.tcreatetime }}
+                {{ scope.row.createTime }}
               </div>
             </template>
           </el-table-column>
@@ -313,7 +314,6 @@
                 <span
                   class="theme-cursor"
                   style="margin-right: 14px"
-                  @click="operation('edit', scope.row.user_id)"
                 >
                   查看
                 </span>
@@ -322,7 +322,6 @@
                   v-if="
                     scope.row.info_status == 0 || scope.row.info_status == -1
                   "
-                  @click="operation('edit', scope.row.user_id)"
                   >辅助填写</span
                 >
                 <span
@@ -330,26 +329,22 @@
                   v-if="
                     scope.row.info_status == 0 || scope.row.info_status == 1
                   "
-                  @click="operation('agree', scope.row.user_id, scope.row)"
                   >同意</span
                 >
                 <span
                   class="shopro-edit-text"
                   v-if="scope.row.info_status == null"
-                  @click="operation('agree-null-status', scope.row.user_id)"
                   >同意</span
                 >
                 <span
                   class="agent-apply-item-tip-delete"
                   v-if="scope.row.info_status == 1"
-                  @click="operation('reject', scope.row.user_id)"
                   >驳回</span
                 >
                 <span
                   class="shopro-delete-text"
                   slot="reference"
                   v-if="scope.row.info_status == 1"
-                  @click="operation('del', scope.row.user_id)"
                   >删除</span
                 >
               </div>
@@ -357,9 +352,10 @@
           </el-table-column>
         </el-table>
 
+        <!-- 待升级 -->
         <el-table
           v-if="activeTabsName == '1'"
-          :data="listData3"
+          :data="listData"
           border
           stripe
           :cell-class-name="tableCellClassName3"
@@ -375,7 +371,7 @@
                   </el-image> -->
                 </div>
                 <div class="ellipsis-item">
-                  {{ scope.row.name }}
+                  {{ scope.row.tenantId}}
                 </div>
               </div>
             </template>
@@ -383,7 +379,7 @@
           <el-table-column label="当前等级" min-width="160">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.phone }}
+                {{ scope.row.level }}
               </div>
             </template>
           </el-table-column>
@@ -400,7 +396,7 @@
           <el-table-column label="创建时间" width="160">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_income
+                {{ scope.row.createTime
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -408,7 +404,7 @@
           <el-table-column label="消费金额(元)" min-width="140">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.total_consume
+                {{ scope.row.orderMoney
                 }}<span class="unit-tip-item">元</span>
               </div>
             </template>
@@ -416,7 +412,7 @@
           <el-table-column label="推广人数" width="140">
             <template slot-scope="scope">
               <div class="ellipsis-item theme-cursor">
-                {{ scope.row.parent_agent }}
+                {{ scope.row.level}}
               </div>
             </template>
           </el-table-column>
@@ -567,131 +563,23 @@ export default {
         mobile: "like",
         level_status: ">",
       },
-      // listData:[],//listData2和listData3都是listData
-      // listData模拟数据 注意user干什么的
-      listData: [
+      // listData:[],
+      listData:[
         {
-          img: "",
-          name: "遇见预见1",
-          phone: "1234566467",
-          level: "1",
-          total_income: "12.12",
-          total_consume: "13.13",
-          parent_agent: "aa",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见2",
-          phone: "1234562357",
-          level: "1",
-          total_income: "22.12",
-          total_consume: "15.13",
-          parent_agent: "ba",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见3",
-          phone: "1234565327",
-          level: "1",
-          total_income: "32.12",
-          total_consume: "16.13",
-          parent_agent: "ca",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见4",
-          phone: "123452367",
-          level: "1",
-          total_income: "42.12",
-          total_consume: "173.13",
-          parent_agent: "da",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-        },
-      ],
-      listData2: [
-        {
-          img: "",
-          name: "遇见预见1",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "qq",
-          total_consume: "13.13",
-          parent_agent: "1",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-          tcreatetime: "2032-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见2",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "bb",
-          total_consume: "15.13",
-          parent_agent: "2",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-          tcreatetime: "2022-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见3",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "cc",
-          total_consume: "16.13",
-          parent_agent: "3",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-          tcreatetime: "2052-11-11 10:54:08",
-        },
-        {
-          img: "",
-          name: "遇见预见4",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "ee",
-          total_consume: "173.13",
-          parent_agent: "4",
-          child_user_count_1: "1",
-          createtime: "2022-11-11 10:54:08",
-          tcreatetime: "2622-11-11 10:54:08",
-        },
-      ],
-      listData3: [
-        {
-          img: "",
-          name: "遇见预见1",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "2032-11-11 10:54:08",
-          total_consume: "13.13",
-          parent_agent: "1",
-        },
-        {
-          img: "",
-          name: "遇见预见2",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "2052-11-11 10:54:08",
-          total_consume: "15.13",
-          parent_agent: "2",
-        },
-        {
-          img: "",
-          name: "遇见预见3",
-          phone: "无需等级",
-          level: "等级1",
-          total_income: "2082-11-11 10:54:08",
-          total_consume: "16.13",
-          parent_agent: "3",
+          tenantId:'用户',
+          // 等级
+          level:1,
+          applyInfo:'电话',
+          totallncome:'累计收入',
+          orderMoney:'消费金额',
+          childAgentLevel: "上级分销商",
+          childOrderCount:1,
+          createTime:'创建时间',
+          updateTime:'更新时间',
+
+          // 审核资料 待定
+          // 推广人数 待定
+          // 提交次数 待定
         },
       ],
       // 自带生成元素
@@ -719,8 +607,6 @@ export default {
       selectionList: [],
       // 表单配置
       option: option,
-      // 表单列表
-      datas: [],
     };
   },
   mounted() {
@@ -860,9 +746,8 @@ export default {
         page.pageSize,
         Object.assign(params, this.query)
       ).then((res) => {
-        this.datas = res.data.data.records
-        console.log("data1", res);
-        // console.log("data2", res.data.data.records);
+        this.listData = res.data.data.records
+        // console.log("data1", this.listData);
         // this.page.total = data.total;
         // this.data = data.records;
         // this.loading = false;

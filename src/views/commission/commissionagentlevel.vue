@@ -20,7 +20,7 @@
 
       <div class="shopro-table-container level">
         <el-table
-          :data="indexList"
+          :data="levellist"
           style="width: 100%"
           stripe
           border
@@ -44,11 +44,11 @@
             </template>
           </el-table-column>
           <el-table-column label="等级徽章" min-width="120">
-            <template slot-scope="scope">
+            <template>
               <div class="table-image">
                 <el-image
                   style="width: 40px; height: 40px"
-                  :src="scope.row.image"
+                  src="https://demo.shopro.top/uploads/20220909/5c5e361cd3869e363e8d19c4911905e5.jpg"
                   :fit="fit"
                 ></el-image>
               </div>
@@ -57,21 +57,21 @@
           <el-table-column label="一级(自购)佣金比例" min-width="160">
             <template slot-scope="scope">
               <div class="shopro-custom-cell-center">
-                {{ scope.row.commission_rules1 }}%
+                {{ scope.row.upgradeRules }}%
               </div>
             </template>
           </el-table-column>
           <el-table-column label="二级佣金比例" min-width="120">
             <template slot-scope="scope">
               <div class="shopro-custom-cell-center">
-                {{ scope.row.commission_rules2 }}%
+                {{ scope.row.upgradeRules }}%
               </div>
             </template>
           </el-table-column>
           <el-table-column label="三级佣金比例" min-width="120">
-            <template slot-scope="scope">
+            <template>
               <div class="shopro-custom-cell-center">
-                {{ scope.row.commission_rules3 }}%
+                三级佣金
               </div>
             </template>
           </el-table-column>
@@ -112,43 +112,17 @@ export default {
     return {
       operation: false,
       operationb:false,
-      indexList: [
+
+      levellist:[
         {
-          level: 1,
-          name: "普通用户",
-          image:
-            "https://demo.shopro.top/uploads/20220909/5c5e361cd3869e363e8d19c4911905e5.jpg",
-          commission_rules1: 1.0,
-          commission_rules2: 2.0,
-          commission_rules3: 3.0,
-        },
-        {
-          level: 1,
-          name: "普通用户",
-          image:
-            "https://demo.shopro.top/uploads/20220909/5c5e361cd3869e363e8d19c4911905e5.jpg",
-          commission_rules1: 1.0,
-          commission_rules2: 2.0,
-          commission_rules3: 3.0,
-        },
-        {
-          level: 1,
-          name: "普通用户",
-          image:
-            "https://demo.shopro.top/uploads/20220909/5c5e361cd3869e363e8d19c4911905e5.jpg",
-          commission_rules1: 1.0,
-          commission_rules2: 2.0,
-          commission_rules3: 3.0,
-        },
-        {
-          level: 1,
-          name: "普通用户",
-          image:
-            "https://demo.shopro.top/uploads/20220909/5c5e361cd3869e363e8d19c4911905e5.jpg",
-          commission_rules1: 1.0,
-          commission_rules2: 2.0,
-          commission_rules3: 3.0,
-        },
+          level:2,
+          name:'普通用户',
+          image:"图片", 
+          upgradeRules:'一级佣金',
+          upgradeRules:'二级佣金',
+
+          //  一级佣金 二级佣金 三级佣金 字段都有问题
+        }
       ],
 
       //以下为生成
@@ -182,7 +156,7 @@ export default {
   },
   mounted() {
     this.init();
-    this.onLoad(this.page);
+    this.onLoad();
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -205,16 +179,17 @@ export default {
     // 以下为生成
 
     init() {},
-    onLoad(page, params = {}) {
-      const that = this;
+
+    onLoad(params = {}) {
+      let that = this;
       that.loading = true;
       getList(
-        page.currentPage,
-        page.pageSize,
+        that.page.currentPage,
+        that.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        const data = res.data.data;
-        console.log('data',res)
+        that.levellist = res.data.data.records;
+        console.log('level数据',res)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;

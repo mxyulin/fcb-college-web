@@ -120,6 +120,62 @@
                     >
                   </span> -->
                 </el-dialog>
+
+
+                <div style="max-width: 632px;border: 1px solid #e6e6e6;margin-top: 9px;">
+                  <div class="shopro-goods-header">
+                    <div class="shopro-goods-id">ID</div>
+                    <div class="shopro-goods-title">商品信息</div>
+                    <div class="shopro-goods-stock">库存</div>
+                    <div class="shopro-goods-opt">操作</div>
+                  </div>
+
+                  <div>
+                    <div
+                      class="shopro-goods-body"
+                    >
+                      <div class="shopro-goods-id">
+                      </div>
+                      <div class="shopro-goods-title">
+                        <div class="shopro-goods-image">
+                          <el-image
+                            fit="contain"
+                          >
+                            <div slot="error" class="image-slot">
+                              <i class="el-icon-picture-outline"></i>
+                            </div>
+                          </el-image>
+                        </div>
+                        <div>
+                          <div
+                            class="ellipsis-item"
+                            style="
+                              width: 180px;
+                              height: 20px;
+                              line-height: 20px;
+                            "
+                          >
+                          </div>
+                          <div style="height: 20px; line-height: 20px">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="shopro-goods-stock">
+                      </div>
+                      <div class="shopro-goods-opt">
+                        <span class="become_register_delete">删除</span>
+                      </div>
+                    </div>
+                    <div style="padding: 0 20px" v-if="!goodsDetail">
+                      商品不存在或已下架
+                    </div>
+                  </div>
+                  <div class="shopro-goods-body" >
+                      <div class="shopro-goods-add-button">
+                          <i class="el-icon-plus"></i>选择商品
+                      </div>
+                  </div>
+                </div>
               </el-form-item>
               <!-- 累计消费消费累计金额 -->
               <el-form-item
@@ -163,8 +219,11 @@
           <el-collapse-transition>
             <div v-if="needAgentForm == 1">
               <el-form-item label="表单背景图：">
-                <div class="bgimage-add-container"  @click="centerbackground = true">
-                  <el-image 
+                <div
+                  class="bgimage-add-container"
+                  @click="centerbackground = true"
+                >
+                  <el-image
                     v-if="configData.agent_form.background_image"
                     fit="contain"
                   >
@@ -173,7 +232,6 @@
                     </div>
                   </el-image>
 
-
                   <div
                     class="bgimage-add"
                     v-if="!configData.agent_form.background_image"
@@ -181,15 +239,15 @@
                     <i class="el-icon-plus"></i>
                   </div>
                 </div>
-                  <el-dialog
-                  append-to-body="ture"  
+                <el-dialog
+                  append-to-body="ture"
                   :visible.sync="centerbackground"
                   width="80%"
-                  center>
+                  center
+                >
                   <background></background>
                 </el-dialog>
               </el-form-item>
-
 
               <el-form-item label="表单内容：">
                 <div style="max-width: 642px">
@@ -260,10 +318,15 @@
                           size="small"
                         ></el-input>
                       </div>
-                      <div @click="centerDialogVisiblethree = true" class="apply_protocol-select">选择</div>
+                      <div
+                        @click="centerDialogVisiblethree = true"
+                        class="apply_protocol-select"
+                      >
+                        选择
+                      </div>
 
                       <el-dialog
-                        append-to-body="ture"  
+                        append-to-body="ture"
                         :visible.sync="centerDialogVisiblethree"
                         width="80%"
                         height="60%"
@@ -331,22 +394,22 @@ import {
   remove,
 } from "@/api/commission/commissionconfig";
 
-
-
 import { mapGetters } from "vuex";
 import commodity from "./figchildren/commodity.vue";
 import background from "./figchildren/background.vue";
-import agreement from "./figchildren/agreement.vue"
+import agreement from "./figchildren/agreement.vue";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
 export default {
-  components: { commodity, background,agreement },
+  components: { commodity, background, agreement },
   data() {
     return {
-      centerbackground:false,
+      centerbackground: false,
       centerDialogVisible: false,
-      centerDialogVisiblethree:false,
+      centerDialogVisiblethree: false,
       tipshow: true,
+      goodsDetail:[],
+
       configData: {
         commission_level: "1",
         self_buy: "0",
@@ -399,8 +462,6 @@ export default {
       // 模拟数据
       initData: [],
       isf: false,
-
-
 
       // // 弹框标题
       // title: '新建模板',
@@ -500,15 +561,11 @@ export default {
       // }
     },
 
-    onLoad( params = {}) {
+    onLoad(params = {}) {
       let that = this;
       that.loading = true;
-      getList(
-        that.page.currentPage,
-        that.page.pageSize,
-        params
-      ).then((res) => {
-        console.log('res',res)
+      getList(that.page.currentPage, that.page.pageSize, params).then((res) => {
+        console.log("res", res);
         // that.page.total = res.data.total;
         // that.data = res.data.records;
         // that.loading = false;
@@ -519,8 +576,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped src="@/views/commission/style/commissionconfig.scss"></style>
+<style
+  lang="scss"
+  scoped
+  src="@/views/commission/style/commissionconfig.scss"
+></style>
 <style lang="scss">
 // 当要改变element样式时用
-
 </style>

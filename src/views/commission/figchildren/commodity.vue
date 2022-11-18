@@ -56,7 +56,7 @@
             </el-pagination>
           </div>
 
-          <div class="shopro-submit-container">
+          <div class="shopro-submit-container" >
             <div class="shopro-submit-button">保存</div>
           </div>
 
@@ -193,6 +193,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         that.treedata = res.data.data.slice(8);
+        console.log("树的数据：",that.treedata)
       });
     },
     getproductdata(id) {
@@ -205,6 +206,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         that.ditydatab = res.data.data.records;
+        console.log('表的数据：',that.ditydatab)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
