@@ -171,7 +171,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  size="mini"
+                  :size="option.size"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -212,8 +212,9 @@
         <el-col :xs="16" :sm="16">
           <div class="select-style-item-select">
             <el-radio-group
-              class="item-radio-group"
+              :size="option.size"
               v-model="templateForm.content.style"
+              class="item-radio-group"
             >
               <el-radio :label="4">4列</el-radio>
               <el-radio :label="5">5列</el-radio>
@@ -223,8 +224,8 @@
       </el-row>
       <draggable
         :list="templateForm.content.list"
+        :animation="200"
         v-bind="$attrs"
-        :options="{ animation: 200 }"
         handle=".draggable-handle-move"
       >
         <div
@@ -237,7 +238,7 @@
               <div class="display-flex" style="align-items: center">
                 <img
                   class="draggable-handle-move"
-                  src="/assets/addons/shopro/img/decorate/move.png"
+                  src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
                 />
                 <div class="select-style-item-tip">图片{{ index + 1 }}</div>
               </div>
@@ -256,7 +257,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  size="mini"
+                  :size="option.size"
                   v-model="item.name"
                   maxlength="5"
                 >
@@ -275,15 +276,18 @@
                   :src="
                     item.image
                       ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default2.png'
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  type="primary"
+                  plain
+                  :size="option.size"
+                  class="margin-left-20 choosePicture"
                   :data-index="index"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -310,9 +314,15 @@
           <el-row class="select-style-item-box">
             <el-col :xs="16" :sm="16" :offset="6">
               <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
+                <el-button
+                  type="primary"
+                  plain
+                  :size="option.size"
+                  class="choosePath"
+                  :data-index="index"
+                >
                   选择链接
-                </div>
+                </el-button>
                 <span class="margin-left-20 one-ellipsis">{{
                   item.path_name
                 }}</span>
@@ -320,7 +330,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  size="mini"
+                  :size="option.size"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -329,19 +339,27 @@
         </div>
       </draggable>
       <div class="select-style-item-tip">
-        <div @click.stop="addForm('menu')" class="btn-common">添加</div>
+        <el-button
+          type="primary"
+          plain
+          :size="option.size"
+          @click.stop="addForm('menu')"
+          >添加</el-button
+        >
       </div>
     </div>
     <!-- 广告魔方 -->
     <div v-if="templateForm.type == 'adv'" class="decorate-right-write">
       <div class="select-style-con">
         <img :src="advStyleImage[templateForm.content.style - 1].src" />
-        <div class="chooseAdvPic" @click.stop="chooseAdvPic">选择风格</div>
+        <el-button type="text" class="chooseAdvPic" @click.stop="showDrawer"
+          >选择风格</el-button
+        >
       </div>
       <draggable
         :list="templateForm.content.list"
         v-bind="$attrs"
-        :options="{ animation: 200 }"
+        :animation="200"
         handle=".draggable-handle-move"
       >
         <div
@@ -355,7 +373,7 @@
           >
             <img
               class="draggable-handle-move"
-              src="/assets/addons/shopro/img/decorate/move.png"
+              src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
             />
             <div class="select-style-item-tip">图片{{ index + 1 }}:</div>
           </div>
@@ -370,15 +388,18 @@
                   :src="
                     item.image
                       ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default.png'
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  type="primary"
+                  :size="option.size"
+                  plain
+                  class="margin-left-20 choosePicture"
                   :data-index="index"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -402,9 +423,15 @@
           <el-row class="select-style-item-box">
             <el-col :xs="16" :sm="16" :offset="6">
               <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
+                <el-button
+                  type="primary"
+                  :size="option.size"
+                  plain
+                  class="choosePath"
+                  :data-index="index"
+                >
                   选择链接
-                </div>
+                </el-button>
                 <span class="margin-left-20 one-ellipsis">{{
                   item.path_name
                 }}</span>
@@ -412,7 +439,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  size="mini"
+                  :size="option.size"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -420,7 +447,33 @@
           </el-row>
         </div>
       </draggable>
+      <!-- 选择广告魔方样式 -->
+      <el-drawer
+        title="选择样式"
+        :visible.sync="advdrawer"
+        :with-header="false"
+        size="342px"
+        :append-to-body="true"
+      >
+        <div style="display: flex; flex-wrap: wrap; padding: 15px">
+          <el-row :gutter="10">
+            <el-col
+              :xs="12"
+              :sm="12"
+              v-for="(i, index) in advStyleImage"
+              :key="index"
+            >
+              <img
+                style="margin: 10px 0; width: 154px; height: 100px"
+                :src="i.src"
+                @click.stop="changeAdv(index, i.num)"
+              />
+            </el-col>
+          </el-row>
+        </div>
+      </el-drawer>
     </div>
+    <!-- 商品分类 -->
     <div v-if="templateForm.type == 'goods-group'" class="decorate-right-write">
       <div class="select-style-item">
         <div class="select-style-item-title">商品分类</div>
@@ -447,23 +500,26 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                size="mini"
+                :size="option.size"
                 v-model="templateForm.content.category_name"
                 disabled
               >
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('goods-group')"
+                >
+                  选择
+                </el-button>
               </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('goods-group')"
-              >
-                选择
-              </div>
             </div>
           </el-col>
         </el-row>
       </div>
     </div>
-    <!-- 自定义菜单 -->
+    <!-- 自定义商品分类 -->
     <div v-if="templateForm.type == 'goods-list'" class="decorate-right-write">
       <div class="select-style-item">
         <div class="select-style-item-title">商品列表</div>
@@ -485,18 +541,25 @@
         </el-row>
         <el-row class="select-style-item-box">
           <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip tip-line">选择商品:</div>
+            <d iv class="select-style-item-tip tip-line">选择商品:</d>
           </el-col>
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
-              <el-input size="mini" v-model="templateForm.content.ids" disabled>
-              </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('goods-list')"
+              <el-input
+                :size="option.size"
+                v-model="templateForm.content.ids"
+                disabled
               >
-                选择
-              </div>
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('goods-list')"
+                >
+                  选择
+                </el-button>
+              </el-input>
             </div>
           </el-col>
         </el-row>
@@ -513,7 +576,7 @@
             style="display: flex; flex-wrap: wrap"
             :list="templateData[centerSelect].content.timeData"
             v-bind="$attrs"
-            :options="{ animation: 100 }"
+            :animation="100"
             @end="goodsListEnd"
           >
             <div
@@ -556,6 +619,7 @@
         </div>
       </div>
     </div>
+    <!-- 优惠券 -->
     <div v-if="templateForm.type == 'coupons'" class="decorate-right-write">
       <div class="select-style-item">
         <div class="select-style-item-title">优惠券</div>
@@ -581,14 +645,21 @@
           </el-col>
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
-              <el-input size="mini" v-model="templateForm.content.ids" disabled>
-              </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('coupons')"
+              <el-input
+                :size="option.size"
+                v-model="templateForm.content.ids"
+                disabled
               >
-                选择
-              </div>
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('coupons')"
+                >
+                  选择
+                </el-button>
+              </el-input>
             </div>
           </el-col>
         </el-row>
@@ -600,11 +671,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.bgcolor1"
-                size="mini"
+                :size="option.size"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.bgcolor1"
-                size="mini"
+                :size="option.size"
               >
               </el-color-picker>
             </div>
@@ -618,11 +689,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.bgcolor2"
-                size="mini"
+                :size="option.size"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.bgcolor2"
-                size="mini"
+                :size="option.size"
               >
               </el-color-picker>
             </div>
@@ -636,11 +707,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.pricecolor"
-                size="mini"
+                :size="option.size"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.pricecolor"
-                size="mini"
+                :size="option.size"
               >
               </el-color-picker>
             </div>
@@ -654,11 +725,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.color"
-                size="mini"
+                :size="option.size"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.color"
-                size="mini"
+                :size="option.size"
               ></el-color-picker>
             </div>
           </el-col>
@@ -677,7 +748,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                size="mini"
+                :size="option.size"
               ></el-input>
             </div>
           </el-col>
@@ -705,17 +776,20 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                size="mini"
+                :size="option.size"
                 v-model="templateForm.content.groupon_name"
                 disabled
               >
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('groupon')"
+                >
+                  选择
+                </el-button>
               </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('groupon')"
-              >
-                选择
-              </div>
             </div>
           </el-col>
         </el-row>
@@ -733,7 +807,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                size="mini"
+                :size="option.size"
               ></el-input>
             </div>
           </el-col>
@@ -761,17 +835,20 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                size="mini"
+                :size="option.size"
                 v-model="templateForm.content.seckill_name"
                 disabled
               >
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('seckill')"
+                >
+                  选择
+                </el-button>
               </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('seckill')"
-              >
-                选择
-              </div>
             </div>
           </el-col>
         </el-row>
@@ -779,24 +856,24 @@
     </div>
     <!-- 直播 -->
     <div v-if="templateForm.type == 'live'" class="decorate-right-write">
-      <el-row class="select-style-item-box box-radio">
-        <el-col :xs="6" :sm="6">
-          <div class="select-style-item-tip radio-tip">样式选择</div>
-        </el-col>
-        <el-col :xs="16" :sm="16">
-          <div class="select-style-item-select">
-            <el-radio-group
-              class="item-radio-group"
-              v-model="templateForm.content.style"
-            >
-              <el-radio :label="1">1列</el-radio>
-              <el-radio :label="2">2列</el-radio>
-            </el-radio-group>
-          </div>
-        </el-col>
-      </el-row>
       <div class="select-style-item">
         <div class="select-style-item-title">直播</div>
+        <el-row class="select-style-item-box box-radio">
+          <el-col :xs="6" :sm="6">
+            <div class="select-style-item-tip radio-tip">样式选择</div>
+          </el-col>
+          <el-col :xs="16" :sm="16">
+            <div class="select-style-item-select">
+              <el-radio-group
+                class="item-radio-group"
+                v-model="templateForm.content.style"
+              >
+                <el-radio :label="1">1列</el-radio>
+                <el-radio :label="2">2列</el-radio>
+              </el-radio-group>
+            </div>
+          </el-col>
+        </el-row>
         <el-row class="select-style-item-box">
           <el-col :xs="6" :sm="6">
             <div class="select-style-item-tip search-tip">直播名称</div>
@@ -805,7 +882,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                size="mini"
+                :size="option.size"
               ></el-input>
             </div>
           </el-col>
@@ -816,264 +893,21 @@
           </el-col>
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
-              <el-input size="mini" v-model="templateForm.content.ids" disabled>
+              <el-input
+                :size="option.size"
+                v-model="templateForm.content.ids"
+                disabled
+              >
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('live')"
+                >
+                  选择
+                </el-button>
               </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('live')"
-              >
-                选择
-              </div>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <!-- 底部导航 -->
-    <div v-if="templateForm.type == 'tabbar'" class="decorate-right-write">
-      <div class="select-style-item">
-        <el-row class="select-style-item-title">
-          <el-col :xs="12" :sm="12">
-            <div class="select-style-item-tip">样式选择</div>
-          </el-col>
-        </el-row>
-        <el-row class="select-style-item-box">
-          <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip">选择样式</div>
-          </el-col>
-          <el-col :xs="18" :sm="18">
-            <div class="select-style-item-select">
-              <el-radio-group
-                class="item-radio-group"
-                v-model="templateForm.content.style"
-              >
-                <el-radio :label="1">图标+文字</el-radio>
-                <el-radio :label="2">图标</el-radio>
-                <el-radio :label="3">文字</el-radio>
-              </el-radio-group>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <draggable
-        :list="templateForm.content.list"
-        v-bind="$attrs"
-        :options="{ animation: 100 }"
-        handle=".draggable-handle-move"
-      >
-        <div
-          class="select-style-item"
-          v-for="(item, index) in templateForm.content.list"
-          :key="index"
-        >
-          <el-row class="select-style-item-title">
-            <el-col :xs="12" :sm="12">
-              <div class="display-flex" style="align-items: center">
-                <img
-                  class="draggable-handle-move"
-                  src="/assets/addons/shopro/img/decorate/move.png"
-                />
-                <div class="select-style-item-tip">导航图片{{ index + 1 }}</div>
-              </div>
-            </el-col>
-            <el-col :xs="12" :sm="12">
-              <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
-              </div>
-            </el-col>
-          </el-row>
-          <div v-if="templateForm.content.style != 3">
-            <el-row class="select-style-item-box">
-              <el-col :xs="6" :sm="6">
-                <div class="select-style-item-tip">默认图片</div>
-              </el-col>
-              <el-col :xs="16" :sm="16">
-                <div class="select-style-item-select">
-                  <img
-                    class="select-img select-imgzheng image-border"
-                    :src="
-                      item.image
-                        ? item.image
-                        : '/assets/addons/shopro/img/decorate/image-default2.png'
-                    "
-                  />
-                  <div
-                    class="btn-common margin-left-20 choosePicture"
-                    :data-index="index"
-                  >
-                    {{ item.image ? "重新选择" : "选择图片" }}
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row class="select-style-item-box">
-              <el-col :xs="6" :sm="6">
-                <div class="select-style-item-tip">选中图片</div>
-              </el-col>
-              <el-col :xs="16" :sm="16">
-                <div class="select-style-item-select">
-                  <img
-                    class="select-img select-imgzheng image-border"
-                    :src="
-                      item.activeImage
-                        ? Fast.api.cdnurl(item.activeImage)
-                        : '/assets/addons/shopro/img/decorate/image-default2.png'
-                    "
-                  />
-                  <div
-                    class="btn-common margin-left-20 choosePicture"
-                    :data-index="index"
-                    :data-active="'active'"
-                  >
-                    {{ item.activeImage ? "重新选择" : "选择图片" }}
-                  </div>
-                </div>
-              </el-col>
-            </el-row>
-            <el-row style="margin: 10px 0; padding-left: 10px; color: #999">
-              <el-col :xs="16" :sm="16" :offset="6"> 建议尺寸:46x46 </el-col>
-            </el-row>
-          </div>
-          <el-row
-            class="select-style-item-box"
-            v-if="templateForm.content.style != 2"
-          >
-            <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">图标名称</div>
-            </el-col>
-            <el-col :xs="16" :sm="16">
-              <div class="select-style-item-select">
-                <el-input
-                  placeholder="最多4个文字"
-                  maxlength="4"
-                  size="mini"
-                  v-model="item.name"
-                >
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">选择链接:</div>
-            </el-col>
-            <el-col :xs="16" :sm="16">
-              <div class="select-style-item-select">
-                <el-radio-group
-                  class="item-radio-group"
-                  v-model="item.path_type"
-                  @change="isweblink('tabbar', index)"
-                >
-                  <el-radio :label="1">系统链接</el-radio>
-                  <el-radio :label="2">外部链接</el-radio>
-                </el-radio-group>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="16" :sm="16" :offset="6">
-              <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
-                  选择链接
-                </div>
-                <span class="margin-left-20 one-ellipsis">{{
-                  item.path_name
-                }}</span>
-              </div>
-              <div class="select-style-item-select" v-if="item.path_type == 2">
-                <el-input
-                  v-model="item.path"
-                  size="mini"
-                  placeholder="必须填写http(s)://"
-                >
-                </el-input>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </draggable>
-      <div
-        class="select-style-item-tip"
-        v-if="templateForm.content.list.length < 5"
-      >
-        <div @click.stop="addForm('tabbar')" class="btn-common">添加</div>
-      </div>
-      <div class="select-style-item" v-if="templateForm.content.style != 2">
-        <el-row class="select-style-item-title">
-          <el-col :xs="12" :sm="12">
-            <div class="select-style-item-tip">文字颜色</div>
-          </el-col>
-        </el-row>
-        <el-row class="select-style-item-box">
-          <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip">默认颜色</div>
-          </el-col>
-          <el-col :xs="16" :sm="16">
-            <div class="select-style-item-select">
-              <p class="select-color">
-                <el-input
-                  placeholder=""
-                  size="mini"
-                  v-model="templateForm.content.color"
-                >
-                </el-input>
-                <el-color-picker
-                  v-model="templateForm.content.color"
-                  size="small"
-                >
-                </el-color-picker>
-              </p>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row class="select-style-item-box">
-          <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip">选中颜色</div>
-          </el-col>
-          <el-col :xs="16" :sm="16">
-            <div class="select-style-item-select">
-              <p class="select-color">
-                <el-input
-                  placeholder=""
-                  size="mini"
-                  v-model="templateForm.content.activeColor"
-                >
-                </el-input>
-                <el-color-picker
-                  v-model="templateForm.content.activeColor"
-                  size="small"
-                >
-                </el-color-picker>
-              </p>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-      <div class="select-style-item">
-        <el-row class="select-style-item-title">
-          <el-col :xs="12" :sm="12">
-            <div class="select-style-item-tip">背景颜色</div>
-          </el-col>
-        </el-row>
-        <el-row class="select-style-item-box">
-          <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip">默认颜色</div>
-          </el-col>
-          <el-col :xs="16" :sm="16">
-            <div class="select-style-item-select">
-              <p class="select-color">
-                <el-input
-                  placeholder=""
-                  size="mini"
-                  v-model="templateForm.content.bgcolor"
-                >
-                </el-input>
-                <el-color-picker
-                  v-model="templateForm.content.bgcolor"
-                  size="small"
-                >
-                </el-color-picker>
-              </p>
             </div>
           </el-col>
         </el-row>
@@ -1084,7 +918,7 @@
       <draggable
         :list="templateForm.content.list"
         v-bind="$attrs"
-        :options="{ animation: 100 }"
+        :animation="100"
         handle=".draggable-handle-move"
       >
         <div
@@ -1097,7 +931,7 @@
               <div class="display-flex" style="align-items: center">
                 <img
                   class="draggable-handle-move"
-                  src="/assets/addons/shopro/img/decorate/move.png"
+                  src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
                 />
                 <div class="select-style-item-tip">列表{{ index + 1 }}</div>
               </div>
@@ -1119,15 +953,19 @@
                   :src="
                     item.image
                       ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default2.png'
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
                   :data-index="index"
+                  class="margin-left-20 choosePicture"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -1142,7 +980,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多12个文字"
-                  size="mini"
+                  :size="option.size"
                   v-model="item.name"
                   maxlength="12"
                 >
@@ -1170,9 +1008,16 @@
           <el-row class="select-style-item-box">
             <el-col :xs="16" :sm="16" :offset="6">
               <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  class="choosePath"
+                  :data-index="index"
+                >
                   选择链接
-                </div>
+                </el-button>
                 <span class="margin-left-20 one-ellipsis">{{
                   item.path_name
                 }}</span>
@@ -1180,7 +1025,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  size="mini"
+                  :size="option.size"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -1189,7 +1034,15 @@
         </div>
       </draggable>
       <div class="select-style-item-tip">
-        <div @click.stop="addForm('nav-list')" class="btn-common">添加</div>
+        <el-button
+          slot="append"
+          :size="option.size"
+          type="primary"
+          plain
+          @click="addForm('nav-list')"
+        >
+          添加
+        </el-button>
       </div>
     </div>
     <!-- 宫格列表 -->
@@ -1197,7 +1050,7 @@
       <draggable
         :list="templateForm.content.list"
         v-bind="$attrs"
-        :options="{ animation: 100 }"
+        :animation="100"
         handle=".draggable-handle-move"
       >
         <div
@@ -1210,7 +1063,7 @@
               <div class="display-flex" style="align-items: center">
                 <img
                   class="draggable-handle-move"
-                  src="/assets/addons/shopro/img/decorate/move.png"
+                  src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
                 />
                 <div class="select-style-item-tip">列表图片{{ index + 1 }}</div>
               </div>
@@ -1232,15 +1085,18 @@
                   :src="
                     item.image
                       ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default2.png'
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  class="margin-left-20 choosePicture"
+                  :size="option.size"
+                  type="primary"
+                  plain
                   :data-index="index"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -1252,7 +1108,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  size="mini"
+                  :size="option.size"
                   v-model="item.name"
                   maxlength="4"
                 >
@@ -1262,7 +1118,7 @@
           </el-row>
           <el-row class="select-style-item-box">
             <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">选择链接:</div>
+              <div class="select-style-item-tip">选择链接</div>
             </el-col>
             <el-col :xs="16" :sm="16">
               <div class="select-style-item-select">
@@ -1280,9 +1136,15 @@
           <el-row class="select-style-item-box">
             <el-col :xs="16" :sm="16" :offset="6">
               <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
+                <el-button
+                  :size="option.size"
+                  type="primary"
+                  :data-index="index"
+                  plain
+                  class="choosePath"
+                >
                   选择链接
-                </div>
+                </el-button>
                 <span class="margin-left-20 one-ellipsis">{{
                   item.path_name
                 }}</span>
@@ -1290,7 +1152,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  size="mini"
+                  :size="option.size"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -1299,7 +1161,15 @@
         </div>
       </draggable>
       <div class="select-style-item-tip">
-        <div @click.stop="addForm('grid-list')" class="btn-common">添加</div>
+        <el-button
+          slot="append"
+          :size="option.size"
+          type="primary"
+          plain
+          @click="addForm('grid-list')"
+        >
+          添加
+        </el-button>
       </div>
     </div>
     <!-- 富文本 -->
@@ -1312,15 +1182,24 @@
         </el-row>
         <el-row class="select-style-item-box">
           <el-col :xs="6" :sm="6">
-            <div class="select-style-item-tip">点击选择:</div>
+            <div class="select-style-item-tip tip-line">点击选择</div>
           </el-col>
           <el-col :xs="16" :sm="16">
-            <div class="select-style-item-select">
-              <div class="btn-common chooseRichText">富文本</div>
-              <span class="margin-left-20 one-ellipsis">{{
-                templateForm.content.name
-              }}</span>
-            </div>
+            <el-input
+              v-model="templateForm.content.name"
+              placeholder=""
+              :size="option.size"
+              disabled
+            >
+              <el-button
+                type="primary"
+                slot="append"
+                :size="option.size"
+                plain
+                @click="operation('live')"
+                >富文本</el-button
+              >
+            </el-input>
           </el-col>
         </el-row>
       </div>
@@ -1341,8 +1220,9 @@
           </el-col>
         </el-row>
         <el-row class="title-block-body">
+          <!-- 不存在的字段，判断意义不明 -->
           <div v-if="templateForm.content.style_type">
-            <div class="compotent-title-block-container">
+            <!-- <div class="compotent-title-block-container">
               <div
                 class="title-block-title"
                 :style="{ color: templateForm.content.color }"
@@ -1357,7 +1237,7 @@
             </div>
             <div class="title-block-btn" @click="selectTitleBlock(null)">
               选择样式
-            </div>
+            </div> -->
           </div>
           <div v-else>
             <div v-if="!templateForm.content.image">
@@ -1375,12 +1255,12 @@
                 </div>
                 <img
                   class="title-block-style image-border"
-                  :src="Fast.api.cdnurl(it.src)"
+                  :src="it.src"
                   :style="{ margin: idx == titleBlock.length - 1 ? '0' : '' }"
                 />
               </div>
             </div>
-            <div v-if="templateForm.content.image">
+            <div v-else>
               <div class="compotent-title-block-container">
                 <div
                   class="title-block-title"
@@ -1390,16 +1270,23 @@
                 </div>
                 <img
                   class="title-block-style image-border"
-                  :src="Fast.api.cdnurl(templateForm.content.image)"
+                  :src="templateForm.content.image"
                 />
               </div>
               <div
                 class="title-block-btn"
                 style="justify-content: space-around; display: flex"
               >
-                <span @click="selectTitleBlock(null)">选择样式</span
-                ><span class="choosePicture" data-index="title-block"
-                  >选择图片</span
+                <el-button
+                  :size="option.size"
+                  type="text"
+                  @click="selectTitleBlock(null)"
+                  >选择样式</el-button
+                ><el-button
+                  :size="option.size"
+                  type="text"
+                  data-index="title-block"
+                  >选择图片</el-button
                 >
               </div>
             </div>
@@ -1421,7 +1308,7 @@
               <el-input
                 placeholder="最多4个文字"
                 maxlength="4"
-                size="mini"
+                :size="option.size"
                 v-model="templateForm.content.name"
               >
               </el-input>
@@ -1437,13 +1324,13 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  size="mini"
+                  :size="option.size"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
                 <el-color-picker
                   v-model="templateForm.content.color"
-                  size="small"
+                  :size="option.size"
                 >
                 </el-color-picker>
               </p>
@@ -1488,7 +1375,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  size="mini"
+                  :size="option.size"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
@@ -1514,8 +1401,8 @@
                 class="select-img image-border"
                 :src="
                   templateForm.content.image
-                    ? Fast.api.cdnurl(templateForm.content.image)
-                    : '/assets/addons/shopro/img/decorate/image-default.png'
+                    ? templateForm.content.image
+                    : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                 "
               />
               <div
@@ -1529,6 +1416,7 @@
         </el-row>
       </div>
     </div>
+    <!-- 分类选项卡 -->
     <div
       v-if="templateForm.type == 'category-tabs'"
       class="decorate-right-write"
@@ -1557,136 +1445,24 @@
           </el-col>
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
-              <el-input size="mini" v-model="templateForm.content.ids" disabled>
-              </el-input>
-              <div
-                class="btn-common input-select-btn"
-                @click="operation('category-tabs')"
+              <el-input
+                :size="option.size"
+                v-model="templateForm.content.ids"
+                disabled
               >
-                选择
-              </div>
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="operation('category-tabs')"
+                >
+                  选择
+                </el-button>
+              </el-input>
             </div>
           </el-col>
         </el-row>
-      </div>
-    </div>
-    <!-- 弹窗 -->
-    <div v-if="templateForm.type == 'popup'" class="decorate-right-write">
-      <draggable
-        :list="templateForm.content.list"
-        v-bind="$attrs"
-        :options="{ animation: 100 }"
-      >
-        <div
-          class="select-style-item select-style-block"
-          v-for="(item, index) in templateForm.content.list"
-          :key="index"
-        >
-          <el-row class="select-style-item-title">
-            <el-col :xs="12" :sm="12">
-              <div class="select-style-item-tip">弹窗设置{{ index + 1 }}</div>
-            </el-col>
-            <el-col :xs="12" :sm="12">
-              <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">弹窗图片</div>
-            </el-col>
-            <el-col :xs="16" :sm="16">
-              <div class="select-style-item-select">
-                <img
-                  class="select-img image-border"
-                  :src="
-                    item.image
-                      ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default.png'
-                  "
-                />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
-                  :data-index="index"
-                >
-                  {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row style="margin: 10px 0; padding-left: 10px; color: #999">
-            <el-col :xs="16" :sm="16" :offset="6"> 建议尺寸:612x836 </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">选择链接:</div>
-            </el-col>
-            <el-col :xs="16" :sm="16">
-              <div class="select-style-item-select">
-                <el-radio-group
-                  class="item-radio-group"
-                  v-model="item.path_type"
-                  @change="isweblink(index)"
-                >
-                  <el-radio :label="1">系统链接</el-radio>
-                  <el-radio :label="2">外部链接</el-radio>
-                </el-radio-group>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="16" :sm="16" :offset="6">
-              <div class="select-style-item-select" v-if="item.path_type == 1">
-                <div class="btn-common choosePath" :data-index="index">
-                  选择链接
-                </div>
-                <span class="margin-left-20 one-ellipsis">{{
-                  item.path_name
-                }}</span>
-              </div>
-              <div class="select-style-item-select" v-if="item.path_type == 2">
-                <el-input
-                  v-model="item.path"
-                  size="mini"
-                  placeholder="http(s)://"
-                ></el-input>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row class="select-style-item-box">
-            <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">显示类型</div>
-            </el-col>
-            <el-col :xs="18" :sm="18">
-              <div class="select-style-item-select">
-                <el-radio-group class="item-radio-group" v-model="item.style">
-                  <el-radio :label="1">仅首次</el-radio>
-                  <el-radio :label="2">多次</el-radio>
-                </el-radio-group>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row
-            v-if="item.style == 1"
-            style="margin: 10px 0; padding-left: 10px; color: #999"
-          >
-            <el-col :xs="16" :sm="16" :offset="6">
-              进入商城只显示一次广告弹窗，再次进入商城依旧显示一次
-            </el-col>
-          </el-row>
-          <el-row
-            v-if="item.style == 2"
-            style="margin: 10px 0; padding-left: 10px; color: #999"
-          >
-            <el-col :xs="16" :sm="16" :offset="6">
-              每次进入该商城页面显示广告弹窗
-            </el-col>
-          </el-row>
-        </div>
-      </draggable>
-      <div class="select-style-item-tip">
-        <div @click.stop="addForm('popup')" class="btn-common">添加</div>
       </div>
     </div>
     <!-- 个人中心头部 -->
@@ -1725,7 +1501,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  size="mini"
+                  :size="option.size"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
@@ -1751,16 +1527,19 @@
                 class="select-img image-border"
                 :src="
                   templateForm.content.image
-                    ? Fast.api.cdnurl(templateForm.content.image)
-                    : '/assets/addons/shopro/img/decorate/image-default.png'
+                    ? templateForm.content.image
+                    : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                 "
               />
-              <div
-                class="btn-common margin-left-20 choosePicture"
+              <el-button
+                :size="option.size"
+                type="primary"
+                plain
+                class="margin-left-20 choosePicture"
                 data-index="image"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
-              </div>
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -1769,6 +1548,416 @@
         </el-row>
       </div>
     </div>
+    <!--  -->
+    <!--  -->
+    <!--  -->
+    <!-- 底部导航 -->
+    <div v-if="templateForm.type == 'tabbar'" class="decorate-right-write">
+      <div class="select-style-item">
+        <el-row class="select-style-item-title">
+          <el-col :xs="12" :sm="12">
+            <div class="select-style-item-tip">样式选择</div>
+          </el-col>
+        </el-row>
+        <el-row class="select-style-item-box">
+          <el-col :xs="6" :sm="6">
+            <div class="select-style-item-tip">选择样式</div>
+          </el-col>
+          <el-col :xs="18" :sm="18">
+            <div class="select-style-item-select">
+              <el-radio-group
+                class="item-radio-group"
+                v-model="templateForm.content.style"
+              >
+                <el-radio :label="1">图标+文字</el-radio>
+                <el-radio :label="2">图标</el-radio>
+                <el-radio :label="3">文字</el-radio>
+              </el-radio-group>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      <draggable
+        :list="templateForm.content.list"
+        v-bind="$attrs"
+        :animation="100"
+        handle=".draggable-handle-move"
+      >
+        <div
+          class="select-style-item"
+          v-for="(item, index) in templateForm.content.list"
+          :key="index"
+        >
+          <el-row class="select-style-item-title">
+            <el-col :xs="12" :sm="12">
+              <div class="display-flex" style="align-items: center">
+                <img
+                  class="draggable-handle-move"
+                  src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
+                />
+                <div class="select-style-item-tip">导航图片{{ index + 1 }}</div>
+              </div>
+            </el-col>
+            <el-col :xs="12" :sm="12">
+              <div class="detele-item">
+                <span @click.stop="rightDel(index)">删除</span>
+              </div>
+            </el-col>
+          </el-row>
+          <div v-if="templateForm.content.style != 3">
+            <el-row class="select-style-item-box">
+              <el-col :xs="6" :sm="6">
+                <div class="select-style-item-tip">默认图片</div>
+              </el-col>
+              <el-col :xs="16" :sm="16">
+                <div class="select-style-item-select">
+                  <img
+                    class="select-img select-imgzheng image-border"
+                    :src="
+                      item.image
+                        ? item.image
+                        : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
+                    "
+                  />
+                  <el-button
+                    slot="append"
+                    :size="option.size"
+                    type="primary"
+                    plain
+                    class="margin-left-20 choosePicture"
+                    :data-index="index"
+                  >
+                    {{ item.image ? "重新选择" : "选择图片" }}
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row class="select-style-item-box">
+              <el-col :xs="6" :sm="6">
+                <div class="select-style-item-tip">选中图片</div>
+              </el-col>
+              <el-col :xs="16" :sm="16">
+                <div class="select-style-item-select">
+                  <img
+                    class="select-img select-imgzheng image-border"
+                    :src="
+                      item.activeImage
+                        ? item.activeImage
+                        : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
+                    "
+                  />
+                  <el-button
+                    slot="append"
+                    :size="option.size"
+                    type="primary"
+                    plain
+                    class="margin-left-20 choosePicture"
+                    data-index="active"
+                  >
+                    {{ item.activeImage ? "重新选择" : "选择图片" }}
+                  </el-button>
+                </div>
+              </el-col>
+            </el-row>
+            <el-row style="margin: 10px 0; padding-left: 10px; color: #999">
+              <el-col :xs="16" :sm="16" :offset="6"> 建议尺寸:46x46 </el-col>
+            </el-row>
+          </div>
+          <el-row
+            class="select-style-item-box"
+            v-if="templateForm.content.style != 2"
+          >
+            <el-col :xs="6" :sm="6">
+              <div class="select-style-item-tip">图标名称</div>
+            </el-col>
+            <el-col :xs="16" :sm="16">
+              <div class="select-style-item-select">
+                <el-input
+                  placeholder="最多4个文字"
+                  maxlength="4"
+                  :size="option.size"
+                  v-model="item.name"
+                >
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="6" :sm="6">
+              <div class="select-style-item-tip">选择链接:</div>
+            </el-col>
+            <el-col :xs="16" :sm="16">
+              <div class="select-style-item-select">
+                <el-radio-group
+                  class="item-radio-group"
+                  v-model="item.path_type"
+                  @change="isweblink('tabbar', index)"
+                >
+                  <el-radio :label="1">系统链接</el-radio>
+                  <el-radio :label="2">外部链接</el-radio>
+                </el-radio-group>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="16" :sm="16" :offset="6">
+              <div class="select-style-item-select" v-if="item.path_type == 1">
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  class="choosePath"
+                  :data-index="index"
+                >
+                  选择链接
+                </el-button>
+                <span class="margin-left-20 one-ellipsis">{{
+                  item.path_name
+                }}</span>
+              </div>
+              <div class="select-style-item-select" v-if="item.path_type == 2">
+                <el-input
+                  v-model="item.path"
+                  :size="option.size"
+                  placeholder="必须填写http(s)://"
+                >
+                </el-input>
+              </div>
+            </el-col>
+          </el-row>
+        </div>
+      </draggable>
+      <div
+        class="select-style-item-tip"
+        v-if="templateForm.content.list.length < 5"
+      >
+        <el-button
+          slot="append"
+          :size="option.size"
+          type="primary"
+          plain
+          @click.stop="addForm('tabbar')"
+        >
+          添加
+        </el-button>
+      </div>
+      <div class="select-style-item" v-if="templateForm.content.style != 2">
+        <el-row class="select-style-item-title">
+          <el-col :xs="12" :sm="12">
+            <div class="select-style-item-tip">文字颜色</div>
+          </el-col>
+        </el-row>
+        <el-row class="select-style-item-box">
+          <el-col :xs="6" :sm="6">
+            <div class="select-style-item-tip">默认颜色</div>
+          </el-col>
+          <el-col :xs="16" :sm="16">
+            <div class="select-style-item-select">
+              <p class="select-color">
+                <el-input
+                  placeholder=""
+                  :size="option.size"
+                  v-model="templateForm.content.color"
+                >
+                </el-input>
+                <el-color-picker
+                  v-model="templateForm.content.color"
+                  size="small"
+                >
+                </el-color-picker>
+              </p>
+            </div>
+          </el-col>
+        </el-row>
+        <el-row class="select-style-item-box">
+          <el-col :xs="6" :sm="6">
+            <div class="select-style-item-tip">选中颜色</div>
+          </el-col>
+          <el-col :xs="16" :sm="16">
+            <div class="select-style-item-select">
+              <p class="select-color">
+                <el-input
+                  placeholder=""
+                  :size="option.size"
+                  v-model="templateForm.content.activeColor"
+                >
+                </el-input>
+                <el-color-picker
+                  v-model="templateForm.content.activeColor"
+                  size="small"
+                >
+                </el-color-picker>
+              </p>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      <div class="select-style-item">
+        <el-row class="select-style-item-title">
+          <el-col :xs="12" :sm="12">
+            <div class="select-style-item-tip">背景颜色</div>
+          </el-col>
+        </el-row>
+        <el-row class="select-style-item-box">
+          <el-col :xs="6" :sm="6">
+            <div class="select-style-item-tip">默认颜色</div>
+          </el-col>
+          <el-col :xs="16" :sm="16">
+            <div class="select-style-item-select">
+              <p class="select-color">
+                <el-input
+                  placeholder=""
+                  :size="option.size"
+                  v-model="templateForm.content.bgcolor"
+                >
+                </el-input>
+                <el-color-picker
+                  v-model="templateForm.content.bgcolor"
+                  size="small"
+                >
+                </el-color-picker>
+              </p>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+    <!-- 弹窗提醒 -->
+    <div v-if="templateForm.type == 'popup'" class="decorate-right-write">
+      <draggable
+        :list="templateForm.content.list"
+        v-bind="$attrs"
+        :animation="100"
+      >
+        <div
+          class="select-style-item select-style-block"
+          v-for="(item, index) in templateForm.content.list"
+          :key="index"
+        >
+          <el-row class="select-style-item-title">
+            <el-col :xs="12" :sm="12">
+              <div class="select-style-item-tip">弹窗设置{{ index + 1 }}</div>
+            </el-col>
+            <el-col :xs="12" :sm="12">
+              <div class="detele-item">
+                <span @click.stop="rightDel(index)">删除</span>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="6" :sm="6">
+              <div class="select-style-item-tip">弹窗图片</div>
+            </el-col>
+            <el-col :xs="16" :sm="16">
+              <div class="select-style-item-select">
+                <img
+                  class="select-img image-border"
+                  :src="
+                    item.image
+                      ? item.image
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
+                  "
+                />
+                <div
+                  class="btn-common margin-left-20 choosePicture"
+                  :data-index="index"
+                >
+                  {{ item.image ? "重新选择" : "选择图片" }}
+                </div>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row style="margin: 10px 0; padding-left: 10px; color: #999">
+            <el-col :xs="16" :sm="16" :offset="6"> 建议尺寸:612x836 </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="6" :sm="6">
+              <div class="select-style-item-tip">选择链接:</div>
+            </el-col>
+            <el-col :xs="16" :sm="16">
+              <div class="select-style-item-select">
+                <el-radio-group
+                  class="item-radio-group"
+                  v-model="item.path_type"
+                  @change="isweblink(index)"
+                >
+                  <el-radio :label="1">系统链接</el-radio>
+                  <el-radio :label="2">外部链接</el-radio>
+                </el-radio-group>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="16" :sm="16" :offset="6">
+              <div class="select-style-item-select" v-if="item.path_type == 1">
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  class="choosePath"
+                  :data-index="index"
+                >
+                  选择链接
+                </el-button>
+                <span class="margin-left-20 one-ellipsis">{{
+                  item.path_name
+                }}</span>
+              </div>
+              <div class="select-style-item-select" v-if="item.path_type == 2">
+                <el-input
+                  v-model="item.path"
+                  :size="option.size"
+                  placeholder="http(s)://"
+                ></el-input>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row class="select-style-item-box">
+            <el-col :xs="6" :sm="6">
+              <div class="select-style-item-tip">显示类型</div>
+            </el-col>
+            <el-col :xs="18" :sm="18">
+              <div class="select-style-item-select">
+                <el-radio-group class="item-radio-group" v-model="item.style">
+                  <el-radio :label="1">仅首次</el-radio>
+                  <el-radio :label="2">多次</el-radio>
+                </el-radio-group>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row
+            v-if="item.style == 1"
+            style="margin: 10px 0; padding-left: 10px; color: #999"
+          >
+            <el-col :xs="16" :sm="16" :offset="6">
+              进入商城只显示一次广告弹窗，再次进入商城依旧显示一次
+            </el-col>
+          </el-row>
+          <el-row
+            v-if="item.style == 2"
+            style="margin: 10px 0; padding-left: 10px; color: #999"
+          >
+            <el-col :xs="16" :sm="16" :offset="6">
+              每次进入该商城页面显示广告弹窗
+            </el-col>
+          </el-row>
+        </div>
+      </draggable>
+      <div class="select-style-item-tip">
+        <el-button
+          slot="append"
+          :size="option.size"
+          type="primary"
+          plain
+          @click="addForm('popup')"
+        >
+          添加
+        </el-button>
+      </div>
+    </div>
+    <!-- 悬浮按钮 -->
     <div
       v-if="templateForm.type == 'float-button'"
       class="decorate-right-write"
@@ -1787,19 +1976,23 @@
             <div class="select-style-item-select">
               <el-image
                 class="select-img select-imgzheng image-border"
-                :src="Fast.api.cdnurl(templateForm.content.image)"
+                :src="templateForm.content.image"
                 fit="contain"
               >
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline"></i>
                 </div>
               </el-image>
-              <div
-                class="btn-common margin-left-20 choosePicture"
+              <el-button
+                slot="append"
+                :size="option.size"
+                type="primary"
+                plain
+                class="margin-left-20 choosePicture"
                 data-index="image"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
-              </div>
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -1810,7 +2003,7 @@
       <draggable
         :list="templateForm.content.list"
         v-bind="$attrs"
-        :options="{ animation: 100 }"
+        :animation="100"
         handle=".draggable-handle-move"
       >
         <div
@@ -1823,7 +2016,7 @@
               <div class="display-flex" style="align-items: center">
                 <img
                   class="draggable-handle-move"
-                  src="/assets/addons/shopro/img/decorate/move.png"
+                  src="https://demo.shopro.top/assets/addons/shopro/img/decorate/move.png"
                 />
                 <div class="select-style-item-tip">按钮编辑{{ index + 1 }}</div>
               </div>
@@ -1842,7 +2035,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  size="mini"
+                  :size="option.size"
                   v-model="item.name"
                   maxlength="4"
                 >
@@ -1860,17 +2053,21 @@
                   class="select-img select-imgzheng image-border"
                   :src="
                     item.btnimage
-                      ? Fast.api.cdnurl(item.btnimage)
-                      : '/assets/addons/shopro/img/decorate/image-default2.png'
+                      ? item.btnimage
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default2.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
                   :data-index="index"
                   data-type="btn"
+                  class="margin-left-20 choosePicture"
                 >
-                  {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                  {{ item.btnimage ? "重新选择" : "选择图片" }}
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -1901,15 +2098,19 @@
                   :src="
                     item.image
                       ? item.image
-                      : '/assets/addons/shopro/img/decorate/image-default.png'
+                      : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
+                <el-button
+                  slot="append"
+                  :size="option.size"
+                  type="primary"
+                  plain
                   :data-index="index"
+                  class="margin-left-20 choosePicture"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -1937,9 +2138,16 @@
                   class="select-style-item-select"
                   v-if="item.path_type == 1"
                 >
-                  <div class="btn-common choosePath" :data-index="index">
+                  <el-button
+                    slot="append"
+                    :size="option.size"
+                    type="primary"
+                    plain
+                    :data-index="index"
+                    class="choosePath"
+                  >
                     选择链接
-                  </div>
+                  </el-button>
                   <span class="margin-left-20 one-ellipsis">{{
                     item.path_name
                   }}</span>
@@ -1950,7 +2158,7 @@
                 >
                   <el-input
                     v-model="item.path"
-                    size="mini"
+                    :size="option.size"
                     placeholder="http(s)://"
                   >
                   </el-input>
@@ -1961,7 +2169,15 @@
         </div>
       </draggable>
       <div class="select-style-item-tip">
-        <div @click.stop="addForm('float-button')" class="btn-common">添加</div>
+        <el-button
+          slot="append"
+          :size="option.size"
+          type="primary"
+          plain
+          @click="addForm('float-button')"
+        >
+          添加
+        </el-button>
       </div>
     </div>
   </div>
@@ -1974,10 +2190,6 @@ import option from "@/const/decorate/dodecorate";
 import draggable from "vuedraggable";
 
 export default {
-  /*
-   * 父组件传来的数据 centerSelect templateForm fromtype
-   * 父组件绑定的事件
-   */
   name: "ToolsForm",
   comments: {
     draggable,
@@ -1986,7 +2198,10 @@ export default {
     isfloat: Boolean,
     popupIndex: Number,
     fromtype: String,
-    centerSelect: Number,
+    centerSelect: {
+      type: Number,
+      required: true,
+    },
     templateData: {
       type: Array,
       required: true,
@@ -2002,10 +2217,66 @@ export default {
     return {
       // 表单配置
       option: option,
-      fromtype: this.fromtype,
-      centerSelect: this.centerSelect,
-      templateForm: this.templateForm,
-      templateData: this.templateData,
+      // 广告布局抽屉状态
+      advdrawer: false,
+      // 广告魔方数据
+      advStyleImage: [
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_01.png",
+          num: 1,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_02.png",
+          num: 2,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_03.png",
+          num: 3,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_04.png",
+          num: 3,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_05.png",
+          num: 3,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_06.png",
+          num: 3,
+        },
+        {
+          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_07.png",
+          num: 5,
+        },
+      ],
+      // 标题栏样式
+      titleBlock: {
+        isSelected: false,
+        data: [
+          {
+            src: "https://file.shopro.top/imgs/title1.png",
+            selected: false,
+          },
+          {
+            src: "https://file.shopro.top/imgs/title2.png",
+            selected: false,
+          },
+          {
+            src: "https://file.shopro.top/imgs/title3.png",
+            selected: false,
+          },
+          {
+            src: "https://file.shopro.top/imgs/title4.png",
+            selected: false,
+          },
+          {
+            src: "https://file.shopro.top/imgs/title5.png",
+            selected: false,
+          },
+        ],
+        currentImage: "",
+      },
     };
   },
   computed: {
@@ -2111,6 +2382,58 @@ export default {
           break;
       }
       that.templateData[that.centerSelect].content.list.push(form);
+    },
+    // 打开广告样式抽屉
+    showDrawer() {
+      this.advdrawer = true;
+    },
+    // 选择广告样式
+    changeAdv(index, num) {
+      let that = this;
+      that.templateData[that.centerSelect].content.list = [];
+      that.templateData[that.centerSelect].content.style = index + 1;
+      for (let i = 0; i < num; i++) {
+        that.templateData[that.centerSelect].content.list.push({
+          image: "",
+          name: "",
+          path: "",
+          path_name: "",
+          path_type: 1,
+        });
+      }
+      that.$emit("update:templateForm", that.templateData[that.centerSelect]);
+      that.advdrawer = false;
+    },
+    // 选择标题栏样式
+    selectTitleBlock(index) {
+      let that = this;
+      if (index != null) {
+        that.titleBlock.isSelected = true;
+        that.templateData[that.centerSelect].content.image =
+          that.titleBlock.data[index].src;
+        that.titleBlock.currentImage = that.titleBlock.data[index].src;
+      } else {
+        that.titleBlock.isSelected = false;
+        that.templateData[that.centerSelect].content.image = "";
+      }
+    },
+    // 自定义列表商品图片排序
+    goodsListEnd() {
+      this.templateForm.content.ids = "";
+      let idsArr = [];
+      this.templateForm.content.timeData.forEach((t) => {
+        idsArr.push(t.id);
+      });
+      this.templateForm.content.ids = idsArr.join(",");
+    },
+    // 删除自定义列表商品图片
+    customList(index) {
+      this.templateData[this.centerSelect].content.timeData.splice(index, 1);
+      let idsArr = this.templateData[this.centerSelect].content.ids.split(",");
+      idsArr.splice(index, 1);
+      this.templateData[this.centerSelect].content.ids = idsArr.join(",");
+      this.templateForm.content.ids = idsArr.join(",");
+      this.$forceUpdate();
     },
   },
   mounted() {},

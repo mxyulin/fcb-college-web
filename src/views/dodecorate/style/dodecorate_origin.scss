@@ -379,18 +379,17 @@
 
 .chooseAdvPic {
   height: 38px;
-  background: #EEEAF7;
   width: 100%;
-  border: none;
-  color: #804ED1;
-  font-size: 16px;
+  background: #fff;
   position: absolute;
   left: 0;
   bottom: 0;
-  border-radius: 0px 4px 4px 0px;
-  line-height: 38px;
-  text-align: center;
-  cursor: pointer;
+  // border: none;
+  // font-size: 16px;
+  // border-radius: 0px 4px 4px 0px;
+  // line-height: 38px;
+  // text-align: center;
+  // cursor: pointer;
 }
 
 .item {
@@ -642,13 +641,13 @@
 .title-block-btn {
   /* width: 338px; */
   height: 42px;
+  width: 100%;
   line-height: 42px;
   border-radius: 0px 0px 6px 6px;
-  background: #EEEAF7;
-  font-style: 16px;
-  color: #804ED1;
-  text-align: center;
-  cursor: pointer;
+  background: #fff;
+  // font-style: 16px;
+  // text-align: center;
+  // cursor: pointer;
 }
 
 .nav-bg {

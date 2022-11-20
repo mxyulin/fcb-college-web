@@ -32,12 +32,23 @@ import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
 
 export default {
-  /*
-   * 父组件传来的数据 fromtype templateData centerSelect isPageType
-   * 父组件绑定的事件 showForm
-   */
   name: "ToolsBox",
-  props: ["fromtype", "templateData", "centerSelect", "isPageType"],
+  props: {
+    fromtype: String,
+    templateData: {
+      type: Array,
+      required: true,
+      default: () => [],
+    },
+    centerSelect: {
+      type: Number,
+      required: true,
+    },
+    isPageType: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       // 页面配置
@@ -187,10 +198,6 @@ export default {
           ],
         },
       ],
-      // 工具表单类型
-      fromtype: this.fromtype,
-      // 装修类型
-      isPageType: this.isPageType,
     };
   },
   computed: {
@@ -231,7 +238,6 @@ export default {
 
       /* 非分类选项卡 */
       if (this.centerSelect == null) {
-        // *简单props数据可写
         this.centerSelect = this.templateData.length;
         if (type != "category-tabs" && this.templateData.length > 1) {
           this.centerSelect = this.templateData.length;
@@ -306,7 +312,7 @@ export default {
                 {
                   name: "标题",
                   image:
-                    "/assets/addons/shopro/img/decorate/image-default3.png",
+                    "https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default3.png",
                   path: "",
                   path_name: "",
                   path_type: 1,
@@ -314,7 +320,7 @@ export default {
                 {
                   name: "标题",
                   image:
-                    "/assets/addons/shopro/img/decorate/image-default3.png",
+                    "https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default3.png",
                   path: "",
                   path_name: "",
                   path_type: 1,
@@ -322,7 +328,7 @@ export default {
                 {
                   name: "标题",
                   image:
-                    "/assets/addons/shopro/img/decorate/image-default3.png",
+                    "https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default3.png",
                   path: "",
                   path_name: "",
                   path_type: 1,
@@ -330,7 +336,7 @@ export default {
                 {
                   name: "标题",
                   image:
-                    "/assets/addons/shopro/img/decorate/image-default3.png",
+                    "https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default3.png",
                   path: "",
                   path_name: "",
                   path_type: 1,
@@ -450,7 +456,7 @@ export default {
                 {
                   name: "标题",
                   image:
-                    "/assets/addons/shopro/img/decorate/image-default3.png",
+                    "https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default3.png",
                   path: "",
                   path_name: "",
                   path_type: 1,

@@ -12,8 +12,8 @@
           <div class="title-msg">店铺装修</div>
         </el-col>
         <el-col :span="3">
-          <el-button type="primary" size="mini" plain>预览</el-button>
-          <el-button type="primary" :size="option.size">保存</el-button>
+          <el-button type="primary" :size="option.size" plain>预览</el-button>
+          <el-button type="primary" :size="option.size" @click="saveTamplateData">保存</el-button>
         </el-col>
       </el-row>
     </el-heade>
@@ -29,8 +29,8 @@
         <ToolsBox
           :fromtype="fromtype"
           :isPageType="isPageType"
-          :templateData="templateData"
-          :centerSelect="centerSelect"
+          :templateData.sync="templateData"
+          :centerSelect.sync="centerSelect"
           @showForm="showForm"
         />
       </el-aside>
@@ -264,10 +264,10 @@
         <ToolsForm
           :fromtype="fromtype"
           :templateForm="templateForm"
+          :isfloat.sync="isfloat"
           :popupIndex.sync="popupIndex"
           :centerSelect.sync="centerSelect"
           :templateData.sync="templateData"
-          :isfloat.sync="isfloat"
         />
       </el-aside>
     </el-container>
@@ -351,64 +351,6 @@ export default {
       templateForm: {},
       //
       group: "changepull",
-      // 广告魔方数据
-      advStyleImage: [
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_01.png",
-          num: 1,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_02.png",
-          num: 2,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_03.png",
-          num: 3,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_04.png",
-          num: 3,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_05.png",
-          num: 3,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_06.png",
-          num: 3,
-        },
-        {
-          src: "https://demo.shopro.top/assets/addons/shopro/img/decorate/adv_07.png",
-          num: 5,
-        },
-      ],
-      // 标题栏样式
-      titleBlock: {
-        isSelected: false,
-        data: [
-          {
-            src: "https://file.shopro.top/imgs/title1.png",
-            selected: false,
-          },
-          {
-            src: "https://file.shopro.top/imgs/title2.png",
-            selected: false,
-          },
-          {
-            src: "https://file.shopro.top/imgs/title3.png",
-            selected: false,
-          },
-          {
-            src: "https://file.shopro.top/imgs/title4.png",
-            selected: false,
-          },
-          {
-            src: "https://file.shopro.top/imgs/title5.png",
-            selected: false,
-          },
-        ],
-        currentImage: "",
-      },
 
       /* 模板预览 */
       httpsDlocked: true,
@@ -426,11 +368,10 @@ export default {
       iframePlatform: "",
       // 模板预览开关
       previewDialog: false,
-      advdrawer: false,
       // 模板预览 ID（用于获取模板预览相关数据）
       // decorate_id: new URLSearchParams(location.search).get("id"),
 
-      /* 装修区模板 */
+      /* 装修类型表单始数据 */
       homeData: [],
       userData: [
         {
@@ -455,8 +396,10 @@ export default {
             list: [
               {
                 name: "标题",
-                image: "",
-                activeImage: "",
+                image:
+                  "http://file.shopro.top/uploads/20210527/c4591c74c27a49bda021257d3c889225.png",
+                activeImage:
+                  "http://file.shopro.top/uploads/20210527/558feb98726495d17128d07694d7ff47.png",
                 path: "",
                 path_name: "",
                 path_type: 1,
@@ -464,8 +407,10 @@ export default {
               },
               {
                 name: "标题",
-                image: "",
-                activeImage: "",
+                image:
+                  "http://file.shopro.top/uploads/20210527/d6e987bb27013691478ddce7ce700288.png",
+                activeImage:
+                  "http://file.shopro.top/uploads/20210527/f280b7f9ea18db0c80337d1c1cac6075.png",
                 path: "",
                 path_name: "",
                 path_type: 1,
@@ -473,8 +418,10 @@ export default {
               },
               {
                 name: "标题",
-                image: "",
-                activeImage: "",
+                image:
+                  "http://file.shopro.top/uploads/20210527/0ab4659f44404d6d4723c265ccd21f94.png",
+                activeImage:
+                  "http://file.shopro.top/uploads/20210527/5273d6e90fb45e3d9189fba9fcbea47c.png",
                 path: "",
                 path_name: "",
                 path_type: 1,
@@ -482,8 +429,10 @@ export default {
               },
               {
                 name: "标题",
-                image: "",
-                activeImage: "",
+                image:
+                  "http://file.shopro.top/uploads/20210527/406848d5827325fead27224decffd141.png",
+                activeImage:
+                  "http://file.shopro.top/uploads/20210527/8eca666cc43686d292113244b31e0664.png",
                 path: "",
                 path_name: "",
                 path_type: 1,
@@ -502,7 +451,8 @@ export default {
               {
                 name: "",
                 style: 1,
-                image: "",
+                image:
+                  "http://file.shopro.top/uploads/20210522/9136ecddcddf6607184fab689207e7e3.png",
                 btnimage: "",
                 path: "",
                 path_name: "",
@@ -517,8 +467,40 @@ export default {
           type: "float-button",
           name: "悬浮按钮",
           content: {
-            image: "",
-            list: [],
+            image:
+              "http://file.shopro.top/uploads/20210518/f6b9c9d20d21df541ac52e9548486e1a.png",
+            list: [
+              {
+                name: "关注",
+                btnimage:
+                  "http://file.shopro.top/uploads/20210522/875dd6d2b1980dbccbec0895f757cdff.png",
+                style: 1,
+                image: "",
+                path_type: 1,
+                path_name: "",
+                path: "",
+              },
+              {
+                name: "收藏",
+                btnimage:
+                  "http://file.shopro.top/uploads/20210522/5c50e0b17d64f448d271cfaac5039e00.png",
+                style: 1,
+                image: "",
+                path_type: 1,
+                path_name: "",
+                path: "",
+              },
+              {
+                name: "客服",
+                btnimage:
+                  "http://file.shopro.top/uploads/20210522/73234ab79bd6164b11f09a1b11df3f55.png",
+                style: 1,
+                image: "",
+                path_type: 1,
+                path_name: "",
+                path: "",
+              },
+            ],
           },
         },
       ],
@@ -531,7 +513,6 @@ export default {
       fromtype: "shop",
       // 定制名（未用）
       customName: "",
-
       /* 暂时不用 */
       //#region
       // * 源码 draggable 组件配置
@@ -603,7 +584,7 @@ export default {
   },
   methods: {
     init() {},
-    // 工具表单展示
+    // 展示工具表单
     showForm(index) {
       let that = this;
       that.centerSelect = index;
@@ -625,18 +606,7 @@ export default {
         that.templateForm = that.templateData[that.centerSelect];
       }
     },
-    // 底部导航栏选择
-    tabbarSelected(index) {
-      let that = this;
-      that.templateData[0].content.list.forEach((i) => {
-        // i.selected = false;
-        that.$set(i, "selected", false);
-      });
-      // that.templateData[0].content.list[index].selected = true;
-      that.$set(that.templateData[0].content.list[index], "selected", true);
-      // that.$forceUpdate();
-    },
-    // 缓存上一次装修数据
+    // 缓存上一次装修的数据
     cachePreData(type) {
       let that = this;
       switch (type) {
@@ -657,7 +627,7 @@ export default {
           break;
       }
     },
-    // templateData 加载当前装修组件数据
+    // 加载当前装修类型的数据
     loadTemplateDate(type) {
       let that = this;
       switch (type) {
@@ -678,6 +648,21 @@ export default {
           break;
       }
     },
+    // 选择底部导航
+    tabbarSelected(index) {
+      let that = this;
+      that.templateData[0].content.list.forEach((i) => {
+        // i.selected = false;
+        that.$set(i, "selected", false);
+      });
+      // that.templateData[0].content.list[index].selected = true;
+      that.$set(that.templateData[0].content.list[index], "selected", true);
+      // that.$forceUpdate();
+    },
+    // 保存(提交)模板数据
+    saveTamplateData() {
+      console.log(this.templateData);
+    }
   },
   mounted() {},
 };
