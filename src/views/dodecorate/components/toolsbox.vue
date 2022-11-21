@@ -38,7 +38,6 @@ export default {
     templateData: {
       type: Array,
       required: true,
-      default: () => [],
     },
     centerSelect: {
       type: Number,
@@ -220,7 +219,7 @@ export default {
         showStatus == this.isPageType
       );
     },
-    // !选择工具模块
+    // ?选择工具模块
     selectTools(type) {
       let that = this;
       let form = that.cloneComponent(type);
@@ -266,14 +265,14 @@ export default {
         this.$emit("showForm", this.centerSelect);
       }
     },
-    // 克隆组件初始数据
+    // 克隆装修组件初始数据
     cloneComponent(type) {
       let form = {};
       switch (type) {
         case "search":
           form = {
             name: "搜索",
-            content: "",
+            content: "搜索文本",
             type: "search",
           };
           break;

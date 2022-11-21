@@ -13,7 +13,12 @@
         </el-col>
         <el-col :span="3">
           <el-button type="primary" :size="option.size" plain>预览</el-button>
-          <el-button type="primary" :size="option.size" @click="saveTamplateData">保存</el-button>
+          <el-button
+            type="primary"
+            :size="option.size"
+            @click="saveTamplateData"
+            >保存</el-button
+          >
         </el-col>
       </el-row>
     </el-heade>
@@ -34,7 +39,7 @@
           @showForm="showForm"
         />
       </el-aside>
-      <!-- 组件装修区 -->
+      <!-- App 装修区 -->
       <el-main class="center-body">
         <!-- 首页和个人中心 -->
         <div
@@ -86,11 +91,10 @@
           <AppLayout
             :fromtype="fromtype"
             :isPageType="isPageType"
-            :templateData="templateData"
-            :templateForm="templateForm"
             :centerSelect="centerSelect"
-            @centerDel="centerDel"
+            :templateData="templateData"
             @showForm="showForm"
+            @centerDel="centerDel"
           />
         </div>
         <!-- 底部导航 -->
@@ -263,11 +267,12 @@
       <el-aside class="right-container" width="350px">
         <ToolsForm
           :fromtype="fromtype"
+          :centerSelect="centerSelect"
           :templateForm="templateForm"
           :isfloat.sync="isfloat"
           :popupIndex.sync="popupIndex"
-          :centerSelect.sync="centerSelect"
           :templateData.sync="templateData"
+          @showForm="showForm"
         />
       </el-aside>
     </el-container>
@@ -590,22 +595,6 @@ export default {
       that.centerSelect = index;
       that.templateForm = that.templateData[index];
     },
-    // 删除选项卡
-    centerDel(idx) {
-      let that = this;
-      that.templateData.splice(idx, 1);
-      that.centerSelect = idx;
-      if (that.centerSelect == 0) {
-        if (that.templateData.length > 1) {
-          that.templateForm = that.templateData[that.centerSelect];
-        } else {
-          that.centerSelect = null;
-        }
-      } else {
-        that.centerSelect = that.centerSelect - 1;
-        that.templateForm = that.templateData[that.centerSelect];
-      }
-    },
     // 缓存上一次装修的数据
     cachePreData(type) {
       let that = this;
@@ -659,10 +648,25 @@ export default {
       that.$set(that.templateData[0].content.list[index], "selected", true);
       // that.$forceUpdate();
     },
+    // 删除装修组件
+    centerDel(idx) {
+      let that = this;
+      that.templateData.splice(idx, 1);
+      that.centerSelect = idx;
+      if (that.centerSelect == 0) {
+        if (that.templateData.length > 1) {
+          that.templateForm = that.templateData[that.centerSelect - 1];
+        } else {
+          that.centerSelect = null;
+        }
+      } else {
+        that.showForm( that.centerSelect - 1 )
+      }
+    },
     // 保存(提交)模板数据
     saveTamplateData() {
       console.log(this.templateData);
-    }
+    },
   },
   mounted() {},
 };

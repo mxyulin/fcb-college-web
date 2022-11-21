@@ -356,6 +356,31 @@
           >选择风格</el-button
         >
       </div>
+      <!-- 广告魔方样式抽屉 -->
+      <el-drawer
+        size="25%"
+        title="选择样式"
+        :visible.sync="advdrawer"
+        :with-header="false"
+        :modal-append-to-body="false"
+      >
+        <div style="display: flex; flex-wrap: wrap; padding: 15px">
+          <el-row :gutter="10">
+            <el-col
+              :xs="12"
+              :sm="12"
+              v-for="(i, index) in advStyleImage"
+              :key="index"
+            >
+              <img
+                style="margin: 10px 0; width: 154px; height: 100px"
+                :src="i.src"
+                @click.stop="changeAdv(index, i.num)"
+              />
+            </el-col>
+          </el-row>
+        </div>
+      </el-drawer>
       <draggable
         :list="templateForm.content.list"
         v-bind="$attrs"
@@ -447,31 +472,6 @@
           </el-row>
         </div>
       </draggable>
-      <!-- 选择广告魔方样式 -->
-      <el-drawer
-        title="选择样式"
-        :visible.sync="advdrawer"
-        :with-header="false"
-        size="342px"
-        :append-to-body="true"
-      >
-        <div style="display: flex; flex-wrap: wrap; padding: 15px">
-          <el-row :gutter="10">
-            <el-col
-              :xs="12"
-              :sm="12"
-              v-for="(i, index) in advStyleImage"
-              :key="index"
-            >
-              <img
-                style="margin: 10px 0; width: 154px; height: 100px"
-                :src="i.src"
-                @click.stop="changeAdv(index, i.num)"
-              />
-            </el-col>
-          </el-row>
-        </div>
-      </el-drawer>
     </div>
     <!-- 商品分类 -->
     <div v-if="templateForm.type == 'goods-group'" class="decorate-right-write">
@@ -2383,7 +2383,7 @@ export default {
       }
       that.templateData[that.centerSelect].content.list.push(form);
     },
-    // 打开广告样式抽屉
+    // 展开样式抽屉
     showDrawer() {
       this.advdrawer = true;
     },
@@ -2401,7 +2401,7 @@ export default {
           path_type: 1,
         });
       }
-      that.$emit("update:templateForm", that.templateData[that.centerSelect]);
+      that.$emit("showForm", that.centerSelect);
       that.advdrawer = false;
     },
     // 选择标题栏样式

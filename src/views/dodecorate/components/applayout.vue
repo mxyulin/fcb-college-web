@@ -1,7 +1,7 @@
 <template>
   <!-- 拖放模块 -->
   <div
-    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ''"
+    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ``"
     class="center-draggable"
   >
     <template v-if="templateData && templateData.length > 0">
@@ -14,7 +14,7 @@
         <div class="seat-item">可放在此处</div>
         <!-- 装修布局 -->
         <div class="compotent-item-container">
-          <!-- search -->
+          <!-- 搜索 -->
           <div
             class="
               compotent-item-container-item
@@ -28,7 +28,7 @@
               <span>{{ compotent.content }}</span>
             </div>
           </div>
-          <!-- banner -->
+          <!-- 头部轮播图 -->
           <div
             v-if="compotent.type == 'banner' && compotent.content"
             class="compotent-banner compotent-item-container-item-margin"
@@ -88,13 +88,13 @@
               </el-carousel-item>
             </el-carousel>
           </div>
-          <!-- adv -->
+          <!-- 广告魔方 -->
           <div
             class="compotent-adv compotent-item-container-item-margin"
             :class="index == centerSelect ? 'selected' : ''"
             v-if="compotent.type == 'adv' && compotent.content"
           >
-            <!-- 1 -->
+            <!-- style 1 -->
             <div
               v-if="compotent.content.style == 1"
               class="compotent-adv-1 compotent-adv-image"
@@ -109,25 +109,21 @@
                 </div>
               </el-image>
             </div>
-            <!-- 2 -->
+            <!-- style 2 -->
             <div v-if="compotent.content.style == 2" class="compotent-adv-2">
               <div
                 class="adv-width-50 adv-height-100 compotent-adv-image"
                 v-for="(it, idx) in compotent.content.list"
                 :key="idx"
               >
-                <el-image
-                  v-if="it.image"
-                  :src="it.image"
-                  fit="cover"
-                >
+                <el-image v-if="it.image" :src="it.image" fit="cover">
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline"></i>
                   </div>
                 </el-image>
               </div>
             </div>
-            <!-- 3 -->
+            <!-- style 3 -->
             <div v-if="compotent.content.style == 3" class="compotent-adv-3">
               <div
                 class="
@@ -175,7 +171,7 @@
                 </div>
               </div>
             </div>
-            <!-- 4 -->
+            <!-- style 4 -->
             <div v-if="compotent.content.style == 4" class="compotent-adv-4">
               <div class="adv-width-50 adv-height-100 adv-line-right">
                 <div
@@ -218,7 +214,7 @@
                 </el-image>
               </div>
             </div>
-            <!-- 5 -->
+            <!-- style 5 -->
             <div v-if="compotent.content.style == 5" class="compotent-adv-5">
               <div
                 class="adv-width-100 adv-height-50 adv-line-bottom display-flex"
@@ -263,7 +259,7 @@
                 </el-image>
               </div>
             </div>
-            <!-- 6 -->
+            <!-- style 6 -->
             <div v-if="compotent.content.style == 6" class="compotent-adv-6">
               <div
                 class="
@@ -311,7 +307,7 @@
                 </div>
               </div>
             </div>
-            <!-- 7 -->
+            <!-- style 7 -->
             <div v-if="compotent.content.style == 7" class="compotent-adv-7">
               <div
                 class="adv-width-100 adv-height-50 adv-line-bottom display-flex"
@@ -391,7 +387,7 @@
               </div>
             </div>
           </div>
-          <!-- 列表导航nav-list -->
+          <!-- 列表导航 -->
           <div
             class="compotent-item-container-item"
             :class="index == centerSelect ? 'selected' : ''"
@@ -413,7 +409,7 @@
               <div><i class="el-icon-arrow-right"></i></div>
             </div>
           </div>
-          <!-- 宫格列表 grid-list -->
+          <!-- 宫格列表 -->
           <div
             class="compotent-item-container-item"
             :class="index == centerSelect ? 'selected' : ''"
@@ -722,11 +718,7 @@
                     class="compotent-activity-item"
                   >
                     <div class="compotent-activity-item-image">
-                      <el-image
-                        v-if="it.image"
-                        :src="it.image"
-                        fit="cover"
-                      >
+                      <el-image v-if="it.image" :src="it.image" fit="cover">
                         <div slot="error" class="image-slot">
                           <i class="el-icon-picture-outline"></i>
                         </div>
@@ -752,10 +744,7 @@
                       v-if="compotent.content.style == 2"
                     >
                       <div class="compotent-goods-list-image">
-                        <el-image
-                          :src="sitem.image"
-                          fit="cover"
-                        >
+                        <el-image :src="sitem.image" fit="cover">
                           <div slot="error" class="image-slot">
                             <i class="el-icon-picture-outline"></i>
                           </div>
@@ -876,11 +865,7 @@
                     class="compotent-activity-item"
                   >
                     <div class="compotent-activity-item-image">
-                      <el-image
-                        v-if="it.image"
-                        :src="it.image"
-                        fit="cover"
-                      >
+                      <el-image v-if="it.image" :src="it.image" fit="cover">
                         <div slot="error" class="image-slot">
                           <i class="el-icon-picture-outline"></i>
                         </div>
@@ -907,10 +892,7 @@
                   >
                     <div class="compotent-goods-list">
                       <div class="compotent-goods-list-image">
-                        <el-image
-                          :src="gitem.image"
-                          fit="cover"
-                        >
+                        <el-image :src="gitem.image" fit="cover">
                           <div slot="error" class="image-slot">
                             <i class="el-icon-picture-outline"></i>
                           </div>
@@ -989,7 +971,7 @@
               </el-image>
             </template>
           </div>
-          <!-- 标题栏  component-item-special-->
+          <!-- 标题栏 -->
           <div
             v-if="compotent.type == 'title-block' && compotent.content"
             :class="index == centerSelect ? 'selected' : ''"
@@ -1010,7 +992,7 @@
               </div>
             </div>
           </div>
-          <!-- 商品分类,自定义商品 -->
+          <!-- 商品分类 & 自定义商品 -->
           <div
             v-if="
               (compotent.type == 'goods-list' ||
@@ -1587,10 +1569,7 @@
                           it.live_status_text
                         }}</span>
                       </div>
-                      <img
-                        class="label-auto"
-                        :src="it.share_img"
-                      />
+                      <img class="label-auto" :src="it.share_img" />
                       <div
                         class="live-name"
                         style="
@@ -1679,7 +1658,23 @@ import option from "@/const/decorate/dodecorate";
 
 export default {
   name: "AppLayout",
-  props: ["templateData", "isPageType", "templateForm", "centerSelect", "fromtype"],
+  props: {
+    isPageType: {
+      type: String,
+      required: true,
+    },
+    templateData: {
+      type: Array,
+      required: true,
+    },
+    centerSelect: {
+      type: Number,
+      required: true,
+    },
+    fromtype: {
+      type: String,
+    },
+  },
   data() {
     return {
       // 表单配置
@@ -1701,14 +1696,13 @@ export default {
   methods: {
     init() {},
     centerDel(idx) {
-      this.$emit("centerDel", idx)
+      this.$emit("centerDel", idx);
     },
     showForm(idx) {
-      this.$emit("showForm", idx)
-    }
+      this.$emit("showForm", idx);
+    },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 
