@@ -52,15 +52,19 @@
 }
 
 .shopro-add-button {
-    background: #7536d0;
-    color: #fff;
+    // background: #7536d0;
+    // color: #fff;
     width: 98px;
     height: 32px;
     line-height: 32px;
     border-radius: 4px;
     font-size: 12px;
     text-align: center;
-    cursor: pointer;
+    // cursor: pointer;
+}
+.shopro-screen-button{
+    background: #409eff;
+    color: #fff;
 }
 
 .shopro-add-button i {

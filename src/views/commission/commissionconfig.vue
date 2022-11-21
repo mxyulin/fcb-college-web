@@ -4,7 +4,7 @@
       <el-form :model="configData" ref="configData" label-width="158px">
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             基础设置
           </div>
           <div class="shopro-form-group-title-agreement" v-if="tipshow">
@@ -70,7 +70,7 @@
 
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             默认分销商设置
           </div>
 
@@ -92,7 +92,8 @@
                 v-if="configData.become_agent.type == 'goods'"
               >
                 <el-button
-                  class="goods-add"
+
+                  class="goods-add shopro-screen-button"
                   type="text"
                   @click="centerDialogVisible = true"
                   style="margin: 5px 0"
@@ -171,7 +172,7 @@
                     </div>
                   </div>
                   <div class="shopro-goods-body" >
-                      <div class="shopro-goods-add-button">
+                      <div class="shopro-goods-add-button shopro-screen-button">
                           <i class="el-icon-plus"></i>选择商品
                       </div>
                   </div>
@@ -293,7 +294,7 @@
                   </div>
                   <div>
                     <div class="become_register_add-button" @click="fromture">
-                      <i class="el-icon-plus"></i>追加
+                      <i class="el-icon-plus"></i >追加
                     </div>
                   </div>
                 </div>
@@ -344,7 +345,7 @@
         <!-- 结算条件 -->
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             结算条件
           </div>
           <el-form-item label="商品结算方式：">
@@ -379,7 +380,7 @@
         </div>
       </el-form>
       <div class="shopro-submit-container">
-        <div class="shopro-submit-button">保存</div>
+        <div class="shopro-submit-button shopro-screen-button">保存</div>
       </div>
     </div>
   </basic-container>
@@ -576,11 +577,13 @@ export default {
 };
 </script>
 
+
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionconfig.scss"
-></style>
+>
+@import "@/views/commission/style/commissionconfig.scss"; 
+</style>
 <style lang="scss">
 // 当要改变element样式时用
 </style>

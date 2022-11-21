@@ -1,112 +1,130 @@
 <template>
   <basic-container>
-    <div id="orderIndex" v-cloak>
+    <div id="orderIndex">
       <div class="screen-container display-flex">
-        <div class="shopro-button shopro-refresh-button">
-          <i class="el-icon-refresh"></i>
-        </div>
-
-        <div class="screen-item">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_1_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_1_key"
-              slot="prepend"
-              placeholder="请选择"
-            >
-              <el-option
-                label="下单用户ID"
-                value="searchOp.buyer_id"
-              ></el-option>
-              <el-option
-                label="下单用户昵称"
-                value="searchOp.buyer_nickname"
-              ></el-option>
-              <el-option
-                label="下单用户手机号"
-                value="searchOp.buyer_mobile"
-              ></el-option>
-            </el-select>
-          </el-input>
-        </div>
-
-        <div class="screen-item">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_2_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_2_key"
-              slot="prepend"
-              placeholder="请选择"
-            >
-              <el-option label="分销用户ID" value="agent_id"></el-option>
-              <el-option
-                label="分销用户昵称"
-                value="agent_nickname"
-              ></el-option>
-              <el-option
-                label="分销用户手机号"
-                value="agent_mobile"
-              ></el-option>
-            </el-select>
-          </el-input>
-        </div>
-
-        <div class="screen-item">
-          <div class="screen-item-tip">订单号</div>
-          <el-input
-            placeholder="请输入订单号"
-            v-model="searchForm.order_sn"
-            class="screen-item-input"
-            size="small"
-          >
-          </el-input>
-        </div>
-
-        <div class="screen-item">
-          <div class="screen-item-tip">入账状态</div>
-          <el-select
-            v-model="searchForm.status"
-            placeholder="请选择分佣状态"
-            size="small"
-          >
-            <el-option
-              :label="sitem.label"
-              :value="sitem.value"
-              v-for="(sitem, indexa) in searchStatusOption"
-              :key="indexa"
-            >
-            </el-option>
-          </el-select>
-        </div>
-
-        <div class="screen-item screen-item-time">
-          <div class="screen-item-tip">分佣时间</div>
-          <div>
-            <el-date-picker
-              v-model="searchForm.createtime"
-              type="datetimerange"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              size="small"
-              format="yyyy-MM-dd HH:mm:ss"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="shopro-button shopro-refresh-button">
+            <i class="el-icon-refresh"></i>
           </div>
         </div>
 
-        <div class="screen-item shopro-screen-item-button">
-          <div class="shopro-button shopro-reset-button">重置</div>
-          <div class="shopro-button shopro-screen-button">筛选</div>
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="shopro-screen-condition">
+              <el-input
+                placeholder="请输入内容"
+                v-model="searchForm.form_1_value"
+                class="screen-item-select"
+                size="small"
+              >
+                <el-select
+                  v-model="searchForm.form_1_key"
+                  slot="prepend"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    label="下单用户ID"
+                    value="buyer_id"
+                  ></el-option>
+                  <el-option
+                    label="下单用户昵称"
+                    value="buyer_nickname"
+                  ></el-option>
+                  <el-option
+                    label="下单用户手机号"
+                    value="buyer_mobile"
+                  ></el-option>
+                </el-select>
+              </el-input>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="shopro-screen-condition">
+              <el-input
+                placeholder="请输入内容"
+                v-model="searchForm.form_2_value"
+                class="screen-item-select"
+                size="small"
+              >
+                <el-select
+                  v-model="searchForm.form_2_key"
+                  slot="prepend"
+                  placeholder="请选择"
+                >
+                  <el-option label="分销用户ID" value="agent_id"></el-option>
+                  <el-option
+                    label="分销用户昵称"
+                    value="agent_nickname"
+                  ></el-option>
+                  <el-option
+                    label="分销用户手机号"
+                    value="agent_mobile"
+                  ></el-option>
+                </el-select>
+              </el-input>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item">
+              <div class="screen-item-tip">订单号</div>
+              <div class="screen-item-botton">
+              <el-input
+                placeholder="请输入订单号"
+                v-model="searchForm.order_sn"
+                class="screen-item-input"
+                size="small"
+              >
+              </el-input>
+              </div>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item">
+              <div class="screen-item-tip">入账状态</div>
+              <div class="screen-item-botton ">
+              <el-select
+                v-model="searchForm.status"
+                placeholder="请选择分佣状态"
+                size="small"
+              >
+                <el-option
+                  :label="sitem.label"
+                  :value="sitem.value"
+                  v-for="(sitem, indexa) in searchStatusOption"
+                  :key="indexa"
+                >
+                </el-option>
+              </el-select>
+              </div>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item screen-item-time">
+              <div class="screen-item-tip">分佣时间</div>
+              <div class="screen-item-times">
+                  <el-date-picker
+                    v-model="searchForm.createtime"
+                    type="datetimerange"
+                    value-format="yyyy-MM-dd HH:mm:ss"
+                    size="small"
+                    format="yyyy-MM-dd HH:mm:ss"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  >
+                  </el-date-picker>
+              </div>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item shopro-screen-item-button">
+              <div class="shopro-button shopro-reset-button">重置</div>
+              <div class="shopro-button shopro-screen-button">筛选</div>
+          </div>
         </div>
       </div>
 
@@ -197,144 +215,27 @@
             stripe
             default-expand-all="true"
           >
-            <el-table-column width="70" label="ID">
-              <template slot-scope="scope">
-                {{ scope.row.order.id }}
-              </template>
+            <el-table-column prop="tenantId" width="220" label="订单号">
             </el-table-column>
-            <el-table-column width="220" label="订单号">
-              <template slot-scope="scope">
-                <span
-                  class="commission-order-sn"
-                  @click="openCommissonOrder(scope.row.order)"
-                  >{{ scope.row.order.order_sn }}</span
-                >
-              </template>
+
+            <el-table-column prop="commissionRules" min-width="160" label="下单用户">
             </el-table-column>
-            <el-table-column min-width="160" label="下单用户">
-              <template slot-scope="scope">
-                <el-popover placement="bottom" trigger="hover" width="180">
-                  <div v-if="scope.row.buyer" class="popover-container">
-                    <div class="display-flex">
-                      <div class="display-flex">
-                        <div class="popover-tip">用户ID</div>
-                        ：
-                      </div>
-                      <div class="active-cursor-line">
-                        {{ scope.row.buyer.id }}
-                      </div>
-                    </div>
-                    <div
-                      class="display-flex"
-                      v-if="scope.row.buyer && scope.row.buyer.mobile"
-                    >
-                      <div class="display-flex">
-                        <div class="popover-tip">手机号</div>
-                        ：
-                      </div>
-                      <div>{{ scope.row.buyer.mobile }}</div>
-                    </div>
-                  </div>
-                  <div
-                    v-if="scope.row.buyer"
-                    slot="reference"
-                    class="table-user-container display-flex"
-                  >
-                    <div class="commission-avatar">
-                      <el-image
-                        :src="Fast.api.cdnurl(scope.row.buyer.avatar)"
-                        fit="contain"
-                      >
-                        <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </div>
-                    <div class="ellipsis-item commission-nickname">
-                      {{ scope.row.buyer.nickname }}
-                    </div>
-                  </div>
-                </el-popover>
-                <span v-if="!scope.row.buyer">-</span>
-              </template>
+
+            <el-table-column prop="commissionRules" min-width="160" label="分销用户">
             </el-table-column>
-            <el-table-column min-width="160" label="分销用户">
-              <template slot-scope="scope">
-                <el-popover placement="bottom" trigger="hover" width="180">
-                  <div v-if="scope.row.agent" class="popover-container">
-                    <div class="display-flex">
-                      <div class="display-flex">
-                        <div class="popover-tip">用户ID</div>
-                        ：
-                      </div>
-                      <div class="active-cursor-line">
-                        {{ scope.row.agent.id }}
-                      </div>
-                    </div>
-                    <div
-                      class="display-flex"
-                      v-if="scope.row.agent && scope.row.agent.mobile"
-                    >
-                      <div class="display-flex">
-                        <div class="popover-tip">手机号</div>
-                        ：
-                      </div>
-                      <div>{{ scope.row.agent.mobile }}</div>
-                    </div>
-                  </div>
-                  <div
-                    v-if="scope.row.agent"
-                    class="table-user-container display-flex"
-                    slot="reference"
-                  >
-                    <div class="commission-avatar">
-                      <el-image
-                        :src="Fast.api.cdnurl(scope.row.agent.avatar)"
-                        fit="contain"
-                      >
-                        <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </div>
-                    <div
-                      class="ellipsis-item commission-nickname"
-                      @click="operation('edit', scope.row.agent.id)"
-                    >
-                      {{ scope.row.agent.nickname }}
-                    </div>
-                  </div>
-                </el-popover>
-                <span v-if="!scope.row.agent">-</span>
-              </template>
-            </el-table-column>
+
             <el-table-column min-width="90" prop="commission" label="分佣金额">
-              <template slot-scope="scope">
-                <div class="ellipsis-item">{{ scope.row.commission }}元</div>
-              </template>
             </el-table-column>
-            <el-table-column width="90" label="入账状态">
-              <template slot-scope="scope">
-                <div
-                  class="display-flex"
-                  :class="rewardStatusClass(scope.row.status)"
-                >
-                  <span class="shopro-status-dot"></span>
-                  <span>{{ scope.row.status_text }}</span>
-                </div>
-              </template>
+
+            <el-table-column prop="orderId"  width="90" label="入账状态">
             </el-table-column>
-            <el-table-column width="90" prop="type_text" label="入账方式">
+
+            <el-table-column width="90" prop="agentId" label="入账方式">
             </el-table-column>
-            <el-table-column min-width="160" label="分佣时间">
-              <template slot-scope="scope">
-                {{
-                  moment(scope.row.createtime * 1000).format(
-                    "YYYY-MM-DD HH:mm:ss"
-                  )
-                }}
-              </template>
+
+            <el-table-column prop="updateTime" min-width="160" label="分佣时间">
             </el-table-column>
+
           </el-table>
         </div>
 
@@ -362,8 +263,8 @@ import {
   add,
   update,
   remove,
-} from "@/api/commission/commissionagentlevel";
-import option from "@/const/commission/commissionagentlevel";
+} from "@/api/commission/commissionreward";
+import option from "@/const/commission/commissionreward";
 import { mapGetters } from "vuex";
 import { getDictionary } from "@/api/system/dict";
 
@@ -423,7 +324,19 @@ export default {
         delay_total: 0,
         commission_back_total: 0,
       },
-      orderList: [],
+      orderList: [
+        {
+          tenantId:'用户Id 订单号',
+          commissionRules:'佣金奖励 下单用户 分销用户',
+          commission:'佣金 佣金金额',
+          orderId:'类型  入账状态',
+          agentId:'代理Id 入账方式',
+          updateTime:'修改时间 分佣时间',
+
+          // 问题tenantId commissionRules commissionRules
+
+        }
+      ],
 
       // 弹框标题
       title: "",
@@ -477,8 +390,8 @@ export default {
         page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        const data = res.data.data;
-        console.log('data',res)
+        that.orderList = res.data.data.records;
+        console.log(that.orderList)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
@@ -491,10 +404,9 @@ export default {
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionreward.scss"
-></style>
+>
+@import "@/views/commission/style/commissionreward.scss"; 
+</style>
 
 <style lang="scss" scoped>
-.el-pagination {
-}
 </style>

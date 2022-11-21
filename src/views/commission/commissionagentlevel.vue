@@ -9,7 +9,7 @@
           <i class="el-icon-refresh"></i>
         </div>
         <!-- operation 弹框副页面 -->
-        <div class="shopro-add-button" @click="operationa()">
+        <div class="shopro-add-button shopro-screen-button" @click="operationa()">
           <i class="el-icon-plus"></i>添加等级
         </div>
         <el-dialog append-to-body="ture"   :visible.sync="operation" width="60%"  center>
@@ -199,12 +199,13 @@ export default {
 };
 </script>
 
+
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionagentlevel.scss"
-></style>
-
+>
+@import "@/views/commission/style/commissionagentlevel.scss"; 
+</style>
 
 <style lang="scss">
  .level .el-table th.el-table__cell {

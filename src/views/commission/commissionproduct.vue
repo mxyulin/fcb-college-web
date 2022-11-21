@@ -5,6 +5,7 @@
         <div class="shopro-button shopro-refresh-button">
           <i class="el-icon-refresh"></i>
         </div>
+
         <div class="display-flex shopro-screen-item">
           <div class="shopro-screen-tip">商品名称</div>
           <div class="shopro-screen-condition">
@@ -91,15 +92,16 @@
             </el-select>
           </div>
         </div>
+
         <div class="display-flex shopro-screen-item-button">
           <div class="shopro-button shopro-reset-button">重置</div>
           <div class="shopro-button shopro-screen-button">筛选</div>
         </div>
       </div>
 
+
       <div class="shopro-table-container" v-loading="tableAjax">
         <el-table
-          ref="multipleTable"
           :data="listData"
           style="width: 100%"
           border
@@ -110,79 +112,11 @@
         >
           <el-table-column type="selection" width="55"> </el-table-column>
 
-          <el-table-column prop="id" label="ID" width="130"> </el-table-column>
-
-          <el-table-column prop="name" label="商品信息" min-width="300">
-            <template slot-scope="scope">
-              <div class="display-flex">
-                <div class="table-image">
-                  <el-image
-                    :src="Fast.api.cdnurl(scope.row.image)"
-                    fit="contain"
-                  >
-                    <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline"></i>
-                    </div>
-                  </el-image>
-                </div>
-                <div>
-                  <div
-                    class="ellipsis-item"
-                    style="margin-top: 8px; line-height: 1"
-                  >
-                    {{ scope.row.title }}
-                  </div>
-                  <div class="display-flex" style="margin-top: 14px">
-                    <span
-                      v-if="scope.row.is_sku == 1"
-                      style="color: #444; margin-right: 12px; line-height: 20px"
-                    >
-                      {{ scope.row.is_sku == 1 ? "多规格" : "" }}
-                    </span>
-                    <div
-                      v-if="scope.row.activity_type || scope.row.app_type"
-                      class="activity-type display-flex"
-                    >
-                      <div
-                        v-if="scope.row.app_type"
-                        class="activity-tags full-activity-tag"
-                      >
-                        {{ scope.row.app_type_text }}
-                      </div>
-                      <template
-                        v-for="(b, a) in scope.row.activity_type_text_arr"
-                      >
-                        <template v-if="a == 'groupon'">
-                          <div class="activity-tags groupon-activity-tag">
-                            拼团
-                          </div>
-                        </template>
-                        <div
-                          v-if="a == 'seckill'"
-                          class="activity-tags seckill-activity-tag"
-                        >
-                          {{ b }}
-                        </div>
-                        <div
-                          v-if="
-                            a == 'full_reduce' ||
-                            a == 'full_discount' ||
-                            a == 'free_shipping'
-                          "
-                          class="activity-tags full-activity-tag"
-                        >
-                          {{ b }}
-                        </div>
-                      </template>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </template>
+          <el-table-column prop="tenantId" label="商品信息" min-width="300">
           </el-table-column>
 
-          <el-table-column label="分销规则" width="100">
-            <template slot-scope="scope">
+          <el-table-column prop="commissionRules" label="分销规则" width="100">
+            <!-- <template slot-scope="scope">
               <div
                 v-if="scope.row.commission && scope.row.commission.status == 1"
               >
@@ -190,21 +124,10 @@
                 <div v-if="scope.row.commission.self_rules == 1">独立规则</div>
                 <div v-if="scope.row.commission.self_rules == 2">批量规则</div>
               </div>
-              <div
-                v-if="
-                  !scope.row.commission ||
-                  (scope.row.commission && scope.row.commission.status == 0)
-                "
-              >
-                -
-              </div>
-            </template>
+            </template> -->
           </el-table-column>
 
-          <el-table-column label="商品状态" width="100">
-            <template slot-scope="scope">
-              {{ scope.row.status_text }}
-            </template>
+          <el-table-column prop="commissionConfig" label="商品状态" width="100">
           </el-table-column>
           
           <el-table-column label="操作" fixed="right" width="220">
@@ -212,7 +135,6 @@
               <div>
                 <span
                   class="shopro-edit-text"
-                  @click="operation('edit', scope.row)"
                   >设置佣金</span
                 >
                 <span class="shopro-detail-text" v-if="scope.row.commission">
@@ -220,7 +142,6 @@
                     v-if="
                       scope.row.commission && scope.row.commission.status == 0
                     "
-                    @click="operation('join', scope.row)"
                     >参与</span
                   >
                   <span
@@ -228,14 +149,11 @@
                     v-if="
                       scope.row.commission && scope.row.commission.status == 1
                     "
-                    @click="operation('nojoin', scope.row)"
                     >不参与</span
                   >
                 </span>
                 <span
                   class="shopro-detail-text"
-                  v-if="!scope.row.commission"
-                  @click="operation('join', scope.row)"
                   >参与</span
                 >
               </div>
@@ -367,6 +285,18 @@ export default {
           type: "1",
         },
       ],
+      listData:[
+        {
+          tenantId:'用户id 商品信息', 
+          commissionRules:'佣金奖励 分销规则', 
+          commissionConfig:'佣金配置 商品状态',
+
+          // 
+          selfRules:'自我购买',
+          commissionOrderStatus:'佣金订单状态',
+        }
+      ],
+
 
       // 弹框标题
       title: "",
@@ -414,7 +344,7 @@ export default {
     init() {},
     // 有报错
     onLoad(page, params = {}) {
-      const that = this;
+      let that = this;
       that.loading = true;
       getList(
         page.currentPage,
@@ -422,7 +352,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         console.log('data',res)
-        const data = res.data.data;
+        that.listData = res.data.data.records;
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
@@ -432,12 +362,13 @@ export default {
 };
 </script>
 
+
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionproduct.scss"
-></style>
-
+>
+@import "@/views/commission/style/commissionproduct.scss"; 
+</style>
 <style lang="scss" scoped>
 .display-center-a .el-pagination {
   margin: 0;

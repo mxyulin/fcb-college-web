@@ -101,8 +101,12 @@
           </div>
         </div>
         <div class="display-flex shopro-screen-item-button">
+
           <div class="shopro-button shopro-reset-button">重置</div>
+
           <div class="shopro-button shopro-screen-button">筛选</div>
+          <!-- type="primary" -->
+          <!-- <el-button >筛选</el-button> -->
         </div>
       </div>
 
@@ -761,8 +765,9 @@ export default {
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionagent.scss"
-></style>
+>
+@import "@/views/commission/style/commissionagent.scss"; 
+</style>
 
 <style lang="scss">
 // 修改element

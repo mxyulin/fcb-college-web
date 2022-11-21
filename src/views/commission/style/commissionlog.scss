@@ -239,12 +239,14 @@
     margin-bottom: 20px;
 }
 
-.shopro-screen-button {
+.shopro-button-size {
     width: 78px;
     height: 32px;
-    background: #6e3dc8;
-    color: #fff;
 }
+.shopro-screen-button {
+    background: #409eff;
+    color: #fff;
+  }
 .ellipsis-item {
     overflow: hidden;
     text-overflow: ellipsis;

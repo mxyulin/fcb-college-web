@@ -57,7 +57,7 @@
           </div>
 
           <div class="shopro-submit-container" >
-            <div class="shopro-submit-button">保存</div>
+            <div class="shopro-submit-button shopro-screen-button">保存</div>
           </div>
 
         </div>
@@ -95,49 +95,7 @@ export default {
           title: "哦豁1",
           oldtime: "2022-11-08 13：32：42",
           newtiem: "2022-12-09 13：32：42",
-        },
-        {
-          id: 2,
-          title: "哦豁2",
-          oldtime: "2022-11-02 13：32：42",
-          newtiem: "2022-12-10 13：32：42",
-        },
-        {
-          id: 3,
-          title: "哦豁3",
-          oldtime: "2022-11-03 13：32：42",
-          newtiem: "2022-12-07 13：32：42",
-        },
-        {
-          id: 4,
-          title: "哦豁4",
-          oldtime: "2022-11-04 13：32：42",
-          newtiem: "2022-12-11 13：32：42",
-        },
-        {
-          id: 5,
-          title: "哦豁4",
-          oldtime: "2022-11-04 13：32：42",
-          newtiem: "2022-12-11 13：32：42",
-        },
-        {
-          id: 5,
-          title: "哦豁4",
-          oldtime: "2022-11-04 13：32：42",
-          newtiem: "2022-12-11 13：32：42",
-        },
-        {
-          id: 5,
-          title: "哦豁4",
-          oldtime: "2022-11-04 13：32：42",
-          newtiem: "2022-12-11 13：32：42",
-        },
-        {
-          id: 5,
-          title: "哦豁4",
-          oldtime: "2022-11-04 13：32：42",
-          newtiem: "2022-12-11 13：32：42",
-        },
+        }
       ],
 
       // 弹框标题

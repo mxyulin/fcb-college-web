@@ -8,7 +8,8 @@
 
         <div class="display-flex shopro-screen-item">
           <div class="really-status-tip">实时动态</div>
-          <el-popover
+          <el-popover 
+            type="primary"
             placement="top"
             trigger="hover"
             content="开启后，该页面将实时刷新"
@@ -137,7 +138,7 @@
             重置
           </div>
           <div
-            class="shopro-button shopro-screen-button"
+            class="shopro-button shopro-screen-button  shopro-button-size"
           >
             筛选
           </div>
@@ -376,12 +377,13 @@ export default {
 };
 </script>
 
+
 <style
   lang="scss"
   scoped
-  src="@/views/commission/style/commissionlog.scss"
-></style>
-
+>
+@import "@/views/commission/style/commissionlog.scss"; 
+</style>
 <style lang="scss" scoped>
 .el-pagination {
   margin-top: 20px;

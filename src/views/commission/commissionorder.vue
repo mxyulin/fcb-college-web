@@ -3,224 +3,231 @@
     <!-- 分销订单 -->
     <div id="orderIndex" v-cloak>
       <div class="screen-container display-flex">
-        <div class="screen-item-a">
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
           <div class="shopro-button shopro-refresh-button" @click="getrefresh">
             <i class="el-icon-refresh"></i>
           </div>
         </div>
 
-        <!-- <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-        </div>
-        </div> -->
-
         <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_1_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_1_key"
-              slot="prepend"
-              placeholder="请选择"
+          <div class="shopro-screen-condition">
+            <el-input
+              placeholder="请输入内容"
+              v-model="searchForm.form_1_value"
+              class="screen-item-select"
+              size="small"
             >
-              <el-option label="下单用户ID" value="buyer_id"></el-option>
-              <el-option label="下单用户昵称" value="buyer_nickname"></el-option>
-              <el-option label="下单用户手机号" value="buyer_mobile"></el-option>
-            </el-select>
-          </el-input>
-        </div>
+              <el-select
+                v-model="searchForm.form_1_key"
+                slot="prepend"
+                placeholder="请选择"
+              >
+                <el-option label="下单用户ID" value="buyer_id"></el-option>
+                <el-option label="下单用户昵称" value="buyer_nickname"></el-option>
+                <el-option label="下单用户手机号" value="buyer_mobile"></el-option>
+              </el-select>
+            </el-input>
+          </div>
         </div>
 
         <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_2_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_2_key"
-              slot="prepend"
-              placeholder="请选择"
+          <div class="shopro-screen-condition">
+            <el-input
+              placeholder="请输入内容"
+              v-model="searchForm.form_2_value"
+              class="screen-item-select"
+              size="small"
             >
-              <el-option label="推广分销商ID" value="agent_id"></el-option>
-              <el-option
-                label="推广分销商昵称"
-                value="agent_nickname"
-              ></el-option>
-              <el-option
-                label="推广分销商手机号"
-                value="agent_mobile"
-              ></el-option>
-            </el-select>
-          </el-input>
-        </div>
+              <el-select
+                v-model="searchForm.form_2_key"
+                slot="prepend"
+                placeholder="请选择"
+              >
+                <el-option label="推广分销商ID" value="agent_id"></el-option>
+                <el-option
+                  label="推广分销商昵称"
+                  value="agent_nickname"
+                ></el-option>
+                <el-option
+                  label="推广分销商手机号"
+                  value="agent_mobile"
+                ></el-option>
+              </el-select>
+            </el-input>
+          </div>
         </div>
 
         
         <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_3_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_3_key"
-              slot="prepend"
-              placeholder="请选择"
-            >
-              <el-option
-                label="分佣用户ID"
-                value="commission_user_id"
-              ></el-option>
-              <el-option
-                label="分佣用户昵称"
-                value="commission_nickname"
-              ></el-option>
-              <el-option
-                label="分佣用户手机号"
-                value="commission_mobile"
-              ></el-option>
-            </el-select>
-          </el-input>
-        </div>
-        </div>
-
-        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
-        <div class="shopro-screen-condition">
-          <el-input
-            placeholder="请输入内容"
-            v-model="searchForm.form_3_value"
-            class="screen-item-select"
-            size="small"
-          >
-            <el-select
-              v-model="searchForm.form_3_key"
-              slot="prepend"
-              placeholder="请选择"
-            >
-              <el-option
-                label="分佣用户ID"
-                value="commission_user_id"
-              ></el-option>
-              <el-option
-                label="分佣用户昵称"
-                value="commission_nickname"
-              ></el-option>
-              <el-option
-                label="分佣用户手机号"
-                value="commission_mobile"
-              ></el-option>
-            </el-select>
-          </el-input>
-        </div>
-        </div>
-
-
-        <div class="screen-item screen-item-time">
-          <div class="screen-item-tip">下单时间</div>
-          <div class="screen-item-times">
-            <el-date-picker
-              v-model="searchForm.order_createtime"
-              type="datetimerange"
-              value-format="yyyy-MM-dd HH:mm:ss"
+          <div class="shopro-screen-condition">
+            <el-input
+              placeholder="请输入内容"
+              v-model="searchForm.form_3_value"
+              class="screen-item-select"
               size="small"
-              format="yyyy-MM-dd HH:mm:ss"
-              :default-time="['00:00:00', '23:59:59']"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
             >
-            </el-date-picker>
+              <el-select
+                v-model="searchForm.form_3_key"
+                slot="prepend"
+                placeholder="请选择"
+              >
+                <el-option
+                  label="分佣用户ID"
+                  value="commission_user_id"
+                ></el-option>
+                <el-option
+                  label="分佣用户昵称"
+                  value="commission_nickname"
+                ></el-option>
+                <el-option
+                  label="分佣用户手机号"
+                  value="commission_mobile"
+                ></el-option>
+              </el-select>
+            </el-input>
           </div>
         </div>
 
-        <div class="screen-item">
-          <div class="screen-item-tip">商品名称</div>
-          <div>
-            <div class="screen-item-botton">
-              <el-input
-                placeholder="请输入商品名称"
-                v-model="searchForm.goods_title"
-                class="screen-item-input"
-                size="small"
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="shopro-screen-condition">
+            <el-input
+              placeholder="请输入内容"
+              v-model="searchForm.form_3_value"
+              class="screen-item-select"
+              size="small"
+            >
+              <el-select
+                v-model="searchForm.form_3_key"
+                slot="prepend"
+                placeholder="请选择"
               >
-              </el-input>
+                <el-option
+                  label="分佣用户ID"
+                  value="commission_user_id"
+                ></el-option>
+                <el-option
+                  label="分佣用户昵称"
+                  value="commission_nickname"
+                ></el-option>
+                <el-option
+                  label="分佣用户手机号"
+                  value="commission_mobile"
+                ></el-option>
+              </el-select>
+            </el-input>
+          </div>
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item screen-item-time">
+            <div class="screen-item-tip">下单时间</div>
+            <div class="screen-item-times">
+              <el-date-picker
+                v-model="searchForm.order_createtime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                size="small"
+                format="yyyy-MM-dd HH:mm:ss"
+                :default-time="['00:00:00', '23:59:59']"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+              >
+              </el-date-picker>
             </div>
           </div>
         </div>
 
-        <div class="screen-item screen-item-time">
-          <div class="screen-item-tip">分佣时间</div>
-          <div class="screen-item-times">
-            <el-date-picker
-              v-model="searchForm.commission_time"
-              type="datetimerange"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              size="small"
-              format="yyyy-MM-dd HH:mm:ss"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            >
-            </el-date-picker>
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item">
+            <div class="screen-item-tip">商品名称</div>
+            <div>
+              <div class="screen-item-botton">
+                <el-input
+                  placeholder="请输入商品名称"
+                  v-model="searchForm.goods_title"
+                  class="screen-item-input"
+                  size="small"
+                >
+                </el-input>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="screen-item">
-          <div class="screen-item-tip">佣金结算</div>
-          <div class="screen-item-botton">
-            <el-select
-              v-model="searchForm.commission_reward_status"
-              placeholder="请选择佣金结算"
-              size="small"
-            >
-              <el-option
-                :label="sitem.label"
-                :value="sitem.value"
-                v-for="(sitem, index) in searchStatusOption"
-                :key="index"
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item screen-item-time">
+            <div class="screen-item-tip">分佣时间</div>
+            <div class="screen-item-times">
+              <el-date-picker
+                v-model="searchForm.commission_time"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                size="small"
+                format="yyyy-MM-dd HH:mm:ss"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
               >
-              </el-option>
-            </el-select>
+              </el-date-picker>
+            </div>
           </div>
         </div>
 
-        <div class="screen-item">
-          <div class="screen-item-tip">结算方式</div>
-          <div class="screen-item-botton">
-            <el-select
-              v-model="searchForm.commission_event"
-              placeholder="请选择结算方式"
-              size="small"
-            >
-              <el-option
-                :label="sitem.label"
-                :value="sitem.value"
-                v-for="(sitem, indexb) in commissionEventOption"
-                :key="indexb"
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item">
+            <div class="screen-item-tip">佣金结算</div>
+            <div class="screen-item-botton">
+              <el-select
+                v-model="searchForm.commission_reward_status"
+                placeholder="请选择佣金结算"
+                size="small"
               >
-              </el-option>
-            </el-select>
+                <el-option
+                  :label="sitem.label"
+                  :value="sitem.value"
+                  v-for="(sitem, index) in searchStatusOption"
+                  :key="index"
+                >
+                </el-option>
+              </el-select>
+            </div>
           </div>
         </div>
 
-        <div class="screen-item shopro-screen-item-button">
-          <div class="shopro-button shopro-reset-button" @click="screenEmpty">
-            重置
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item">
+            <div class="screen-item-tip">结算方式</div>
+            <div class="screen-item-botton">
+              <el-select
+                v-model="searchForm.commission_event"
+                placeholder="请选择结算方式"
+                size="small"
+              >
+                <el-option
+                  :label="sitem.label"
+                  :value="sitem.value"
+                  v-for="(sitem, indexb) in commissionEventOption"
+                  :key="indexb"
+                >
+                </el-option>
+              </el-select>
+            </div>
           </div>
-          <div
-            class="shopro-button shopro-screen-button"
-            @click="handleCurrentChange(1)"
-          >
-            筛选
+        </div>
+
+        <div class="display-flex shopro-screen-item shopro-screen-item-vague">
+          <div class="screen-item shopro-screen-item-button">
+            <div class="shopro-button shopro-reset-button" @click="screenEmpty">
+              重置
+            </div>
+            <div
+              class="shopro-button shopro-screen-button"
+              @click="handleCurrentChange(1)"
+            >
+              筛选
+            </div>
           </div>
         </div>
       </div>
@@ -1074,48 +1081,18 @@
             </el-table-column> -->
 
 
-            <el-table-column label="商品信息" width="420">
-              <!-- <template slot-scope="scope">
-                <div class="disply-flex" style="width: 100%">
-                  <span class="font-size-12 color-444 margin-left-10"
-                    >ID:{{ scope.row.id }}</span
-                  >
-                  <span class="font-size-12 color-999 margin-left-10"
-                    >订单号:{{ scope.row.order.order_sn }}</span
-                  >
-                  <span
-                    class="font-size-12 color-999 margin-left-10"
-                    v-if="scope.row.createtime"
-                  >
-                    下单时间:{{
-                      moment(scope.row.order.createtime * 1000).format(
-                        "YYYY-MM-DD HH:mm:ss"
-                      )
-                    }}
-                  </span>
-                  <span class="font-size-12 color-999 margin-left-10">
-                    订单状态：{{ scope.row.order.status_name }}
-                  </span>
-                  <span
-                    class="font-size-12 margin-left-10 active-cursor"
-                    @click="goDetail(scope.row.order_id)"
-                  >
-                    订单详情
-                  </span>
-                </div>
-              </template> -->
+            <el-table-column prop="productId" label="商品信息"   width="220">
             </el-table-column>
-            <el-table-column label="退款状态" width="100"> </el-table-column>
-            <el-table-column label="下单用户" width="110"> </el-table-column>
-            <el-table-column label="推广分销商" width="110"> </el-table-column>
-            <el-table-column label="佣金详情" width="280"> </el-table-column>
-            <el-table-column label="佣金结算" width="100"> </el-table-column>
-            <el-table-column label="结算时间" width="160"> </el-table-column>
-            <el-table-column label="结算方式" width="110"> </el-table-column>
-            <el-table-column label="商品结算金额" width="120">
-            </el-table-column>
-            <el-table-column label="分销商业绩" width="100"> </el-table-column>
-            <el-table-column label="分佣总金额/到账金额" width="160">
+            <el-table-column prop="orderItemId" label="退款状态" width="100"> </el-table-column>
+            <el-table-column prop="tenantId" label="下单用户" width="110"> </el-table-column>
+            <el-table-column prop="createUser" label="推广分销商" width="110"> </el-table-column>
+            <el-table-column prop="commissionPriceType" label="佣金详情" width="280"> </el-table-column>
+            <el-table-column prop="commissionOrderStatus" label="佣金结算" width="100"> </el-table-column>
+            <el-table-column prop="commissionTime" label="结算时间" width="160"> </el-table-column>
+            <el-table-column prop="buyerId" label="结算方式" width="110"> </el-table-column>
+            <el-table-column prop="commissionEvent" label="商品结算金额" width="120"></el-table-column>
+            <el-table-column prop="commissionRules" label="分销商业绩" width="100"> </el-table-column>
+            <el-table-column prop="amount" label="分佣总金额/到账金额" width="160">
             </el-table-column>
             <el-table-column label="操作" fixed="right" min-width="120">
             </el-table-column>
@@ -1308,10 +1285,20 @@ export default {
           },
         },
       },
-      // orderList:[],
       orderList:[
-        {},
-
+        {
+          tenantId:'用户id 下单用户 中文',
+          orderItemId:'订单项目ID 退款状态 数字',
+          productId:'产品Id 产品信息 数字',
+          createUser:'创建用户 推广分销商 数字',
+          commissionPriceType:'佣金价格类型 佣金详情  中文',
+          commissionOrderStatus:'佣金订单状态 佣金结算 数字',
+          commissionTime:'佣金结算时间',
+          buyerId:'购买者ID 结算方式 数字',	
+          commissionEvent:'自我购买 结算金额 数字',
+          commissionRules:'佣金奖励状态 分销商业业绩 中文',   
+          amount:'数量 总金额',	
+        },
       ],
 
 
@@ -1376,26 +1363,29 @@ export default {
 
     init() {},
     // 有报错
-    // onLoad(page, params = {}) {
-    //   const that = this;
-    //   that.loading = true;
-    //   getList(
-    //     page.currentPage,
-    //     page.pageSize,
-    //     Object.assign(params, that.query)
-    //   ).then((res) => {
-    //     const data = res.data.data;
-    //     console.log('data',res)
-    //     // that.page.total = data.total;
-    //     // that.data = data.records;
-    //     // that.loading = false;
-    //   });
-    // },
+    onLoad(page, params = {}) {
+      let that = this;
+      that.loading = true;
+      getList(
+        page.currentPage,
+        page.pageSize,
+        Object.assign(params, that.query)
+      ).then((res) => {
+        that.orderList = res.data.data.records
+        // that.page.total = data.total;
+        // that.data = data.records;
+        // that.loading = false;
+      });
+    },
   },
 };
 </script>
-<style lang="scss" scoped src="@/views/commission/style/order.scss"></style>
-
+<style
+  lang="scss"
+  scoped
+>
+@import "@/views/commission/style/order.scss"; 
+</style>
 <style lang="scss">
 .el-pagination {
   margin-top: 20px;
