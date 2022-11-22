@@ -144,6 +144,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 // .decorate-body-buttom-item {
@@ -1297,7 +1298,12 @@
   align-items: center;
   height: 100%;
   justify-content: center;
-  background: #EEEAF7;
+  background: #fff;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 
 .sortable-ghost .compotent-item-container {

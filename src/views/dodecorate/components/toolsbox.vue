@@ -30,9 +30,13 @@
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
+import draggable from "vuedraggable";
 
 export default {
   name: "ToolsBox",
+  components: {
+    draggable
+  },
   props: {
     fromtype: String,
     templateData: {
