@@ -16,7 +16,7 @@
           <el-button
             type="primary"
             :size="option.size"
-            @click="saveTamplateData"
+            @click="saveDecorateData"
             >保存</el-button
           >
         </el-col>
@@ -350,7 +350,7 @@ export default {
           },
         },
       ],
-      // 模板索引
+      // 组装模板索引
       centerSelect: null,
       // 模板的表单数据
       templateForm: {},
@@ -664,8 +664,8 @@ export default {
       }
     },
     // 保存(提交)模板数据
-    saveTamplateData() {
-      console.log(this.templateData);
+    saveDecorateData() {
+      console.log("首页", this.homeData);
     },
   },
   mounted() {},
