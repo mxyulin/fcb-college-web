@@ -3,6 +3,7 @@
     <div class="">
       <el-row :gutter="10">
 
+        <!-- 个人信息 -->
         <el-col :xs="14" :sm="14" :md="14" :lg="8" :xl="8">
           <div class="profile-block display-flex agent-message">
             <div class="agent-image">
@@ -141,64 +142,64 @@
                 </div>
               </div>
 
-              <!-- <div class="display-flex">
+              <div class="display-flex">
                 <div class="agent-list-item-tip">
                   <span class="tip-span">允许升级</span><span>:</span>
                 </div>
                 <div class="display-flex">
                   <el-switch
+                    v-model="upgrade_lock"
                     :active-value="0"
                     :inactive-value="1"
-                    @change="lockChange"
                     active-color="#7536D0"
                     inactive-color="#eee"
                   >
                   </el-switch>
                 </div>
-              </div> -->
+              </div>
 
             </div>
           </div>
         </el-col>
 
-        <!-- <el-col class="hidden-sm-and-down" :lg="12" :xl="12">
-          <div class="profile-block agent-dashboard">
+        <!-- 团队统计 -->
+        <el-col class="hidden-sm-and-down" :lg="12" :xl="12">
+          <div class="profile-block agent-dashboard  profile-block-scrollbar">
             <div class="agent-dashboard-contanmer">
               <div class="agent-dashboard-title font-weight">
-                团队统计<span
-                  class="theme-cursor theme-cursor-edit"
-                  @click="operation('view-team', profileData.user_id)"
-                  >查看团队</span
-                >
+                团队统计<span class="theme-cursor theme-cursor-edit">查看团队</span>
               </div>
+
               <el-row :gutter="10">
                 <el-col :span="8">
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">团队人数：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count }}
+                        0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">一级团队人数:</div>
-                    <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count_1 }}
+                    <div class="agent-dashboard-item-form">0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">二级团队人数:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count_2 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">
@@ -207,59 +208,53 @@
                         <div>
                           <div
                             class="agent-dashboard-popover-item"
-                            v-for="(
-                              agentLevel, alindex
-                            ) in profileData.child_agent_level"
                           >
                             <span class="agent-dashboard-popover-item-tip"
-                              >等级{{ alindex }}:</span
-                            ><span>{{ agentLevel }}人</span>
+                              >等级:</span
+                            ><span>人</span>
                           </div>
                         </div>
                         <i slot="reference" class="el-icon-warning"></i>
                       </el-popover>
                     </div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">
                       一级分销商人数:
                       <el-popover placement="bottom-start" trigger="hover">
                         <div>
-                          <div
-                            class="agent-dashboard-popover-item"
-                            v-for="(
-                              agentLevel, alindex
-                            ) in profileData.child_agent_level_1"
-                          >
+                          <div class="agent-dashboard-popover-item">
                             <span class="agent-dashboard-popover-item-tip"
-                              >等级{{ alindex }}:</span
-                            ><span>{{ agentLevel }}人</span>
+                              >等级:</span>0<span>人</span>
                           </div>
                         </div>
                         <i slot="reference" class="el-icon-warning"></i>
                       </el-popover>
                     </div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count_1 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">二级分销商人数:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count_2 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
               </el-row>
             </div>
             <div class="agent-assets">
@@ -269,7 +264,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">团队分销总金额：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -278,7 +273,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">一级分销总金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money_1 }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -287,7 +282,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">二级分销总金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money_2 }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -307,9 +302,8 @@
                     </div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-order')"
                     >
-                      {{ profileData.order_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -318,7 +312,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">团队分销订单：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -327,7 +321,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">一级分销订单:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count_1 }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -336,7 +330,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">二级分销订单:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count_2 }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -356,15 +350,15 @@
                     </div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-order')"
                     >
-                      {{ profileData.order_count }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
                 </el-col>
               </el-row>
             </div>
+
             <div class="agent-assets">
               <div class="agent-assets-title font-weight">资产信息</div>
               <el-row :gutter="10">
@@ -373,9 +367,8 @@
                     <div class="agent-dashboard-item-tip">累计佣金:</div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-reward', '')"
                     >
-                      {{ profileData.total_income }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -385,9 +378,8 @@
                     <div class="agent-dashboard-item-tip">待入账佣金:</div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-reward', '0')"
                     >
-                      {{ profileData.delay_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -396,9 +388,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">消费金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{
-                        profileData.user ? profileData.user.total_consume : "-"
-                      }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -406,36 +396,30 @@
               </el-row>
             </div>
           </div>
-        </el-col> -->
+        </el-col>
 
-
+        <!-- min-height: 545px; -->
         <!-- 完善资料 -->
-        <!-- <el-col :xs="10" :sm="10" :md="10" :lg="4" :xl="4">
+        <el-col :xs="10" :sm="10" :md="10" :lg="4" :xl="4">
           <div class="profile-block agent-apply shopro-container-scrollbar">
             <div class="agent-apply-title font-weight">
               <div>完善资料</div>
             </div>
+
             <div class="agent-apply-info-status display-flex">
               <div>资料状态：</div>
               <div
                 class="agent-apply-status"
-                :class="
-                  profileData.info_status == -1
-                    ? 'apply-info-status-1'
-                    : profileData.info_status == 0
-                    ? 'apply-info-status-2'
-                    : 'apply-info-status-3'
-                "
-                style="width: 90px"
+                style="width: 100px"
               >
                 <el-select
-                  v-model="profileData.info_status"
+                  v-model="info_statusa"
                   placeholder=""
                   size="mini"
                   @change="applyInfoStatusChange"
                 >
                   <el-option
-                    v-for="item in agentInfoOptions"
+                    v-for="item in info_status"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -444,12 +428,12 @@
                 </el-select>
               </div>
             </div>
+
             <div class="agent-apply-title font-weight">
               <div>申请信息</div>
               <div
                 class="theme-cursor theme-cursor-edit"
                 v-if="!isEditInfoStatus"
-                @click="operation('edit-info-status', 'apply_info')"
               >
                 编辑
               </div>
@@ -463,101 +447,63 @@
                 <span
                   class="theme-cursor theme-cursor-edit"
                   style="margin-left: 10px"
-                  @click="operation('save', 'apply_info')"
                   >保存</span
                 >
               </div>
             </div>
+
             <template v-if="applyInfoList != 0">
               <div
-                v-if="
-                  typeof profileData.apply_info != 'string' &&
-                  (profileData.apply_info || applyInfoList != 0)
-                "
                 class="agent-apply-item"
-                v-for="(infoitem, infoindex) in profileData.apply_info"
               >
                 <div class="agent-apply-item-tip">
-                  <span>{{ infoitem.name }}:</span>
+                  <span>姓名:</span>
                   <span
                     class="agent-apply-item-tip-delete"
-                    v-if="!infoitem.isdelete && isEditInfoStatus"
-                    @click="operation('delete-apply-info', infoindex)"
                     >删除</span
                   >
                 </div>
+
                 <div
                   class="agent-apply-item-form display-flex"
-                  v-if="infoitem.type == 'input' || infoitem.type == 'number'"
                 >
                   <div class="font-weight">
-                    <el-input
-                      v-if="isEditInfoStatus"
-                      v-model="infoitem.value"
+                    <!-- <el-input
                       placeholder="请输入内容"
                       size="small"
-                    ></el-input>
-                    <span v-if="!isEditInfoStatus">{{ infoitem.value }}</span>
+                    ></el-input> -->
+                    <!-- <span></span> -->
                   </div>
                 </div>
-                <div
-                  class="agent-apply-item-form display-flex"
-                  v-if="infoitem.type == 'image'"
-                >
-                  <div
-                    class="agent-apply-item-identity"
-                    @click="operation('select-image', infoindex)"
-                    v-if="isEditInfoStatus"
-                  >
-                    <el-image
-                      :src="Fast.api.cdnurl(infoitem.value)"
-                      fit="contain"
-                    >
-                      <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline"></i>
-                      </div>
-                    </el-image>
-                  </div>
-                  <div
-                    class="agent-apply-item-identity"
-                    v-if="!isEditInfoStatus"
-                  >
-                    <el-image
-                      :src="Fast.api.cdnurl(infoitem.value)"
-                      :preview-src-list="infoitem.value_arr"
-                      fit="contain"
-                    >
-                      <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline"></i>
-                      </div>
-                    </el-image>
-                  </div>
+
+                <div class="agent-apply-item-form display-flex">  
                 </div>
               </div>
-              <div
+
+              <!-- <div
                 class="agent-apply-item-nodata font-weight"
                 v-if="!profileData.apply_info && applyInfoList == 0"
               >
                 暂无申请资料
-              </div>
+              </div> -->
+
             </template>
-            <div
-              class="agent-apply-item-nodata font-weight"
-              v-if="applyInfoList == 0"
-            >
+
+            <!-- <div class="agent-apply-item-nodata font-weight">
               无需资料审核
-            </div>
+            </div> -->
+
           </div>
-        </el-col> -->
+        </el-col>
+
 
         <!-- 团队统计 -->
-        <!-- <el-col class="hidden-sm-and-up" :xs="24" :sm="24" :md="24">
+        <el-col class="hidden-sm-and-up" :xs="24" :sm="24" :md="24">
           <div class="profile-block agent-dashboard">
             <div class="agent-dashboard-contanmer">
               <div class="agent-dashboard-title font-weight">
                 团队统计<span
                   class="theme-cursor theme-cursor-edit"
-                  @click="operation('view-team', profileData.user_id)"
                   >查看团队</span
                 >
               </div>
@@ -566,29 +512,31 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">团队人数：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count }}
+                        0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">一级团队人数:</div>
-                    <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count_1 }}
+                    <div class="agent-dashboard-item-form">0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">二级团队人数:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.user.child_user_count_2 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">
@@ -597,61 +545,56 @@
                         <div>
                           <div
                             class="agent-dashboard-popover-item"
-                            v-for="(
-                              agentLevel, alindex
-                            ) in profileData.child_agent_level"
                           >
                             <span class="agent-dashboard-popover-item-tip"
-                              >等级{{ alindex }}:</span
-                            ><span>{{ agentLevel }}人</span>
+                              >等级:</span
+                            ><span>人</span>
                           </div>
                         </div>
                         <i slot="reference" class="el-icon-warning"></i>
                       </el-popover>
                     </div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">
                       一级分销商人数:
                       <el-popover placement="bottom-start" trigger="hover">
                         <div>
-                          <div
-                            class="agent-dashboard-popover-item"
-                            v-for="(
-                              agentLevel, alindex
-                            ) in profileData.child_agent_level_1"
-                          >
+                          <div class="agent-dashboard-popover-item">
                             <span class="agent-dashboard-popover-item-tip"
-                              >等级{{ alindex }}:</span
-                            ><span>{{ agentLevel }}人</span>
+                              >等级:</span>0<span>人</span>
                           </div>
                         </div>
                         <i slot="reference" class="el-icon-warning"></i>
                       </el-popover>
                     </div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count_1 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
                 <el-col :span="8">
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">二级分销商人数:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_agent_count_2 }}
+                      0
                       <span class="unit-tip-item">人</span>
                     </div>
                   </div>
                 </el-col>
+
               </el-row>
             </div>
+
             <div class="agent-assets">
               <div class="agent-assets-title font-weight">业绩统计</div>
               <el-row :gutter="10">
@@ -659,7 +602,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">团队分销总金额：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -668,7 +611,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">一级分销总金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money_1 }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -677,7 +620,7 @@
                   <div class="agent-dashboard-item agent-dashboard-item-margin">
                     <div class="agent-dashboard-item-tip">二级分销总金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_money_2 }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -697,9 +640,8 @@
                     </div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-order')"
                     >
-                      {{ profileData.order_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -708,7 +650,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">团队分销订单：</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -717,7 +659,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">一级分销订单:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count_1 }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -726,7 +668,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">二级分销订单:</div>
                     <div class="agent-dashboard-item-form">
-                      {{ profileData.child_order_count_2 }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
@@ -746,15 +688,15 @@
                     </div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-order')"
                     >
-                      {{ profileData.order_count }}
+                      0
                       <span class="unit-tip-item">单</span>
                     </div>
                   </div>
                 </el-col>
               </el-row>
             </div>
+
             <div class="agent-assets">
               <div class="agent-assets-title font-weight">资产信息</div>
               <el-row :gutter="10">
@@ -763,9 +705,8 @@
                     <div class="agent-dashboard-item-tip">累计佣金:</div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-reward', '')"
                     >
-                      {{ profileData.total_income }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -775,9 +716,8 @@
                     <div class="agent-dashboard-item-tip">待入账佣金:</div>
                     <div
                       class="agent-dashboard-item-form theme-cursor"
-                      @click="operation('open-reward', '0')"
                     >
-                      {{ profileData.delay_money }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -786,9 +726,7 @@
                   <div class="agent-dashboard-item">
                     <div class="agent-dashboard-item-tip">消费金额:</div>
                     <div class="agent-dashboard-item-form">
-                      {{
-                        profileData.user ? profileData.user.total_consume : "-"
-                      }}
+                      0.00
                       <span class="unit-tip-item">元</span>
                     </div>
                   </div>
@@ -796,32 +734,29 @@
               </el-row>
             </div>
           </div>
-        </el-col> -->
+        </el-col>
 
       </el-row>
     </div>
 
     <!-- table表格表头 -->
-    <!-- <div class="profile-block agent-table">
+    <div class="profile-block agent-table">
       <div class="shopro-index-button-container">
         <div
           class="custom-refresh display-flex-c"
-          @click="getListData(activeStatus)"
         >
           <i class="el-icon-refresh"></i>
         </div>
         <div class="flex-1">
           <el-radio-group
             v-model="activeStatus"
-            fill="#7536D0"
-            @change="radioChange"
           >
-            <el-radio-button label="log">分销动态</el-radio-button>
-            <el-radio-button label="order">分销订单</el-radio-button>
-            <el-radio-button label="reward">佣金明细</el-radio-button>
+            <el-radio-button   label="log">分销动态</el-radio-button>
+            <el-radio-button   label="order">分销订单</el-radio-button>
+            <el-radio-button   label="reward">佣金明细</el-radio-button>
           </el-radio-group>
         </div>
-        <div class="theme-cursor" @click="operation('list-detail')">
+        <div class="theme-cursor" >
           查看详情
         </div>
       </div>
@@ -830,7 +765,7 @@
           class="shopro-table-container"
           :class="activeStatus == 'order' ? 'table-height' : ''"
         >
-          <el-table ref="multipleTable" :data="logList" border>
+          <!-- <el-table ref="multipleTable" :data="logList" border>
             <template v-for="(item, index) in columns[activeStatus]">
               <el-table-column
                 :key="index"
@@ -864,31 +799,37 @@
                     {{ item.title }}
                   </div>
                 </template>
+
                 <template slot-scope="scope">
                   <div
                     class="display-flex"
                     v-if="item.type == 'vhtml'"
                     v-html="item.formatter(scope.row)"
                   ></div>
+
                   <div
                     class="display-flex"
                     v-if="item.type == 'click'"
                     v-html="item.formatter(scope.row)"
                     @click="operation('open-order', scope.row.order.id)"
                   ></div>
+
                   <div
                     class="display-flex"
                     v-if="item.type == 'open'"
                     v-html="item.formatter(scope.row)"
                     @click="operation(scope.row.event, scope.row.event_id)"
                   ></div>
+
                   <div v-if="item.type == 'vmodel'">
                     {{ scope.row[item.field] }}
                   </div>
                 </template>
+
               </el-table-column>
             </template>
-          </el-table>
+          </el-table> -->
+        
         </div>
         <div class="shopro-pagination-container">
           <el-pagination
@@ -903,7 +844,9 @@
           </el-pagination>
         </div>
       </div>
-    </div> -->
+    </div>
+    
+    
     <!-- table表格内容 -->
     <!-- <div class="ChildUserCountContainer">
       <el-dialog
@@ -1110,7 +1053,7 @@
         </span>
       </el-dialog>
     </div> -->
-
+    <div style="height:50px;"></div>
   </div>
 </template>
 
@@ -1118,7 +1061,11 @@
 export default {
     data() {
         return {
+            logList:[],
+            activeStatus: 'log',
+            isEditInfoStatus: false,
             profileData: [],
+            upgrade_lock:1,
             agentdataa:"正常",
             agentdata:[
                 {label:'正常',value:'1',},
@@ -1126,6 +1073,14 @@ export default {
                 {label:'审核中',value:'3',},
                 {label:'冻结',value:'4',},
             ],
+            info_statusa:"无需资料",
+            info_status:[
+                {label:'驳回',value:'1',},
+                {label:'未完善',value:'2',},
+                {label:'已完善',value:'3',},
+                {label:'无需资料',value:'4',},
+            ],
+
 
         }
     },
@@ -1135,4 +1090,10 @@ export default {
 <style lang="scss" scoped>
 @import "@/views/commission/style/profile.scss";
 </style>
-<style lang="scss" scoped></style>
+<style lang="scss">
+.flex-1 .el-radio-button__inner{
+    height: 32px;
+    font-size: 12px;
+    line-height: 6px;
+}
+</style>

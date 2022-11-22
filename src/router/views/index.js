@@ -105,5 +105,15 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
  
   },
+  {
+    path: '/profile',
+    name: 'agent子业',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/agentchildren/profile')
+ 
+  },
 ]}
  ]
