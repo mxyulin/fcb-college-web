@@ -56,30 +56,22 @@
                 </div>
               </div>
 
-              <!-- <div class="agent-list-item display-flex">
+              <div class="agent-list-item display-flex">
                 <div class="agent-list-item-tip">
                   <span class="tip-span">分销等级</span><span>:</span>
                 </div>
                 <div class="agent-list-item-container display-flex">
                   <div class="agent-list-item-form font-weight">
-                    <span>{{
-                      profileData.agent_level && profileData.agent_level.name
-                        ? profileData.agent_level.name
-                        : "-"
-                    }}</span>
-                    <span>(等级)</span>
+                    <span>普通用户</span>
+                    <span>(等级1)</span>
                   </div>
-                  <div
-                    class="theme-cursor theme-cursor-edit"
-                  >
+                  <div class="theme-cursor theme-cursor-edit">
                     更换
                   </div>
                 </div>
-              </div> -->
+              </div>
 
-              <!-- <div
-                class="agent-list-item display-flex"
-              >
+              <!-- <div class="agent-list-item display-flex">
                 <div class="agent-list-item-tip">
                   <span class="tip-span">待升级等级</span><span>:</span>
                 </div>
@@ -105,76 +97,49 @@
                 </div>
               </div> -->
 
-              <!-- <div class="agent-list-item display-flex">
+              <div class="agent-list-item display-flex">
                 <div class="agent-list-item-tip">
                   <span class="tip-span">上级分销商</span><span>:</span>
                 </div>
                 <div class="agent-list-item-container display-flex">
                   <div class="agent-list-item-form">
-                    <span
-                      class="ellipsis-item ellipsis-item-width font-weight theme-cursor"
-                      v-if="
-                        profileData.parent_agent &&
-                        profileData.parent_agent_id != 0
-                      "
-                      @click="
-                        operation(
-                          'view-parent-agent',
-                          profileData.parent_agent_id
-                        )
-                      "
-                      >{{ profileData.parent_agent.nickname }}</span
-                    >
-                    <span v-else>无推荐人</span>
+                    <span>无推荐人</span>
                   </div>
-                  <div
-                    class="theme-cursor"
-                    @click="openDialog('change-parent-agent')"
-                  >
+                  <div class="theme-cursor">
                     更换
                   </div>
                 </div>
               </div>
+
               <div class="agent-list-item-more display-flex">
                 <div class="agent-list-item-tip">
                   <span class="tip-span">佣金比例</span><span>:</span>
                 </div>
                 <div class="agent-list-item-container display-flex">
+
                   <div class="agent-commission_rules-item">
                     <div>一级(自购)</div>
                     <div class="agent-commission_rules-rate font-weight">
-                      {{
-                        profileData.agent_level
-                          ? profileData.agent_level.commission_rules
-                              .commission_1
-                          : "0.00"
-                      }}%
+                      0.00%
                     </div>
                   </div>
+
                   <div class="agent-commission_rules-item">
                     <div>二级</div>
                     <div class="agent-commission_rules-rate font-weight">
-                      {{
-                        profileData.agent_level
-                          ? profileData.agent_level.commission_rules
-                              .commission_2
-                          : "0.00"
-                      }}%
+                      0.00%
                     </div>
                   </div>
+
                   <div class="agent-commission_rules-item">
                     <div>三级</div>
                     <div class="agent-commission_rules-rate font-weight">
-                      {{
-                        profileData.agent_level
-                          ? profileData.agent_level.commission_rules
-                              .commission_3
-                          : "0.00"
-                      }}%
+                      0.00%
                     </div>
                   </div>
+
                 </div>
-              </div> -->
+              </div>
 
               <!-- <div class="display-flex">
                 <div class="agent-list-item-tip">
@@ -1161,7 +1126,7 @@ export default {
                 {label:'审核中',value:'3',},
                 {label:'冻结',value:'4',},
             ],
-            
+
         }
     },
 };
