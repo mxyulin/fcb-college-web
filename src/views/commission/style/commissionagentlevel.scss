@@ -1,0 +1,77 @@
+#indexPage {
+    background: #fff;
+    border-radius: 10px 10px 0px 0px;
+    padding-bottom: 30px;
+}
+.shopro-edit-text{
+    margin: 0;
+    color: #7536d0;
+}
+
+[v-cloak] {
+    display: none
+}
+
+.shopro-header-container {
+    height: 50px;
+    line-height: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+.shopro-index-button-container {
+    margin-bottom: 14px;
+    padding: 0 20px;
+    display: flex;
+}
+
+.shopro-button {
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shopro-refresh-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e6e6e6;
+    font-size: 14px;
+    color: #999;
+    margin-right: 14px;
+}
+.shopro-refresh-button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e6e6e6;
+    font-size: 14px;
+    color: #999;
+    margin-right: 14px;
+}
+
+.shopro-add-button {
+    // background: #7536d0;
+    // color: #fff;
+    width: 98px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+    // cursor: pointer;
+}
+.shopro-screen-button{
+    background: #409eff;
+    color: #fff;
+}
+
+.shopro-add-button i {
+    margin-right: 5px;
+    font-size: 13px;
+}
+
+.shopro-table-container {
+    padding: 0 20px;
+}

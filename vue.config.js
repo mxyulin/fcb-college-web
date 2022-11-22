@@ -27,6 +27,7 @@ module.exports = {
     proxy: {
       '/api': {
         //本地服务接口地址
+        // target: 'http://192.168.10.211:8090',
         target: 'http://127.0.0.1:8090',
         //远程演示服务地址,可用于直接启动项目
         //target: 'https://fcb.fcbx.vip/api',

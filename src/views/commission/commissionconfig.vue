@@ -4,7 +4,7 @@
       <el-form :model="configData" ref="configData" label-width="158px">
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             基础设置
           </div>
           <div class="shopro-form-group-title-agreement" v-if="tipshow">
@@ -21,7 +21,10 @@
           </div>
 
           <el-form-item label="分销层级：">
-            <el-radio-group v-model="configData.commission_level">
+            <el-radio-group
+              v-model="configData.commission_level"
+              fill="#8322ff"
+            >
               <el-radio label="0">关闭</el-radio>
               <el-radio label="1">一级</el-radio>
               <el-radio label="2">二级</el-radio>
@@ -65,21 +68,17 @@
           </el-form-item>
         </div>
 
-
-
-
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             默认分销商设置
           </div>
 
           <el-form-item label="成为分销商条件：">
             <el-radio-group
               v-model="configData.become_agent.type"
-              @change="changeBecomeAgentType"
+              @change="changeBecomeAgentType(configData.become_agent.type)"
             >
-              <!-- @change="changeBecomeAgentType" -->
               <el-radio label="apply">自助申请</el-radio>
               <el-radio label="goods">购买任意商品</el-radio>
               <el-radio label="consume">消费累计</el-radio>
@@ -92,54 +91,61 @@
                 label="选择商品："
                 v-if="configData.become_agent.type == 'goods'"
               >
-                <div class="display-flex">
-                  <div
-                    class="goods-add"
-                    style="margin: 5px 0"
-                  >
-                    {{
-                      configData.become_agent.value ? "重新选择" : "选择商品"
-                    }}
-                  </div>
-                </div>
-                <div
-                  style="
-                    max-width: 632px;
-                    border: 1px solid #e6e6e6;
-                    margin-top: 9px;
-                  "
-                  v-if="configData.become_agent.value"
+                <el-button
+
+                  class="goods-add shopro-screen-button"
+                  type="text"
+                  @click="centerDialogVisible = true"
+                  style="margin: 5px 0"
+                  >{{
+                    configData.become_agent.value ? "重新选择" : "选择商品"
+                  }}</el-button
                 >
+                <!-- append-to-body="ture"  解决el-dialog点击后的朦胧层 -->
+                <el-dialog
+                  append-to-body="ture"
+                  :visible.sync="centerDialogVisible"
+                  width="80%"
+                  center
+                >
+                  <commodity></commodity>
+                  <!-- <span>需要注意的是内容是默认不居中的</span>
+                  <span slot="footer" class="dialog-footer">
+                    <el-button @click="centerDialogVisible = false"
+                      >取 消</el-button
+                    >
+                    <el-button
+                      type="primary"
+                      @click="centerDialogVisible = false"
+                      >确 定</el-button
+                    >
+                  </span> -->
+                </el-dialog>
+
+
+                <div style="max-width: 632px;border: 1px solid #e6e6e6;margin-top: 9px;">
                   <div class="shopro-goods-header">
                     <div class="shopro-goods-id">ID</div>
                     <div class="shopro-goods-title">商品信息</div>
                     <div class="shopro-goods-stock">库存</div>
                     <div class="shopro-goods-opt">操作</div>
                   </div>
+
                   <div>
                     <div
                       class="shopro-goods-body"
-                      v-for="(goods, gindex) in goodsDetail"
-                      :key="gindex"
                     >
                       <div class="shopro-goods-id">
-                        {{ goods.id }}
                       </div>
-
                       <div class="shopro-goods-title">
                         <div class="shopro-goods-image">
-                          <div>
-                            {{ goods.img }}
-                          </div>
-                          <!-- <el-image
-                            v-if="goods.image"
-                            :src="Fast.api.cdnurl(goods.image)"
+                          <el-image
                             fit="contain"
                           >
                             <div slot="error" class="image-slot">
                               <i class="el-icon-picture-outline"></i>
                             </div>
-                          </el-image> -->
+                          </el-image>
                         </div>
                         <div>
                           <div
@@ -150,27 +156,25 @@
                               line-height: 20px;
                             "
                           >
-                            {{ goods.title }}
                           </div>
                           <div style="height: 20px; line-height: 20px">
-                            ￥{{ goods.price }}
                           </div>
                         </div>
                       </div>
                       <div class="shopro-goods-stock">
-                        {{ goods.stock }}
                       </div>
                       <div class="shopro-goods-opt">
-                        <span
-                          class="become_register_delete"
-                          @click="deleteGoods(gindex)"
-                          >删除</span
-                        >
+                        <span class="become_register_delete">删除</span>
                       </div>
                     </div>
                     <div style="padding: 0 20px" v-if="!goodsDetail">
                       商品不存在或已下架
                     </div>
+                  </div>
+                  <div class="shopro-goods-body" >
+                      <div class="shopro-goods-add-button shopro-screen-button">
+                          <i class="el-icon-plus"></i>选择商品
+                      </div>
                   </div>
                 </div>
               </el-form-item>
@@ -192,13 +196,15 @@
               </el-form-item>
 
               <!-- 邀请下级用户满 -->
-              <el-form-item>
-              </el-form-item>
+              <el-form-item> </el-form-item>
             </div>
           </el-collapse-transition>
 
           <el-form-item label="完善资料：">
-            <el-radio-group v-model="needAgentForm" >
+            <el-radio-group
+              v-model="needAgentForm"
+              @change="changeAgentForm(needAgentForm)"
+            >
               <el-radio
                 label="0"
                 :disabled="configData.become_agent.type == 'apply'"
@@ -210,22 +216,23 @@
               成为分销商条件如果选择自助申请，完善资料必须选择需要
             </div>
           </el-form-item>
-          
+
           <el-collapse-transition>
-            <!-- <div v-if="needAgentForm == 1">
+            <div v-if="needAgentForm == 1">
               <el-form-item label="表单背景图：">
-                <div class="bgimage-add-container" @click="bgimageAdd">
+                <div
+                  class="bgimage-add-container"
+                  @click="centerbackground = true"
+                >
                   <el-image
                     v-if="configData.agent_form.background_image"
-                    :src="
-                      Fast.api.cdnurl(configData.agent_form.background_image)
-                    "
                     fit="contain"
                   >
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline"></i>
                     </div>
                   </el-image>
+
                   <div
                     class="bgimage-add"
                     v-if="!configData.agent_form.background_image"
@@ -233,96 +240,61 @@
                     <i class="el-icon-plus"></i>
                   </div>
                 </div>
+                <el-dialog
+                  append-to-body="ture"
+                  :visible.sync="centerbackground"
+                  width="80%"
+                  center
+                >
+                  <background></background>
+                </el-dialog>
               </el-form-item>
+
               <el-form-item label="表单内容：">
-                <div style="max-width: 632px">
+                <div style="max-width: 642px">
                   <div style="border: 1px solid #e6e6e6">
                     <div class="become-register-row become-register-row-title">
                       <div class="become-register-row-item">表单类型</div>
-                      <div
-                        class="
-                          become-register-row-item
-                          become-register-row-item-center
-                        "
-                      >
-                        表单名称
-                      </div>
-                      <div
-                        class="
-                          become-register-row-item become-register-row-item-last
-                        "
-                      >
-                        操作
+                      <div class="become-register-row-item">表单名称</div>
+                      <div class="become-register-row-item-last">
+                        <span>操作</span>
                       </div>
                     </div>
-                    <draggable
-                      :list="configData.agent_form.content"
-                      v-bind="$attrs"
-                      :options="defaultOption"
-                      :style="{
-                        borderTop:
-                          configData.agent_form.content &&
-                          configData.agent_form.content.length > 0
-                            ? '1px solid #e6e6e6'
-                            : '',
-                      }"
+                    <div
+                      v-if="this.listfrom"
+                      class="become-register-row become-register-row-box"
                     >
-                      <div
-                        class="become-register-row"
-                        v-for="(item, rindex,i) in configData.agent_form.content"
-                        :key="i"
-                      >
-                        <div class="seat-item">可放在此处</div>
-                        <div class="become_register-contaoner">
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-esp
-                            "
-                          >
-                            <el-select v-model="item.type" size="small">
-                              <el-option
-                                v-for="item in become_register_options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                              >
-                              </el-option>
-                            </el-select>
-                          </div>
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-center
-                              become-register-row-item-esp
-                            "
-                          >
-                            <el-input
-                              v-model="item.name"
-                              size="small"
-                            ></el-input>
-                          </div>
-                          <div
-                            class="
-                              become-register-row-item
-                              become-register-row-item-last
-                            "
-                          >
-                            <span
-                              class="become_register_delete"
-                              @click="becomeRegisterDelete(rindex)"
-                              >删除</span
-                            >
-                            <i id="draggableHandle" class="el-icon-rank"></i>
-                          
-                          </div>
-                        </div>
+                      <div class="become-register-row-item">
+                        <el-select
+                          class="become-register-row-item-input"
+                          v-model="numselect"
+                          slot="prepend"
+                          placeholder="请选择"
+                        >
+                          <el-option label="餐厅名" value="1"></el-option>
+                          <el-option label="订单号" value="2"></el-option>
+                          <el-option label="用户电话" value="3"></el-option>
+                        </el-select>
                       </div>
-                    </draggable>
+                      <div class="become-register-row-item">
+                        <el-input
+                          class="become-register-row-item-input"
+                          v-model="frominput"
+                          placeholder="请输入内容"
+                        ></el-input>
+                      </div>
+                      <div class="become-register-row-item-last">
+                        <span
+                          class="become-register-row-item-last-red"
+                          @click="fromfalse"
+                          >删除</span
+                        >
+                      </div>
+                    </div>
                   </div>
                   <div>
-                    <div class="become_register_add-button">
-                      <i class="el-icon-plus"></i>追加
+                    <div class="become_register_add-button" @click="fromture">
+                      <i class="el-icon-plus"></i >追加
                     </div>
                   </div>
                 </div>
@@ -330,12 +302,13 @@
               <el-form-item label="申请协议：">
                 <el-radio-group
                   v-model="needApplyProtocol"
-                  @change="changeApplyProtocol"
+                  @change="changeApplyProtocol(needApplyProtocol)"
                 >
                   <el-radio label="0">不显示</el-radio>
                   <el-radio label="1">显示</el-radio>
                 </el-radio-group>
               </el-form-item>
+
               <el-collapse-transition>
                 <div v-if="needApplyProtocol == 1">
                   <el-form-item label="协议内容：">
@@ -346,22 +319,33 @@
                           size="small"
                         ></el-input>
                       </div>
-                      <div class="apply_protocol-select">选择</div>
+                      <div
+                        @click="centerDialogVisiblethree = true"
+                        class="apply_protocol-select"
+                      >
+                        选择
+                      </div>
+
+                      <el-dialog
+                        append-to-body="ture"
+                        :visible.sync="centerDialogVisiblethree"
+                        width="80%"
+                        height="60%"
+                      >
+                        <agreement></agreement>
+                      </el-dialog>
                     </div>
                   </el-form-item>
                 </div>
               </el-collapse-transition>
-            </div> -->
+            </div>
           </el-collapse-transition>
         </div>
-
-
-
 
         <!-- 结算条件 -->
         <div class="form-group-area">
           <div class="shopro-form-group-title">
-            <div class="shopro-form-group-title-line"></div>
+            <div class="shopro-form-group-title-line shopro-screen-button"></div>
             结算条件
           </div>
           <el-form-item label="商品结算方式：">
@@ -396,29 +380,37 @@
         </div>
       </el-form>
       <div class="shopro-submit-container">
-        <div class="shopro-default-button">重置</div>
-        <div class="shopro-submit-button">保存</div>
+        <div class="shopro-submit-button shopro-screen-button">保存</div>
       </div>
     </div>
   </basic-container>
 </template>
 
 <script>
-import {getList, getDetail, add, update, remove} from "@/api/commission/commissionconfig"
+import {
+  getList,
+  getDetail,
+  add,
+  update,
+  remove,
+} from "@/api/commission/commissionconfig";
+
 import { mapGetters } from "vuex";
+import commodity from "./figchildren/commodity.vue";
+import background from "./figchildren/background.vue";
+import agreement from "./figchildren/agreement.vue";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
 export default {
+  components: { commodity, background, agreement },
   data() {
     return {
-      // 弹框标题
-      title: "",
-      page: {
-        pageSize: 10,
-        currentPage: 1,
-        total: 0,
-      },
+      centerbackground: false,
+      centerDialogVisible: false,
+      centerDialogVisiblethree: false,
       tipshow: true,
+      goodsDetail:[],
+
       configData: {
         commission_level: "1",
         self_buy: "0",
@@ -428,77 +420,119 @@ export default {
         upgrade_check: "0",
         become_agent: {
           type: "apply",
-          value: "",//传递金额
+          value: "", //传递值
         },
-        needAgentForm: "1",
-
-        // agent_form: {
-        //   background_image: "",
-        //   content: [],
-        // },
+        agent_form: {
+          background_image: "",
+          content: [],
+        },
         apply_protocol: "0",
-
         commission_price_type: "goods_price",
         commission_event: "payed",
         refund_commission_reward: "0",
         refund_commission_order: "0",
       },
+      configDatatwo: {
+        commission_level: "1",
+        self_buy: "0",
+        invite_lock: "share",
+        agent_check: "0",
+        upgrade_jump: "0",
+        upgrade_check: "0",
+        become_agent: {
+          type: "apply",
+          value: "", //传递值
+        },
+        agent_form: {
+          background_image: "",
+          content: [],
+        },
+        apply_protocol: "0",
+        commission_price_type: "goods_price",
+        commission_event: "payed",
+        refund_commission_reward: "0",
+        refund_commission_order: "0",
+      },
+      needApplyProtocol: "0",
+      needAgentForm: "1",
+
+      frominput: "",
+      numselect: "",
+      listfrom: false,
 
       // 模拟数据
-      initData:[],
-      goodsDetail: [
-        { id: 1, img: "图1", title: "默默1", price: 155.23, stock: 54 },
-        { id: 1, img: "图2", title: "默默2", price: 255.23, stock: 55 },
-        { id: 1, img: "图3", title: "默默3", price: 355.23, stock: 56 },
-        { id: 1, img: "图4", title: "默默4", price: 455.23, stock: 57 },
-      ],
+      initData: [],
+      isf: false,
+
+      // // 弹框标题
+      // title: '新建模板',
+      // // 是否展示弹框
+      // box: false,
+      // // 加载中
+      // loading: true,
+      // // 是否为查看模式
+      // view: false,
+      // // 查询信息
+      // query: {},
+      // //选择的平台
+      // platformArray:[],
+      // // 分页信息
+      // page: {
+      //   currentPage: 1,
+      //   pageSize: 10,
+      //   total: 40
+      // },
+      // // 表单数据
+      // form: {name:'',memo:'',platform:[]},
+      // // 表单配置
+      // option: option,
+      // // 表单列表
+      // templateList: [],
     };
   },
   mounted() {
     this.init();
-    this.onLoad(this.page);
+    this.onLoad();
   },
   computed: {
     ...mapGetters(["permission"]),
   },
   methods: {
+    formRestore() {
+      this.configData = this.configDatatwo;
+    },
+    fromture() {
+      this.listfrom = true;
+    },
+    fromfalse() {
+      this.listfrom = false;
+    },
     tipClose() {
       this.tipshow = !this.tipshow;
     },
-    // changeAgentForm(value) {
-    //   if (value == 0) {
-    //     this.configData.agent_form = "0";
-    //   } else {
-    //     this.configData.agent_form = {
-    //       background_image: "",
-    //       content: [
-    //         {
-    //           name: "",
-    //           type: "",
-    //         },
-    //       ],
-    //     };
-    //   }
-    // },
-    // changeBecomeAgentType(value) {
-    //   if (value == "apply") {
-    //     this.needAgentForm = "1";
-    //     if (this.configData.agent_form == 0) {
-    //       this.configData.agent_form = {
-    //         background_image: "",
-    //         content: [
-    //           {
-    //             name: "",
-    //             type: "",
-    //           },
-    //         ],
-    //       };
-    //     }
-    //   }
-    //   this.configData.become_agent.value = "";
-    // },
-    
-    
+    changeAgentForm(value) {
+      let that = this;
+      if (value == "0") {
+        that.configData.apply_protocol = "0";
+      }
+    },
+    changeBecomeAgentType(value) {
+      let that = this;
+      if (value == "apply") {
+        that.needAgentForm = "1";
+      }
+    },
+    changeApplyProtocol(value) {
+      if (value == "0") {
+        this.configData.apply_protocol = "0";
+      } else {
+        this.configData.apply_protocol = {
+          name: "",
+          richtext_id: "",
+        };
+      }
+    },
+
     init() {
       // console.log(this)
       // getDictionary({code: 'yes_no'}).then(res => {
@@ -528,383 +562,28 @@ export default {
       // }
     },
 
-    onLoad(page, params = {}) {
-      console.log("消息");
-      // const that = this;
-      // that.loading = true;
-      getList(
-        page.currentPage,
-        page.pageSize,
-        Object.assign(params, that.query)
-      ).then((res) => {
-        let data = res.data.data;
-        console.log("data:",data)
-        // this.page.total = data.total;
-        // this.data = data.records;
-        // this.loading = false;
-        // this.selectionClear();
+    onLoad(params = {}) {
+      let that = this;
+      that.loading = true;
+      getList(that.page.currentPage, that.page.pageSize, params).then((res) => {
+        console.log("res", res);
+        // that.page.total = res.data.total;
+        // that.data = res.data.records;
+        // that.loading = false;
+        // that.selectionClear();
       });
     },
   },
 };
 </script>
 
-<style lang="scss" scoped>
-#indexPage {
-  border-radius: 10px 10px 0px 0px;
-  color: #444;
-  font-weight: 500;
-  position: relative;
-}
-.el-form-item {
-  padding: 0 0 0 100px;
-}
 
-.el-form-item {
-  margin-bottom: 16px;
-}
-
-.become-register-row {
-  display: flex;
-  font-size: 13px;
-}
-
-.become-register-row-title {
-  background: #f9f9f9;
-  border: none;
-}
-
-.become-register-row-item {
-  width: 260px;
-  min-width: 260px;
-  padding: 0 20px;
-  line-height: 44px;
-}
-
-.become-register-row-item-center {
-  width: 240px;
-  min-width: 240px;
-}
-
-.become-register-row-title .become-register-row-item {
-  line-height: 40px;
-}
-
-.become-register-row-item-last {
-  width: 130px;
-  min-width: 130px;
-  display: flex;
-  align-items: center;
-}
-
-.become_register-contaoner {
-  display: flex;
-}
-
-.become_register_add-button {
-  cursor: pointer;
-  color: #7438d5;
-  width: 60px;
-  margin-top: 16px;
-  font-size: 13px;
-}
-
-.become_register_add-button i {
-  margin-right: 6px;
-}
-
-.become_register_delete {
-  color: #ff5959;
-  cursor: pointer;
-}
-
-.become-register-row-frist {
-  width: 90px;
-  color: rgba(0, 0, 0, 0);
-}
-
-#draggableHandle {
-  cursor: move;
-  margin-left: 18px;
-  font-size: 16px;
-}
-
-.seat-item {
-  display: none;
-  padding: 0 20px;
-  color: #7438d5;
-  height: 44px;
-  line-height: 44px;
-}
-
-.sortable-ghost .seat-item {
-  display: block;
-}
-
-.sortable-ghost .become_register-contaoner {
-  display: none;
-}
-
-.apply_protocol-select {
-  color: #7438d5;
-  cursor: pointer;
-  margin-left: 20px;
-}
-.shopro-submit-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  width: calc(100% - 300px);
-  height: 60px;
-  padding: 0 16px;
-  position: fixed;
-  bottom: 0px;
-  right: 16px;
-  background-color: #ffffff;
-}
-
-.shopro-submit-button {
-  width: 88px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  background: #7438d5;
-  color: #fff;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.shopro-default-button {
-  width: 88px;
-  height: 36px;
-  line-height: 36px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
-  color: #7438d5;
-}
-
-.title-tip {
-  color: #999;
-  line-height: 13px;
-  font-size: 13px;
-  font-weight: 400;
-  margin-top: 14px;
-}
-
-.bgimage-add-container {
-  border: 1px solid #e6e6e6;
-  width: 80px;
-  height: 80px;
-  border-radius: 5px;
-}
-
-.bgimage-add {
-  width: 80px;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  color: #999;
-}
-
-.goods-add {
-  width: 80px;
-  height: 30px;
-  border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-  background: #7438d5;
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.el-form-item__label,
-.el-radio__label,
-.el-input,
-.el-select-dropdown__item {
-  font-size: 13px;
-}
-
-.form-group-area {
-  border-radius: 4px;
-  margin-bottom: 60px;
-}
-.shopro-form-group-title {
-  height: 50px;
-  display: flex;
-  align-items: center;
-
-  color: black;
-  font-weight: 600;
-  box-sizing: border-box;
-}
-.shopro-form-group-title-href,
-.shopro-form-group-title-href:hover,
-.shopro-form-group-title-href:focus {
-  color: #7438d5;
-}
-.shopro-form-group-title-agreement {
-  height: 38px;
-  line-height: 38px;
-  background: #f1ebfa;
-  font-size: 12px;
-  color: #444;
-  padding: 0 20px;
-  margin: 0 20px 20px 32px;
-  width: auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-radius: 4px;
-}
-.shopro-form-group-title-line {
-  width: 2px;
-  height: 18px;
-  background: #7438d5;
-  margin: 0 10px 0 10px;
-}
-.shopro-goods-header {
-  height: 40px;
-  display: flex;
-  align-items: center;
-  background: #f9f9f9;
-}
-
-.shopro-goods-body {
-  height: 50px;
-  display: flex;
-  align-items: center;
-  border-top: 1px solid #e6e6e6;
-}
-
-.shopro-goods-title {
-  width: 280px;
-  min-width: 280px;
-  display: flex;
-  height: 50px;
-  align-items: center;
-  padding: 0 20px;
-}
-
-.shopro-goods-stock {
-  width: 120px;
-  min-width: 120px;
-}
-
-.shopro-goods-opt {
-  width: 160px;
-  min-width: 160px;
-}
-
-.shopro-goods-image {
-  width: 36px;
-  height: 36px;
-
-  border: 1px solid #e6e6e6;
-  box-sizing: border-box;
-  border-radius: 2px;
-  margin-right: 12px;
-}
-
-.shopro-goods-add-button {
-  cursor: pointer;
-  color: #7438d5;
-  font-size: 13px;
-  height: 50px;
-  line-height: 50px;
-  padding: 0 20px;
-}
-
-.shopro-goods-add-button i {
-  margin-right: 6px;
-}
-.shopro-goods-id {
-  width: 70px;
-  padding: 0 10px;
-  text-align: center;
-  flex-shrink: 0;
-}
-.form-group-area-last {
-  padding-bottom: 20px;
-}
-.become-register-row-item-esp {
-  line-height: 32px;
-  display: flex;
-  align-items: center;
-}
-.el-dialog {
-  width: 900px;
-}
-.el-dialog__wrapper {
-  background: rgba(43, 43, 43, 0.05);
-  backdrop-filter: blur(2px);
-}
-.configis-upgrade-image {
-  width: 900px;
-  height: 580px;
-  background: #ffffff;
-  border-radius: 4px;
-  position: relative;
-}
-.configis-upgrade-image img {
-  width: 100%;
-  height: 100%;
-}
-.el-dialog__body {
-  padding: 0;
-}
-.el-dialog__header {
-  height: 0;
-  padding: 0;
-}
-.configis-upgrade-button {
-  position: absolute;
-  bottom: 162px;
-  right: 360px;
-}
-.configis-upgrade-button-upgrade {
-  width: 110px;
-  height: 34px;
-  background: #8322ff;
-  border-radius: 2px;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 12px;
-  color: #ffffff;
-  margin-left: 42px;
-  cursor: pointer;
-}
-.configis-upgrade-button-upgrade .icon-right {
-  margin-left: 12px;
-  width: 18px;
-  height: 18px;
-}
-.configis-upgrade-button-refresh {
-  color: #86818e;
-  font-size: 12px;
-  cursor: pointer;
-}
-.configis-upgrade-button-refresh .el-icon-refresh-right {
-  margin-right: 6px;
-  font-size: 14px;
-}
-.configis-upgrade-close {
-  position: absolute;
-  top: 53px;
-  right: 58px;
-  font-size: 20px;
-  color: #7f7a87;
-  cursor: pointer;
-}
-
-[v-cloak] {
-  display: none;
-}
-.el-card__body {
-  padding: 0;
-}
+<style
+  lang="scss"
+  scoped
+>
+@import "@/views/commission/style/commissionconfig.scss"; 
+</style>
+<style lang="scss">
+// 当要改变element样式时用
 </style>

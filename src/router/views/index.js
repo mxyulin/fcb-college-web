@@ -34,7 +34,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
+      import( /* webpackChunkName: "views" */ '@/views/util/test')
   }]
 }, {
   path: '/dict-horizontal',
@@ -103,7 +103,46 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
+<<<<<<< HEAD
  
   },
 ]}
  ]
+=======
+  },{
+    path: '/add',
+    name: 'add',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/levelchildren/add.vue')
+  },{
+    path: '/commodity',
+    name: '分销商设置子页',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/figchildren/commodity.vue')
+  },
+  {
+    path: '/ceshi',
+    name: '测试页面',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/ceshi.vue')
+  },
+  {
+    path: '/profile',
+    name: 'agent子页',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/agentchildren/profile.vue')
+  },]
+}]
+>>>>>>> xubiao
