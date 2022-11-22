@@ -385,7 +385,4 @@ export default {
 @import "@/views/commission/style/commissionlog.scss"; 
 </style>
 <style lang="scss" scoped>
-.el-pagination {
-  margin-top: 20px;
-}
 </style>

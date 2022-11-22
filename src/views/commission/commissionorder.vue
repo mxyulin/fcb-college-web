@@ -1384,10 +1384,8 @@ export default {
   lang="scss"
   scoped
 >
-@import "@/views/commission/style/order.scss"; 
+@import "@/views/commission/style/commissionorder.scss"; 
 </style>
 <style lang="scss">
-.el-pagination {
-  margin-top: 20px;
-}
+
 </style>

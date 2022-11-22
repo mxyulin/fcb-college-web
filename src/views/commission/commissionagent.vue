@@ -125,10 +125,10 @@
             <template slot-scope="scope">
               <div class="display-flex">
                 <div class="table-image">
-                  <!-- <el-image
-                    src="scope.row.img"
+                  <el-image
+                    src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM5viafIuiciaZxwY5guBR7yJNa6iaN5CexOHZxsMH554A66czQKNuFBuH8InrzNw3WqlrykH8aLibTRXYA/132"
                   >
-                  </el-image> -->
+                  </el-image>
                 </div>
                 <div class="ellipsis-item">
                   {{ scope.row.tenantId }}
@@ -227,10 +227,8 @@
             <template slot-scope="scope">
               <div class="display-flex">
                 <div class="table-image">
-                  <!-- <el-image
-                    src="scope.row.img"
-                  >
-                  </el-image> -->
+                  <el-image src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM5viafIuiciaZxwY5guBR7yJNa6iaN5CexOHZxsMH554A66czQKNuFBuH8InrzNw3WqlrykH8aLibTRXYA/132">
+                  </el-image>
                 </div>
                 <div class="ellipsis-item">
                   {{ scope.row.tenantId }}
@@ -369,10 +367,10 @@
             <template slot-scope="scope">
               <div class="display-flex">
                 <div class="table-image">
-                  <!-- <el-image
-                    src="scope.row.img"
+                  <el-image
+                    src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM5viafIuiciaZxwY5guBR7yJNa6iaN5CexOHZxsMH554A66czQKNuFBuH8InrzNw3WqlrykH8aLibTRXYA/132"
                   >
-                  </el-image> -->
+                  </el-image>
                 </div>
                 <div class="ellipsis-item">
                   {{ scope.row.tenantId}}
@@ -586,6 +584,7 @@ export default {
           // 提交次数 待定
         },
       ],
+      
       // 自带生成元素
       // 弹框标题
       title: "",
@@ -751,7 +750,6 @@ export default {
         Object.assign(params, this.query)
       ).then((res) => {
         this.listData = res.data.data.records
-        // console.log("data1", this.listData);
         // this.page.total = data.total;
         // this.data = data.records;
         // this.loading = false;
@@ -771,10 +769,12 @@ export default {
 
 <style lang="scss">
 // 修改element
-.shopro-tabs-container .el-tabs__nav-scroll {
+.el-card__body{
   padding: 0 20px;
 }
-
+.shopro-tabs-container .el-tabs__nav-scroll {
+    padding: 0 20px;
+}
 .shopro-tabs-container .el-tabs__item {
   width: 100px;
   padding: 0;

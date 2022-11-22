@@ -127,5 +127,14 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/ceshi.vue')
+  },
+  {
+    path: '/profile',
+    name: 'agent子页',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/agentchildren/profile.vue')
   },]
 }]

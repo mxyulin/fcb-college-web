@@ -369,7 +369,7 @@ export default {
 >
 @import "@/views/commission/style/commissionproduct.scss"; 
 </style>
-<style lang="scss" scoped>
+<style lang="scss">
 .display-center-a .el-pagination {
   margin: 0;
 }
