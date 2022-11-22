@@ -247,7 +247,7 @@
             </div>
           </div>
         </div>
-        <!-- 画布底部按钮组 -->
+        <!-- 底部按钮组 -->
         <div class="decorate-body-buttom">
           <el-radio-group
             v-model="isPageType"

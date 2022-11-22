@@ -93,7 +93,7 @@
             :min-width="100"
             align="center"
           >
-            <template :slot-scope="{ row }">
+            <template slot-scope="{ row }">
               <el-button
                 :size="option.size"
                 type="text"

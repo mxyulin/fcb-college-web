@@ -107,7 +107,7 @@
       <el-table-column fixed="right" label="操作" min-width="180">
         <template slot-scope="scope">
           <!-- 上架的下拉菜单 -->
-          <el-popover placement="bottom" trigger="hover" width="100">
+          <el-popover placement="bottom" trigger="hover" width="150">
             <div class="display-flex status-box">
               <el-button
                 plain
