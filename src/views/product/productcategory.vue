@@ -1,7 +1,7 @@
 <template>
   <basic-container>
     <div class="avue-crud">
-      <!-- t头部功能菜单 -->
+      <!-- 头部功能菜单 -->
       <el-row>
         <div class="avue-crud__menu">
           <!-- 头部左侧按钮模块 -->
@@ -37,53 +37,53 @@
         <el-table
           stripe
           ref="table"
-          v-loading="loading"
-          :size="option.size"
-          @selection-change="selectionChange"
-          :data="data"
           row-key="id"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-          style="width: 100%"
+          v-loading="loading"
+          :data="data"
+          :size="option.size"
           :border="option.border"
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          @selection-change="selectionChange"
+          style="width: 100%"
         >
           <el-table-column
-            type="selection"
             v-if="option.selection"
+            type="selection"
             width="55"
             align="center"
           ></el-table-column>
           <!-- 预留展开按钮 -->
           <el-table-column
-            type="expand"
             v-if="option.expand"
+            type="expand"
             align="center"
           ></el-table-column>
           <el-table-column
             v-if="option.index"
-            label="ID"
+            label="排序"
             type="index"
-            width="50"
             align="center"
+            width="50"
           >
           </el-table-column>
-          <template v-for="(item, index) in option.column">
+          <template v-for="(item, index) of option.column">
             <!-- table字段 -->
             <el-table-column
-              v-if="item.hide !== true"
+              v-if="!item.hide"
               :prop="item.prop"
               :label="item.label"
               :width="item.width"
               :key="index"
-              :lable="item.lable"
             >
               <!-- 分类图 -->
-              <el-image
-                v-if="item.label === '分类图片'"
-                style="width: 58px; height: 58px"
-                :src="item.lable"
-                :fit="contain"
-                class="image-slot"
-              ></el-image>
+              <template slot-scope="{ row }" v-if="item.prop == 'name'">
+                <el-image
+                  style="width: 58px; height: 58px"
+                  :src="row.image"
+                  :fit="contain"
+                ></el-image>
+                <span>{{row.name}}</span>
+              </template>
             </el-table-column>
           </template>
           <!-- 操作栏模块 -->
@@ -97,26 +97,9 @@
               <el-button
                 :size="option.size"
                 type="text"
-                icon="el-icon-magic-stick"
+                icon="icon-hideinvisiblehidden"
                 @click="rowHide(row)"
               >
-                <!-- 阿里 svg -->
-                <!-- <svg
-                  t="1667744486012"
-                  color="red"
-                  class="icon"
-                  viewBox="0 0 1024 1024"
-                  version="1.1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  p-id="1742"
-                  width="12"
-                  height="12"
-                >
-                  <path
-                    type="primary"
-                    d="M917.333333 573.866667l-87.466666-87.466667c34.133333-32 66.133333-68.266667 91.733333-108.8 8.533333-14.933333 4.266667-34.133333-10.666667-44.8-14.933333-8.533333-34.133333-4.266667-44.8 10.666667-76.8 125.866667-209.066667 200.533333-356.266666 200.533333-145.066667 0-279.466667-74.666667-354.133334-198.4-8.533333-14.933333-29.866667-19.2-44.8-10.666667-14.933333 8.533333-19.2 29.866667-10.666666 44.8 25.6 40.533333 55.466667 76.8 91.733333 108.8l-85.333333 85.333334c-12.8 12.8-12.8 32 0 44.8 6.4 6.4 14.933333 8.533333 23.466666 8.533333s17.066667-2.133333 23.466667-8.533333l91.733333-91.733334c38.4 25.6 81.066667 46.933333 125.866667 59.733334l-34.133333 130.133333c-4.266667 17.066667 6.4 34.133333 23.466666 38.4 2.133333 0 6.4 2.133333 8.533334 2.133333 14.933333 0 27.733333-8.533333 29.866666-23.466666l36.266667-132.266667c25.6 4.266667 51.2 6.4 78.933333 6.4 27.733333 0 55.466667-2.133333 83.2-6.4l36.266667 132.266667c4.266667 14.933333 17.066667 23.466667 29.866667 23.466666 2.133333 0 6.4 0 8.533333-2.133333 17.066667-4.266667 27.733333-21.333333 23.466667-38.4L661.333333 584.533333c44.8-12.8 85.333333-34.133333 123.733334-59.733333l91.733333 91.733333c6.4 6.4 14.933333 8.533333 23.466667 8.533334s17.066667-2.133333 23.466666-8.533334c6.4-10.666667 6.4-29.866667-6.4-42.666666z"
-                    p-id="1743"
-                  ></path></svg> -->
                 隐藏
               </el-button>
               <el-button
@@ -236,7 +219,7 @@ import {
 import option from "@/const/product/productcategory";
 import { mapGetters } from "vuex";
 import { validatenull } from "@/util/validate";
- 
+
 export default {
   data() {
     return {
@@ -263,13 +246,13 @@ export default {
         children: "children",
         label: "name",
       },
-      // 某一行表单数据
+      // 表单
       form: {},
       // 选择行
       selectionList: [],
       // 表单配置
       option: option,
-      // 表单列表
+      // 表格
       data: [],
       // 父节点列表
       treeData: [],

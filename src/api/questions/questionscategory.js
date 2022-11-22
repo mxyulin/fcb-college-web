@@ -2,19 +2,7 @@ import request from '@/router/axios';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/fcb-product/product/list',
-    method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
-  })
-}
-
-export const getListByCategory = (current, size, params) => {
-  return request({
-    url: '/api/fcb-product/product/page-bycategory-ids',
+    url: '/api/fcb-questions/category/list',
     method: 'get',
     params: {
       ...params,
@@ -26,7 +14,7 @@ export const getListByCategory = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/fcb-product/product/detail',
+    url: '/api/fcb-questions/category/detail',
     method: 'get',
     params: {
       id
@@ -34,9 +22,19 @@ export const getDetail = (id) => {
   })
 }
 
+export const getTree = (tenantId) => {
+  return request({
+    url: '/api/fcb-questions/category/tree',
+    method: 'get',
+    params: {
+      tenantId,
+    }
+  })
+}
+
 export const remove = (ids) => {
   return request({
-    url: '/api/fcb-product/product/remove',
+    url: '/api/fcb-questions/category/remove',
     method: 'post',
     params: {
       ids,
@@ -46,7 +44,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/fcb-product/product/submit',
+    url: '/api/fcb-questions/category/submit',
     method: 'post',
     data: row
   })
@@ -54,16 +52,9 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/fcb-product/product/submit',
+    url: '/api/fcb-questions/category/submit',
     method: 'post',
     data: row
   })
 }
 
-export const slectionsUpdate = (ids, status) => {
-  return request({
-    url: '/api/fcb-product/product/shelfstatus',
-    method: 'post',
-    params: { ids, status }
-  })
-}

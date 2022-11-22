@@ -2,7 +2,7 @@ export default {
   size: 'small',
   expand: false,
   index: true,
-  border: false,
+  border: true,
   selection: true,
   column: [
     {
@@ -12,39 +12,42 @@ export default {
       hide: true,
     },
     {
-      label: "分类",
+      label: "租户ID",
+      prop: "tenantId",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "附件地址",
+      prop: "link",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "附件域名",
+      prop: "domainUrl",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "附件名称",
       prop: "name",
-      hide: false,
-      width: "200"
+      span: 24,
     },
     {
-      label: "栏目类型",
-      prop: "type",
-      hide: false,
-    },
-    // {
-    //   label: "分类图片",
-    //   prop: "image",
-    //   hide: false,
-    // },
-    {
-      label: "父ID",
-      prop: "pid",
+      label: "附件原名",
+      prop: "originalName",
+      display: false,
       hide: true,
     },
     {
-      label: "权重",
-      prop: "weigh",
-      hide: true,
+      label: "附件拓展名",
+      prop: "extension",
     },
     {
-      label: "描述",
-      prop: "description",
-      hide: false,
-    },
-    {
-      label: "状态",
-      prop: "status",
+      label: "附件大小",
+      prop: "attachSize",
+      display: false,
       hide: true,
     },
     {
@@ -62,8 +65,7 @@ export default {
     {
       label: "创建时间",
       prop: "createTime",
-      display: false,
-      hide: false,
+      search: true,
     },
     {
       label: "修改人",
@@ -74,6 +76,18 @@ export default {
     {
       label: "修改时间",
       prop: "updateTime",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "状态",
+      prop: "status",
+      display: false,
+      hide: true,
+    },
+    {
+      label: "是否已删除",
+      prop: "isDeleted",
       display: false,
       hide: true,
     },
