@@ -21,7 +21,8 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
-  }]
+  },
+]
 }, {
   path: '/logs',
   component: Layout,
@@ -103,6 +104,6 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
  
-  } 
+  },
 ]}
  ]

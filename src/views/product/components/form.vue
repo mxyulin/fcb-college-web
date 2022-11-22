@@ -235,6 +235,9 @@ export default {
     init() {},
     beforeClose(done) {
       this.$emit("beforeClose", done);
+    },
+    handleSubmit(formName) {
+      this.$emit("handleSubmit", formName)
     }
   },
   mounted() {},

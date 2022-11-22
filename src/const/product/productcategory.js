@@ -12,20 +12,21 @@ export default {
       hide: true,
     },
     {
-      label: "分类名",
+      label: "分类",
       prop: "name",
       hide: false,
+      width: "200"
     },
     {
       label: "栏目类型",
       prop: "type",
-      hide: true,
-    },
-    {
-      label: "分类图片",
-      prop: "image",
       hide: false,
     },
+    // {
+    //   label: "分类图片",
+    //   prop: "image",
+    //   hide: false,
+    // },
     {
       label: "父ID",
       prop: "pid",
