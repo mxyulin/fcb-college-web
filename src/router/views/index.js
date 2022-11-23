@@ -1,4 +1,4 @@
-import Layout from '@/page/index/';
+import Layout from '@/page/index/'
 
 export default [{
   path: '/wel',
@@ -21,9 +21,10 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
-  }]
+  },
+]
 }, {
-  path: '/test',
+  path: '/logs',
   component: Layout,
   redirect: '/test/index',
   children: [{
@@ -33,7 +34,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/test.vue')
+      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
   }]
 }, {
   path: '/dict-horizontal',
@@ -102,57 +103,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
-
-  }, {
-    path: '/designer',
-    name: '设计师模板',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/designer')
-  }, {
-    path: '/decorate',
-    name: '模板管理',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/decorate'),
-  }
-    , {
-    path: '/coupons',
-    name: '优惠劵',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/coupons/coupons')
-  }
-    , {
-    path: '/commissionagent',
-    name: '分销商',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionagent')
-  }, {
-    path: '/commissionconfig',
-    name: '分销商基础设置',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/commissionconfig')
-  }, {
-    path: '/decorate/dodecorate',
-    name: '店铺装修',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import(/* webpackChunkName: "views" */ '@/views/dodecorate/dodecorate'),
-  }
-  ]
-}]
+ 
+  },
+]}
+ ]
