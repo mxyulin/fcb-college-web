@@ -5,14 +5,15 @@
  * isSerialize是否开启form表单提交
  * isToken是否需要token
  */
-import axios from 'axios';
-import store from '@/store/';
-import router from '@/router/router';
-import {serialize} from '@/util/util';
-import {getToken} from '@/util/auth';
-import {Message} from 'element-ui';
 import website from '@/config/website';
-import {Base64} from 'js-base64';
+// !错误：store 存在循环引用
+// import router from '@/router/router';
+// import store from '@/store';
+import { getToken } from '@/util/auth';
+import { serialize } from '@/util/util';
+import axios from 'axios';
+import { Message } from 'element-ui';
+import { Base64 } from 'js-base64';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -66,7 +67,7 @@ axios.interceptors.response.use(res => {
   //如果在白名单里则自行catch逻辑处理
   if (statusWhiteList.includes(status)) return Promise.reject(res);
   //如果是401则跳转到登录页面
-  if (status === 401) store.dispatch('FedLogOut').then(() => router.push({path: '/login'}));
+  // if (status === 401) store.dispatch('FedLogOut').then(() => router.push({path: '/login'}));
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {
     Message({
