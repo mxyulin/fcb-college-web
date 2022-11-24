@@ -1,0 +1,339 @@
+#indexPage {
+  border-radius: 10px 10px 0px 0px;
+  color: #444;
+  font-weight: 500;
+  position: relative;
+  min-width: 800px;
+  margin: 0 auto;
+}
+.el-form-item {
+  padding: 0 0 0 100px;
+}
+
+.el-form-item {
+  margin-bottom: 16px;
+}
+
+.become-register-row {
+  display: flex;
+  font-size: 13px;
+}
+
+.become-register-row-title {
+  background: #f9f9f9;
+  border: none;
+}
+
+.become-register-row-item {
+  box-sizing: border-box;
+  width: 260px;
+  min-width: 260px;
+  padding-left: 20px;
+  height: 44px;
+  line-height: 44px;
+}
+
+.become-register-row-title .become-register-row-item {
+  line-height: 40px;
+}
+
+.become-register-row-item-last {
+  width: 130px;
+  min-width: 130px;
+  display: flex;
+  align-items: center;
+}
+.become-register-row-item-last-red {
+  color: red;
+}
+.become-register-row-item-input {
+  width: 200px;
+}
+
+.become_register-contaoner {
+  display: flex;
+}
+
+.become_register_add-button {
+  cursor: pointer;
+  color: #7438d5;
+  width: 60px;
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.become_register_add-button i {
+  margin-right: 6px;
+}
+
+.become-register-row-frist {
+  width: 90px;
+  color: rgba(0, 0, 0, 0);
+}
+
+.apply_protocol-select {
+  color: #7438d5;
+  cursor: pointer;
+  margin-left: 20px;
+}
+.shopro-submit-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: calc(100% - 300px);
+  height: 60px;
+  padding: 0 16px;
+  position: fixed;
+  bottom: 0px;
+  right: 16px;
+  background-color: #ffffff;
+}
+
+.shopro-submit-button {
+  width: 88px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  background: #7438d5;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.shopro-default-button {
+  width: 88px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 5px;
+  color: #7438d5;
+}
+
+.title-tip {
+  color: #999;
+  line-height: 13px;
+  font-size: 13px;
+  font-weight: 400;
+  margin-top: 14px;
+}
+
+.bgimage-add-container {
+  border: 1px solid #e6e6e6;
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+}
+
+.bgimage-add {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  color: #999;
+}
+
+.goods-add {
+  width: 80px;
+  height: 30px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  background: #7438d5;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.el-form-item__label,
+.el-radio__label,
+.el-input,
+.el-select-dropdown__item {
+  font-size: 13px;
+}
+
+.form-group-area {
+  border-radius: 4px;
+  margin-bottom: 60px;
+}
+.shopro-form-group-title {
+  height: 50px;
+  display: flex;
+  align-items: center;
+
+  color: black;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+.shopro-form-group-title-href,
+.shopro-form-group-title-href:hover,
+.shopro-form-group-title-href:focus {
+  color: #7438d5;
+}
+.shopro-form-group-title-agreement {
+  height: 38px;
+  line-height: 38px;
+  background: #f1ebfa;
+  font-size: 12px;
+  color: #444;
+  padding: 0 20px;
+  margin: 0 20px 20px 32px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+}
+.shopro-form-group-title-line {
+  width: 2px;
+  height: 18px;
+  background: #7438d5;
+  margin: 0 10px 0 10px;
+}
+.shopro-goods-header {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+}
+
+.shopro-goods-body {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #e6e6e6;
+}
+
+.shopro-goods-title {
+  width: 280px;
+  min-width: 280px;
+  display: flex;
+  height: 50px;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.shopro-goods-stock {
+  width: 120px;
+  min-width: 120px;
+}
+
+.shopro-goods-opt {
+  width: 160px;
+  min-width: 160px;
+}
+
+.shopro-goods-image {
+  width: 36px;
+  height: 36px;
+
+  border: 1px solid #e6e6e6;
+  box-sizing: border-box;
+  border-radius: 2px;
+  margin-right: 12px;
+}
+
+.shopro-goods-add-button {
+  cursor: pointer;
+  color: #7438d5;
+  font-size: 13px;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 20px;
+}
+
+.shopro-goods-add-button i {
+  margin-right: 6px;
+}
+.shopro-goods-id {
+  width: 70px;
+  padding: 0 10px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.form-group-area-last {
+  padding-bottom: 20px;
+}
+.el-dialog {
+  width: 900px;
+}
+.el-dialog__wrapper {
+  background: rgba(43, 43, 43, 0.05);
+  backdrop-filter: blur(2px);
+}
+.configis-upgrade-image {
+  width: 900px;
+  height: 580px;
+  background: #ffffff;
+  border-radius: 4px;
+  position: relative;
+}
+.configis-upgrade-image img {
+  width: 100%;
+  height: 100%;
+}
+.el-dialog__body {
+  padding: 0;
+}
+.el-dialog__header {
+  height: 0;
+  padding: 0;
+}
+.configis-upgrade-button {
+  position: absolute;
+  bottom: 162px;
+  right: 360px;
+}
+.configis-upgrade-button-upgrade {
+  width: 110px;
+  height: 34px;
+  background: #8322ff;
+  border-radius: 2px;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #ffffff;
+  margin-left: 42px;
+  cursor: pointer;
+}
+.configis-upgrade-button-upgrade .icon-right {
+  margin-left: 12px;
+  width: 18px;
+  height: 18px;
+}
+.configis-upgrade-button-refresh {
+  color: #86818e;
+  font-size: 12px;
+  cursor: pointer;
+}
+.configis-upgrade-button-refresh .el-icon-refresh-right {
+  margin-right: 6px;
+  font-size: 14px;
+}
+.configis-upgrade-close {
+  position: absolute;
+  top: 53px;
+  right: 58px;
+  font-size: 20px;
+  color: #7f7a87;
+  cursor: pointer;
+}
+
+[v-cloak] {
+  display: none;
+}
+.el-card__body {
+  padding: 0;
+}
+.display-flex {
+  display: flex;
+  align-items: center;
+  width: 400px;
+}
+.shopro-screen-button {
+  background: #409eff;
+  color: #fff;
+}

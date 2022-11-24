@@ -6,9 +6,9 @@
  * isToken是否需要token
  */
 import website from '@/config/website';
-// !错误：store 存在循环引用
+// ! router 存在循环引用
 // import router from '@/router/router';
-// import store from '@/store';
+import store from '@/store';
 import { getToken } from '@/util/auth';
 import { serialize } from '@/util/util';
 import axios from 'axios';
@@ -67,7 +67,8 @@ axios.interceptors.response.use(res => {
   //如果在白名单里则自行catch逻辑处理
   if (statusWhiteList.includes(status)) return Promise.reject(res);
   //如果是401则跳转到登录页面
-  // if (status === 401) store.dispatch('FedLogOut').then(() => router.push({path: '/login'}));
+  //// if (status === 401) store.dispatch('FedLogOut').then(() => router.push({path: '/login'}));
+  if (status === 401) store.dispatch('user/FedLogOut').then(() => router.push({path: '/login'}));
   // 如果请求为非200否者默认统一处理
   if (status !== 200) {
     Message({

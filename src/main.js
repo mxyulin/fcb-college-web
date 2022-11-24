@@ -1,30 +1,31 @@
+import App from '@/App';
+import '@/cache'; //页面缓存
+import basicBlock from '@/components/basic-block/main';
+import basicContainer from '@/components/basic-container/main';
+import flowDesign from '@/components/flow-design/main';
+import ResourceTable from '@/components/resource-table';
+import thirdRegister from '@/components/third-register/main';
 import * as urls from '@/config/env';
 import {
   iconfontUrl,
   iconfontVersion
 } from '@/config/env';
 import website from '@/config/website';
+import '@/error'; // 日志
+import i18n from '@/lang'; // Internationalization
 import crudCommon from '@/mixins/crud';
+import '@/permission'; // 权限
+import axios from '@/router/axios';
+import router from '@/router/router';
+import store from '@/store';
+import '@/styles/common.scss';
+import { loadStyle } from '@/util/util';
 import avueUeditor from 'avue-plugin-ueditor';
 import Element from 'element-ui';
 import Vue from 'vue';
 import VueAxios from 'vue-axios';
-import App from './App';
-import './cache'; //页面缓存
-import basicBlock from './components/basic-block/main';
-import basicContainer from './components/basic-container/main';
-import flowDesign from './components/flow-design/main';
-import thirdRegister from './components/third-register/main';
-import './error'; // 日志
-import i18n from './lang'; // Internationalization
-import './permission'; // 权限
-import axios from './router/axios';
-import router from './router/router';
-import store from './store';
-import './styles/common.scss';
-import { loadStyle } from './util/util';
 // 业务组件
-import tenantPackage from './views/system/tenantpackage';
+import tenantPackage from '@/views/system/tenantpackage';
 
 
 // 注册全局crud驱动
@@ -48,6 +49,8 @@ Vue.component('thirdRegister', thirdRegister);
 Vue.component('avueUeditor', avueUeditor);
 Vue.component('flowDesign', flowDesign);
 Vue.component('tenantPackage', tenantPackage);
+// 全局组件
+Vue.component(ResourceTable.name, ResourceTable);
 // 加载相关url地址
 Object.keys(urls).forEach(key => {
   Vue.prototype[key] = urls[key];

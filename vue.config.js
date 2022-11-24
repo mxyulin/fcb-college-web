@@ -1,3 +1,4 @@
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 module.exports = {
   //路径前缀
   publicPath: "/",
@@ -27,6 +28,7 @@ module.exports = {
     proxy: {
       '/api': {
         //本地服务接口地址
+        // target: 'http://192.168.10.211:8090',
         target: 'http://127.0.0.1:8090',
         //远程演示服务地址,可用于直接启动项目
         //target: 'https://fcb.fcbx.vip/api',
@@ -37,4 +39,17 @@ module.exports = {
       }
     }
   },
+  // 调整 webpack 配置
+  configureWebpack: {
+    plugins: [
+      // 用于编译打包时检测循环引用问题
+      new CircularDependencyPlugin({
+        exclude: /a\.js|node_modules/,
+        include: /dir/,
+        failOnError: true,
+        allowAsyncCycles: false,
+        cwd: process.cwd("@/"),
+      })
+    ] 
+  }
 };

@@ -7,12 +7,12 @@
  * isAuth是否需要授权
  */
 import i18n from '@/lang'; // Internationalization 国际化 多语言
-import Store from '@/store'; // vuex
+import AvueRouter from '@/router/avue-router'; //封装的路由控制方法
+import PageRouter from '@/router/page/'; // 页面路由
+import ViewsRouter from '@/router/views/'; // 页面路由
+import Store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import AvueRouter from './avue-router'; //封装的路由控制方法
-import PageRouter from './page/'; // 页面路由
-import ViewsRouter from './views/'; // 页面路由
 Vue.use(VueRouter)
 //创建路由
 export const createRouter = () => new VueRouter({
@@ -28,7 +28,7 @@ AvueRouter.install(Vue, {
 });
 Router.$avueRouter.formatRoutes(Store.state.user.menuAll, true); // 动态路由核心方法
 Router.addRoutes([...PageRouter, ...ViewsRouter]);
-export function resetRouter () {  // 重置路由 比如用于身份验证失败，需要重新登录时 先清空当前的路有权限
+export function resetRouter () {  // 重置路由 比如用于身份验证失败，需要重新登录时 先清空当前的路由权限
   const newRouter = createRouter()
   Router.matcher = newRouter.matcher // reset router
   AvueRouter.install(Vue, {
