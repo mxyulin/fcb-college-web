@@ -750,6 +750,7 @@ export default {
         Object.assign(params, this.query)
       ).then((res) => {
         this.listData = res.data.data.records
+        console.log('data数据',res)
         // this.page.total = data.total;
         // this.data = data.records;
         // this.loading = false;

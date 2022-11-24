@@ -1,0 +1,191 @@
+#detailPage {
+    background-color: #fff;
+    border-radius: 10px;
+    color: #444;
+    font-weight: 500;
+    padding: 0px 10px 60px;
+    position: relative;
+}
+//////////////////////////////////////////
+.shopro-form-group-title {
+    border-bottom: 1px solid #e6e6e6;
+    height: 50px;
+    line-height: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+
+.shopro-form-group-title-line {
+    width: 2px;
+    height: 16px;
+    background: #7438d5;
+    border-radius: 4px;
+    margin: 0 10px;
+}
+//////////////////////////////////////////
+.el-image {
+    width: 100%;
+    height: 100%;
+}
+
+.image-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.goods-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border: 1px solid #e6e6e6;
+    margin-right: 14px;
+}
+
+.shopro-submit-container {
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    right: 40px;
+    bottom: 10px;
+    /* width: 100%; */
+    height: 40px;
+}
+
+.shopro-submit-button {
+    width: 88px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background: #7438D5;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.sku-price-rate {
+    margin-right: 10px;
+}
+
+.sku-price-rate,
+.sku-price-money {
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 50px;
+}
+
+.commission-body-container {
+    line-height: 50px;
+    display: flex;
+    border-left: 1px solid #e6e6e6;
+}
+
+
+
+.commission-header-container {
+    line-height: 40px;
+    border-left: 1px solid #e6e6e6;
+}
+
+.commission-header-container .commission-store-name,
+.commission-header-container .commission-item,
+.commission-header-container .commission-sku,
+.commission-header-container .commission-price {
+    border-top: 1px solid #e6e6e6;
+    background: #f9f9f9;
+}
+
+.commission-store-name {
+    width: 120px;
+    min-width: 120px;
+    padding: 0 10px;
+    text-align: center;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.commission-item {
+    width: 190px;
+    min-width: 190px;
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    border-right: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.commission-sku,
+.commission-price {
+    width: 180px;
+    min-width: 180px;
+    padding: 0 20px;
+    border-bottom: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    text-align: center;
+}
+
+.commission-price {
+    width: 100px;
+    min-width: 100px;
+    padding: 0 20px;
+}
+
+.commission-item-batch {
+    cursor: pointer;
+}
+
+.el-button--text,
+.el-button--text:hover,
+.el-button--text:focus {
+    color: #999;
+}
+
+.batch-setting-container {
+    line-height: 50px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid #e6e6e6;
+}
+
+.alone-setting-container {
+    line-height: 50px;
+    display: flex;
+    border-left: 1px solid #e6e6e6;
+}
+
+.commission-order-status-icon {
+    font-size: 20px;
+    color: #7C7C7C;
+    margin-left: 16px;
+}
+
+.el-popover--plain {
+    padding: 12px;
+    color: #444;
+}
+
+.batch-edit-icon {
+    margin-left: 10px;
+    margin-top: -3px;
+}
+
+.batch-question-icon {
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+[v-cloak] {
+    display: none
+}
