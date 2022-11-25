@@ -160,7 +160,7 @@
                   :size="option.size"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseLink(index)"
                 >
                   选择链接
                 </el-button>
@@ -284,7 +284,7 @@
                   plain
                   :size="option.size"
                   class="margin-left-20 choosePicture"
-                  :data-index="index"
+                  @click="choosePicture('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2183,24 +2183,14 @@
     <!--  -->
     <!--  -->
     <!--  -->
-    <!-- 资源表弹窗 -->
-    <el-dialog
-      width="75%"
-      :visible.sync="dialogVisible"
-      :before-close="dialogBeforeClose"
-      :append-to-body="true"
-      :close-on-click-modal="false"
-    >
-      <div
-        slot="title"
-        style="border-bottom: 1px solid #ccc; padding-bottom: 10px"
-      >
-        选择{{ dialogTitle }}
-      </div>
-      <ResourceTable />
-      <div slot="footer">
-      </div>
-    </el-dialog>
+    <!-- 资源表弹窗组件 -->
+    <ResourceTable
+      :dialogVisible.sync="dialogVisible"
+      :dialogTitle="dialogTitle"
+      :currentListIdx="currentListIdx"
+      :chooseResourceType="chooseResourceType"
+      v-bind="$attrs"
+    />
   </div>
 </template>
 
@@ -2219,10 +2209,7 @@ export default {
     isfloat: Boolean,
     popupIndex: Number,
     fromtype: String,
-    centerSelect: {
-      type: Number,
-      required: true,
-    },
+    centerSelect: Number,
     templateData: {
       type: Array,
       required: true,
@@ -2240,7 +2227,6 @@ export default {
       option: option,
       // 广告布局抽屉状态
       advdrawer: false,
-      //
       dialogVisible: false,
       // 广告魔方数据
       advStyleImage: [
@@ -2300,7 +2286,12 @@ export default {
         ],
         currentImage: "",
       },
+      // 弹窗名称
       dialogTitle: "",
+      // 当前所选列表
+      currentListIdx: null,
+      // 选择资源类型
+      chooseResourceType: "",
     };
   },
   computed: {
@@ -2323,19 +2314,26 @@ export default {
     },
     // 选择图片
     choosePicture(type, index) {
+      this.currentListIdx = index;
+      this.chooseResourceType = type;
+      this.dialogTitle = "图片";
+      this.templateForm.content.list[index].name = "";
+      this.templateForm.content.list[index].image = "";
       this.dialogVisible = true;
-      switch (type) {
-        case "picture":
-          this.dialogTitle = "图片";
-          break;
-        case "link":
-          this.dialogTitle = "链接";
-          break;
-      }
     },
     // 选择链接
+    chooseLink(index) {
+      this.currentListIdx = index;
+      this.chooseResourceType = type;
+      this.dialogTitle = "链接";
+      this.templateForm.content.list[index].path = "";
+      this.templateForm.content.list[index].path_name = "";
+      this.dialogVisible = true;
+    },
+    // 链接类型
     isweblink(type, index) {
       let that = this;
+      that.currentListIdx = index;
       that.templateForm.content.list[index].path = "";
       that.templateForm.content.list[index].path_name = "";
     },

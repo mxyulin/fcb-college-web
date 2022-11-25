@@ -272,7 +272,9 @@
           :isfloat.sync="isfloat"
           :popupIndex.sync="popupIndex"
           :templateData.sync="templateData"
+          :updateForm="updateForm"
           @showForm="showForm"
+          v-bind="$attrs"
         />
       </el-aside>
     </el-container>
@@ -594,6 +596,16 @@ export default {
       let that = this;
       that.centerSelect = index;
       that.templateForm = that.templateData[index];
+    },
+    // 更新表单数据
+    updateForm(type, index, data) {
+      const { name, link } = data;
+      switch (type) {
+        case "picture":
+          this.templateForm.content.list[index].name = name;
+          this.templateForm.content.list[index].image = link;
+          break;
+      }
     },
     // 缓存上一次装修的数据
     cachePreData(type) {

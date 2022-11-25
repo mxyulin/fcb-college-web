@@ -210,11 +210,10 @@ export default {
       return list.name.indexOf(value) !== -1;
     },
     handleUpload() {
-      this.attachBox = true;
+      this.fattachBox = true;
 
     },
     uploadAfter(res, done, loading, column) {
-      window.console.log('123', column);
       this.attachBox = false;
       this.refreshChange();
       done();

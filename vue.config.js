@@ -1,4 +1,3 @@
-const CircularDependencyPlugin = require('circular-dependency-plugin')
 module.exports = {
   //路径前缀
   publicPath: "/",
@@ -39,17 +38,4 @@ module.exports = {
       }
     }
   },
-  // 调整 webpack 配置
-  configureWebpack: {
-    plugins: [
-      // 用于编译打包时检测循环引用问题
-      new CircularDependencyPlugin({
-        exclude: /a\.js|node_modules/,
-        include: /dir/,
-        failOnError: true,
-        allowAsyncCycles: false,
-        cwd: process.cwd("@/"),
-      })
-    ] 
-  }
 };

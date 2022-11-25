@@ -1,58 +1,101 @@
 <template>
-  <el-row>
-    <!-- 资源表 -->
-    <el-col :span="5">
-      <div>
-        <el-scrollbar>
-          <el-input
-            :size="option.size"
-            placeholder="搜索分类"
-            v-model="filterText"
-            style="margin-bottom: 10px"
-          >
-          </el-input>
-          <el-tree
-            :props="defaultProps"
-            :data="treeDta"
-            :node-key="id"
-            :highlight-current="true"
-            :filter-node-method="filterNode"
-            @node-click="handleNodeClick"
-            ref="tree"
-          >
-          </el-tree>
-        </el-scrollbar>
-      </div>
-    </el-col>
-    <el-col :span="19">
-      <!-- <avue-crud :option="option" :table-loading="loading" :data="data" :page.sync="page" :permission="permissionList"
-          :before-open="beforeOpen" v-model="form" ref="crud" @row-del="rowDel" @search-change="searchChange"
-          @search-reset="searchReset" @selection-change="selectionChange" @current-change="currentChange"
-          @size-change="sizeChange" @refresh-change="refreshChange" @on-load="loadDataList">
-          <template slot="link">
-            <img class="img-item"
-              src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76"
-              alt="">
-          </template>
+  <el-dialog
+    width="75%"
+    :visible.sync="dialogVisible"
+    :append-to-body="true"
+    :close-on-click-modal="false"
+    :before-close="beforeClose"
+  >
+    <div slot="title">选择{{ dialogTitle }}</div>
+    <el-row gutter="0" type="flex" justify="space-between">
+      <!-- 资源表 -->
+      <el-col :span="4">
+        <div>
+          <el-scrollbar>
+            <el-input
+              :size="option.size"
+              placeholder="搜索分类"
+              v-model="filterText"
+              style="margin-bottom: 10px"
+            >
+            </el-input>
+            <el-tree
+              :props="defaultProps"
+              :data="treeDta"
+              :node-key="id"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              @node-click="handleNodeClick"
+              ref="tree"
+            >
+            </el-tree>
+          </el-scrollbar>
+        </div>
+      </el-col>
+      <el-col :span="19">
+        <avue-crud
+          :data="data"
+          :option="avueOption"
+          :table-loading="loading"
+          :page.sync="page"
+          :search.sync="search"
+          :permission="permissionList"
+        >
           <template slot="menuLeft">
-            <el-button type="primary" size="small" plain v-if="permission.attach_upload" icon="el-icon-upload2"
-              @click="handleUpload">上 传
-            </el-button>
-            <el-button type="danger" size="small" icon="el-icon-delete" plain v-if="permission.attach_delete"
-              @click="handleDelete">删 除
-            </el-button>
+            <el-button
+              type="primary"
+              :size="option.size"
+              icon="el-icon-upload2"
+              @click="handleUpload"
+              >上传</el-button
+            >
           </template>
-          <template slot-scope="scope" slot="menu">
-            <el-button type="text" icon="el-icon-download" size="small" v-if="permission.attach_download"
-              @click="handleDownload(scope.row)">下载
-            </el-button>
+          <template slot="link" slot-scope="scope">
+            <el-image
+              style="width: 80px; height: 80px"
+              :src="scope.link"
+              :preview-src-list="[scope.link]"
+              :fit="fit"
+            ></el-image>
           </template>
-          <template slot-scope="{row}" slot="attachSize">
-            <el-tag>{{ `${row.attachSize} KB` }}</el-tag>
+          <template slot="categoryName">{{ selectNode.name }}</template>
+          <template slot-scope="{ row }" slot="menu">
+            <el-button
+              :size="option.size"
+              type="primary"
+              @click="handleSlect(row)"
+              >选择</el-button
+            >
           </template>
-        </avue-crud> -->
-    </el-col>
-  </el-row>
+        </avue-crud>
+        <el-dialog
+          title="图片上传"
+          append-to-body
+          :visible.sync="attachBox"
+          width="555px"
+        >
+          <el-upload
+            action="/api/fcb-resource/oss/endpoint/put-file-attach"
+            :multiple="true"
+            :on-preview="handlePreview"
+            :on-success="uploadSuccess"
+            :on-error="uploadError"
+            :before-remove="handleBeforeRemove"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            list-type="picture"
+            ref="upload"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">
+              只能上传jpg/png文件, 且不超过500kb
+            </div>
+          </el-upload>
+        </el-dialog>
+      </el-col>
+    </el-row>
+    <div slot="footer"></div>
+  </el-dialog>
 </template>
 
 <script>
@@ -64,15 +107,10 @@ import { getList, getDetail, remove } from "@/api/resource/attach";
 
 export default {
   name: "ResourceTable",
-  props: [
-    {
-      dialogOption: {
-        type: Object,
-        required: true,
-        default: () => {},
-      },
+  props: {
+      dialogVisible: Boolean,
+      dialogTitle: String,
     },
-  ],
   data() {
     return {
       /* 公共数据 */
@@ -82,6 +120,7 @@ export default {
         pageSize: 10,
         currentPage: 1,
         total: 0,
+        pagerCount: 7,
       },
       query: {},
 
@@ -92,12 +131,53 @@ export default {
         children: "children",
         label: "name",
       },
-      selectNodeId: null,
+      selectNode: {},
 
       /* 表格 */
+      avueOption: {
+        header: true,
+        search: true,
+        border: true,
+        menuWidth: 100,
+        align: "center",
+        search: {
+          name: "",
+        },
+        column: [
+          {
+            label: "类别",
+            prop: "categoryName",
+            overHidden: true,
+          },
+          {
+            label: "文件名",
+            prop: "name",
+            sortable: true,
+            overHidden: true,
+          },
+          {
+            label: "预览",
+            prop: "link",
+            overHidden: true,
+          },
+          {
+            label: "文件类型",
+            prop: "extension",
+            overHidden: true,
+          },
+          {
+            label: "创建时间",
+            prop: "createTime",
+            sortable: true,
+            overHidden: true,
+          },
+        ],
+      },
       data: [],
       selectionList: [],
       pictUrl: [],
+      attachBox: false,
+      fileList: [],
     };
   },
   computed: {
@@ -109,6 +189,14 @@ export default {
       });
       return ids.join(",");
     },
+    // 表格按钮权限
+    permissionList() {
+      return {
+        addBtn: false,
+        editBtn: false,
+        delBtn: false,
+      };
+    },
   },
   watch: {
     // 树节点过滤
@@ -118,6 +206,11 @@ export default {
   },
   methods: {
     init() {},
+    // 关闭弹窗
+    beforeClose(done) {
+      this.$emit("update:dialogVisible", false);
+      done();
+    },
     // 获取分类节点数据
     loadCategoryTree() {
       let that = this;
@@ -133,8 +226,8 @@ export default {
     // 获取对应分类表格
     handleNodeClick(data, node) {
       let that = this;
-      that.selectNodeId = data.id;
-      that.loadDataList(that.page, { categoryIds: that.selectNodeId });
+      that.selectNode = data;
+      that.loadDataList(that.page, { categoryIds: that.selectNode.id });
     },
     // 获取表格数据
     loadDataList(page, params = {}) {
@@ -156,6 +249,24 @@ export default {
     selectionClear() {
       this.selectionList = [];
       // this.$refs.crud.toggleSelection();
+    },
+    // 打开上传表单
+    handleUpload() {
+      this.attachBox = true;
+    },
+    // 上传成功
+    uploadSuccess(res, file, fileList) {},
+    // 上传失败
+    uploadError(err, file, fileList) {},
+    // 预览已上传图片
+    handlePreview(file) {},
+    // 删除文件前
+    handleBeforeRemove(file, fileList) {},
+    // 选择图片
+    handleSlect(row) {
+      const { currentListIdx, chooseResourceType, updateForm } = this.$attrs;
+      updateForm(chooseResourceType, currentListIdx, row);
+      this.$emit("update:dialogVisible", false);
     },
   },
   mounted() {
