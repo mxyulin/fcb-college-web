@@ -3,7 +3,6 @@
     id="decorateApp"
     v-cloak
     style="height: calc(100vh - 120px)"
-    v-loading="loading"
   >
     <el-heade height="40px">
       <!-- 顶部按钮组 -->
@@ -298,8 +297,6 @@ export default {
     return {
       // 全局组件配置
       option: option,
-      // v-loading 状态
-      loading: false,
 
       // 底部按钮组
       pageTypeList: [
@@ -375,8 +372,6 @@ export default {
       iframePlatform: "",
       // 模板预览开关
       previewDialog: false,
-      // 模板预览 ID（用于获取模板预览相关数据）
-      // decorate_id: new URLSearchParams(location.search).get("id"),
 
       /* 装修类型表单始数据 */
       homeData: [],
@@ -591,7 +586,7 @@ export default {
   },
   methods: {
     init() {},
-    // 展示工具表单
+    // 展示表单数据
     showForm(index) {
       let that = this;
       that.centerSelect = index;
@@ -599,15 +594,19 @@ export default {
     },
     // 更新表单数据
     updateForm(type, index, data) {
-      const { name, link } = data;
+      const { name, link, path, pathName } = data;
       switch (type) {
         case "picture":
           this.templateForm.content.list[index].name = name;
           this.templateForm.content.list[index].image = link;
           break;
+        case "link":
+          this.templateForm.content.list[index].path = path;
+          this.templateForm.content.list[index].path_name = pathName;
+          break;
       }
     },
-    // 缓存上一次装修的数据
+    // 缓存上一次装修的表单数据
     cachePreData(type) {
       let that = this;
       switch (type) {

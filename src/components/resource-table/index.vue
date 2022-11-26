@@ -7,8 +7,8 @@
     :before-close="beforeClose"
   >
     <div slot="title">选择{{ dialogTitle }}</div>
+    <!-- 资源表 -->
     <el-row gutter="0" type="flex" justify="space-between">
-      <!-- 资源表 -->
       <el-col :span="4">
         <div>
           <el-scrollbar>
@@ -40,6 +40,8 @@
           :page.sync="page"
           :search.sync="search"
           :permission="permissionList"
+          @refresh-change="refreshTable"
+          ref="crud"
         >
           <template slot="menuLeft">
             <el-button
@@ -58,7 +60,7 @@
               :fit="fit"
             ></el-image>
           </template>
-          <template slot="categoryName">{{ selectNode.name }}</template>
+          <template slot="categoryName">{{ nodeData.name }}</template>
           <template slot-scope="{ row }" slot="menu">
             <el-button
               :size="option.size"
@@ -108,12 +110,11 @@ import { getList, getDetail, remove } from "@/api/resource/attach";
 export default {
   name: "ResourceTable",
   props: {
-      dialogVisible: Boolean,
-      dialogTitle: String,
-    },
+    dialogVisible: Boolean,
+    dialogTitle: String,
+  },
   data() {
     return {
-      /* 公共数据 */
       option: option,
       loading: false,
       page: {
@@ -124,16 +125,20 @@ export default {
       },
       query: {},
 
-      /* 节点树 */
+      /*
+       *节点树
+       */
       treeDta: [],
       filterText: "",
       defaultProps: {
         children: "children",
         label: "name",
       },
-      selectNode: {},
-
-      /* 表格 */
+      nodeData: {},
+      nodeId: null,
+      /*
+       *表格
+       */
       avueOption: {
         header: true,
         search: true,
@@ -203,6 +208,20 @@ export default {
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
+    // 获取节点树
+    dialogVisible(newVal) {
+      const { resourceType } = this.$attrs;
+      if (newVal) {
+        // 根据用户所选资源类型不同，提供不同的节点树
+        switch (resourceType) {
+          case "picture":
+            this.loadCategoryTree();
+            break;
+        }
+      } else {
+        this.treeDta = [];
+      }
+    },
   },
   methods: {
     init() {},
@@ -211,23 +230,11 @@ export default {
       this.$emit("update:dialogVisible", false);
       done();
     },
-    // 获取分类节点数据
+    // 获取节点树
     loadCategoryTree() {
-      let that = this;
       getCategoryList().then(({ data: { data } }) => {
-        that.treeDta = data;
+        this.treeDta = data;
       });
-    },
-    // 过滤（搜索）分类
-    filterNode(val, data, node) {
-      if (!val) return true;
-      return data.name.indexOf(val) != -1 ? true : false;
-    },
-    // 获取对应分类表格
-    handleNodeClick(data, node) {
-      let that = this;
-      that.selectNode = data;
-      that.loadDataList(that.page, { categoryIds: that.selectNode.id });
     },
     // 获取表格数据
     loadDataList(page, params = {}) {
@@ -245,12 +252,38 @@ export default {
         }
       );
     },
+    // 过滤（搜索）分类
+    filterNode(val, data, node) {
+      if (!val) return true;
+      return data.name.indexOf(val) != -1 ? true : false;
+    },
+    // 获取对应分类表格数据
+    handleNodeClick(data, node) {
+      this.nodeId = node.id;
+      this.nodeData = data;
+      this.loadDataList(this.page, { categoryIds: this.nodeData.id });
+    },
+    // 选择图片
+    handleSlect(row) {
+      const { resourceType, currentListIdx, updateForm } = this.$attrs;
+      updateForm(resourceType, currentListIdx, row);
+      this.$emit("update:dialogVisible", false);
+    },
+    // 刷新表格
+    refreshTable() {
+      // 优化用户体验，刷新即刻得到第一个节点数据
+      this.$refs.tree.$children[0].handleClick();
+      this.$refs.crud.refreshTable();
+    },
     // 清空已选
     selectionClear() {
       this.selectionList = [];
-      // this.$refs.crud.toggleSelection();
+      // this.$refs.crud.clearSelection();
     },
-    // 打开上传表单
+    /*
+     *上传图片
+     */
+    // 打开上传
     handleUpload() {
       this.attachBox = true;
     },
@@ -258,20 +291,12 @@ export default {
     uploadSuccess(res, file, fileList) {},
     // 上传失败
     uploadError(err, file, fileList) {},
-    // 预览已上传图片
+    // 预览图片
     handlePreview(file) {},
     // 删除文件前
     handleBeforeRemove(file, fileList) {},
-    // 选择图片
-    handleSlect(row) {
-      const { currentListIdx, chooseResourceType, updateForm } = this.$attrs;
-      updateForm(chooseResourceType, currentListIdx, row);
-      this.$emit("update:dialogVisible", false);
-    },
   },
-  mounted() {
-    this.loadCategoryTree();
-  },
+  mounted() {},
 };
 </script>
 
