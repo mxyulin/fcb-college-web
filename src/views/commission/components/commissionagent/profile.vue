@@ -167,7 +167,7 @@
           <div class="profile-block agent-dashboard  profile-block-scrollbar">
             <div class="agent-dashboard-contanmer">
               <div class="agent-dashboard-title font-weight">
-                团队统计<span class="theme-cursor theme-cursor-edit">查看团队</span>
+                团队统计<span @click="centerdilogteam=true" class="theme-cursor theme-cursor-edit">查看团队</span>
               </div>
 
               <el-row :gutter="10">
@@ -504,6 +504,7 @@
               <div class="agent-dashboard-title font-weight">
                 团队统计<span
                   class="theme-cursor theme-cursor-edit"
+                  @click="centerdilogteam=true"
                   >查看团队</span
                 >
               </div>
@@ -1053,14 +1054,26 @@
         </span>
       </el-dialog>
     </div> -->
+    <!-- eldialog 跳转组件 -->
+      <el-dialog
+        append-to-body="ture"
+        :visible.sync="centerdilogteam"
+        width="60%"
+        center
+      >
+      <team></team>
+      </el-dialog>
     <div style="height:50px;"></div>
   </div>
 </template>
 
 <script>
+import team from "./team.vue"
 export default {
+    components :{team},
     data() {
         return {
+            centerdilogteam:false,
             logList:[],
             activeStatus: 'log',
             isEditInfoStatus: false,
