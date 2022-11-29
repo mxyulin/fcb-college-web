@@ -450,16 +450,17 @@
         </el-table>
       </div>
 
-      <!-- pag页码 -->
+      <!-- pag页码 分页器 -->
       <div class="shopro-pagination-container">
         <el-pagination
+          align="right" background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          :current-page="page.currentPage"
           :page-sizes="[10, 20, 30, 40]"
-          :page-size="limit"
+          :page-size="page.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="totalPage"
+          :total="page.total"
         >
         </el-pagination>
       </div>
@@ -572,7 +573,6 @@ export default {
         mobile: "like",
         level_status: ">",
       },
-      // listData:[],
       listData: [
         {
           tenantId: "用户",
@@ -742,27 +742,32 @@ export default {
       this.selectionList = [];
       // this.$refs.table.clearSelection();
     },
-    currentChange(currentPage) {
-      this.page.currentPage = currentPage;
-      this.onLoad(this.page);
+      
+    // 分页器 
+    handleCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
     },
-    sizeChange(pageSize) {
-      this.page.pageSize = pageSize;
-      this.onLoad(this.page);
+    handleSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.onLoad(that.page);
     },
-
+    // 发请求
     onLoad(page, params = {}) {
-      this.loading = true;
+      let that = this;
+      that.loading = true;
       getList(
         page.currentPage,
         page.pageSize,
-        Object.assign(params, this.query)
+        Object.assign(params, that.query)
       ).then((res) => {
-        this.listData = res.data.data.records;
-        console.log("data数据", res);
-        // this.page.total = data.total;
+        that.listData = res.data.data.records;
+        // console.log("data数据", res);
+        that.page.total = data.total;
         // this.data = data.records;
-        // this.loading = false;
+        that.loading = false;
         // this.selectionClear();
       });
     },

@@ -3,7 +3,6 @@
     <!-- 分销订单 -->
     <div id="orderIndex" v-cloak>
       <div class="screen-container display-flex">
-
         <div class="display-flex shopro-screen-item shopro-screen-item-vague">
           <div class="shopro-button shopro-refresh-button" @click="getrefresh">
             <i class="el-icon-refresh"></i>
@@ -24,8 +23,14 @@
                 placeholder="请选择"
               >
                 <el-option label="下单用户ID" value="buyer_id"></el-option>
-                <el-option label="下单用户昵称" value="buyer_nickname"></el-option>
-                <el-option label="下单用户手机号" value="buyer_mobile"></el-option>
+                <el-option
+                  label="下单用户昵称"
+                  value="buyer_nickname"
+                ></el-option>
+                <el-option
+                  label="下单用户手机号"
+                  value="buyer_mobile"
+                ></el-option>
               </el-select>
             </el-input>
           </div>
@@ -58,7 +63,6 @@
           </div>
         </div>
 
-        
         <div class="display-flex shopro-screen-item shopro-screen-item-vague">
           <div class="shopro-screen-condition">
             <el-input
@@ -241,7 +245,7 @@
               :md="8"
               :lg="8"
               :xl="8"
-              v-for="(itemTotal,indexc) in commissionDashboard.total"
+              v-for="(itemTotal, indexc) in commissionDashboard.total"
               :key="indexc"
             >
               <div class="table-dashboard-item-container">
@@ -272,7 +276,7 @@
               :md="12"
               :lg="6"
               :xl="6"
-              v-for="(itemStatus,indexd) in commissionDashboard.status"
+              v-for="(itemStatus, indexd) in commissionDashboard.status"
               :key="indexd"
             >
               <div class="table-dashboard-item-container">
@@ -298,14 +302,8 @@
           </el-row>
         </div>
 
-
         <div class="shopro-table-expends">
-          <el-table
-            :data="orderList"
-            style="width: 100%"
-            default-expand-all
-          >
-
+          <el-table :data="orderList" style="width: 100%" default-expand-all>
             <!-- <el-table-column type="expand">
               <template slot-scope="props">
                 <div class="expand-container">
@@ -1080,34 +1078,62 @@
               </template>
             </el-table-column> -->
 
-
-            <el-table-column prop="productId" label="商品信息"   width="220">
+            <el-table-column prop="productId" label="商品信息" width="220">
             </el-table-column>
-            <el-table-column prop="orderItemId" label="退款状态" width="100"> </el-table-column>
-            <el-table-column prop="tenantId" label="下单用户" width="110"> </el-table-column>
-            <el-table-column prop="createUser" label="推广分销商" width="110"> </el-table-column>
-            <el-table-column prop="commissionPriceType" label="佣金详情" width="280"> </el-table-column>
-            <el-table-column prop="commissionOrderStatus" label="佣金结算" width="100"> </el-table-column>
-            <el-table-column prop="commissionTime" label="结算时间" width="160"> </el-table-column>
-            <el-table-column prop="buyerId" label="结算方式" width="110"> </el-table-column>
-            <el-table-column prop="commissionEvent" label="商品结算金额" width="120"></el-table-column>
-            <el-table-column prop="commissionRules" label="分销商业绩" width="100"> </el-table-column>
-            <el-table-column prop="amount" label="分佣总金额/到账金额" width="160">
+            <el-table-column prop="orderItemId" label="退款状态" width="100">
+            </el-table-column>
+            <el-table-column prop="tenantId" label="下单用户" width="110">
+            </el-table-column>
+            <el-table-column prop="createUser" label="推广分销商" width="110">
+            </el-table-column>
+            <el-table-column
+              prop="commissionPriceType"
+              label="佣金详情"
+              width="280"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="commissionOrderStatus"
+              label="佣金结算"
+              width="100"
+            >
+            </el-table-column>
+            <el-table-column prop="commissionTime" label="结算时间" width="160">
+            </el-table-column>
+            <el-table-column prop="buyerId" label="结算方式" width="110">
+            </el-table-column>
+            <el-table-column
+              prop="commissionEvent"
+              label="商品结算金额"
+              width="120"
+            ></el-table-column>
+            <el-table-column
+              prop="commissionRules"
+              label="分销商业绩"
+              width="100"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="amount"
+              label="分佣总金额/到账金额"
+              width="160"
+            >
             </el-table-column>
             <el-table-column label="操作" fixed="right" min-width="120">
             </el-table-column>
-          
           </el-table>
         </div>
+        <!-- pag页码 分页器 -->
         <div class="shopro-pagination-container">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            align="right" background
+            @current-change="orderCurrentChange"
+            @size-change="orderSizeChange"
+            :current-page="page.currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="limit"
+            :page-size="page.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
+            :total="page.total"
           >
           </el-pagination>
         </div>
@@ -1285,26 +1311,21 @@ export default {
           },
         },
       },
-      orderList:[
+      orderList: [
         {
-          tenantId:'用户id 下单用户 中文',
-          orderItemId:'订单项目ID 退款状态 数字',
-          productId:'产品Id 产品信息 数字',
-          createUser:'创建用户 推广分销商 数字',
-          commissionPriceType:'佣金价格类型 佣金详情  中文',
-          commissionOrderStatus:'佣金订单状态 佣金结算 数字',
-          commissionTime:'佣金结算时间',
-          buyerId:'购买者ID 结算方式 数字',	
-          commissionEvent:'自我购买 结算金额 数字',
-          commissionRules:'佣金奖励状态 分销商业业绩 中文',   
-          amount:'数量 总金额',	
+          tenantId: "用户id 下单用户 中文",
+          orderItemId: "订单项目ID 退款状态 数字",
+          productId: "产品Id 产品信息 数字",
+          createUser: "创建用户 推广分销商 数字",
+          commissionPriceType: "佣金价格类型 佣金详情  中文",
+          commissionOrderStatus: "佣金订单状态 佣金结算 数字",
+          commissionTime: "佣金结算时间",
+          buyerId: "购买者ID 结算方式 数字",
+          commissionEvent: "自我购买 结算金额 数字",
+          commissionRules: "佣金奖励状态 分销商业业绩 中文",
+          amount: "数量 总金额",
         },
       ],
-
-
-
-
-
 
       // 弹框标题
       title: "",
@@ -1362,7 +1383,18 @@ export default {
     },
 
     init() {},
-    // 有报错
+    // 分页器
+    orderCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
+    },
+    orderSizeChange(pageSize) {
+      let that = this;
+      that.page.pageSize = pageSize;
+      that.onLoad(that.page);
+    },
+    // 发请求
     onLoad(page, params = {}) {
       let that = this;
       that.loading = true;
@@ -1371,8 +1403,8 @@ export default {
         page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        that.orderList = res.data.data.records
-        // that.page.total = data.total;
+        that.orderList = res.data.data.records;
+        that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });
@@ -1380,12 +1412,7 @@ export default {
   },
 };
 </script>
-<style
-  lang="scss"
-  scoped
->
-@import "@/views/commission/style/commissionorder.scss"; 
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionorder.scss";
 </style>
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
