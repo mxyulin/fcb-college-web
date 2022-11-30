@@ -834,13 +834,14 @@
         </div>
         <div class="shopro-pagination-container">
           <el-pagination
-            @size-change="handleSizeChange"
+            align="right" background
             @current-change="handleCurrentChange"
+            @size-change="handleSizeChange"
             :current-page="currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="limit"
+            :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
+            :total="total"
           >
           </el-pagination>
         </div>
@@ -1093,15 +1094,50 @@ export default {
                 {label:'已完善',value:'3',},
                 {label:'无需资料',value:'4',},
             ],
-
-
+  
+              // 弹框标题
+      title: "",
+      // 是否展示弹框
+      box: false,
+      // 是否显示查询
+      search: true,
+      // 加载中
+      loading: true,
+      // 是否为查看模式
+      view: false,
+      // 查询信息
+      query: {},
+      // 分页信息
+      page: {
+        currentPage: 1,
+        pageSize: 10,
+        total: 40,
+      },
+      // 表单数据
+      form: {},
+      // 选择行
+      selectionList: [],
+      // 表单配置
         }
+    },
+    methods: {
+      // 分页器 
+    handleCurrentChange(currentPage) {
+      // let that = this;
+      // that.page.currentPage = currentPage;
+      // that.onLoad(that.page);
+    },
+    handleSizeChange(pageSize) {
+        // let that = this;
+        // that.page.pageSize = pageSize;
+        // that.onLoad(that.page);
+    },
     },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "@/views/commission/style/profile.scss";
+@import "@/views/commission/style/commissionagent/profile.scss";
 </style>
 <style lang="scss">
 .flex-1 .el-radio-button__inner{

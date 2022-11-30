@@ -388,7 +388,7 @@ export default {
       ).then((res) => {
         that.listData = res.data.data.records;
         // console.log('log数据：',res)
-        that.page.total = data.total;
+        // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });

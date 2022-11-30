@@ -290,5 +290,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped src="@/views/commission/style/edit.scss"></style>
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionagentlevel/edit.scss";
+</style>
 <style lang="scss"></style>

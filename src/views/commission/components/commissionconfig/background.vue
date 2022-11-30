@@ -103,11 +103,10 @@ export default {
 };
 </script>
 
-<style
-  lang="scss"
-  scoped
-  src="@/views/commission/style/background.scss"
-></style>
+
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionconfig/background.scss";
+</style>
 <style lang="scss">
 // 当要改变element样式时用
 .backgroundinput .el-input__inner{

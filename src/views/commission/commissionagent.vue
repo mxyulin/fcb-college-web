@@ -765,7 +765,7 @@ export default {
       ).then((res) => {
         that.listData = res.data.data.records;
         // console.log("data数据", res);
-        that.page.total = data.total;
+        // that.page.total = data.total;
         // this.data = data.records;
         that.loading = false;
         // this.selectionClear();

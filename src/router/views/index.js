@@ -135,5 +135,15 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionproduct/edit')
  
   },
+  {
+    path: '/commodity',
+    name: '子业',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionconfig/commodity')
+ 
+  },
 ]}
  ]

@@ -470,7 +470,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@import "@/views/commission/style/team.scss";
+@import "@/views/commission/style/commissionagent/team.scss";
 </style>
 
 <style lang="scss"></style>

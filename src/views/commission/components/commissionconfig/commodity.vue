@@ -45,13 +45,14 @@
 
           <div class="shopro-pagination-container">
             <el-pagination
+              align="right" background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="currentPage"
+              :current-page="page.currentPage"
               :page-sizes="[10, 20, 30, 40]"
-              :page-size="limit"
+              :page-size="page.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="totalPage"
+              :total="page.total"
             >
             </el-pagination>
           </div>
@@ -139,9 +140,23 @@ export default {
 
   methods: {
     commodityclick(node) {
-      this.getproductdata(node.id);
+      let id = node.id;
+      let page=1;
+      this.getproductdata(page,id);
     },
 
+    // 分页器 
+    handleCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.getproductdata(that.page);
+    },
+    handleSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.getproductdata(that.page);
+    },
+    // 发请求
     getcommoditydata(page, params = {}) {
       let that = this;
       that.loading = true;
@@ -154,13 +169,15 @@ export default {
         console.log("树的数据：",that.treedata)
       });
     },
-    getproductdata(id) {
+    // page 报错
+    getproductdata(page,id) {
+      console.log('page的参数',page)
       let that = this;
       let params = { categoryIds: id };
       that.loading = true;
       getListByCategory(
-        that.page.currentPage,
-        that.page.pageSize,
+        page.currentPage,
+        page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
         that.ditydatab = res.data.data.records;
@@ -177,8 +194,9 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="@/views/commission/style/commodity.scss"></style>
-
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionconfig/commodity.scss";
+</style>
 <style lang="scss">
 .level .el-table th.el-table__cell {
   background-color: #fafafa;

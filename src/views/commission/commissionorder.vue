@@ -1404,7 +1404,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         that.orderList = res.data.data.records;
-        that.page.total = data.total;
+        // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });

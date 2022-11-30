@@ -350,7 +350,7 @@ export default {
       ).then((res) => {
         console.log("data", res);
         that.listData = res.data.data.records;
-        that.page.total = data.total;
+        // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
       });
