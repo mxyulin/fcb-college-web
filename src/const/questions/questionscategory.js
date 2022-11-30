@@ -14,6 +14,7 @@ export default {
       label: "主键",
       prop: "id",
       type: "input",
+      hide: true,
     },
     {
       label: "租户ID",

@@ -771,12 +771,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/views/commission/style/commissionagent.scss";
+ @import "@/views/commission/style/commissionagent.scss";
 </style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // 修改element
-.el-card__body {
+#agentIndex .el-card__body {
   padding: 0 20px;
 }
 .shopro-tabs-container .el-tabs__nav-scroll {

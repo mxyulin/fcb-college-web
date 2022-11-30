@@ -6,13 +6,13 @@
  * isTab是否加入到tag导航
  * isAuth是否需要授权
  */
-import i18n from '@/lang'; // Internationalization 国际化 多语言
-import AvueRouter from '@/router/avue-router'; //封装的路由控制方法
-import PageRouter from '@/router/page/'; // 页面路由
-import ViewsRouter from '@/router/views/'; // 页面路由
-import Store from '@/store';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import PageRouter from './page/' // 页面路由
+import ViewsRouter from './views/' // 页面路由
+import AvueRouter from './avue-router'; //封装的路由控制方法
+import i18n from '@/lang' // Internationalization 国际化 多语言
+import Store from '../store/'; // vuex
 Vue.use(VueRouter)
 //创建路由
 export const createRouter = () => new VueRouter({
