@@ -2,7 +2,7 @@ import request from '@/router/axios';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/fcb-commission/agent/list',
+    url: '/api/fcb-commission/agent/page',
     method: 'get',
     params: {
       ...params,

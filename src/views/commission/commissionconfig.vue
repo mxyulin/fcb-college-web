@@ -396,9 +396,9 @@ import {
 } from "@/api/commission/commissionconfig";
 
 import { mapGetters } from "vuex";
-import commodity from "./figchildren/commodity.vue";
-import background from "./figchildren/background.vue";
-import agreement from "./figchildren/agreement.vue";
+import commodity from "./components/commissionconfig/commodity.vue";
+import background from "./components/commissionconfig/background.vue";
+import agreement from "./components/commissionconfig/agreement.vue";
 //   import vala from "../../mock/designer/designer"
 //   console.log(vala)
 export default {
