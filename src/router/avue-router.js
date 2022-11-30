@@ -1,7 +1,6 @@
 let RouterPlugin = function () {
   this.$router = null;
   this.$store = null;
-
 };
 RouterPlugin.install = function (vue, option = {}) {
   this.$router = option.router;

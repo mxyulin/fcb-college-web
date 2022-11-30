@@ -106,7 +106,7 @@
           </el-row>
           <el-row class="select-style-item-box">
             <el-col :xs="6" :sm="6">
-              <div class="select-style-item-tip">选择图片:</div>
+              <div class="select-style-item-tip">选择图片</div>
             </el-col>
             <el-col :xs="16" :sm="16">
               <div class="select-style-item-select input-select-inline">
@@ -124,7 +124,7 @@
                   type="primary"
                   :size="option.size"
                   class="margin-left-20"
-                  @click="choosePicture('banner', index)"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -144,7 +144,7 @@
                   :size="option.size"
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('banner', index)"
+                  @change="clearlink('banner', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -160,7 +160,7 @@
                   :size="option.size"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -284,7 +284,7 @@
                   plain
                   :size="option.size"
                   class="margin-left-20 choosePicture"
-                  :data-index="index"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -303,7 +303,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('menu', index)"
+                  @change="clearlink('menu', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -319,7 +319,7 @@
                   plain
                   :size="option.size"
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -421,7 +421,7 @@
                   :size="option.size"
                   plain
                   class="margin-left-20 choosePicture"
-                  :data-index="index"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -437,7 +437,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('adv', index)"
+                  @change="clearlink('adv', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -453,7 +453,7 @@
                   :size="option.size"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -961,8 +961,8 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  :data-index="index"
                   class="margin-left-20 choosePicture"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -997,7 +997,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('nav-list', index)"
+                  @change="clearlink('nav-list', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -1014,7 +1014,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1093,7 +1093,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  :data-index="index"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -1125,7 +1125,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('grid-list', index)"
+                  @change="clearlink('grid-list', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -1139,9 +1139,9 @@
                 <el-button
                   :size="option.size"
                   type="primary"
-                  :data-index="index"
                   plain
                   class="choosePath"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1242,10 +1242,10 @@
           <div v-else>
             <div v-if="!templateForm.content.image">
               <div
-                v-for="(it, idx) in titleBlock.data"
+                v-for="(it, index) in titleBlock.data"
                 class="compotent-title-block-container"
-                :key="idx"
-                @click="selectTitleBlock(idx)"
+                :key="index"
+                @click="selectTitleBlock(index)"
               >
                 <div
                   class="title-block-title"
@@ -1256,7 +1256,7 @@
                 <img
                   class="title-block-style image-border"
                   :src="it.src"
-                  :style="{ margin: idx == titleBlock.length - 1 ? '0' : '' }"
+                  :style="{ margin: index == titleBlock.length - 1 ? '0' : '' }"
                 />
               </div>
             </div>
@@ -1285,7 +1285,7 @@
                 ><el-button
                   :size="option.size"
                   type="text"
-                  data-index="title-block"
+                  @click="chooseResource('picture', index)"
                   >选择图片</el-button
                 >
               </div>
@@ -1405,12 +1405,15 @@
                     : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                 "
               />
-              <div
-                class="btn-common margin-left-20 choosePicture"
-                data-index="image"
+              <el-button
+                class="margin-left-20 choosePicture"
+                :size="option.size"
+                type="primary"
+                plain
+                @click="chooseResource('picture', index)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
-              </div>
+              </el-button>
             </div>
           </el-col>
         </el-row>
@@ -1536,7 +1539,7 @@
                 type="primary"
                 plain
                 class="margin-left-20 choosePicture"
-                data-index="image"
+                @click="chooseResource('picture', index)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -1625,7 +1628,7 @@
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    :data-index="index"
+                    @click="chooseResource('picture', index)"
                   >
                     {{ item.image ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1652,7 +1655,7 @@
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    data-index="active"
+                    @click="chooseResource('picture', index)"
                   >
                     {{ item.activeImage ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1691,7 +1694,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink('tabbar', index)"
+                  @change="clearlink('tabbar', index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -1708,7 +1711,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1859,12 +1862,15 @@
                       : 'https://demo.shopro.top/assets/addons/shopro/img/decorate/image-default.png'
                   "
                 />
-                <div
-                  class="btn-common margin-left-20 choosePicture"
-                  :data-index="index"
+                <el-button
+                  class="margin-left-20 choosePicture"
+                  :size="option.size"
+                  type="primary"
+                  plain
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
-                </div>
+                </el-button>
               </div>
             </el-col>
           </el-row>
@@ -1880,7 +1886,7 @@
                 <el-radio-group
                   class="item-radio-group"
                   v-model="item.path_type"
-                  @change="isweblink(index)"
+                  @change="clearlink(index)"
                 >
                   <el-radio :label="1">系统链接</el-radio>
                   <el-radio :label="2">外部链接</el-radio>
@@ -1897,7 +1903,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  :data-index="index"
+                  @click="chooseResource('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1984,12 +1990,12 @@
                 </div>
               </el-image>
               <el-button
-                slot="append"
+                class="margin-left-20 choosePicture"
                 :size="option.size"
                 type="primary"
+                slot="append"
                 plain
-                class="margin-left-20 choosePicture"
-                data-index="image"
+                @click="chooseResource('picture', index)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -2058,13 +2064,12 @@
                   "
                 />
                 <el-button
-                  slot="append"
+                  class="margin-left-20 choosePicture"
                   :size="option.size"
+                  slot="append"
                   type="primary"
                   plain
-                  :data-index="index"
-                  data-type="btn"
-                  class="margin-left-20 choosePicture"
+                 @click="chooseResource('picture', index)"
                 >
                   {{ item.btnimage ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2102,12 +2107,12 @@
                   "
                 />
                 <el-button
-                  slot="append"
+                  class="margin-left-20 choosePicture"
                   :size="option.size"
                   type="primary"
+                  slot="append"
                   plain
-                  :data-index="index"
-                  class="margin-left-20 choosePicture"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2124,7 +2129,7 @@
                   <el-radio-group
                     class="item-radio-group"
                     v-model="item.path_type"
-                    @change="isweblink(index)"
+                    @change="clearlink(index)"
                   >
                     <el-radio :label="1">系统链接</el-radio>
                     <el-radio :label="2">外部链接</el-radio>
@@ -2143,8 +2148,8 @@
                     :size="option.size"
                     type="primary"
                     plain
-                    :data-index="index"
                     class="choosePath"
+                    @click="chooseResource('link', index)"
                   >
                     选择链接
                   </el-button>
@@ -2180,6 +2185,17 @@
         </el-button>
       </div>
     </div>
+    <!--  -->
+    <!--  -->
+    <!--  -->
+    <!-- 资源表弹窗组件 -->
+    <ResourceTable
+      :dialogVisible.sync="dialogVisible"
+      :dialogTitle="dialogTitle"
+      :currentListIdx="currentListIdx"
+      :resourceType="resourceType"
+      v-bind="$attrs"
+    />
   </div>
 </template>
 
@@ -2198,10 +2214,7 @@ export default {
     isfloat: Boolean,
     popupIndex: Number,
     fromtype: String,
-    centerSelect: {
-      type: Number,
-      required: true,
-    },
+    centerSelect: Number,
     templateData: {
       type: Array,
       required: true,
@@ -2217,8 +2230,10 @@ export default {
     return {
       // 表单配置
       option: option,
-      // 广告布局抽屉状态
+      // 广告样式抽屉状态
       advdrawer: false,
+      // 资源表弹窗状态
+      dialogVisible: false,
       // 广告魔方数据
       advStyleImage: [
         {
@@ -2277,6 +2292,12 @@ export default {
         ],
         currentImage: "",
       },
+      // 弹窗名称
+      dialogTitle: "",
+      // 当前表单列表
+      currentListIdx: null,
+      // 资源类型
+      resourceType: "",
     };
   },
   computed: {
@@ -2291,19 +2312,29 @@ export default {
   },
   methods: {
     init() {},
-    // 删除子元素
+    // 删除表单列表项
     rightDel(index) {
       let that = this;
       that.$emit("update:popupIndex", null);
       that.templateData[that.centerSelect].content.list.splice(index, 1);
     },
-    // 选择图片
-    choosePicture(type, index) {},
-    // 选择链接
-    isweblink(type, index) {
-      let that = this;
-      that.templateForm.content.list[index].path = "";
-      that.templateForm.content.list[index].path_name = "";
+    // 选择装修资源
+    chooseResource(type, index) {
+      this.currentListIdx = index;
+      this.resourceType = type;
+      switch (type) {
+        case "picture":
+          this.dialogTitle = "图片";
+          break;
+        case "link":
+          this.dialogTitle = "链接";
+      }
+      this.dialogVisible = true;
+    },
+    // 清空链接数据
+    clearlink(type, index) {
+      this.templateForm.content.list[index].path = "";
+      this.templateForm.content.list[index].path_name = "";
     },
     // 添加表单
     addForm(type) {
@@ -2383,7 +2414,7 @@ export default {
       }
       that.templateData[that.centerSelect].content.list.push(form);
     },
-    // 展开样式抽屉
+    // 展开广告样式抽屉
     showDrawer() {
       this.advdrawer = true;
     },
@@ -2441,6 +2472,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/views/dodecorate/style/dodecorate_origin";
+@import "@/views/decorate/style/dodecorate_origin";
 </style>
-

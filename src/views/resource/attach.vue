@@ -214,7 +214,6 @@ export default {
 
     },
     uploadAfter(res, done, loading, column) {
-      window.console.log('123', column);
       this.attachBox = false;
       this.refreshChange();
       done();

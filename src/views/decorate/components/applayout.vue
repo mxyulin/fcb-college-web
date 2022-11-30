@@ -1758,5 +1758,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/views/dodecorate/style/dodecorate_origin";
+@import "@/views/decorate/style/dodecorate_origin";
 </style>

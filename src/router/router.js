@@ -28,7 +28,7 @@ AvueRouter.install(Vue, {
 });
 Router.$avueRouter.formatRoutes(Store.state.user.menuAll, true); // 动态路由核心方法
 Router.addRoutes([...PageRouter, ...ViewsRouter]);
-export function resetRouter () {  // 重置路由 比如用于身份验证失败，需要重新登录时 先清空当前的路有权限
+export function resetRouter () {  // 重置路由 比如用于身份验证失败，需要重新登录时 先清空当前的路由权限
   const newRouter = createRouter()
   Router.matcher = newRouter.matcher // reset router
   AvueRouter.install(Vue, {

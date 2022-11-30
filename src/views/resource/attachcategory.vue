@@ -56,10 +56,10 @@
       ...mapGetters(["permission"]),
       permissionList() {
         return {
-          addBtn: this.vaildData(this.permission.attachCategory_add, false),
-          viewBtn: this.vaildData(this.permission.attachCategory_view, false),
-          delBtn: this.vaildData(this.permission.attachCategory_delete, false),
-          editBtn: this.vaildData(this.permission.attachCategory_edit, false)
+          addBtn: true,//this.vaildData(this.permission.attachCategory_add, false),
+          viewBtn: true,//this.vaildData(this.permission.attachCategory_view, false),
+          delBtn: true,//this.vaildData(this.permission.attachCategory_delete, false),
+          editBtn: true,//this.vaildData(this.permission.attachCategory_edit, false)
         };
       },
       ids() {

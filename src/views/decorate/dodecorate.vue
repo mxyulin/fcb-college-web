@@ -2,8 +2,7 @@
   <basic-container
     id="decorateApp"
     v-cloak
-    style="height: calc(100vh - 129px)"
-    v-loading="loading"
+    style="height: calc(100vh - 120px)"
   >
     <el-heade height="40px">
       <!-- 顶部按钮组 -->
@@ -16,13 +15,13 @@
           <el-button
             type="primary"
             :size="option.size"
-            @click="saveTamplateData"
+            @click="saveDecorateData"
             >保存</el-button
           >
         </el-col>
       </el-row>
     </el-heade>
-    <el-container style="height: calc(100vh - 200px)">
+    <el-container style="height: calc(100vh - 160px)">
       <!-- 左边栏 -->
       <el-aside
         v-if="
@@ -272,7 +271,9 @@
           :isfloat.sync="isfloat"
           :popupIndex.sync="popupIndex"
           :templateData.sync="templateData"
+          :updateForm="updateForm"
           @showForm="showForm"
+          v-bind="$attrs"
         />
       </el-aside>
     </el-container>
@@ -282,9 +283,9 @@
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import AppLayout from "@/views/dodecorate/components/applayout";
-import ToolsBox from "@/views/dodecorate/components/toolsbox";
-import ToolsForm from "@/views/dodecorate/components/toolsform";
+import AppLayout from "@/views/decorate/components/applayout";
+import ToolsBox from "@/views/decorate/components/toolsbox";
+import ToolsForm from "@/views/decorate/components/toolsform";
 
 export default {
   components: {
@@ -296,8 +297,6 @@ export default {
     return {
       // 全局组件配置
       option: option,
-      // v-loading 状态
-      loading: false,
 
       // 底部按钮组
       pageTypeList: [
@@ -350,7 +349,7 @@ export default {
           },
         },
       ],
-      // 模板索引
+      // 组装模板索引
       centerSelect: null,
       // 模板的表单数据
       templateForm: {},
@@ -373,8 +372,6 @@ export default {
       iframePlatform: "",
       // 模板预览开关
       previewDialog: false,
-      // 模板预览 ID（用于获取模板预览相关数据）
-      // decorate_id: new URLSearchParams(location.search).get("id"),
 
       /* 装修类型表单始数据 */
       homeData: [],
@@ -589,13 +586,27 @@ export default {
   },
   methods: {
     init() {},
-    // 展示工具表单
+    // 展示表单数据
     showForm(index) {
       let that = this;
       that.centerSelect = index;
       that.templateForm = that.templateData[index];
     },
-    // 缓存上一次装修的数据
+    // 更新表单数据
+    updateForm(type, index, data) {
+      const { name, link, path, pathName } = data;
+      switch (type) {
+        case "picture":
+          this.templateForm.content.list[index].name = name;
+          this.templateForm.content.list[index].image = link;
+          break;
+        case "link":
+          this.templateForm.content.list[index].path = path;
+          this.templateForm.content.list[index].path_name = pathName;
+          break;
+      }
+    },
+    // 缓存上一次装修的表单数据
     cachePreData(type) {
       let that = this;
       switch (type) {
@@ -664,8 +675,8 @@ export default {
       }
     },
     // 保存(提交)模板数据
-    saveTamplateData() {
-      console.log(this.templateData);
+    saveDecorateData() {
+      console.log("首页", this.homeData);
     },
   },
   mounted() {},
@@ -673,8 +684,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/views/dodecorate/style/dodecorate_layout";
-@import "@/views/dodecorate/style/dodecorate_origin";
+@import "@/views/decorate/style/dodecorate_layout";
+@import "@/views/decorate/style/dodecorate_origin";
 </style>
 
 <style lang="scss">

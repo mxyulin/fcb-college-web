@@ -23,7 +23,7 @@
                    size="small"
                    icon="el-icon-delete"
                    plain
-                   v-if="permission.questionsCategory_delete"
+                   v-if="permission.questions_delete"
                    @click="handleDelete">删 除
         </el-button>
       </template>
@@ -56,10 +56,10 @@
       ...mapGetters(["permission"]),
       permissionList() {
         return {
-          addBtn: this.vaildData(this.permission.questionsCategory_add, false),
-          viewBtn: this.vaildData(this.permission.questionsCategory_view, false),
-          delBtn: this.vaildData(this.permission.questionsCategory_delete, false),
-          editBtn: this.vaildData(this.permission.questionsCategory_edit, false)
+          addBtn: this.vaildData(this.permission.questions_add, false),
+          viewBtn: this.vaildData(this.permission.questions_view, false),
+          delBtn: this.vaildData(this.permission.questions_delete, false),
+          editBtn: this.vaildData(this.permission.questions_edit, false)
         };
       },
       ids() {

@@ -2,7 +2,7 @@ import request from '@/router/axios';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/fcb-commission/agent/list',
+    url: '/api/fcb-decorate/content/list',
     method: 'get',
     params: {
       ...params,
@@ -14,7 +14,7 @@ export const getList = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/fcb-commission/agent/detail',
+    url: '/api/fcb-decorate/content/detail',
     method: 'get',
     params: {
       id
@@ -24,7 +24,7 @@ export const getDetail = (id) => {
 
 export const remove = (ids) => {
   return request({
-    url: '/api/fcb-commission/agent/remove',
+    url: '/api/fcb-decorate/content/remove',
     method: 'post',
     params: {
       ids,
@@ -34,7 +34,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/fcb-commission/agent/submit',
+    url: '/api/fcb-decorate/content/submit',
     method: 'post',
     data: row
   })
@@ -42,7 +42,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/fcb-commission/agent/submit',
+    url: '/api/fcb-decorate/content/submit',
     method: 'post',
     data: row
   })

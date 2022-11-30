@@ -1,6 +1,6 @@
-import {setStore, getStore} from '@/util/store'
-import {dateFormat} from '@/util/date'
-import {sendLogs} from '@/api/user'
+import { sendLogs } from '@/api/user';
+import { dateFormat } from '@/util/date';
+import { getStore, setStore } from '@/util/store';
 
 const logs = {
   state: {

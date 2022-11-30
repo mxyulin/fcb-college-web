@@ -21,6 +21,7 @@ import basicContainer from './components/basic-container/main';
 import thirdRegister from './components/third-register/main';
 import flowDesign from './components/flow-design/main';
 import avueUeditor from 'avue-plugin-ueditor';
+import resourceTable from '@/components/resource-table';
 import website from '@/config/website';
 import crudCommon from '@/mixins/crud';
 // 业务组件
@@ -47,6 +48,7 @@ Vue.component('thirdRegister', thirdRegister);
 Vue.component('avueUeditor', avueUeditor);
 Vue.component('flowDesign', flowDesign);
 Vue.component('tenantPackage', tenantPackage);
+Vue.component('resourceTable', resourceTable);
 // 加载相关url地址
 Object.keys(urls).forEach(key => {
   Vue.prototype[key] = urls[key];
@@ -60,6 +62,20 @@ iconfontVersion.forEach(ele => {
   loadStyle(iconfontUrl.replace('$key', ele));
 });
 Vue.config.productionTip = false;
+
+/* 启用 vue 调试工具(适用于v2) */
+// 获取 devtools 的全局变量
+/*
+const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__
+// *关键一步：初始化当前 Vue 构造函数的调试工具
+devtools.emit('init', Vue);
+// 开发环境启用 devtools 否则不启用
+if (process.env.NODE_ENV == 'development') {
+  Vue.config.devtools = true;
+} else {
+  Vue.config.devtools = false;
+}
+*/
 
 new Vue({
   router,
