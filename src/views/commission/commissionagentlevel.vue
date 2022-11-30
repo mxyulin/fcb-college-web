@@ -101,8 +101,8 @@ import {
   remove,
 } from "@/api/commission/commissionagentlevel";
 import option from "@/const/commission/commissionagentlevel";
-import addvue from "./levelchildren/add.vue"
-import editvue from "./levelchildren/edit.vue"
+import addvue from "./components/commissionagentlevel/add.vue"
+import editvue from "./components/commissionagentlevel/edit.vue"
 import { mapGetters } from "vuex";
 import { getDictionary } from "@/api/system/dict";
 

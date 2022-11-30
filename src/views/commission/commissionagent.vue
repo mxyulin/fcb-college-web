@@ -40,7 +40,7 @@
             </el-input>
           </div>
         </div>
-        
+
         <div class="display-flex shopro-screen-item">
           <div class="shopro-screen-tip">分销商等级</div>
           <div class="shopro-screen-condition">
@@ -101,7 +101,6 @@
           </div>
         </div>
         <div class="display-flex shopro-screen-item-button">
-
           <div class="shopro-button shopro-reset-button">重置</div>
 
           <div class="shopro-button shopro-screen-button">筛选</div>
@@ -159,8 +158,7 @@
           <el-table-column label="累计佣金" min-width="100">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.totallncome
-                }}<span class="unit-tip-item">元</span>
+                {{ scope.row.totallncome }}<span class="unit-tip-item">元</span>
               </div>
             </template>
           </el-table-column>
@@ -168,8 +166,7 @@
           <el-table-column label="消费金额" min-width="100">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.orderMoney
-                }}<span class="unit-tip-item">元</span>
+                {{ scope.row.orderMoney }}<span class="unit-tip-item">元</span>
               </div>
             </template>
           </el-table-column>
@@ -203,13 +200,16 @@
 
           <el-table-column fixed="right" label="状态" width="100">
             <template>
-              <div class="display-flex">正常</div>
+              <div class="display-flex">
+                <span class="shopro-status-dot shopro-status-normal-dot"></span>
+                <span class="shopro-status-special">正常</span>
+              </div>
             </template>
           </el-table-column>
 
           <el-table-column fixed="right" label="操作" min-width="80">
             <template>
-              <div>查看</div>
+              <div class="theme-cursor" @click="centerdilogprofile=true">查看</div>
             </template>
           </el-table-column>
         </el-table>
@@ -227,7 +227,9 @@
             <template slot-scope="scope">
               <div class="display-flex">
                 <div class="table-image">
-                  <el-image src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM5viafIuiciaZxwY5guBR7yJNa6iaN5CexOHZxsMH554A66czQKNuFBuH8InrzNw3WqlrykH8aLibTRXYA/132">
+                  <el-image
+                    src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q3auHgzwzM5viafIuiciaZxwY5guBR7yJNa6iaN5CexOHZxsMH554A66czQKNuFBuH8InrzNw3WqlrykH8aLibTRXYA/132"
+                  >
                   </el-image>
                 </div>
                 <div class="ellipsis-item">
@@ -240,7 +242,6 @@
           <el-table-column label="资料审核" width="160">
             <template slot-scope="scope">
               <div>
-                
                 {{ scope.row.level }}
               </div>
             </template>
@@ -269,8 +270,7 @@
           <el-table-column label="消费金额" width="140">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.orderMoney
-                }}<span class="unit-tip-item">元</span>
+                {{ scope.row.orderMoney }}<span class="unit-tip-item">元</span>
               </div>
             </template>
           </el-table-column>
@@ -313,10 +313,7 @@
           <el-table-column fixed="right" label="操作" min-width="220">
             <template slot-scope="scope">
               <div>
-                <span
-                  class="theme-cursor"
-                  style="margin-right: 14px"
-                >
+                <span @click="centerdilogprofile=true" class="theme-cursor" style="margin-right: 14px">
                   查看
                 </span>
                 <span
@@ -373,7 +370,7 @@
                   </el-image>
                 </div>
                 <div class="ellipsis-item">
-                  {{ scope.row.tenantId}}
+                  {{ scope.row.tenantId }}
                 </div>
               </div>
             </template>
@@ -398,23 +395,21 @@
           <el-table-column label="创建时间" width="160">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.createTime
-                }}<span class="unit-tip-item">元</span>
+                {{ scope.row.createTime }}<span class="unit-tip-item">元</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="消费金额(元)" min-width="140">
             <template slot-scope="scope">
               <div>
-                {{ scope.row.orderMoney
-                }}<span class="unit-tip-item">元</span>
+                {{ scope.row.orderMoney }}<span class="unit-tip-item">元</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="推广人数" width="140">
             <template slot-scope="scope">
               <div class="ellipsis-item theme-cursor">
-                {{ scope.row.level}}
+                {{ scope.row.level }}
               </div>
             </template>
           </el-table-column>
@@ -445,8 +440,8 @@
                   >{{ scope.row.level_status_text ? "拒绝" : "删除" }}</span
                 >
                 <span
-                  class="shopro-edit-text"
-                  @click="operation('edit', scope.row.user_id)"
+                  class="shopro-edit-text theme-cursor"
+                  @click="centerdilogprofile = true"
                   >查看</span
                 >
               </div>
@@ -468,6 +463,16 @@
         >
         </el-pagination>
       </div>
+
+      <!-- eldialog 跳转组件 -->
+      <el-dialog
+        append-to-body="ture"
+        :visible.sync="centerdilogprofile"
+        width="80%"
+        center
+      >
+      <profile></profile>
+      </el-dialog>
     </div>
   </basic-container>
 </template>
@@ -482,9 +487,11 @@ import {
 } from "@/api/commission/commissionagent";
 import option from "@/const/commission/commissionagent";
 import { mapGetters } from "vuex";
+import profile from "./components/commissionagent/profile.vue";
 import { getDictionary } from "@/api/system/dict";
 
 export default {
+  components: { profile },
   data() {
     return {
       // 模拟数据
@@ -542,7 +549,7 @@ export default {
         status: "all",
         level: "all",
         updatetime: [],
-        
+
         form_1_key: "user_id",
         form_1_value: "",
 
@@ -566,25 +573,27 @@ export default {
         level_status: ">",
       },
       // listData:[],
-      listData:[
+      listData: [
         {
-          tenantId:'用户',
+          tenantId: "用户",
           // 等级
-          level:1,
-          applyInfo:'电话',
-          totallncome:'累计收入',
-          orderMoney:'消费金额',
+          level: 1,
+          applyInfo: "电话",
+          totallncome: "累计收入",
+          orderMoney: "消费金额",
           childAgentLevel: "上级分销商",
-          childOrderCount:1,
-          createTime:'创建时间',
-          updateTime:'更新时间',
+          childOrderCount: 1,
+          createTime: "创建时间",
+          updateTime: "更新时间",
 
           // 审核资料 待定
           // 推广人数 待定
           // 提交次数 待定
         },
       ],
-      
+
+      centerdilogprofile:false,
+
       // 自带生成元素
       // 弹框标题
       title: "",
@@ -749,7 +758,8 @@ export default {
         page.pageSize,
         Object.assign(params, this.query)
       ).then((res) => {
-        this.listData = res.data.data.records
+        this.listData = res.data.data.records;
+        console.log("data数据", res);
         // this.page.total = data.total;
         // this.data = data.records;
         // this.loading = false;
@@ -760,20 +770,17 @@ export default {
 };
 </script>
 
-<style
-  lang="scss"
-  scoped
->
-@import "@/views/commission/style/commissionagent.scss"; 
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionagent.scss";
 </style>
 
 <style lang="scss">
 // 修改element
-.el-card__body{
+.el-card__body {
   padding: 0 20px;
 }
 .shopro-tabs-container .el-tabs__nav-scroll {
-    padding: 0 20px;
+  padding: 0 20px;
 }
 .shopro-tabs-container .el-tabs__item {
   width: 100px;

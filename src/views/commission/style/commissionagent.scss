@@ -4,6 +4,19 @@
     padding-bottom: 30px;
     font-size: 12px;
 }
+
+//////////////////////////////////////////////
+.shopro-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    display: inline-block;
+    background: #65c62c;
+}
+.shopro-status-special{
+    color: #65c62c;
+}
 .shopro-screen-container {
     padding: 0 20px;
     display: flex;
