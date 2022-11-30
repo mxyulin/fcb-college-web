@@ -69,6 +69,7 @@
 </template>
 
 <script>
+// 树表
 import { getList } from "@/api/product/productcategory";
 // 树元素标题绑定表
 import { getListByCategory } from "@/api/product/product";
@@ -125,6 +126,8 @@ export default {
       option: option,
       // 表单列表
       data: [],
+
+      ids:1,
     };
   },
 
@@ -140,21 +143,20 @@ export default {
 
   methods: {
     commodityclick(node) {
-      let id = node.id;
-      let page=1;
-      this.getproductdata(page,id);
+       this.ids= node.id;
+      this.getproductdata(this.page,this.ids);
     },
 
     // 分页器 
     handleCurrentChange(currentPage) {
       let that = this;
       that.page.currentPage = currentPage;
-      that.getproductdata(that.page);
+      that.getproductdata(that.page,this.ids);
     },
     handleSizeChange(pageSize) {
         let that = this;
         that.page.pageSize = pageSize;
-        that.getproductdata(that.page);
+        that.getproductdata(that.page,this.ids);
     },
     // 发请求
     getcommoditydata(page, params = {}) {
