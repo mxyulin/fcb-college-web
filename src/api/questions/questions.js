@@ -1,15 +1,17 @@
 import request from '@/router/axios';
+ 
 
 export const getList = (current, size, params) => {
-  return request({
-    url: '/api/fcb-questions/questions/list',
-    method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
-  })
+  // return request({
+  //   url: '/api/fcb-questions/questions/list',
+  //   method: 'get',
+  //   params: {
+  //     ...params,
+  //     current,
+  //     size,
+  //   }
+  // })
+  return {};
 }
 
 export const getDetail = (id) => {
@@ -48,3 +50,13 @@ export const update = (row) => {
   })
 }
 
+export const getViewList = (params) => {
+  return request({
+    url: '/api/fcb-questions/questions/import-view',
+    method: 'get',
+    params: {
+      ...params 
+    }
+  })
+}
+ 

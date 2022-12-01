@@ -15,25 +15,21 @@
     </avue-crud>
 
     <el-dialog title="批量导入试题" append-to-body :visible.sync="showUploadBox" width="400px">
-       <avue-form ref="form" :option="importOption" v-model="importForm" :upload-after="uploadAfter">
-      </avue-form>  
-      <!-- <UploadDocx/> -->
+      <el-steps :active="importStep">
+        <el-step title="1.下载模板" icon="el-icon-edit"></el-step>
+        <el-step title="2.上传文件" icon="el-icon-upload"></el-step>
+        <el-step title="3.确认导入" icon="el-icon-picture"></el-step>
+      </el-steps>
+      <avue-form ref="form" :option="importOption" v-model="importForm" :upload-after="uploadAfter">
+      </avue-form>
     </el-dialog>
 
-    <el-drawer title="试题导入预览" :visible.sync="showPreview" size="60%" append-to-body="true">
-
+    <el-drawer title="试题导入预览" :visible.sync="showPreview" size="100%" append-to-body="true">
       <el-row>
         <el-col :span="2"></el-col>
         <el-col :span="20">
           <el-container>
-            <el-steps :active="importStep">
-              <el-step title="1.下载模板" icon="el-icon-edit"></el-step>
-              <el-step title="2.上传文件" icon="el-icon-upload"></el-step>
-              <el-step title="3.确认导入" icon="el-icon-picture"></el-step>
-            </el-steps>
             <el-header style="text-align: right; font-size: 12px">
-           
-
               <el-dropdown>
                 <i class="el-icon-setting" style="margin-right: 15px"></i>
                 <el-dropdown-menu slot="dropdown">
@@ -45,7 +41,9 @@
               <span>王小虎</span>
             </el-header>
             <el-main>
-              <el-table :data="questionPreviewList" border> 
+              <el-table :data="questionPreviewList" border>
+                <el-table-column prop="id" label="序号" width="60">
+                </el-table-column>
                 <el-table-column label="试题和解析">
                   <template slot-scope="scope">
                     <div v-if="hasError">
@@ -102,7 +100,7 @@
                       </span>
                     </div>
                   </template>
-                </el-table-column>
+                </el-table-column> 
               </el-table>
             </el-main>
           </el-container>
@@ -120,12 +118,7 @@ import { getList, getDetail, add, update, remove, getViewList } from "@/api/ques
 import option from "@/const/questions/questions";
 import { mapGetters } from "vuex";
 
-import UploadDocx from "./components/uploaddocx";
-
 export default {
-  components: {
-    UploadDocx,
-  },
   data() {
     return {
       qsTypeMap: {
@@ -229,7 +222,6 @@ export default {
       that.questionPreviewList = [];
       getViewList({}).then(res2 => {
         let dataList = res2.data.data;
-        console.log(dataList);
         // 
         for (let i = 0; i < dataList.length; ++i) {
           let qs = dataList[i];
@@ -243,8 +235,16 @@ export default {
 
           if (qs["body"]) {
             if ("TK" == qs.type) {
-              let tmpArray = qs.body.replaceAll("<G8INPUT/>", "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)");
-              qsItem["body"] = JSON.parse(tmpArray);
+              let tmpArray = JSON.parse(qs.body);
+              // let str = "";
+              // tmpArray.forEach(item=>{
+              //   if("[]"== item){
+              //     str +=  "(_____)";
+              //   }else{
+              //     str += item;
+              //   }
+              // }); 
+              qsItem["body"] = tmpArray;
             } else {
               qsItem["body"] = JSON.parse(qs.body);
             }
@@ -255,18 +255,14 @@ export default {
             qsItem["options"] = JSON.parse(qs.options);
           }
 
-          qsItem["answer"] = [];
-          if ("PD" == qs.type) { 
-            let v = qs.answer.indexOf("Y");
-            qsItem["answer"] = v ? ["正确"] : ["错误"];
-          }else if("TK" == qs.type){
-            if (qs["answer"]) {
-              qsItem["answer"].push(JSON.parse(qs.answer).join(" 、"));
-            }
-          }else {
+
+          if ("PD" != qs.type) {
             if (qs["answer"]) {
               qsItem["answer"] = JSON.parse(qs.answer);
             }
+          } else {
+            let v = qs.answer.indexOf("Y");
+            qsItem["answer"] = v ? ["正确"] : ["错误"];
           }
 
 
@@ -286,11 +282,10 @@ export default {
           that.questionPreviewList.push(qsItem);
         }
         // debugger;
-        if (dataList.length > 0) {
-          that.showPreview = true;
-        }
       });
-
+      if (dataList.length > 0) {
+        that.showPreview = true;
+      }
     },
     rowSave(row, done, loading) {
       add(row).then(() => {
