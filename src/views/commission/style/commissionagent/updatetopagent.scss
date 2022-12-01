@@ -1,0 +1,46 @@
+#updatetopagent {
+    background: #fff;
+    border-radius: 10px 10px 0px 0px;
+    padding-bottom: 30px;
+}
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+.shopro-screen-container .shopro-screen-item {
+    margin-right: 30px;
+    margin-bottom: 20px;
+}
+.shopro-screen-condition {
+    width: 242px;
+}
+.shopro-screen-container .shopro-screen-item:last-of-type {
+    margin-right: 0px;
+}
+
+.shopro-header-container {
+    height: 50px;
+    line-height: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 0 20px;
+    margin-bottom: 10px;
+}
+
+.remind{
+    font-size: 12px;
+    color: #fac063;
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+.shopro-table-container {
+    padding: 0 20px;
+}
+
+.shopro-screen-container {
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}

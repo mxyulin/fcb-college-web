@@ -129,6 +129,7 @@
       </div>
 
       <div class="order-table">
+        
         <div class="table-dashboard-container">
           <div class="table-dashboard-item-container">
             <div class="table-dashboard-item">
@@ -205,6 +206,7 @@
             </div>
           </div>
         </div>
+
         <div>
           <el-table
             :data="orderList"

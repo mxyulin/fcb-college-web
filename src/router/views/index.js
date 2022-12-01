@@ -126,6 +126,16 @@ export default [{
  
   },
   {
+    path: '/updatelevel',
+    name: 'agent子业',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionagent/updatelevel')
+ 
+  },
+  {
     path: '/edit',
     name: 'product子业',
     meta: {
