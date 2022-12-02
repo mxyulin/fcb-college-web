@@ -59,4 +59,20 @@ export const getViewList = (params) => {
     }
   })
 }
+
+export const uploadFile = (form) => {
+  return request({
+    url: '/api/fcb-questions/questions/import',
+    method: 'post',
+    data: form
+  })
+}
+
+export const clearCache = () => {
+  return request({
+    url: '/api/fcb-questions/questions/clear-cache',
+    method: 'get' 
+  })
+}
+
  
