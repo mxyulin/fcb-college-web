@@ -12,14 +12,8 @@
           @click="handleDelete">删 除
         </el-button>
       </template>
-    </avue-crud>
-
-    <!-- <el-dialog title="批量导入试题" append-to-body :visible.sync="showImprtBox" width="400px">
-       <avue-form ref="form" :option="importOption" v-model="importForm" :upload-after="uploadAfter">
-      </avue-form>  
-    </el-dialog> -->
-    
-    <import-dialog ref="importDlg"/>
+    </avue-crud>  
+    <import-dialog ref="questionPanel"/>
   </basic-container>
 </template>
 
@@ -37,8 +31,7 @@ export default {
     return { 
       form: {},
       query: {},
-      loading: true,
-      // showImprtBox:false,  
+      loading: true, 
       page: {
         pageSize: 10,
         currentPage: 1,
@@ -71,7 +64,7 @@ export default {
   },
   methods: {
     handleImport() {
-      this.$refs.importDlg.showImprtBox();
+      this.$refs.questionPanel.showImprtBox();
     },
     rowSave(row, done, loading) {
       add(row).then(() => {
@@ -173,14 +166,15 @@ export default {
       this.onLoad(this.page, this.query);
     },
     onLoad(page, params = {}) {
-      this.loading = true;
-      // getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-      //   const questiongList = res.data.data;
-      //   this.page.total = data.total;
-      //   this.questiongList = data.records;
-      //   this.loading = false;
-      //   this.selectionClear();
-      // });
+      const that = this;
+      that.loading = true;
+      getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
+        let data = res.data.data;
+        that.page.total = data.total;
+        that.questiongList = data.records;
+        that.loading = false;
+        that.selectionClear();
+      });
     }
   }
 };

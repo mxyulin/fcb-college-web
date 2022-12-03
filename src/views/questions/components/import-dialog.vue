@@ -6,21 +6,23 @@
 				<el-step title="2.预览试题" icon="el-icon-tickets"></el-step>
 				<el-step title="3.确认导入" icon="el-icon-finished"></el-step>
 			</el-steps>
-			<import-panel v-if="(step == 1)"  @onChangeStep="onChangeStep"/>
-			<preview-panel v-if="(step == 2)" @onChangeStep="onChangeStep"/>
+			<upload-panel  v-if="(step == 1)"  @onChangeStep="onChangeStep"/>
+			<preview-panel v-if="(step == 2)"  @onChangeStep="onChangeStep"/>
+			<import-panel  v-if="(step == 3)"  @onChangeStep="onChangeStep"/>
 		</div>
 	</el-drawer>
 </template>
 
 <script>
-import importPanel from "./import-panel";
+import uploadPanel from "./upload-panel";
 import previewPanel from "./preview-panel";
-
+import importPanel from "./import-panel";
 export default {
 	name: "import-dialog",
 	components: {
-		importPanel,
-		previewPanel
+		uploadPanel,
+		previewPanel,
+		importPanel		
 	},
 	data() {
 		return {

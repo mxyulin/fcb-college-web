@@ -10,72 +10,41 @@
                 <el-button type="text" @click="onBack" size="min" icon="el-icon-arrow-left"
                   style="color:white;">重新上传</el-button>
               </el-col>
-              <el-col :span="16" style="font-size:18px;font-wigth:2;">试题和解析
+              <el-col :span="16" style="font-size:18px;font-wigth:2;">
+                导入试题
               </el-col>
               <el-col :span="4">
-                <el-button type="text" size="min" style="color:white;">确认提交<i
-                    class="el-icon-arrow-right el-icon--right"></i></el-button>
+                <!-- <el-button type="text" size="min" @click="onNext" style="color:white;">确认提交<i
+                    class="el-icon-arrow-right el-icon--right"></i></el-button> -->
               </el-col>
-            </el-row>
+            </el-row>            
           </el-header>
           <el-main>
+            <el-row>
+              <el-col :span="24">
+                <el-alert type="warning" show-icon :closable="false">
+                  <template slot="title">
+                    <span>即将导入的试题{{ questionPreviewList.length }}道</span>
+                  </template>
+                  <template slot="">
+                    <span v-if="questionData.DX > 0" style="font-size:14px">单选题：{{ questionData.DX }}道</span>
+                    <span v-if="questionData.DUX > 0" style="font-size:14px">多选题：{{ questionData.DUX }}道</span>，
+                    <span v-if="questionData.PD > 0" style="font-size:14px">判断题：{{ questionData.PD }}道</span>，
+                    <span v-if="questionData.TK > 0" style="font-size:14px">填空题：{{ questionData.TK }}道</span>，
+                    <span v-if="questionData.JD > 0" style="font-size:14px">问答题：{{ questionData.JD }}道</span>，
+                    <span v-if="questionData.CLT > 0" style="font-size:14px">材料题：{{ questionData.CLT }}道</span>
+                  </template>
+                </el-alert>
+              </el-col>
+            </el-row>
             <el-scrollbar class="scroll-wrapper">
-              <el-table :data="questionPreviewList" border>
-                <el-table-column label="试题和解析">
+              <el-table :data="questionPreviewList" :border="false" :show-header="false">
+                <el-table-column label="">
                   <template slot-scope="scope">
-                    <div v-if="hasError">
-                      <h7 v-html="scope.row.title"></h7>
-                      <div v-html="scope.row.message" style="background-color: #fef0f0; color: #F56C6C;"></div>
-                    </div>
-                    <div style="width:100%;" v-else>
-                      <div style="width:100%;" v-if="scope.row.resource">
-                        {{ scope.row.id }}、<el-tag type="success" size="small" effect="plain">{{ scope.row.type
-                        }}</el-tag>
-                        <span v-for="sub  of scope.row.resource " :key="sub">
-                          <span v-html="sub"></span>
-                          <p />
-                        </span>
-                      </div>
-                      <div style="width:100%;" v-if="scope.row.body">
-                        {{ scope.row.id }}、<el-tag type="success" size="small" effect="plain">{{ scope.row.type
-                        }}</el-tag>
-                        <span v-for="sub  of scope.row.body " :key="sub">
-                          <span v-html="sub"></span>
-                          <p />
-                        </span>
-                      </div>
-                      <div style="width:100%;" v-if="scope.row.options">
-                        <p v-for="sub  of scope.row.options " :key="sub">
-                          <span v-html="sub"></span>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div style="width:100%;" v-if="scope.row.answer">
-                      <span>[答案]</span>
-                      <span v-for="sub  of scope.row.answer " :key="sub">
-                        <span v-html="sub"></span>
-                        <p />
-                      </span>
-                    </div>
-                    <div style="width:100%;" v-if="scope.row.explain">
-                      [解析]
-                      <span v-for="sub  of scope.row.explain " :key="sub">
-                        <span v-html="sub"></span>
-                        <p />
-                      </span>
-                    </div>
-
-                    <div style="width:100%;" v-if="scope.row.diffLevel">
-                      [难度]
-                      {{ scope.row.diffLevel }}
-                    </div>
-                    <div style="width:100%;" v-if="scope.row.tags">
-                      [标签]
-                      <span v-for="sub  of scope.row.tags " :key="sub">
-                        <el-tag effect="plain" type="info" size="small" style="margin:0 5px;">{{ sub }}</el-tag>
-                      </span>
-                    </div>
+                    <question-view :question="scope.row" 
+                    @onReqImport="onReqImport"
+                    @onReqRemove="onReqRemove"
+                    ></question-view> 
                   </template>
                 </el-table-column>
               </el-table>
@@ -89,10 +58,14 @@
 </template>
 
 <script>
-import { getViewList, clearCache } from "@/api/questions/questions";
+import { getPreviewList, clearCache ,doImport } from "@/api/questions/questions";
 import { mapGetters } from "vuex";
+import questionView from "./question-view";
+ 
+
 export default {
   components: {
+    questionView
   },
   data() {
     return {
@@ -104,8 +77,14 @@ export default {
         "JD": "问答题",
         "CLT": "材料题",
       },
-      form: {},
-      query: {},
+      questionData: {
+        "DX": 0,
+        "DUX": 0,
+        "PD": 0,
+        "TK": 0,
+        "JD": 0,
+        "CLT": 0,
+      },
       loading: true,
       page: {
         pageSize: 10,
@@ -113,9 +92,7 @@ export default {
         total: 0
       },
       questionPreviewList: [],
-      hasError: false,
-      selectionList: [],
-      data: []
+      questionList: []
     };
   },
   computed: {
@@ -127,13 +104,6 @@ export default {
         delBtn: this.vaildData(this.permission.questions_delete, false),
         editBtn: this.vaildData(this.permission.questions_edit, false)
       };
-    },
-    ids() {
-      let ids = [];
-      this.selectionList.forEach(ele => {
-        ids.push(ele.id);
-      });
-      return ids.join(",");
     }
   },
   mounted() {
@@ -147,21 +117,46 @@ export default {
             this.$emit("onChangeStep", 1);
           });
         }).catch(_ => { });
-
-
+    },
+    onReqImport(id){
+      const that = this;    
+      let qs = null;
+      for (let i = 0; i < that.questionList.length; ++i){
+          if(that.questionList[i].id == id){
+            qs = that.questionList[i];
+            break;
+          }
+      }
+ 
+      if(qs != null){
+        doImport(qs).then(res=>{ 
+          onReqRemove(id);	
+			  });
+      }
+      
+    }, 
+    onReqRemove(id){
+      const that = this;       
+      for(let index = 0 ; index < that.questionPreviewList.length; ++index){
+        let item = that.questionPreviewList[index];
+        if(item.id == id){
+          that.questionPreviewList.splice(index, 1);
+          break;
+        }        
+      }
     },
     loadPreviewCache() {
       const that = this;
       that.questionPreviewList = [];
-      getViewList({}).then(res2 => {
-        let dataList = res2.data.data;
-        console.log(dataList);
+      getPreviewList({}).then(res2 => {
+        that.questionList = res2.data.data;
         // 
-        for (let i = 0; i < dataList.length; ++i) {
-          let qs = dataList[i];
+        for (let i = 0; i < that.questionList.length; ++i) {
+          let qs = that.questionList[i];
           let qsItem = {};
           qsItem["id"] = qs.id;
           qsItem["type"] = that.qsTypeMap[qs.type];
+          that.questionData[qs.type] += 1;
 
           if (qs["resource"]) {
             qsItem["resource"] = JSON.parse(qs.resource);
@@ -207,14 +202,14 @@ export default {
           if (qs["tags"]) {
             qsItem["tags"] = JSON.parse(qs.tags);
           }
- 
+
           that.questionPreviewList.push(qsItem);
         }
-        
+
       });
 
     }
-    
+
   }
 };
 </script>
