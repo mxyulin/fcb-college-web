@@ -67,11 +67,13 @@ export const getPreviewList = (params) => {
   })
 }
 
-export const doImport = (form) => {
+export const doImport = (params) => {
   return request({
     url: '/api/fcb-questions/questions/do-import',
     method: 'post',
-    data: form
+    params: {
+      ...params 
+    }
   })
 } 
 

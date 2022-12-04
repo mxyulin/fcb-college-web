@@ -2,7 +2,7 @@
 	<div class="question-item-wrapper">
 		<div style="width:100%;">
 			<div style="width:100%;" v-if="question.resource">
-				{{ question.id }}、<el-tag type="success" size="small" effect="plain">{{ question.type
+				{{ indexId}}、<el-tag type="success" size="small" effect="plain">{{ question.type
 				}}</el-tag>
 				<span v-for="sub  of question.resource " :key="sub">
 					<span v-html="sub"></span>
@@ -10,7 +10,7 @@
 				</span>
 			</div>
 			<div style="width:100%;" v-if="question.body">
-				{{ question.id }}、<el-tag type="success" size="small" effect="plain">{{ question.type
+				{{ indexId }}、<el-tag type="success" size="small" effect="plain">{{ question.type
 				}}</el-tag>
 				<span v-for="sub  of question.body " :key="sub">
 					<span v-html="sub"></span>
@@ -64,6 +64,10 @@ export default {
 			type: Object,
 			required: true,
 		},
+		indexId:{
+			type: String,
+			required: true,
+		}
 
 	},
 	methods: {

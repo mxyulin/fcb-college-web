@@ -27,7 +27,7 @@ export default {
 	data() {
 		return {
 			dialogVisible: false,
-			step: 1,
+			step: 2,
 		}
 	},
 	created() {

@@ -40,8 +40,8 @@
             <el-scrollbar class="scroll-wrapper">
               <el-table :data="questionPreviewList" :border="false" :show-header="false">
                 <el-table-column label="">
-                  <template slot-scope="scope">
-                    <question-view :question="scope.row" 
+                  <template slot-scope="scope"> 
+                    <question-view :question="scope.row" :indexId="(index+1)"
                     @onReqImport="onReqImport"
                     @onReqRemove="onReqRemove"
                     ></question-view> 
@@ -120,20 +120,9 @@ export default {
     },
     onReqImport(id){
       const that = this;    
-      let qs = null;
-      for (let i = 0; i < that.questionList.length; ++i){
-          if(that.questionList[i].id == id){
-            qs = that.questionList[i];
-            break;
-          }
-      }
- 
-      if(qs != null){
-        doImport(qs).then(res=>{ 
-          onReqRemove(id);	
-			  });
-      }
-      
+      doImport({id:id}).then(res=>{ 
+        that.onReqRemove(id);	
+      });
     }, 
     onReqRemove(id){
       const that = this;       
@@ -150,6 +139,10 @@ export default {
       that.questionPreviewList = [];
       getPreviewList({}).then(res2 => {
         that.questionList = res2.data.data;
+        if(that.questionList.length < 1){
+          this.$emit("onChangeStep", 1);
+          return ;
+        }
         // 
         for (let i = 0; i < that.questionList.length; ++i) {
           let qs = that.questionList[i];
@@ -163,7 +156,7 @@ export default {
           }
 
           if (qs["body"]) {
-            if ("TK" == qs.type) {
+            if ("TK" == qs.type) { 
               let tmpArray = qs.body.replaceAll("<G8INPUT/>", "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)");
               qsItem["body"] = JSON.parse(tmpArray);
             } else {
