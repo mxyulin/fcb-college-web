@@ -105,7 +105,7 @@ import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
 import { validatenull } from "@/util/validate";
 import { getList as getCategoryList } from "@/api/resource/attachcategory";
-import { getList, getDetail, remove } from "@/api/resource/attach";
+import { getList } from "@/api/resource/attach";
 
 export default {
   name: "ResourceTable",
@@ -208,9 +208,12 @@ export default {
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
-    // 获取节点树
     dialogVisible(newVal) {
       const { resourceType } = this.$attrs;
+      // 重置列表和表格
+      this.treeDta = [];
+      this.data = [];
+      // 获取节点树
       if (newVal) {
         // 根据用户所选资源类型不同，提供不同的节点树
         switch (resourceType) {

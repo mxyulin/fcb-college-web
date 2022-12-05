@@ -1,9 +1,5 @@
 <template>
-  <basic-container
-    id="decorateApp"
-    v-cloak
-    style="height: calc(100vh - 120px)"
-  >
+  <basic-container id="decorateApp" v-cloak style="height: calc(100vh - 120px)">
     <el-heade height="40px">
       <!-- 顶部按钮组 -->
       <el-row :gutter="0" type="flex" justify="space-between" align="center">
@@ -286,6 +282,7 @@ import option from "@/const/decorate/dodecorate";
 import AppLayout from "@/views/decorate/components/applayout";
 import ToolsBox from "@/views/decorate/components/toolsbox";
 import ToolsForm from "@/views/decorate/components/toolsform";
+import { add } from "@/api/decorate/decoratecontent"
 
 export default {
   components: {
@@ -608,43 +605,41 @@ export default {
     },
     // 缓存上一次装修的表单数据
     cachePreData(type) {
-      let that = this;
       switch (type) {
         case "home":
-          that.homeData = that.templateData;
+          this.homeData = this.templateData;
           break;
         case "user":
-          that.userData = that.templateData;
+          this.userData = this.templateData;
           break;
         case "tabbar":
-          that.tabbarData = that.templateData;
+          this.tabbarData = this.templateData;
           break;
         case "popup":
-          that.popupData = that.templateData;
+          this.popupData = this.templateData;
           break;
         case "float-button":
-          that.floatButtonData = that.templateData;
+          this.floatButtonData = this.templateData;
           break;
       }
     },
     // 加载当前装修类型的数据
     loadTemplateDate(type) {
-      let that = this;
       switch (type) {
         case "home":
-          that.templateData = that.homeData;
+          this.templateData = this.homeData;
           break;
         case "user":
-          that.templateData = that.userData;
+          this.templateData = this.userData;
           break;
         case "tabbar":
-          that.templateData = that.tabbarData;
+          this.templateData = this.tabbarData;
           break;
         case "popup":
-          that.templateData = that.popupData;
+          this.templateData = this.popupData;
           break;
         case "float-button":
-          that.templateData = that.floatButtonData;
+          this.templateData = this.floatButtonData;
           break;
       }
     },
@@ -671,15 +666,22 @@ export default {
           that.centerSelect = null;
         }
       } else {
-        that.showForm( that.centerSelect - 1 )
+        that.showForm(that.centerSelect - 1);
       }
     },
     // 保存(提交)模板数据
     saveDecorateData() {
-      console.log("首页", this.homeData);
+      const { homeData, userData, tabbarData, popupData, floatButtonData } = this;
+      const decorateData = { homeData, userData, tabbarData, popupData, floatButtonData };
+      // let result = JSON.stringify(decorateData);
+      add(decorateData).then(res => {
+        console.log('测试', res)
+      })
     },
   },
-  mounted() {},
+  mounted() {
+    this.cachePreData("home");
+  },
 };
 </script>
 
