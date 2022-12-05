@@ -105,6 +105,7 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
  
   },
+  // 以下为调试用  可以删
   {
     path: '/profile',
     name: 'agent子业',
@@ -153,7 +154,6 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionconfig/commodity')
- 
   },
 ]}
  ]
