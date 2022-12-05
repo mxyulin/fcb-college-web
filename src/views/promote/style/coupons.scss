@@ -1,0 +1,97 @@
+#indexPage {
+  color: #444;
+  background: #fff;
+  padding: 0 20px 30px;
+}
+///////////////////////////////////////////
+.custom-header {
+  height: 50px;
+  line-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.display-flex {
+  display: flex;
+  align-items: center;
+}
+.custom-table-header {
+  margin-bottom: 14px;
+}
+.display-flex-b {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.custom-refresh {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #999;
+  margin-right: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.display-flex-c {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-btn {
+  background: #7536d0;
+  color: #fff;
+  width: 100px;
+  height: 32px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.create-btn i {
+  font-size: 14px;
+  margin-right: 8px;
+}
+///////////////////////////////////////////
+
+
+
+
+.create-btn {
+  width: 110px;
+  margin-right: 20px;
+}
+
+.delete-btn {
+  width: 88px;
+  height: 32px;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  color: #999;
+  font-size: 13px;
+  justify-content: center;
+}
+
+.delete-btn-active {
+  color: #ff5959;
+  border-color: #ff5959;
+}
+
+.el-input__inner,
+.el-input__icon {
+  height: 32px;
+  line-height: 32px;
+}
+
+[v-cloak] {
+  display: none;
+}

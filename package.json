@@ -14,7 +14,6 @@
     "avue-plugin-ueditor": "^0.1.4",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
-    "circular-dependency-plugin": "^5.2.2",
     "classlist-polyfill": "^1.2.0",
     "crypto-js": "^4.0.0",
     "element-ui": "^2.15.6",

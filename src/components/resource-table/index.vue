@@ -108,7 +108,7 @@ import { getList as getCategoryList } from "@/api/resource/attachcategory";
 import { getList } from "@/api/resource/attach";
 
 export default {
-  name: "ResourceTable",
+  name: "resourceTable",
   props: {
     dialogVisible: Boolean,
     dialogTitle: String,

@@ -6,6 +6,44 @@
   font-family: Noto Sans SC;
   font-weight: 400;
 }
+///////////////////////////////////共共样式
+.shopro-index-button-container {
+    margin-bottom: 14px;
+    padding: 0 20px;
+    display: flex;
+}
+.flex-1 {
+    flex: 1;
+}
+.custom-refresh {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #999;
+    margin-right: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.display-flex-c {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+
+
 
 .agent-image .el-image {
   border-radius: 50%;
@@ -26,9 +64,10 @@
 .agent-message {
   flex-direction: column;
   align-items: center;
-  min-height: 545px;
+  min-height: 597px;
   padding-top: 30px;
 }
+
 
 .agent-image {
   width: 98px;
@@ -95,6 +134,7 @@
 
 .agent-commission_rules-item {
   margin-right: 12px;
+  color: #666666;
 }
 
 .agent-commission_rules-rate {
@@ -106,15 +146,15 @@
 
 .agent-apply {
   padding: 18px 20px;
-  min-height: 545px;
-  height: 545px;
+  min-height: 597px;
+  height: 597px;
   overflow-y: auto;
 }
 
 .agent-apply-title {
   font-size: 14px;
-  line-height: 14px;
   color: #666666;
+  line-height: 14px;
   padding: 0 0 28px;
   display: flex;
   justify-content: space-between;
@@ -439,6 +479,8 @@
 }
 
 .agent-apply-info-status {
+  font-size: 14px;
+  color: #666666;
   padding-bottom: 32px;
   margin-bottom: 28px;
   border-bottom: 1px dashed #e6e6e6;
@@ -486,6 +528,7 @@
 }
 
 .theme-cursor {
+  font-size: 13px;
   color: #6e3dc8;
   cursor: pointer;
 }
@@ -599,7 +642,3 @@
 }
 
 
-.display-flex {
-    display: flex;
-    align-items: center;
-}

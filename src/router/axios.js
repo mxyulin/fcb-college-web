@@ -5,15 +5,15 @@
  * isSerialize是否开启form表单提交
  * isToken是否需要token
  */
-import website from '@/config/website';
+import axios from 'axios';
+import store from '@/store/';
 // ! router 存在循环引用
 // import router from '@/router/router';
-import store from '@/store';
-import { getToken } from '@/util/auth';
-import { serialize } from '@/util/util';
-import axios from 'axios';
-import { Message } from 'element-ui';
-import { Base64 } from 'js-base64';
+import {serialize} from '@/util/util';
+import {getToken} from '@/util/auth';
+import {Message} from 'element-ui';
+import website from '@/config/website';
+import {Base64} from 'js-base64';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 

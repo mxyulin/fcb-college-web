@@ -1,9 +1,14 @@
 import request from '@/router/axios';
 
-export const getList = () => {
+export const getList = (current, size, params) => {
   return request({
     url: '/api/fcb-resource/attach-category/list',
     method: 'get',
+    params: {
+      ...params,
+      current,
+      size,
+    }
   })
 }
 

@@ -19,7 +19,7 @@
           :before-open="beforeOpen" v-model="form" ref="crud" @row-del="rowDel" @search-change="searchChange"
           @search-reset="searchReset" @selection-change="selectionChange" @current-change="currentChange"
           @size-change="sizeChange" @refresh-change="refreshChange" @on-load="loadDataList">
-          <template slot="link">
+          <template slot="link" slot-scope="scope">
             <img class="img-item"
               src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76"
               alt="">
@@ -210,7 +210,7 @@ export default {
       return list.name.indexOf(value) !== -1;
     },
     handleUpload() {
-      this.fattachBox = true;
+      this.attachBox = true;
 
     },
     uploadAfter(res, done, loading, column) {
