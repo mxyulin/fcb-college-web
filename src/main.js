@@ -1,29 +1,29 @@
-import Vue from 'vue';
-import axios from './router/axios';
-import VueAxios from 'vue-axios';
-import App from './App';
-import router from './router/router';
-import './permission'; // 权限
-import './error'; // 日志
-import './cache';//页面缓存
-import store from './store';
-import {loadStyle} from './util/util'
+import resourceTable from '@/components/resource-table';
 import * as urls from '@/config/env';
-import Element from 'element-ui';
 import {
   iconfontUrl,
   iconfontVersion
 } from '@/config/env';
-import i18n from './lang'; // Internationalization
-import './styles/common.scss';
-import basicBlock from './components/basic-block/main';
-import basicContainer from './components/basic-container/main';
-import thirdRegister from './components/third-register/main';
-import flowDesign from './components/flow-design/main';
-import avueUeditor from 'avue-plugin-ueditor';
-import resourceTable from '@/components/resource-table';
 import website from '@/config/website';
 import crudCommon from '@/mixins/crud';
+import avueUeditor from 'avue-plugin-ueditor';
+import Element from 'element-ui';
+import Vue from 'vue';
+import VueAxios from 'vue-axios';
+import App from './App';
+import './cache'; //页面缓存
+import basicBlock from './components/basic-block/main';
+import basicContainer from './components/basic-container/main';
+import flowDesign from './components/flow-design/main';
+import thirdRegister from './components/third-register/main';
+import './error'; // 日志
+import i18n from './lang'; // Internationalization
+import './permission'; // 权限
+import axios from './router/axios';
+import router from './router/router';
+import store from './store';
+import './styles/common.scss';
+import { loadStyle } from './util/util';
 // 业务组件
 import tenantPackage from './views/system/tenantpackage';
 

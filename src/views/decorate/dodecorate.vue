@@ -1,5 +1,5 @@
 <template>
-  <basic-container id="decorateApp" v-cloak style="height: calc(100vh - 120px)">
+  <basic-container id="decorateApp" v-cloak style="height: calc(100vh - 120px)" class="Vlaoding">
     <el-heade height="40px">
       <!-- 顶部按钮组 -->
       <el-row :gutter="0" type="flex" justify="space-between" align="center">
@@ -282,7 +282,8 @@ import option from "@/const/decorate/dodecorate";
 import AppLayout from "@/views/decorate/components/applayout";
 import ToolsBox from "@/views/decorate/components/toolsbox";
 import ToolsForm from "@/views/decorate/components/toolsform";
-import { add } from "@/api/decorate/decoratecontent"
+import { submit, getDetail } from "@/api/decorate/decoratecontent"
+import { Loading } from 'element-ui';
 
 export default {
   components: {
@@ -294,6 +295,7 @@ export default {
     return {
       // 全局组件配置
       option: option,
+      loding: true,
 
       // 底部按钮组
       pageTypeList: [
@@ -512,33 +514,6 @@ export default {
       fromtype: "shop",
       // 定制名（未用）
       customName: "",
-      /* 暂时不用 */
-      //#region
-      // * 源码 draggable 组件配置
-      // menuOption: {
-      //   group: {
-      //     name: "draggableName",
-      //     pull: "clone",
-      //     put: false,
-      //   },
-      //   ghostClass: "sortable-ghost",
-      //   fallbackClass: "clone-item",
-      //   fallbackOnBody: true,
-      // },
-      // defaultOption: {
-      //   filter: ".undraggable",
-      //   animation: 100,
-      //   group: {
-      //     name: "draggableName",
-      //   },
-      //   ghostClass: "sortable-ghost",
-      //   fallbackClass: "clone-item",
-      //   dragClass: "dragin-item",
-      // },
-      // ?缓存整个装修
-      // saveHtml: null,
-      // decorateContent: "",
-      //#endregion
     };
   },
   computed: {
@@ -550,6 +525,9 @@ export default {
       });
       return ids.join(",");
     },
+    decorateId() {
+      return this.$route.query.decorateId;
+    }
   },
   watch: {
     templateData: {
@@ -669,18 +647,62 @@ export default {
         that.showForm(that.centerSelect - 1);
       }
     },
-    // 保存(提交)模板数据
+    // 保存(提交)装修数据
     saveDecorateData() {
-      const { homeData, userData, tabbarData, popupData, floatButtonData } = this;
-      const decorateData = { homeData, userData, tabbarData, popupData, floatButtonData };
-      // let result = JSON.stringify(decorateData);
-      add(decorateData).then(res => {
-        console.log('测试', res)
+      const { homeData, userData, tabbarData, popupData, floatButtonData, decorateId } = this;
+      const decorateData = { homeData, userData, tabbarData, popupData, floatButtonData, decorateId };
+      submit(decorateData)
+      .then(res => {
+        this.$message({
+          message: "保存成功",
+          type: 'success'
+        })
+        // 保存成功后跳转到
+      })
+      .catch(err => {
+        this.$message({
+          message: "保存失败",
+          type: 'error'
+        })
       })
     },
   },
   mounted() {
+    // 启用 loading
+    let loadingInstance = Loading.service({
+      target: ".Vlaoding",
+      fullscreen: false,
+      lock: true
+    });
+    const { decorateId } = this;
+    // 初始化 homeData
     this.cachePreData("home");
+    // 获取当前模板数据
+    getDetail(decorateId)
+    .then(res => {
+      const { homeData, userData, tabbarData, popupData, floatButtonData } = res.data.data;
+      this.homeData = homeData ? homeData : this.homeData;
+      this.userData = userData ? userData : this.userData;
+      this.tabbarData = tabbarData ? tabbarData : this.tabbarData;
+      this.popupData = popupData ? popupData : this.popupData;
+      this.floatButtonData = floatButtonData ? floatButtonData : this.floatButtonData;
+      // 默认渲染首页装修数据
+      this.loadTemplateDate("home");
+      // 关闭 loading
+      this.$nextTick(() => {
+        loadingInstance.close(); 
+      })
+      this.$message({
+        message: "加载成功",
+        type: 'success'
+      })
+    })
+    .catch(err => {
+      this.$message({
+        message: "加载失败",
+        type: 'error'
+      })
+    })
   },
 };
 </script>

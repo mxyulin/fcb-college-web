@@ -2189,7 +2189,7 @@
     <!--  -->
     <!--  -->
     <!-- 资源表弹窗组件 -->
-    <ResourceTable
+    <resourceTable
       :dialogVisible.sync="dialogVisible"
       :dialogTitle="dialogTitle"
       :currentListIdx="currentListIdx"
