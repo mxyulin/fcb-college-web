@@ -2215,16 +2215,8 @@ export default {
     popupIndex: Number,
     fromtype: String,
     centerSelect: Number,
-    templateData: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
-    templateForm: {
-      type: Object,
-      required: true,
-      default: () => {},
-    },
+    templateData: Array,
+    templateForm: Object,
   },
   data() {
     return {
@@ -2311,12 +2303,10 @@ export default {
     },
   },
   methods: {
-    init() {},
     // 删除表单列表项
     rightDel(index) {
-      let that = this;
-      that.$emit("update:popupIndex", null);
-      that.templateData[that.centerSelect].content.list.splice(index, 1);
+      this.$emit("update:popupIndex", null);
+      this.templateData[this.centerSelect].content.list.splice(index, 1);
     },
     // 选择装修资源
     chooseResource(type, index) {
@@ -2338,7 +2328,6 @@ export default {
     },
     // 添加表单
     addForm(type) {
-      let that = this;
       let form = {};
       switch (type) {
         case "banner":
@@ -2400,7 +2389,7 @@ export default {
           break;
         case "float-button":
           //this.isfloat = false;
-          that.$emit("update:isfloat", false);
+          this.$emit("update:isfloat", false);
           form = {
             name: "",
             style: 1,
@@ -2412,7 +2401,7 @@ export default {
           };
           break;
       }
-      that.templateData[that.centerSelect].content.list.push(form);
+      this.templateData[this.centerSelect].content.list.push(form);
     },
     // 展开广告样式抽屉
     showDrawer() {
@@ -2420,11 +2409,10 @@ export default {
     },
     // 选择广告样式
     changeAdv(index, num) {
-      let that = this;
-      that.templateData[that.centerSelect].content.list = [];
-      that.templateData[that.centerSelect].content.style = index + 1;
+      this.templateData[this.centerSelect].content.list = [];
+      this.templateData[this.centerSelect].content.style = index + 1;
       for (let i = 0; i < num; i++) {
-        that.templateData[that.centerSelect].content.list.push({
+        this.templateData[this.centerSelect].content.list.push({
           image: "",
           name: "",
           path: "",
@@ -2432,20 +2420,19 @@ export default {
           path_type: 1,
         });
       }
-      that.$emit("showForm", that.centerSelect);
-      that.advdrawer = false;
+      this.$emit("showForm", this.centerSelect);
+      this.advdrawer = false;
     },
     // 选择标题栏样式
     selectTitleBlock(index) {
-      let that = this;
       if (index != null) {
-        that.titleBlock.isSelected = true;
-        that.templateData[that.centerSelect].content.image =
-          that.titleBlock.data[index].src;
-        that.titleBlock.currentImage = that.titleBlock.data[index].src;
+        this.titleBlock.isSelected = true;
+        this.templateData[this.centerSelect].content.image =
+          this.titleBlock.data[index].src;
+        this.titleBlock.currentImage = this.titleBlock.data[index].src;
       } else {
-        that.titleBlock.isSelected = false;
-        that.templateData[that.centerSelect].content.image = "";
+        this.titleBlock.isSelected = false;
+        this.templateData[this.centerSelect].content.image = "";
       }
     },
     // 自定义列表商品图片排序
@@ -2467,7 +2454,6 @@ export default {
       this.$forceUpdate();
     },
   },
-  mounted() {},
 };
 </script>
 
