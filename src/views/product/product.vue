@@ -107,16 +107,6 @@
         </el-pagination>
       </el-col>
     </el-row>
-    <!-- 表单模块 -->
-    <!-- el-dialog -->
-    <!-- <el-dialog 
-    append-to-body="ture"
-    width="60%"
-    :visible.sync="box"
-    >
-    <Form></Form>
-    </el-dialog> -->
-
     <Form
       ref="form"
       :title="title"
@@ -207,6 +197,7 @@ export default {
   methods: {
     // 初始化
     init() {},
+
     // 提交表单
     handleSubmit(formName) {
       let that = this;
@@ -240,6 +231,7 @@ export default {
           });
         });
     },
+
     // 增加商品
     handleAdd() {
       this.title = "新增商品";
@@ -289,6 +281,7 @@ export default {
       this.page.pageSize = pageSize;
       this.getGoodsData();
     },
+
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this;

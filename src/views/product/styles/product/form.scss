@@ -15,6 +15,12 @@
     justify-content: center;
     align-items: center;
 }
+
+.shopro-screen-button{
+    background: #409eff;
+    color: #fff;
+}
+
 //////////////////////////////////////////////////////
 .display-flex-c /deep/ .el-input__inner{
     display: block;
@@ -29,7 +35,8 @@
     border-radius: 4px;
     padding: 0 5px;
 }
-.btn-common {
+
+.btn-common{
     line-height: 32px;
     height: 32px;
     cursor: pointer;
@@ -57,7 +64,6 @@
 .add-params,
 .add-level1-sku {
     width: 98px;
-    background: #7536D0;
     color: #fff;
 }
 
@@ -141,7 +147,7 @@
 
 .good-detail-body {
     padding: 20px 25px 10px 5px;
-    // height: calc(100vh - 400px);
+    // height: calc(100vh - 100px);
     height: 600px;
     overflow: auto;
 }
@@ -219,7 +225,7 @@ label {
     display: flex;
     justify-content: flex-end;
     padding: 0 30px;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
 }
 
 .back-btn {
@@ -237,7 +243,6 @@ label {
     height: 36px;
     line-height: 36px;
     text-align: center;
-    background: #7438D5;
     font-size: 14px;
     color: #fff;
     cursor: pointer;

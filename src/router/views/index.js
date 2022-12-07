@@ -147,13 +147,22 @@ export default [{
  
   },
   {
-    path: '/commodity',
-    name: '子业',
+    path: '/ceshi',
+    name: '测试2',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionconfig/commodity')
+      import( /* webpackChunkName: "views" */ '@/views/product/ceshi')
+  },
+  {
+    path: '/dodecorate',
+    name: '测试',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate')
   },
 ]}
  ]

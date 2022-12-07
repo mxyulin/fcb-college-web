@@ -105,7 +105,7 @@
       </el-form> -->
 
     <!-- 内容 -->
-    <div id="productform" v-cloak>
+    <div id="goodsDetail" v-cloak>
       <div class="preview-body">
         <el-steps class="steps-display" :active="stepActive" simple>
           <el-step title="1、基础信息"></el-step>
@@ -1019,8 +1019,11 @@
                     </div>
                     <draggable
                       :list="goodsDetail.params_arr"
-                      v-bind="$attrs"
                       :options="{ animation: 500 }"
+                      :animation="500"
+                      tag="div"
+                      ghostclass="ghost"
+                      class="center-draggable"
                     >
                       <div
                         class="display-flex goods-detail-item"
@@ -1061,26 +1064,48 @@
                       </div>
                     </draggable>
                   </div>
-                  <div class="btn-common add-params" @click="addParams">
+                  <div class="btn-common add-params shopro-screen-button" @click="addParams">
                     <i class="el-icon-plus"></i>
                     <span>添加参数</span>
                   </div>
                 </div>
               </el-form-item>
             </div>
-            <form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action=""
-                    v-show="stepActive==3">
-                    <div class="display-flex" style="margin: 0;align-items: flex-start;">
-                        <label class="control-label" style="width: 110px;
-                        padding-left: 30px;
-                        font-weight: 600;
-                        font-size: 14px;
-                        color: #606266;">图文详情 :</label>
-                        <div style="flex: 1;">
-                            <textarea id="c-content" class="form-control editor" rows="5" name="row[content]"
-                                cols="50"></textarea>
-                        </div>
-                    </div>
+            <form
+              id="add-form"
+              class="form-horizontal"
+              role="form"
+              data-toggle="validator"
+              method="POST"
+              action=""
+              v-show="stepActive == 3"
+            >
+              <div
+                class="display-flex"
+                style="margin: 0; align-items: flex-start"
+              >
+                <label
+                  class="control-label"
+                  style="
+                    width: 110px;
+                    padding-left: 30px;
+                    font-weight: 600;
+                    font-size: 14px;
+                    color: #606266;
+                  "
+                  >图文详情 :</label
+                >
+                <!-- 富文本 -->
+                <div style="flex: 1">
+                  <textarea
+                    id="c-content"
+                    class="form-control editor"
+                    rows="5"
+                    name="row[content]"
+                    cols="50"
+                  ></textarea>
+                </div>
+              </div>
             </form>
           </el-form>
         </div>
@@ -1090,13 +1115,13 @@
           上一步
         </div>
         <div
-          class="btn-common sub-btn"
+          class="btn-common sub-btn shopro-screen-button"
           v-if="stepActive < 3"
           @click="gotoback('goodsDetail')"
         >
           下一步
         </div>
-        <div class="btn-common sub-btn" v-if="stepActive == 3">确定</div>
+        <div class="btn-common sub-btn shopro-screen-button" v-if="stepActive == 3">确定</div>
       </span>
     </div>
   </el-dialog>
@@ -1109,8 +1134,12 @@ import { getList } from "@/api/product/productcategory";
 import { mapGetters } from "vuex";
 import option from "@/const/product/product";
 import { validatenull } from "@/util/validate";
+import draggable from "vuedraggable";
 
 export default {
+  components: {
+    draggable,
+  },
   /*
    * 父组件传来的数据
    * 父组件绑定的事件
