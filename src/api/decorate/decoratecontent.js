@@ -10,6 +10,15 @@ export const getDetail = (decorateId) => {
   })
 }
 
+export const getList = (decorateId) => {
+  return request({
+    url: '/api/fcb-decorate/content/list',
+    method: 'get',
+    params: {
+      decorateId
+    }
+  })
+}
 
 export const submit = (row) => {
   return request({

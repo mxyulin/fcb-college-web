@@ -9,7 +9,7 @@
       <!-- 顶部按钮组 -->
       <el-row :gutter="0" type="flex" justify="space-between" align="center">
         <el-col :span="21">
-          <div class="title-msg">店铺装修{{centerSelect}}</div>
+          <div class="title-msg">店铺装修</div>
         </el-col>
         <el-col :span="3">
           <el-button type="primary" :size="option.size" plain>预览</el-button>
@@ -30,7 +30,7 @@
         "
         class="decorate-left"
         width="265px"
-        style="text-align: center;"
+        style="text-align: center"
       >
         <ToolsBox
           :fromtype="fromtype"
@@ -40,7 +40,7 @@
         />
       </el-aside>
       <!-- App 装修区 -->
-      <el-main class="center-body" style="text-align: center;">
+      <el-main class="center-body" style="text-align: center">
         <!-- 首页和个人中心 -->
         <div
           id="html2canvasWrap"
@@ -234,7 +234,7 @@
                 </div>
               </el-image>
             </div>
-            <div @click.stop="isfloat = !isfloat">
+            <div>
               <el-image
                 style="width: 30px; height: 30px; border-radius: 15px"
                 :src="templateData[0].content.image"
@@ -248,7 +248,7 @@
           </div>
         </div>
         <!-- 底部按钮组 -->
-        <div class="decorate-body-buttom">
+        <div class="decorate-body-buttom" v-if="fromtype == 'shop'">
           <el-radio-group
             v-model="isPageType"
             :size="option.size"
@@ -269,7 +269,6 @@
           :fromtype="fromtype"
           :centerSelect="centerSelect"
           :templateForm="templateForm"
-          :isfloat.sync="isfloat"
           :popupIndex.sync="popupIndex"
           :templateData.sync="templateData"
           :updateForm="updateForm"
@@ -285,7 +284,7 @@
 import { mapGetters } from "vuex";
 import { Loading } from "element-ui";
 import option from "@/const/decorate/dodecorate";
-import { submit, getDetail } from "@/api/decorate/decoratecontent";
+import { submit, getList } from "@/api/decorate/decoratecontent";
 import AppLayout from "@/views/decorate/components/applayout";
 import ToolsBox from "@/views/decorate/components/toolsbox";
 import ToolsForm from "@/views/decorate/components/toolsform";
@@ -327,35 +326,11 @@ export default {
 
       // 装修类型
       isPageType: "home",
-      // 表单类型（shop & custom）
-      fromtype: "shop",
+      // 表单类型（shop & page）
+      // fromtype: "shop",
 
       // 模板数据（默认带首页轮播图)
-      templateData: [
-        {
-          name: "轮播图",
-          type: "banner",
-          icon: "icon-carousel",
-          content: {
-            name: "",
-            style: 1,
-            height: 520,
-            radius: 0,
-            x: 0,
-            y: 0,
-            list: [
-              {
-                name: "",
-                bgcolor: "",
-                image: "",
-                path: "",
-                path_name: "",
-                path_type: 1,
-              },
-            ],
-          },
-        },
-      ],
+      templateData: [],
       // 表单数据
       templateForm: {},
       // 模板定制名
@@ -364,7 +339,33 @@ export default {
       customData: [],
 
       /* 装修数据 */
-      homeData: { content: [] },
+      homeData: {
+        content: [
+          {
+            name: "轮播图",
+            type: "banner",
+            icon: "icon-carousel",
+            content: {
+              name: "",
+              style: 1,
+              height: 520,
+              radius: 0,
+              x: 0,
+              y: 0,
+              list: [
+                {
+                  name: "",
+                  bgcolor: "",
+                  image: "",
+                  path: "",
+                  path_name: "",
+                  path_type: 1,
+                },
+              ],
+            },
+          },
+        ],
+      },
       userData: {
         content: [
           {
@@ -509,8 +510,6 @@ export default {
       centerSelect: null,
       // 选中的弹窗提醒
       popupIndex: null,
-      // 悬浮按钮
-      isfloat: false,
 
       /* 模板预览（未用） */
       // httpsDlocked: true,
@@ -534,6 +533,9 @@ export default {
     ...mapGetters(["permission"]),
     decorateId() {
       return this.$route.query.decorateId ? this.$route.query.decorateId : null;
+    },
+    fromtype() {
+      return this.$route.query.type ? this.$route.query.type : "shop";
     },
   },
   watch: {
@@ -565,36 +567,73 @@ export default {
       }
       this.showForm(this.centerSelect);
     },
+    decorateId: {
+      handler() {
+        this.init();
+      },
+    },
   },
   methods: {
-    // 渲染初始数据
+    // 装修数据初始化
     init() {
       // 启用 loading
-      // let loadingInstance = Loading.service({
-      //   target: ".laoding",
-      //   fullscreen: false,
-      //   lock: true,
-      // });
+      let loadingInstance = Loading.service({
+        target: ".laoding",
+        fullscreen: false,
+        lock: true,
+      });
       // 获取当前模板数据
-      const { decorateId } = this;
-      getDetail(decorateId)
-        .then((res) => {
-          const { homeData, userData, tabbarData, popupData, floatButtonData } =
-            res.data.data;
-          this.homeData = homeData ? homeData : this.homeData;
+      const { decorateId, fromtype } = this;
+      getList(decorateId).then((res) => {
+        const { homeData, userData, tabbarData, popupData, floatButtonData } =
+          res.data.data;
+        // 默认渲染首页装修数据
+        if (fromtype == "shop") {
+          this.homeData = homeData
+            ? homeData
+            : {
+                content: [
+                  {
+                    name: "轮播图",
+                    type: "banner",
+                    icon: "icon-carousel",
+                    content: {
+                      name: "",
+                      style: 1,
+                      height: 520,
+                      radius: 0,
+                      x: 0,
+                      y: 0,
+                      list: [
+                        {
+                          name: "",
+                          bgcolor: "",
+                          image: "",
+                          path: "",
+                          path_name: "",
+                          path_type: 1,
+                        },
+                      ],
+                    },
+                  },
+                ],
+              };
           this.userData = userData ? userData : this.userData;
           this.tabbarData = tabbarData ? tabbarData : this.tabbarData;
           this.popupData = popupData ? popupData : this.popupData;
           this.floatButtonData = floatButtonData
             ? floatButtonData
             : this.floatButtonData;
-          // 默认渲染首页装修数据
-          this.loadTemplateDate("home");
-          // 关闭 loading
-          this.$nextTick(() => {
-            loadingInstance.close();
-          });
-        })
+        } else {
+          // 自定义装修数据仅放 homeData
+          this.homeData = homeData ? homeData : { content: [] };
+        }
+        this.loadTemplateDate("home");
+        // 关闭 loading
+        this.$nextTick(() => {
+          loadingInstance.close();
+        });
+      });
     },
     // 渲染表单数据
     showForm(index) {
@@ -608,8 +647,13 @@ export default {
       const { name, link, path, pathName } = data;
       switch (type) {
         case "picture":
-          that.templateForm.content.list[index].name = name;
-          that.templateForm.content.list[index].image = link;
+          if (index != -1) {
+            that.templateForm.content.list[index].name = name;
+            that.templateForm.content.list[index].image = link;
+          } else {
+            // 悬浮主按钮处理
+            that.templateForm.content.image = link;
+          }
           break;
         case "link":
           that.templateForm.content.list[index].path = path;
@@ -664,35 +708,49 @@ export default {
       });
       this.templateData[0].content.list[index].selected = true;
     },
-    // 选择工具并添加装修组件
+    // 添加APP装修组件
     selectTools(type) {
-      let length = this.templateData.length;
-      let form = this.cloneComponent(type);
-      // 如果最后一个是分类选项卡。则将被替换掉
-      let flag =
-        this.templateData[length - 1].type == "category-tabs" ? true : false;
-      // 添加装修组件前，维护好 centerSelect
+      let length = this.templateData.length,
+        form = this.cloneComponent(type),
+        categoryTabsAtEnd = false;
+      if (length != 0) {
+        // * 判断一下分类选项卡是否在末尾
+        categoryTabsAtEnd =
+          this.templateData[length - 1].type == "category-tabs" ? true : false;
+      }
+      /* 新添加的组件会追加到已选中组件之后，除分类选项卡之外 */
+      // 第一次添加APP组件
       if (this.centerSelect == null) {
         this.centerSelect = length;
+        // 特殊情况：第一次添加非分类选项卡组件且末尾有分类选项卡组件，就只能在其前面添加此组件
+        if (type != "category-tabs" && categoryTabsAtEnd) {
+          this.centerSelect = length - 1;
+        }
       } else {
+        // 继续添加APP组件
         this.centerSelect += 1;
-        if (type != "category-tabs" && this.centerSelect == length) {
-          if (flag) {
-            this.centerSelect -= 1;
-          }
+        // 特殊情况：分类选项卡选中且添加的是非分类选项卡，就只能在其前面添加此组件
+        if (
+          type != "category-tabs" &&
+          this.centerSelect == length &&
+          categoryTabsAtEnd
+        ) {
+          this.centerSelect -= 1;
         }
       }
-      // 添加装修组件
+      /* 
+      *如果添加的是分类选项卡就都走这儿的逻辑覆盖前面的 centerSelect
+      */
       if (type == "category-tabs") {
-        if (!flag) {
-          this.centerSelect = length;
-          this.templateData.splice(this.centerSelect, 0, form);
-          this.showForm(this.centerSelect);
+        // 如果末尾有分类选项卡则选中它后立刻 return
+        if (categoryTabsAtEnd) {
+          this.centerSelect = length - 1;
+          return;
         }
-      } else {
-        this.templateData.splice(this.centerSelect, 0, form);
-        this.showForm(this.centerSelect);
+        this.centerSelect = length;
       }
+      this.templateData.splice(this.centerSelect, 0, form);
+      this.showForm(this.centerSelect);
     },
     // 克隆装修组件初始数据
     cloneComponent(type) {
@@ -1007,22 +1065,31 @@ export default {
         popupData,
         floatButtonData,
         decorateId,
+        fromtype,
       } = this;
-      const decorateData = {
-        homeData,
-        userData,
-        tabbarData,
-        popupData,
-        floatButtonData,
-        decorateId,
-      };
+      let decorateData = {};
+      if (fromtype == "shop") {
+        decorateData = {
+          homeData,
+          userData,
+          tabbarData,
+          popupData,
+          floatButtonData,
+          decorateId,
+        };
+      } else {
+        decorateData = {
+          homeData,
+          decorateId,
+        };
+      }
+
       submit(decorateData)
         .then((res) => {
           this.$message({
             message: "保存成功",
             type: "success",
           });
-          // 保存成功后跳转到
         })
         .catch((err) => {
           this.$message({
@@ -1033,9 +1100,6 @@ export default {
     },
   },
   mounted() {
-    // 初始化 homeData
-    this.cachePreData("home");
-    // 初始化装修数据
     this.init();
   },
 };

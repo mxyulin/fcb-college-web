@@ -23,12 +23,12 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
   }, {
     path: '/dodecorate',
-    name: 'APP装修设计',
+    name: '装修设计',
     meta: {
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate.vue')
+      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate')
   }
   ]
 }, {

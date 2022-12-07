@@ -202,7 +202,7 @@ export default {
     // *渲染工具的逻辑判断
     toolsShow(toolsBelong) {
       return (
-        this.fromtype == "custom" ||
+        this.fromtype == "page" ||
         toolsBelong == "common" ||
         toolsBelong == this.isPageType
       );

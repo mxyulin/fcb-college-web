@@ -1995,7 +1995,7 @@
                 type="primary"
                 slot="append"
                 plain
-                @click="chooseResource('picture', index)"
+                @click="chooseResource('picture', -1)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -2213,8 +2213,8 @@ export default {
   props: {
     isfloat: Boolean,
     popupIndex: Number,
-    fromtype: String,
     centerSelect: Number,
+    fromtype: String,
     templateData: Array,
     templateForm: Object,
   },
@@ -2307,6 +2307,7 @@ export default {
     rightDel(index) {
       this.$emit("update:popupIndex", null);
       this.templateData[this.centerSelect].content.list.splice(index, 1);
+      this.$forceUpdate();
     },
     // 选择装修资源
     chooseResource(type, index) {
@@ -2323,8 +2324,11 @@ export default {
     },
     // 清空链接数据
     clearlink(type, index) {
-      this.templateForm.content.list[index].path = "";
-      this.templateForm.content.list[index].path_name = "";
+      if (type == this.templateForm.type) {
+        this.templateForm.content.list[index].path = "";
+        this.templateForm.content.list[index].path_name = "";
+      }
+      this.$forceUpdate();
     },
     // 添加表单
     addForm(type) {
@@ -2388,8 +2392,6 @@ export default {
           };
           break;
         case "float-button":
-          //this.isfloat = false;
-          this.$emit("update:isfloat", false);
           form = {
             name: "",
             style: 1,
@@ -2402,6 +2404,7 @@ export default {
           break;
       }
       this.templateData[this.centerSelect].content.list.push(form);
+      this.$forceUpdate();
     },
     // 展开广告样式抽屉
     showDrawer() {
@@ -2420,8 +2423,10 @@ export default {
           path_type: 1,
         });
       }
-      this.$emit("showForm", this.centerSelect);
+      const { centerSelect } = this;
+      this.$emit("showForm", centerSelect);
       this.advdrawer = false;
+      this.$forceUpdate();
     },
     // 选择标题栏样式
     selectTitleBlock(index) {
@@ -2438,11 +2443,12 @@ export default {
     // 自定义列表商品图片排序
     goodsListEnd() {
       this.templateForm.content.ids = "";
-      let idsArr = [];
+      const idsArr = [];
       this.templateForm.content.timeData.forEach((t) => {
         idsArr.push(t.id);
       });
       this.templateForm.content.ids = idsArr.join(",");
+      this.$forceUpdate();
     },
     // 删除自定义列表商品图片
     customList(index) {
