@@ -107,7 +107,6 @@
         </el-pagination>
       </el-col>
     </el-row>
-    <!-- 表单模块 -->
     <Form
       ref="form"
       :title="title"
@@ -130,9 +129,14 @@ import {
   slectionsUpdate,
 } from "@/api/product/product";
 import option from "@/const/product/product";
-import Query from "@/views/product/components/query";
-import Table from "@/views/product/components/table";
-import Form from "@/views/product/components/form";
+
+import Query from "@/views/product/components/product/query";
+import Table from "@/views/product/components/product/table";
+import Form from "@/views/product/components/product/form";
+
+// import Query from "@/views/product/components/query";
+// import Table from "@/views/product/components/table";
+// import Form from "@/views/product/components/form";
 import { mapGetters } from "vuex";
 
 export default {
@@ -193,6 +197,7 @@ export default {
   methods: {
     // 初始化
     init() {},
+
     // 提交表单
     handleSubmit(formName) {
       let that = this;
@@ -226,6 +231,7 @@ export default {
           });
         });
     },
+
     // 增加商品
     handleAdd() {
       this.title = "新增商品";
@@ -275,6 +281,7 @@ export default {
       this.page.pageSize = pageSize;
       this.getGoodsData();
     },
+
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this;
@@ -352,4 +359,11 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/views/product/styles/product";
+</style>
+
+<style lang="scss" scoped>
+// 修改element全局样式
+.steps-display .el-step__icon{
+    display: none;
+}
 </style>

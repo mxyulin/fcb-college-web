@@ -85,7 +85,7 @@
               <el-option
                 :label="status.name"
                 :value="status.type"
-                v-for="(status,indexd) in commissionStatusOptions"
+                v-for="(status, indexd) in commissionStatusOptions"
                 :key="indexd"
               >
               </el-option>
@@ -98,7 +98,6 @@
           <div class="shopro-button shopro-screen-button">筛选</div>
         </div>
       </div>
-
 
       <div class="shopro-table-container" v-loading="tableAjax">
         <el-table
@@ -129,14 +128,11 @@
 
           <el-table-column prop="commissionConfig" label="商品状态" width="100">
           </el-table-column>
-          
+
           <el-table-column label="操作" fixed="right" width="220">
             <template slot-scope="scope">
               <div>
-                <span
-                  class="shopro-edit-text"
-                  >设置佣金</span
-                >
+                <span class="shopro-edit-text">设置佣金</span>
                 <span class="shopro-detail-text" v-if="scope.row.commission">
                   <span
                     v-if="
@@ -152,10 +148,7 @@
                     >不参与</span
                   >
                 </span>
-                <span
-                  class="shopro-detail-text"
-                  >参与</span
-                >
+                <span class="shopro-detail-text">参与</span>
               </div>
             </template>
           </el-table-column>
@@ -165,32 +158,26 @@
       <div class="shopro-pagination-container">
         <div class="display-flex">
           <div style="margin-right: 40px">
-            <el-checkbox >批量设置</el-checkbox>
+            <el-checkbox>批量设置</el-checkbox>
           </div>
-          <div
-            class="display-flex multiple-set-item"
-          >
-            <div class="multiple-set-acitve-1" >
-              参与
-            </div>
-            <div class="multiple-set-acitve-2" >
-              不参与
-            </div>
-            <div class="multiple-set-acitve-3" >
-              设置佣金
-            </div>
+          <div class="display-flex multiple-set-item">
+            <div class="multiple-set-acitve-1">参与</div>
+            <div class="multiple-set-acitve-2">不参与</div>
+            <div class="multiple-set-acitve-3">设置佣金</div>
           </div>
         </div>
+        <!-- pag页码 分页器 -->
         <div class="display-center-a">
           <el-pagination
-            @size-change="pageSizeChange"
-            @current-change="pageCurrentChange"
-            :current-page="currentPage"
+            align="right"
+            background
+            @current-change="productCurrentChange"
+            @size-change="productSizeChange"
+            :current-page="page.currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="limit"
+            :page-size="page.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
-            pager-count="5"
+            :total="page.total"
           >
           </el-pagination>
         </div>
@@ -285,18 +272,17 @@ export default {
           type: "1",
         },
       ],
-      listData:[
+      listData: [
         {
-          tenantId:'用户id 商品信息', 
-          commissionRules:'佣金奖励 分销规则', 
-          commissionConfig:'佣金配置 商品状态',
+          tenantId: "用户id 商品信息",
+          commissionRules: "佣金奖励 分销规则",
+          commissionConfig: "佣金配置 商品状态",
 
-          // 
-          selfRules:'自我购买',
-          commissionOrderStatus:'佣金订单状态',
-        }
+          //
+          selfRules: "自我购买",
+          commissionOrderStatus: "佣金订单状态",
+        },
       ],
-
 
       // 弹框标题
       title: "",
@@ -342,7 +328,18 @@ export default {
   },
   methods: {
     init() {},
-    // 有报错
+    // 分页器
+    productCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
+    },
+    productSizeChange(pageSize) {
+      let that = this;
+      that.page.pageSize = pageSize;
+      that.onLoad(that.page);
+    },
+    // 发请求
     onLoad(page, params = {}) {
       let that = this;
       that.loading = true;
@@ -351,7 +348,7 @@ export default {
         page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        console.log('data',res)
+        console.log("data", res);
         that.listData = res.data.data.records;
         // that.page.total = data.total;
         // that.data = data.records;
@@ -362,12 +359,8 @@ export default {
 };
 </script>
 
-
-<style
-  lang="scss"
-  scoped
->
-@import "@/views/commission/style/commissionproduct.scss"; 
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionproduct.scss";
 </style>
 <style lang="scss">
 .display-center-a .el-pagination {

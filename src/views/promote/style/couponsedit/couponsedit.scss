@@ -1,0 +1,68 @@
+#pageDetail {
+    background: #fff;
+    overflow: auto;
+    color: #666;
+}
+
+//////////////////////////////////////////////////
+/// 原文件的公共样式
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+
+//////////////////////////////////////////////////
+
+.msg-tip {
+    margin-left: 30px;
+    color: #999;
+}
+
+.select-goods {
+    width: 146px;
+    height: 50px;
+    border: 1px solid #E6E6E6;
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.select-goods-selected {
+    border-color: #7438D5;
+}
+
+.select-goods-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+}
+
+.select-goods div {
+    padding: 0 8px;
+    line-height: 14px;
+    -webkit-line-clamp: 2;
+    font-size: 12px;
+}
+
+.delete-goods {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -8px;
+    right: -8px;
+
+}
+
+.label-auto {
+    width: 16px;
+    height: 16px;
+}
+
+.modify-text {
+    margin-right: 14px;
+}
+
+[v-cloak] {
+    display: none
+}

@@ -112,37 +112,7 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
 
-  },
-  {
-    path: '/profile',
-    name: 'agent子业',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionagent/profile')
-
-  },
-  {
-    path: '/team',
-    name: 'agent子业',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionagent/team')
-
-  },
-  {
-    path: '/edit',
-    name: 'product子业',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionproduct/edit')
-
-  }
+  } 
   ]
 }
 ]

@@ -212,7 +212,6 @@ export default {
     },
     handleUpload() {
       this.attachBox = true;
-
     },
     uploadAfter(res, done, loading, column) {
       this.attachBox = false;

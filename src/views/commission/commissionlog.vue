@@ -228,10 +228,18 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <!-- pag页码 分页器 -->
         <div class="shopro-pagination-container">
-            <el-pagination @size-change="pageSizeChange" @current-change="pageCurrentChange" :current-page="currentPage"
-                :page-sizes="[10, 20, 30, 40]" :page-size="limit" layout="total, sizes, prev, pager, next, jumper"
-                :total="totalPage">
+            <el-pagination 
+             align="right" background
+             @current-change="logCurrentChange" 
+             @size-change="logSizeChange" 
+             :current-page="page.currentPage"
+             :page-sizes="[10, 20, 30, 40]" 
+             :page-size="page.pageSize" 
+             layout="total, sizes, prev, pager, next, jumper"
+             :total="page.total">
             </el-pagination>
         </div>
     </div>
@@ -358,6 +366,18 @@ export default {
     // },
 
     init() {},
+    // 分页器 
+    logCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
+    },
+    logSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.onLoad(that.page);
+    },
+    // 发请求
     onLoad(page, params = {}) {
       const that = this;
       that.loading = true;

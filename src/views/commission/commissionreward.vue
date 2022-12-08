@@ -129,6 +129,7 @@
       </div>
 
       <div class="order-table">
+        
         <div class="table-dashboard-container">
           <div class="table-dashboard-item-container">
             <div class="table-dashboard-item">
@@ -205,6 +206,7 @@
             </div>
           </div>
         </div>
+
         <div>
           <el-table
             :data="orderList"
@@ -241,13 +243,14 @@
 
         <div class="shopro-pagination-container">
           <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="currentPage"
+            align="right" background
+            @current-change="rewardCurrentChange"
+            @size-change="rewardSizeChange"
+            :current-page="page.currentPage"
             :page-sizes="[10, 20, 30, 40]"
-            :page-size="limit"
+            :page-size="page.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="totalPage"
+            :total="page.total"
           >
           </el-pagination>
         </div>
@@ -382,8 +385,21 @@ export default {
   },
   methods: {
     init() {},
+
+   // 分页器 
+    rewardCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
+    },
+    rewardSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.onLoad(that.page);
+    },
+    // 发请求
     onLoad(page, params = {}) {
-      const that = this;
+      let that = this;
       that.loading = true;
       getList(
         page.currentPage,

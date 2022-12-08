@@ -208,8 +208,8 @@
           </el-table-column>
 
           <el-table-column fixed="right" label="操作" min-width="80">
-            <template>
-              <div class="theme-cursor" @click="centerdilogprofile=true">查看</div>
+            <template slot-scope="scope">
+              <div class="theme-cursor" @click="ifprofile(scope.row.id)">查看</div>
             </template>
           </el-table-column>
         </el-table>
@@ -450,16 +450,17 @@
         </el-table>
       </div>
 
-      <!-- pag页码 -->
+      <!-- pag页码 分页器 -->
       <div class="shopro-pagination-container">
         <el-pagination
+          align="right" background
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          :current-page="page.currentPage"
           :page-sizes="[10, 20, 30, 40]"
-          :page-size="limit"
+          :page-size="page.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="totalPage"
+          :total="page.total"
         >
         </el-pagination>
       </div>
@@ -471,7 +472,7 @@
         width="80%"
         center
       >
-      <profile></profile>
+      <profile :profileid="this.logList"></profile>
       </el-dialog>
     </div>
   </basic-container>
@@ -496,6 +497,8 @@ export default {
     return {
       // 模拟数据
 
+      // 组件传参profileid
+      logList:[],
       // 原网站属性
       agentStatusOptions: [
         {
@@ -572,7 +575,6 @@ export default {
         mobile: "like",
         level_status: ">",
       },
-      // listData:[],
       listData: [
         {
           tenantId: "用户",
@@ -742,27 +744,43 @@ export default {
       this.selectionList = [];
       // this.$refs.table.clearSelection();
     },
-    currentChange(currentPage) {
-      this.page.currentPage = currentPage;
-      this.onLoad(this.page);
+    
+    // 分页器 
+    handleCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.onLoad(that.page);
     },
-    sizeChange(pageSize) {
-      this.page.pageSize = pageSize;
-      this.onLoad(this.page);
+    handleSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.onLoad(that.page);
     },
-
+    // 发请求
     onLoad(page, params = {}) {
-      this.loading = true;
+      let that = this;
+      that.loading = true;
       getList(
         page.currentPage,
         page.pageSize,
-        Object.assign(params, this.query)
+        Object.assign(params, that.query)
       ).then((res) => {
-        this.listData = res.data.data.records;
-        // this.page.total = data.total;
+        that.listData = res.data.data.records;
+        console.log("data数据", that.listData);
+        // that.page.total = data.total;
         // this.data = data.records;
-        // this.loading = false;
+        that.loading = false;
         // this.selectionClear();
+      });
+    },
+    // 跳转组件传参 发请求
+    ifprofile(id){
+      this.centerdilogprofile=true;
+      let that = this;
+      that.loading = true;
+      getDetail(id).then((res) => {
+        that.logList = res.data.data;
+        that.loading = false;
       });
     },
   },

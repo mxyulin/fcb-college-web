@@ -1,15 +1,16 @@
 import request from '@/router/axios';
+ 
 
 export const getList = (current, size, params) => {
   return request({
     url: '/api/fcb-questions/questions/list',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       ...params,
       current,
       size,
     }
-  })
+  }); 
 }
 
 export const getDetail = (id) => {
@@ -19,7 +20,7 @@ export const getDetail = (id) => {
     params: {
       id
     }
-  })
+  });
 }
 
 export const remove = (ids) => {
@@ -48,3 +49,50 @@ export const update = (row) => {
   })
 }
 
+export const checkImport = (form) => {
+  return request({
+    url: '/api/fcb-questions/questions/check-import',
+    method: 'post',
+    data: form
+  })
+}
+
+export const getPreviewList = (params) => {
+  return request({
+    url: '/api/fcb-questions/questions/import-preview',
+    method: 'get',
+    params: {
+      ...params 
+    }
+  })
+}
+
+export const doImport = (params) => {
+  return request({
+    url: '/api/fcb-questions/questions/do-import',
+    method: 'post',
+    params: {
+      ...params 
+    }
+  })
+} 
+
+
+export const doDeleteCacheById = (id) => {
+  return request({
+    url: '/api/fcb-questions/questions/delete-cache-by-id',
+    method: 'get',
+    params: {
+      id :id 
+    } 
+  })
+}
+
+export const clearCache = () => {
+  return request({
+    url: '/api/fcb-questions/questions/clear-cache',
+    method: 'get' 
+  })
+}
+
+ 

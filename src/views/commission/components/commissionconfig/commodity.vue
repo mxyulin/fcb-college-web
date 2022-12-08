@@ -45,13 +45,14 @@
 
           <div class="shopro-pagination-container">
             <el-pagination
+              align="right" background
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="currentPage"
+              :current-page="page.currentPage"
               :page-sizes="[10, 20, 30, 40]"
-              :page-size="limit"
+              :page-size="page.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="totalPage"
+              :total="page.total"
             >
             </el-pagination>
           </div>
@@ -68,6 +69,7 @@
 </template>
 
 <script>
+// 树表
 import { getList } from "@/api/product/productcategory";
 // 树元素标题绑定表
 import { getListByCategory } from "@/api/product/product";
@@ -124,6 +126,8 @@ export default {
       option: option,
       // 表单列表
       data: [],
+
+      ids:1,
     };
   },
 
@@ -139,9 +143,22 @@ export default {
 
   methods: {
     commodityclick(node) {
-      this.getproductdata(node.id);
+       this.ids= node.id;
+      this.getproductdata(this.page,this.ids);
     },
 
+    // 分页器 
+    handleCurrentChange(currentPage) {
+      let that = this;
+      that.page.currentPage = currentPage;
+      that.getproductdata(that.page,this.ids);
+    },
+    handleSizeChange(pageSize) {
+        let that = this;
+        that.page.pageSize = pageSize;
+        that.getproductdata(that.page,this.ids);
+    },
+    // 发请求
     getcommoditydata(page, params = {}) {
       let that = this;
       that.loading = true;
@@ -153,13 +170,15 @@ export default {
         that.treedata = res.data.data.slice(8);
       });
     },
-    getproductdata(id) {
+    // page 报错
+    getproductdata(page,id) {
+      console.log('page的参数',page)
       let that = this;
       let params = { categoryIds: id };
       that.loading = true;
       getListByCategory(
-        that.page.currentPage,
-        that.page.pageSize,
+        page.currentPage,
+        page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
         that.ditydatab = res.data.data.records;
@@ -174,8 +193,9 @@ export default {
 };
 </script>
 
-<style scoped lang="scss" src="@/views/commission/style/commodity.scss"></style>
-
+<style lang="scss" scoped>
+@import "@/views/commission/style/commissionconfig/commodity.scss";
+</style>
 <style lang="scss">
 .level .el-table th.el-table__cell {
   background-color: #fafafa;
