@@ -21,7 +21,7 @@
             </el-input>
             <el-tree
               :props="defaultProps"
-              :data="treeDta"
+              :data="treeData"
               :node-key="id"
               :highlight-current="true"
               :filter-node-method="filterNode"
@@ -105,7 +105,7 @@ import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
 import { validatenull } from "@/util/validate";
 import { getList as getCategoryList } from "@/api/resource/attachcategory";
-import { getList, getDetail, remove } from "@/api/resource/attach";
+import { getList } from "@/api/resource/attach";
 
 export default {
   name: "resourceTable",
@@ -128,7 +128,7 @@ export default {
       /*
        *节点树
        */
-      treeDta: [],
+      treeData: [],
       filterText: "",
       defaultProps: {
         children: "children",
@@ -150,31 +150,30 @@ export default {
         },
         column: [
           {
-            label: "类别",
-            prop: "categoryName",
-            overHidden: true,
-          },
-          {
-            label: "文件名",
+            label: "标题",
             prop: "name",
             sortable: true,
             overHidden: true,
+            hide: false
           },
           {
             label: "预览",
             prop: "link",
             overHidden: true,
+            hide: false
           },
           {
             label: "文件类型",
             prop: "extension",
             overHidden: true,
+            hide: false
           },
           {
             label: "创建时间",
             prop: "createTime",
             sortable: true,
             overHidden: true,
+            hide: false
           },
         ],
       },
@@ -208,23 +207,64 @@ export default {
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
-    // 获取节点树
     dialogVisible(newVal) {
       const { resourceType } = this.$attrs;
+      // 重置列表和表格
+      this.treeData = [];
+      this.data = [];
+      // 获取节点树
       if (newVal) {
         // 根据用户所选资源类型不同，提供不同的节点树
         switch (resourceType) {
           case "picture":
             this.loadCategoryTree();
+            this.hideClumn();
+            break;
+          case "link":
+            this.treeData = [
+              {
+                id: "img",
+                name: "图片",
+                parentId: "0",
+              },
+              {
+                id: "goods",
+                name: "商品",
+                parentId: "0",
+              },
+              {
+                id: "page",
+                name: "营销页",
+                parentId: "0",
+              },
+              {
+                id: "doc",
+                name: "文章",
+                parentId: "0",
+              },
+            ];
+            this.hideClumn("extension");
             break;
         }
       } else {
-        this.treeDta = [];
+        this.treeData = [];
       }
     },
   },
   methods: {
-    init() {},
+    init() {
+      
+    },
+    // 列隐藏显示
+    hideClumn(...args) {
+      this.avueOption.column.forEach((col) => {
+        if (args.indexOf(col.prop) != -1) {
+          col.hide = true;
+        } else {
+          col.hide = false;
+        }
+      })
+    },
     // 关闭弹窗
     beforeClose(done) {
       this.$emit("update:dialogVisible", false);
@@ -233,7 +273,7 @@ export default {
     // 获取节点树
     loadCategoryTree() {
       getCategoryList().then(({ data: { data } }) => {
-        this.treeDta = data;
+        this.treeData = data;
       });
     },
     // 获取表格数据
@@ -263,7 +303,7 @@ export default {
       this.nodeData = data;
       this.loadDataList(this.page, { categoryIds: this.nodeData.id });
     },
-    // 选择图片
+    // 选择资源
     handleSlect(row) {
       const { resourceType, currentListIdx, updateForm } = this.$attrs;
       updateForm(resourceType, currentListIdx, row);
@@ -296,7 +336,6 @@ export default {
     // 删除文件前
     handleBeforeRemove(file, fileList) {},
   },
-  mounted() {},
 };
 </script>
 

@@ -16,7 +16,7 @@
           @click.stop="showForm(index)"
           :key="index"
         >
-          <!-- <div class="seat-item">可放在此处</div> -->
+          <!-- <div class="seat-item">可放在此处(拖放参照块)</div> -->
           <!-- 装修布局 -->
           <div class="compotent-item-container">
             <!-- 搜索 -->
@@ -1710,21 +1710,10 @@ export default {
     draggable,
   },
   props: {
-    isPageType: {
-      type: String,
-      required: true,
-    },
-    templateData: {
-      type: Array,
-      required: true,
-    },
-    centerSelect: {
-      type: Number,
-      required: true,
-    },
-    fromtype: {
-      type: String,
-    },
+    isPageType: String,
+    fromtype: String,
+    centerSelect: Number,
+    templateData: Array,
   },
   data() {
     return {
@@ -1736,16 +1725,8 @@ export default {
   },
   computed: {
     ...mapGetters(["permission"]),
-    ids() {
-      let ids = [];
-      this.selectionList.forEach((ele) => {
-        ids.push(ele.id);
-      });
-      return ids.join(",");
-    },
   },
   methods: {
-    init() {},
     centerDel(idx) {
       this.$emit("centerDel", idx);
     },
@@ -1753,7 +1734,6 @@ export default {
       this.$emit("showForm", idx);
     },
   },
-  mounted() {},
 };
 </script>
 

@@ -1,38 +1,26 @@
 import request from '@/router/axios';
 
-export const getList = (current, size, params) => {
-  return request({
-    url: '/api/fcb-decorate/content/list',
-    method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
-  })
-}
-
-export const getDetail = (id) => {
+export const getDetail = (decorateId) => {
   return request({
     url: '/api/fcb-decorate/content/detail',
     method: 'get',
     params: {
-      id
+      decorateId
     }
   })
 }
 
-export const remove = (ids) => {
+export const getList = (decorateId) => {
   return request({
-    url: '/api/fcb-decorate/content/remove',
-    method: 'post',
+    url: '/api/fcb-decorate/content/list',
+    method: 'get',
     params: {
-      ids,
+      decorateId
     }
   })
 }
 
-export const add = (row) => {
+export const submit = (row) => {
   return request({
     url: '/api/fcb-decorate/content/submit',
     method: 'post',
@@ -40,11 +28,4 @@ export const add = (row) => {
   })
 }
 
-export const update = (row) => {
-  return request({
-    url: '/api/fcb-decorate/content/submit',
-    method: 'post',
-    data: row
-  })
-}
 

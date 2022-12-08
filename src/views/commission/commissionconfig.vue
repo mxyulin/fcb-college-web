@@ -566,7 +566,6 @@ export default {
       let that = this;
       that.loading = true;
       getList(that.page.currentPage, that.page.pageSize, params).then((res) => {
-        console.log("res", res);
         // that.page.total = res.data.total;
         // that.data = res.data.records;
         // that.loading = false;

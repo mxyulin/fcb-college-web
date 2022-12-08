@@ -395,14 +395,12 @@ export default {
           type: "warning",
         })
         .then((res) => {
-          console.log("隐藏分类测试", res, row);
           that.$message({
             message: "已隐藏",
             type: "success",
           });
         })
         .catch((err) => {
-          console.log("隐藏分类测试", err);
           that.$message({
             message: "已取消隐藏",
             type: "warning",

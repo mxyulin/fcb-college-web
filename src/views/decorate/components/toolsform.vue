@@ -1995,7 +1995,7 @@
                 type="primary"
                 slot="append"
                 plain
-                @click="chooseResource('picture', index)"
+                @click="chooseResource('picture', -1)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -2189,7 +2189,7 @@
     <!--  -->
     <!--  -->
     <!-- 资源表弹窗组件 -->
-    <ResourceTable
+    <resourceTable
       :dialogVisible.sync="dialogVisible"
       :dialogTitle="dialogTitle"
       :currentListIdx="currentListIdx"
@@ -2213,18 +2213,10 @@ export default {
   props: {
     isfloat: Boolean,
     popupIndex: Number,
-    fromtype: String,
     centerSelect: Number,
-    templateData: {
-      type: Array,
-      required: true,
-      default: () => [],
-    },
-    templateForm: {
-      type: Object,
-      required: true,
-      default: () => {},
-    },
+    fromtype: String,
+    templateData: Array,
+    templateForm: Object,
   },
   data() {
     return {
@@ -2311,12 +2303,11 @@ export default {
     },
   },
   methods: {
-    init() {},
     // 删除表单列表项
     rightDel(index) {
-      let that = this;
-      that.$emit("update:popupIndex", null);
-      that.templateData[that.centerSelect].content.list.splice(index, 1);
+      this.$emit("update:popupIndex", null);
+      this.templateData[this.centerSelect].content.list.splice(index, 1);
+      this.$forceUpdate();
     },
     // 选择装修资源
     chooseResource(type, index) {
@@ -2333,12 +2324,14 @@ export default {
     },
     // 清空链接数据
     clearlink(type, index) {
-      this.templateForm.content.list[index].path = "";
-      this.templateForm.content.list[index].path_name = "";
+      if (type == this.templateForm.type) {
+        this.templateForm.content.list[index].path = "";
+        this.templateForm.content.list[index].path_name = "";
+      }
+      this.$forceUpdate();
     },
     // 添加表单
     addForm(type) {
-      let that = this;
       let form = {};
       switch (type) {
         case "banner":
@@ -2399,8 +2392,6 @@ export default {
           };
           break;
         case "float-button":
-          //this.isfloat = false;
-          that.$emit("update:isfloat", false);
           form = {
             name: "",
             style: 1,
@@ -2412,7 +2403,8 @@ export default {
           };
           break;
       }
-      that.templateData[that.centerSelect].content.list.push(form);
+      this.templateData[this.centerSelect].content.list.push(form);
+      this.$forceUpdate();
     },
     // 展开广告样式抽屉
     showDrawer() {
@@ -2420,11 +2412,10 @@ export default {
     },
     // 选择广告样式
     changeAdv(index, num) {
-      let that = this;
-      that.templateData[that.centerSelect].content.list = [];
-      that.templateData[that.centerSelect].content.style = index + 1;
+      this.templateData[this.centerSelect].content.list = [];
+      this.templateData[this.centerSelect].content.style = index + 1;
       for (let i = 0; i < num; i++) {
-        that.templateData[that.centerSelect].content.list.push({
+        this.templateData[this.centerSelect].content.list.push({
           image: "",
           name: "",
           path: "",
@@ -2432,30 +2423,32 @@ export default {
           path_type: 1,
         });
       }
-      that.$emit("showForm", that.centerSelect);
-      that.advdrawer = false;
+      const { centerSelect } = this;
+      this.$emit("showForm", centerSelect);
+      this.advdrawer = false;
+      this.$forceUpdate();
     },
     // 选择标题栏样式
     selectTitleBlock(index) {
-      let that = this;
       if (index != null) {
-        that.titleBlock.isSelected = true;
-        that.templateData[that.centerSelect].content.image =
-          that.titleBlock.data[index].src;
-        that.titleBlock.currentImage = that.titleBlock.data[index].src;
+        this.titleBlock.isSelected = true;
+        this.templateData[this.centerSelect].content.image =
+          this.titleBlock.data[index].src;
+        this.titleBlock.currentImage = this.titleBlock.data[index].src;
       } else {
-        that.titleBlock.isSelected = false;
-        that.templateData[that.centerSelect].content.image = "";
+        this.titleBlock.isSelected = false;
+        this.templateData[this.centerSelect].content.image = "";
       }
     },
     // 自定义列表商品图片排序
     goodsListEnd() {
       this.templateForm.content.ids = "";
-      let idsArr = [];
+      const idsArr = [];
       this.templateForm.content.timeData.forEach((t) => {
         idsArr.push(t.id);
       });
       this.templateForm.content.ids = idsArr.join(",");
+      this.$forceUpdate();
     },
     // 删除自定义列表商品图片
     customList(index) {
@@ -2467,7 +2460,6 @@ export default {
       this.$forceUpdate();
     },
   },
-  mounted() {},
 };
 </script>
 

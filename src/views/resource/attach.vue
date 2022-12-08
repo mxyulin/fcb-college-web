@@ -19,7 +19,7 @@
           :before-open="beforeOpen" v-model="form" ref="crud" @row-del="rowDel" @search-change="searchChange"
           @search-reset="searchReset" @selection-change="selectionChange" @current-change="currentChange"
           @size-change="sizeChange" @refresh-change="refreshChange" @on-load="loadDataList">
-          <template slot="link" slot-scope="scope">
+          <template slot="link">
             <img class="img-item"
               src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76"
               alt="">
@@ -80,6 +80,7 @@ export default {
       },
       attachBox: false,
       selectionList: [],
+      selectNodeId: 123, 
       option: {
         height: 'auto',
         calcHeight: 30,
@@ -154,7 +155,6 @@ export default {
         ]
       },
       data: [], // 列表地址
-      selectNodeId: null, 
       pictUrl: ["https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76"], // 图片地址
       attachForm: {},
       attachOption: {
@@ -170,6 +170,9 @@ export default {
             span: 24,
             propsHttp: {
               res: 'data'
+            },
+            data: {
+              categoryIds: null
             },
             action: "/api/fcb-resource/oss/endpoint/put-file-attach"
           }
@@ -200,10 +203,8 @@ export default {
   },
   methods: {
     handleNodeClick(node) {
-      const that = this;
-      that.selectNodeId = node.id; 
-      that.query['categoryIds'] = that.selectNodeId;
-      that.loadDataList(that.page, that.query);
+      this.query['categoryIds'] = this.attachOption.column[0].data.categoryIds = node.id; 
+      this.loadDataList(this.page, this.query);
     },
     filterNode(value, list) { 
       if (!value) return true;
@@ -298,9 +299,9 @@ export default {
       const that = this;
       that.loading = true;
       getCategoryList(that.page.currentPage, that.page.pageSize, Object.assign(params, that.query)).then(res => {
+        console.log('测试', res)
         this.list = res.data.data
-        this.page.total = data.total;
-        this.data = data.records;
+        // this.data = data.records;
         this.loading = false;
         this.selectionClear();
       });
@@ -314,9 +315,9 @@ export default {
         that.page.total = data.total;
         that.data = data.records;
         // 对数据做处理遍历data.records这个数组拿到每个数组里的url地址给img标签
-        that.pictUrl = that.data.map(item => {
-          return item.domainUrl
-        })
+        // that.pictUrl = that.data.map(item => {
+        //   return item.domainUrl
+        // })
         // console.log(that.pictUrl);
         that.loading = false;
         that.selectionClear();

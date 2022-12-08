@@ -19,6 +19,7 @@ RouterPlugin.install = function (vue, option = {}) {
     Object.keys(obj).forEach(ele => {
       result.push(`${ele}=${obj[ele]}`);
     })
+    console.log('测试', result)
     return result.join('&');
   }
 
@@ -54,7 +55,7 @@ RouterPlugin.install = function (vue, option = {}) {
     },
     //处理路由
     getPath: function (params) {
-      let {src} = params;
+      let { src } = params;
       let result = src || '/';
       if (isURL(src)) {
         result = `/myiframe/urlPath?${objToform(params)}`;
@@ -84,14 +85,12 @@ RouterPlugin.install = function (vue, option = {}) {
     },
     //动态路由
     // 路由是专门的一个接口获取
-      /**
-       * aMenu: 接受到的动态路由数据 menu的结构外层有父级path 里面有一个childen 记录页面的路由
-       * first: 为了区分外界 调用formatRoutes 和 当前文件调用 formatRoutes
-      */
+    /**
+     * aMenu: 接受到的动态路由数据 menu的结构外层有父级path 里面有一个childen 记录页面的路由
+     * first: 为了区分外界 调用formatRoutes 和 当前文件调用 formatRoutes
+    */
     formatRoutes: function (aMenu = [], first) {
-      // window.console.log('aMenu')
-      // window.console.log(aMenu)
-      const aRouter = []
+      const aRouter = [];
       // 获取到全局配置中的 props
       const propsConfig = this.$website.menu.props;
       // 设置 props默认值 作用就是将字段设置成配置的
@@ -110,20 +109,20 @@ RouterPlugin.install = function (vue, option = {}) {
         const oMenu = aMenu[i];
         // 这一块的赋值 也就是取到返回的值
         let path = (() => {
-            if (first) {
-              // 将 '/index' 替换为 ''
-              return oMenu[propsDefault.path].replace('/index', '')
-            } else {
-              return oMenu[propsDefault.path]
-            }
-          })(),
+          if (first) {
+            // 将 '/index' 替换为 ''
+            return oMenu[propsDefault.path].replace('/index', '')
+          } else {
+            return oMenu[propsDefault.path]
+          }
+        })(),
           //特殊处理组件 执行完这个 component 也就是精确到具体的文件了  views文件夹下面就是具体的页面代码
           component = 'views' + oMenu.path,
           name = oMenu[propsDefault.label],
           icon = oMenu[propsDefault.icon],
           children = oMenu[propsDefault.children],
           meta = oMenu[propsDefault.meta] || {};
-          // meta中 keepalive 的处理
+        // meta中 keepalive 的处理
         meta = Object.assign(meta, (function () {
           if (option.keepAlive === true) {
             return {

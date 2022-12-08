@@ -21,8 +21,16 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
-  },
-]
+  }, {
+    path: '/dodecorate',
+    name: '装修设计',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate')
+  }
+  ]
 }, {
   path: '/logs',
   component: Layout,
@@ -103,7 +111,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
- 
+
   },
   {
     path: '/profile',
@@ -113,7 +121,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionagent/profile')
- 
+
   },
   {
     path: '/team',
@@ -123,7 +131,7 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionagent/team')
- 
+
   },
   {
     path: '/edit',
@@ -133,7 +141,8 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/commission/components/commissionproduct/edit')
- 
-  },
-]}
- ]
+
+  }
+  ]
+}
+]
