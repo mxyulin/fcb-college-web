@@ -49,7 +49,7 @@
 				<el-tag effect="plain" type="info" size="small" style="margin:0 5px;">{{ sub }}</el-tag>
 			</span>
 		</div>
-		<div style="width:100%; margin-top:10px;" >
+		<div style="width:100%; margin-top:10px;" v-if="!viewOnly">
 			<el-button type="danger" @click="doDelete" style="float:left;" size="small" plain><i class="el-icon-delete el-icon--right"></i>删除</el-button>
 			<el-button type="primary" @click="doImprot"  size="small" style="float:right" plain><i class="el-icon-upload el-icon--right"></i>上传</el-button>
 		</div>
@@ -67,7 +67,13 @@ export default {
 		indexId:{
 			type: String,
 			required: true,
+		},
+		viewOnly:{
+			type: Boolean,
+			default: false,
+			required: true
 		}
+		
 
 	},
 	methods: {

@@ -7,15 +7,14 @@
           <el-header style="text-align: center;">
             <el-row>
               <el-col :span="4">
-                <el-button type="text" @click="onBack" size="min" icon="el-icon-arrow-left"
-                  style="color:white;">重新上传</el-button>
+                <el-button type="danger" @click="onBack" size="small" icon="el-icon-arrow-left"
+                    plain>重新上传</el-button>
+                    
               </el-col>
               <el-col :span="16" style="font-size:18px;font-wigth:2;">
                 导入试题
               </el-col>
-              <el-col :span="4">
-                <!-- <el-button type="text" size="min" @click="onNext" style="color:white;">确认提交<i
-                    class="el-icon-arrow-right el-icon--right"></i></el-button> -->
+              <el-col :span="4"> 
               </el-col>
             </el-row>            
           </el-header>
@@ -38,16 +37,17 @@
               </el-col>
             </el-row>
             <el-scrollbar class="scroll-wrapper">
-              <el-table :data="questionPreviewList" :border="false" :show-header="false">
+              <el-table :data="questionPreviewList" :border="false" :show-header="false" v-if="(questionPreviewList.length > 0)">
                 <el-table-column label="">
                   <template slot-scope="scope"> 
-                    <question-view :question="scope.row" :indexId="(index+1)"
+                    <question-item-view :question="scope.row" :indexId="(index+1)"
                     @onReqImport="onReqImport"
                     @onReqRemove="onReqRemove"
-                    ></question-view> 
+                    ></question-item-view> 
                   </template>
                 </el-table-column>
               </el-table>
+              <el-empty description="没有更多试题" v-else></el-empty>
             </el-scrollbar>
           </el-main>
         </el-container>
@@ -59,13 +59,12 @@
 
 <script>
 import { getPreviewList, clearCache ,doImport } from "@/api/questions/questions";
-import { mapGetters } from "vuex";
-import questionView from "./question-view";
- 
+import { mapGetters } from "vuex"; 
+import questionItemView from "./question-item-view";
 
 export default {
   components: {
-    questionView
+    questionItemView
   },
   data() {
     return {
@@ -111,6 +110,11 @@ export default {
   },
   methods: {
     onBack() {
+      if(this.questionPreviewList.length < 1){
+        this.$emit("onChangeStep", 1);
+        return ;
+      }
+      
       this.$confirm('确定要放弃本次导入的数据吗？')
         .then(_ => {
           clearCache().then(res => {

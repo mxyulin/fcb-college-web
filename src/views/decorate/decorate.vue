@@ -249,7 +249,8 @@ export default {
       });
     },
     handleDecorate(id){
-
+      
+      this.$router.push({path: "/decorate/dodecorate"});
     }, 
     handleRelease(id){
         update({id:id,status:1}).then(() => {

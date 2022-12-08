@@ -42,6 +42,7 @@ export default {
 			this.dialogVisible = true;
 		},
 		handleClose(done) {
+			this.$emit("refreshChange");
 			this.dialogVisible = false;
 		}
 

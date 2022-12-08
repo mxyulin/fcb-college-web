@@ -5,7 +5,7 @@ export default {
   searchShow: true,
   searchMenuSpan: 6,
   border: true,
-  index: true,
+  index: false,
   viewBtn: true,
   selection: true,
   dialogClickModal: false,
@@ -32,61 +32,75 @@ export default {
       label: "父类id，指知识点",
       prop: "categoryId",
       type: "input",
+      hide: true,
     },
     {
-      label: "题目类型",
+      label: "类型",
       prop: "questionType",
       type: "input",
+      width: 70,//列宽度
+      minWidth: 'auto',//列最小宽度
     },
     {
-      label: "难易系数",
+      label: "难度",
       prop: "diffLevel",
       type: "input",
+      hide: true,
     },
     {
       label: "选项数",
       prop: "optionsCount",
       type: "input",
+      hide: true,
     },
     {
       label: "标签,多个标签用逗号分开",
       prop: "tags",
       type: "input",
+      hide: true,
     },
     {
       label: "题干",
       prop: "questionBody",
       type: "input",
+      minWidth: 'auto',//列最小宽度
     },
     {
       label: "选项json数组",
       prop: "options",
       type: "input",
+      hide: true,
     },
     {
       label: "正确答案json数组",
       prop: "rightAnswer",
       type: "input",
+      hide: true,
     },
     {
       label: "试题文本解析",
       prop: "resolveText",
       type: "input",
+      hide: true,
     },
     {
       label: "试题视频解析",
       prop: "resolveVideoUrl",
       type: "input",
+      hide: true,
     },
     {
       label: "使用次数",
       prop: "useCount",
       type: "input",
+      hide: true,
     },
     {
-      label: "状态,1:上架，0:下架",
-      prop: "status",
+      label: "状态",
+      prop: "state",
       type: "input",
+      width: 60,//列宽度
+      minWidth: 'auto',//列最小宽度
     },
     {
       label: "是否已删除",

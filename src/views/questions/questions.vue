@@ -1,19 +1,52 @@
 <template>
   <basic-container>
     <avue-crud :option="option" :table-loading="loading" :data="questiongList" :page.sync="page" :permission="permissionList"
-      :before-open="beforeOpen" v-model="form" ref="crud" @row-update="rowUpdate" @row-save="rowSave" @row-del="rowDel"
+       v-model="form" ref="crud"   
       @search-change="searchChange" @search-reset="searchReset" @selection-change="selectionChange"
       @current-change="currentChange" @size-change="sizeChange" @refresh-change="refreshChange" @on-load="onLoad">
       <template slot="menuLeft">
         <el-button type="primary" size="small" plain v-if="permission.questions_add" icon="el-icon-upload2"
           @click="handleImport">批量上传
         </el-button> 
-        <el-button type="danger" size="small" icon="el-icon-delete" plain v-if="permission.questions_delete"
-          @click="handleDelete">删 除
+         
+      </template>
+
+      <template slot-scope="{row}" slot="questionType">
+         {{row.diffLevel}} 
+      </template> 
+      <template slot-scope="{row}" slot="questionBody">
+        {{row.type}} {{row.profile}} {{row.options}}
+      </template>
+      <template slot-scope="{row}" slot="state">
+         {{row.state}}  
+      </template>
+
+      <template slot-scope="scope" slot="menu">
+        <el-button type="text"
+                   icon="el-icon-video-play"
+                   size="small"
+                   v-if="permission.questions_view"
+                   @click="handlePreview(scope.row)">预览
+        </el-button>
+        <el-button type="text"
+                   icon="el-icon-download"
+                   size="small"
+                   v-if="permission.questions_edit"
+                   @click.stop="handleExport(scope.row)">导出
+        </el-button>
+        <!--el-icon-check-->
+        <el-button type="text"
+                   icon="el-icon-close"
+                   size="small"
+                   v-if="permission.questions_delete"
+                   @click.stop="handleStatus(scope.row)">下架
         </el-button>
       </template>
+
     </avue-crud>  
-    <import-dialog ref="questionPanel"/>
+    <import-dialog ref="questionPanel" @refreshChange="refreshChange"/>
+    <preview-dialog ref="previewPanel"/>
+    
   </basic-container>
 </template>
 
@@ -22,10 +55,12 @@ import { getList, getDetail, add, update, remove } from "@/api/questions/questio
 import option from "@/const/questions/questions";
 import { mapGetters } from "vuex";
 import importDialog from "./components/import-dialog"; 
+import previewDialog from "./components/preview-dialog"; 
 
 export default {
   components: { 
-    importDialog 
+    importDialog,
+    previewDialog 
   },
   data() {
     return { 
@@ -47,9 +82,9 @@ export default {
     permissionList() {
       return {
         addBtn: false,
-        viewBtn: this.vaildData(this.permission.questions_view, false),
-        delBtn: this.vaildData(this.permission.questions_delete, false),
-        editBtn: this.vaildData(this.permission.questions_edit, false)
+        viewBtn: false,//this.vaildData(this.permission.questions_view, false),
+        delBtn: false,//this.vaildData(this.permission.questions_delete, false),
+        editBtn: false,//this.vaildData(this.permission.questions_edit, false)
       };
     },
     ids() {
@@ -65,80 +100,42 @@ export default {
   methods: {
     handleImport() {
       this.$refs.questionPanel.showImprtBox();
+    }, 
+    handlePreview(row) {
+      // let qs = this.questiongList[row.$index];
+      // debugger;
+      this.$refs.previewPanel.showQuestion(row);
+     },
+    handleExport(row) {
+      // update(row).then(() => {
+      //   this.onLoad(this.page);
+      //   this.$message({
+      //     type: "success",
+      //     message: "操作成功!"
+      //   });
+      //   done();
+      // }, error => {
+      //   loading();
+      //   console.log(error);
+      // });
     },
-    rowSave(row, done, loading) {
-      add(row).then(() => {
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-        done();
-      }, error => {
-        loading();
-        window.console.log(error);
-      });
-    },
-    rowUpdate(row, index, done, loading) {
-      update(row).then(() => {
-        this.onLoad(this.page);
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-        done();
-      }, error => {
-        loading();
-        console.log(error);
-      });
-    },
-    rowDel(row) {
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          return remove(row.id);
-        })
-        .then(() => {
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-        });
-    },
-    handleDelete() {
-      if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
-        return;
-      }
-      this.$confirm("确定将选择数据删除?", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          return remove(this.ids);
-        })
-        .then(() => {
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-          this.$refs.crud.toggleSelection();
-        });
-    },
-    beforeOpen(done, type) {
-      if (["edit", "view"].includes(type)) {
-        getDetail(this.form.id).then(res => {
-          this.form = res.data.data;
-        });
-      }
-      done();
-    },
+    handleStatus(row) {
+      // this.$confirm("确定将选择数据删除?", {
+      //   confirmButtonText: "确定",
+      //   cancelButtonText: "取消",
+      //   type: "warning"
+      // })
+      //   .then(() => {
+      //     return remove(row.id);
+      //   })
+      //   .then(() => {
+      //     this.onLoad(this.page);
+      //     this.$message({
+      //       type: "success",
+      //       message: "操作成功!"
+      //     });
+      //   });
+    }, 
     searchReset() {
       this.query = {};
       this.onLoad(this.page);
