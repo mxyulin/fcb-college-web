@@ -24,7 +24,6 @@
           </div>
         </div>
       </el-row>
-
       <el-row>
         <!-- 列表模块 -->
         <div id="decorate-index" v-cloak>
@@ -206,7 +205,6 @@
           </el-dialog>
         </div>
       </el-row>
-
       <el-row style="margin-bottom: 20px">
         <!-- 分页模块 -->
         <el-pagination
@@ -223,6 +221,7 @@
         </el-pagination>
       </el-row>
     </div>
+    <DoDecorate :dialogOpt="dialogOpt"/>
   </basic-container>
 </template>
 
@@ -237,6 +236,7 @@ import {
   remove,
   copy,
 } from "@/api/decorate/decorate";
+import DoDecorate from "@/views/decorate/dodecorate"
 
 export default {
   data() {
@@ -265,11 +265,19 @@ export default {
       option: option,
       // 表单列表
       templateList: [],
+      dialogOpt: {
+        dialogVisible: false,
+        decorateId: null,
+        formType: ""
+      }
     };
   },
   mounted() {
     this.init();
     this.onLoad(this.page);
+  },
+  components: {
+    DoDecorate
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -358,9 +366,10 @@ export default {
         that.form.platform = platform.split(",");
       });
     },
-    handleDecorate(id) {
-      // this.$router.$avueRouter.formatRoutes({ path: "/dodecorate", query: { decorateId: id, type: "shop" } })
-      this.$router.push({ path: "/dodecorate", query: { decorateId: id, type: "shop" } });
+    handleDecorate(decorateId) {
+      this.dialogOpt.formType = "shop";
+      this.dialogOpt.decorateId = decorateId;
+      this.dialogOpt.dialogVisible = true;
     },
     handleRelease(id) {
       update({ id: id, status: 1 }).then(() => {

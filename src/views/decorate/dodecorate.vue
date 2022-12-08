@@ -1,283 +1,290 @@
 <template>
-  <basic-container
-    id="decorateApp"
-    v-cloak
-    style="height: calc(100vh - 120px)"
-    class="laoding"
+  <el-dialog
+    :modal="false"
+    :fullscreen="true"
+    :visible.sync="dialogVisible"
+    :before-close="dialogBeforeClose"
   >
-    <el-heade height="40px">
-      <!-- 顶部按钮组 -->
-      <el-row :gutter="0" type="flex" justify="space-between" align="center">
-        <el-col :span="21">
-          <div class="title-msg">店铺装修</div>
-        </el-col>
-        <el-col :span="3">
-          <el-button type="primary" :size="option.size" plain>预览</el-button>
-          <el-button
-            type="primary"
-            :size="option.size"
-            @click="saveDecorateData"
-            >保存</el-button
-          >
-        </el-col>
-      </el-row>
-    </el-heade>
-    <el-container style="height: calc(100vh - 200px)">
-      <!-- 左边栏 -->
-      <el-aside
-        v-if="
-          isPageType == 'home' || isPageType == 'user' || fromtype == 'custom'
-        "
-        class="decorate-left"
-        width="265px"
-        style="text-align: center"
-      >
-        <ToolsBox
-          :fromtype="fromtype"
-          :isPageType="isPageType"
-          @showForm="showForm"
-          @selectTools="selectTools"
-        />
-      </el-aside>
-      <!-- App 装修区 -->
-      <el-main class="center-body" style="text-align: center">
-        <!-- 首页和个人中心 -->
-        <div
-          id="html2canvasWrap"
+    <div v-cloak class="laoding" style="height: calc(100vh - 90px)">
+      <el-heade height="40px">
+        <!-- 顶部按钮组 -->
+        <el-row :gutter="0" type="flex" justify="space-between" align="center">
+          <el-col :span="21">
+            <div class="title-msg">店铺装修</div>
+          </el-col>
+          <el-col :span="3">
+            <el-button type="primary" :size="option.size" plain>预览</el-button>
+            <el-button
+              type="primary"
+              :size="option.size"
+              @click="saveDecorateData"
+              >保存</el-button
+            >
+          </el-col>
+        </el-row>
+      </el-heade>
+      <el-container style="height: calc(100vh - 100px)">
+        <!-- 左边栏 -->
+        <el-aside
           v-if="
-            isPageType != 'tabbar' &&
-            isPageType != 'popup' &&
-            isPageType != 'float-button'
+            isPageType == 'home' || isPageType == 'user' || fromtype == 'custom'
           "
-          class="
-            item
-            decorate-center-container decorate-center-container-scrollbar
-          "
+          class="decorate-left"
+          width="265px"
+          style="text-align: center"
         >
-          <!-- 首页状态栏 -->
-          <div
-            v-if="isPageType == 'home'"
-            style="position: absolute; z-index: 100"
-          >
-            <img
-              src="https://demo.shopro.top//assets/addons/shopro/img/decorate/tabs-header.png"
-            />
-            <div v-if="fromtype == 'custom'" class="custom-name">
-              {{ customName }}
-            </div>
-          </div>
-          <!-- 个人中心状态栏 -->
-          <div
-            v-if="fromtype == 'custom'"
-            style="position: relative; z-index: 100"
-          >
-            <img
-              src="https://demo.shopro.top//assets/addons/shopro/img/decorate/tabs-header.png"
-            />
-            <div v-if="fromtype == 'custom'" class="custom-name">
-              {{ customName }}
-            </div>
-          </div>
-          <!-- 空画板 -->
-          <div
-            v-if="templateData && templateData.length == 0"
-            class="compotent-empty"
-          >
-            <img
-              src="https://demo.shopro.top//assets/addons/shopro/img/decorate/zujian.png"
-            />
-          </div>
-          <!-- App布局模块 -->
-          <AppLayout
+          <ToolsBox
             :fromtype="fromtype"
             :isPageType="isPageType"
-            :centerSelect="centerSelect"
-            :templateData="templateData"
             @showForm="showForm"
-            @centerDel="centerDel"
+            @selectTools="selectTools"
           />
-        </div>
-        <!-- 底部导航 -->
-        <div
-          v-if="isPageType == 'tabbar'"
-          class="item decorate-center-container"
-        >
+        </el-aside>
+        <!-- App 装修区 -->
+        <el-main class="center-body" style="text-align: center">
+          <!-- 首页和个人中心 -->
           <div
-            class="tabbar-body-item"
-            style="height: 60px; justify-content: center"
-            :style="{ background: templateData[0].content.bgcolor }"
+            id="html2canvasWrap"
+            v-if="
+              isPageType != 'tabbar' &&
+              isPageType != 'popup' &&
+              isPageType != 'float-button'
+            "
+            class="
+              item
+              decorate-center-container decorate-center-container-scrollbar
+            "
           >
+            <!-- 首页状态栏 -->
             <div
-              v-for="(item, index) in templateData[0].content.list"
-              :key="item.id"
-              :style="{
-                width: 100 / templateData[0].content.list.length + '%',
-              }"
-              @click.stop="tabbarSelected(index)"
+              v-if="isPageType == 'home'"
+              style="position: absolute; z-index: 100"
             >
-              <div
-                style="
-                  height: 25px;
-                  margin-bottom: 6px;
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                "
-                v-if="templateData[0].content.style != 3"
-              >
-                <img
-                  v-if="item.image && templateData[0].content.style != 3"
-                  style="width: 25px; height: 25px"
-                  :src="item.selected ? item.activeImage : item.image"
-                />
-              </div>
-              <div
-                v-if="
-                  templateData[0].content.style == 1 ||
-                  templateData[0].content.style == 3
-                "
-                :style="{
-                  color: item.selected
-                    ? templateData[0].content.activeColor
-                    : templateData[0].content.color,
-                }"
-              >
-                {{ item.name }}
+              <img
+                src="https://demo.shopro.top//assets/addons/shopro/img/decorate/tabs-header.png"
+              />
+              <div v-if="fromtype == 'custom'" class="custom-name">
+                {{ customName }}
               </div>
             </div>
+            <!-- 个人中心状态栏 -->
+            <div
+              v-if="fromtype == 'custom'"
+              style="position: relative; z-index: 100"
+            >
+              <img
+                src="https://demo.shopro.top//assets/addons/shopro/img/decorate/tabs-header.png"
+              />
+              <div v-if="fromtype == 'custom'" class="custom-name">
+                {{ customName }}
+              </div>
+            </div>
+            <!-- 空画板 -->
+            <div
+              v-if="templateData && templateData.length == 0"
+              class="compotent-empty"
+            >
+              <img
+                src="https://demo.shopro.top//assets/addons/shopro/img/decorate/zujian.png"
+              />
+            </div>
+            <!-- App布局模块 -->
+            <AppLayout
+              :fromtype="fromtype"
+              :isPageType="isPageType"
+              :centerSelect="centerSelect"
+              :templateData="templateData"
+              @showForm="showForm"
+              @centerDel="centerDel"
+              @reSortList="reSortList"
+            />
           </div>
-        </div>
-        <!-- 弹窗提醒 -->
-        <div
-          class="decorate-center-container"
-          id="popupContainer"
-          v-if="isPageType == 'popup'"
-        >
+          <!-- 底部导航 -->
           <div
-            v-for="(item, index) in templateData"
-            :key="item.id"
-            class="board-item tabbar-body"
-            style="height: 100%"
-            @click.stop="showForm(index)"
+            v-if="isPageType == 'tabbar'"
+            class="item decorate-center-container"
           >
             <div
               class="tabbar-body-item"
-              style="height: 100%; background: #999; overflow: hidden"
+              style="height: 60px; justify-content: center"
+              :style="{ background: templateData[0].content.bgcolor }"
             >
-              <div style="position: relative; width: 292px; height: 454px">
+              <div
+                v-for="(item, index) in templateData[0].content.list"
+                :key="item.id"
+                :style="{
+                  width: 100 / templateData[0].content.list.length + '%',
+                }"
+                @click.stop="tabbarSelected(index)"
+              >
                 <div
-                  v-for="(popup, idx) in item.content.list"
-                  :key="idx"
-                  @click="popupIndex = index"
+                  style="
+                    height: 25px;
+                    margin-bottom: 6px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                  "
+                  v-if="templateData[0].content.style != 3"
                 >
-                  <el-image
-                    style="
-                      width: 100%;
-                      height: 100%;
-                      background: #fff;
-                      position: absolute;
-                      border: 1px solid #e6e6e6;
-                      border-radius: 5px;
-                    "
-                    :style="{
-                      left: idx * 20 + 'px',
-                      top: idx * 20 + 'px',
-                    }"
-                    :src="popup.image"
-                    fit="contain"
-                  >
-                    <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline"></i>
-                    </div>
-                  </el-image>
+                  <img
+                    v-if="item.image && templateData[0].content.style != 3"
+                    style="width: 25px; height: 25px"
+                    :src="item.selected ? item.activeImage : item.image"
+                  />
+                </div>
+                <div
+                  v-if="
+                    templateData[0].content.style == 1 ||
+                    templateData[0].content.style == 3
+                  "
+                  :style="{
+                    color: item.selected
+                      ? templateData[0].content.activeColor
+                      : templateData[0].content.color,
+                  }"
+                >
+                  {{ item.name }}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- 悬浮按钮 -->
-        <div
-          class="decorate-center-container"
-          id="float-button-box"
-          style="
-            position: relative;
-            height: calc(100vh - 230px);
-            overflow: hidden;
-          "
-          v-if="isPageType == 'float-button'"
-        >
+          <!-- 弹窗提醒 -->
           <div
-            id="float-button"
-            style="display: flex; flex-direction: column; align-items: flex-end"
+            class="decorate-center-container"
+            id="popupContainer"
+            v-if="isPageType == 'popup'"
           >
             <div
+              v-for="(item, index) in templateData"
+              :key="item.id"
+              class="board-item tabbar-body"
+              style="height: 100%"
+              @click.stop="showForm(index)"
+            >
+              <div
+                class="tabbar-body-item"
+                style="height: 100%; background: #999; overflow: hidden"
+              >
+                <div style="position: relative; width: 292px; height: 454px">
+                  <div
+                    v-for="(popup, idx) in item.content.list"
+                    :key="idx"
+                    @click="popupIndex = index"
+                  >
+                    <el-image
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        background: #fff;
+                        position: absolute;
+                        border: 1px solid #e6e6e6;
+                        border-radius: 5px;
+                      "
+                      :style="{
+                        left: idx * 20 + 'px',
+                        top: idx * 20 + 'px',
+                      }"
+                      :src="popup.image"
+                      fit="contain"
+                    >
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline"></i>
+                      </div>
+                    </el-image>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 悬浮按钮 -->
+          <div
+            class="decorate-center-container"
+            id="float-button-box"
+            style="
+              position: relative;
+              height: calc(100vh - 230px);
+              overflow: hidden;
+            "
+            v-if="isPageType == 'float-button'"
+          >
+            <div
+              id="float-button"
               style="
                 display: flex;
                 flex-direction: column;
                 align-items: flex-end;
               "
             >
-              <el-image
-                v-for="(float, idx) in templateData[0].content.list"
-                :key="idx"
+              <div
                 style="
-                  width: 30px;
-                  height: 30px;
-                  border-radius: 15px;
-                  margin-bottom: 10px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
                 "
-                :src="float.btnimage"
-                fit="contain"
               >
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
-                </div>
-              </el-image>
-            </div>
-            <div>
-              <el-image
-                style="width: 30px; height: 30px; border-radius: 15px"
-                :src="templateData[0].content.image"
-                fit="contain"
-              >
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline"></i>
-                </div>
-              </el-image>
+                <el-image
+                  v-for="(float, idx) in templateData[0].content.list"
+                  :key="idx"
+                  style="
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 15px;
+                    margin-bottom: 10px;
+                  "
+                  :src="float.btnimage"
+                  fit="contain"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline"></i>
+                  </div>
+                </el-image>
+              </div>
+              <div>
+                <el-image
+                  style="width: 30px; height: 30px; border-radius: 15px"
+                  :src="templateData[0].content.image"
+                  fit="contain"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline"></i>
+                  </div>
+                </el-image>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 底部按钮组 -->
-        <div class="decorate-body-buttom" v-if="fromtype == 'shop'">
-          <el-radio-group
-            v-model="isPageType"
-            :size="option.size"
-            fill="primary"
-          >
-            <el-radio-button
-              :label="item.type"
-              v-for="(item, index) in pageTypeList"
-              :key="index"
-              >{{ item.name }}</el-radio-button
+          <!-- 底部按钮组 -->
+          <div class="decorate-body-buttom" v-if="fromtype == 'shop'">
+            <el-radio-group
+              v-model="isPageType"
+              :size="option.size"
+              fill="primary"
             >
-          </el-radio-group>
-        </div>
-      </el-main>
-      <!-- 右边栏 -->
-      <el-aside class="right-container" width="350px">
-        <ToolsForm
-          :fromtype="fromtype"
-          :centerSelect="centerSelect"
-          :templateForm="templateForm"
-          :popupIndex.sync="popupIndex"
-          :templateData.sync="templateData"
-          :updateForm="updateForm"
-          @showForm="showForm"
-          v-bind="$attrs"
-        />
-      </el-aside>
-    </el-container>
-  </basic-container>
+              <el-radio-button
+                :label="item.type"
+                v-for="(item, index) in pageTypeList"
+                :key="index"
+                >{{ item.name }}</el-radio-button
+              >
+            </el-radio-group>
+          </div>
+        </el-main>
+        <!-- 右边栏 -->
+        <el-aside class="right-container" width="350px">
+          <ToolsForm
+            :fromtype="fromtype"
+            :centerSelect="centerSelect"
+            :templateForm="templateForm"
+            :popupIndex.sync="popupIndex"
+            :templateData.sync="templateData"
+            :updateForm="updateForm"
+            @showForm="showForm"
+            v-bind="$attrs"
+          />
+        </el-aside>
+      </el-container>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -290,11 +297,6 @@ import ToolsBox from "@/views/decorate/components/toolsbox";
 import ToolsForm from "@/views/decorate/components/toolsform";
 
 export default {
-  components: {
-    ToolsBox,
-    AppLayout,
-    ToolsForm,
-  },
   data() {
     return {
       test: 0,
@@ -529,13 +531,34 @@ export default {
       // previewDialog: false,
     };
   },
+  components: {
+    ToolsBox,
+    AppLayout,
+    ToolsForm,
+  },
+  props: {
+    dialogOpt: {
+      type: Object,
+      required: true,
+      default: () => {
+        return {
+          dialogVisible: false,
+          decorateId: null,
+          formType: "",
+        };
+      },
+    },
+  },
   computed: {
     ...mapGetters(["permission"]),
     decorateId() {
-      return this.$route.query.decorateId ? this.$route.query.decorateId : null;
+      return this.dialogOpt.decorateId;
     },
     fromtype() {
-      return this.$route.query.type ? this.$route.query.type : "shop";
+      return this.dialogOpt.formType;
+    },
+    dialogVisible() {
+      return this.dialogOpt.dialogVisible;
     },
   },
   watch: {
@@ -572,6 +595,11 @@ export default {
         this.init();
       },
     },
+    dialogVisible(newVal) {
+      if (newVal) {
+        this.init();
+      }
+    }
   },
   methods: {
     // 装修数据初始化
@@ -718,7 +746,7 @@ export default {
         categoryTabsAtEnd =
           this.templateData[length - 1].type == "category-tabs" ? true : false;
       }
-      /* 新添加的组件会追加到已选中组件之后，除分类选项卡之外 */
+      /* 业务逻辑：分类选项卡始终置于APP装修模板末尾，且不可变动位置 */
       // 第一次添加APP组件
       if (this.centerSelect == null) {
         this.centerSelect = length;
@@ -738,9 +766,9 @@ export default {
           this.centerSelect -= 1;
         }
       }
-      /* 
-      *如果添加的是分类选项卡就都走这儿的逻辑覆盖前面的 centerSelect
-      */
+      /*
+       *如果添加的是分类选项卡就都走这儿的逻辑覆盖前面的 centerSelect
+       */
       if (type == "category-tabs") {
         // 如果末尾有分类选项卡则选中它后立刻 return
         if (categoryTabsAtEnd) {
@@ -759,8 +787,8 @@ export default {
         case "search":
           form = {
             name: "搜索",
-            content: "搜索文本",
             type: "search",
+            content: "搜索文本",
           };
           break;
         case "banner":
@@ -1041,6 +1069,16 @@ export default {
       }
       return form;
     },
+    // 禁止分类选项卡上移
+    reSortList() {
+      let length = this.templateData.length;
+      if (this.templateData[length - 2].type == "category-tabs") {
+        const [categoryTabs] = this.templateData.splice(length - 2, 1);
+        this.templateData.push(categoryTabs);
+        this.centerSelect = length - 2;
+        this.showForm(this.centerSelect);
+      }
+    },
     // 删除装修组件
     centerDel(idx) {
       const that = this;
@@ -1056,7 +1094,7 @@ export default {
         that.showForm(that.centerSelect - 1);
       }
     },
-    // 保存(提交)装修数据
+    // 保存装修数据
     saveDecorateData() {
       const {
         homeData,
@@ -1083,7 +1121,6 @@ export default {
           decorateId,
         };
       }
-
       submit(decorateData)
         .then((res) => {
           this.$message({
@@ -1098,9 +1135,11 @@ export default {
           });
         });
     },
-  },
-  mounted() {
-    this.init();
+    // 关闭装修 Dialog
+    dialogBeforeClose(done) {
+      this.dialogOpt.dialogVisible = false;
+      done();
+    },
   },
 };
 </script>

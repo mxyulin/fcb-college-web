@@ -1,12 +1,14 @@
 <template>
   <!-- 拖放模块 -->
   <draggable
-    :list="templateData"
-    :animation="500"
     tag="div"
     ghostClass="ghost"
-    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ``"
+    filter=".undraggable"
     class="center-draggable"
+    :animation="500"
+    :list="templateData"
+    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ``"
+    @update="reSortList"
   >
     <transition-group>
       <template v-if="templateData && templateData.length > 0">
@@ -1733,6 +1735,9 @@ export default {
     showForm(idx) {
       this.$emit("showForm", idx);
     },
+    reSortList() {
+      this.$emit("reSortList");
+    }
   },
 };
 </script>
