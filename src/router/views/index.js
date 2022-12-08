@@ -113,6 +113,17 @@ export default [{
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
 
   } 
+  // 以下为测试
+  , {
+    path: '/ceshi',
+    name: '测试',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/product/ceshi')
+
+  } 
   ]
 }
 ]

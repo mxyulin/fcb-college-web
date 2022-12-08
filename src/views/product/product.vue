@@ -2,6 +2,15 @@
   <basic-container>
     <!-- 查询模块 -->
     <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
+    <!--  -->
+    <el-dialog
+      append-to-body="ture"
+      :visible.sync="box"
+      width="80%"
+      center
+    >
+    <Form></Form>
+    </el-dialog>
     <!-- 列表菜单 -->
     <el-row :gutter="0" type="flex" justify="space-between">
       <el-col :span="2">
@@ -107,7 +116,7 @@
         </el-pagination>
       </el-col>
     </el-row>
-    <Form
+    <!-- <Form
       ref="form"
       :title="title"
       :box="box"
@@ -115,7 +124,7 @@
       :view="view"
       @beforeClose="beforeClose"
       @handleSubmit="handleSubmit"
-    />
+    /> -->
   </basic-container>
 </template>
 
@@ -143,7 +152,7 @@ export default {
   components: {
     Query,
     Table,
-    Form,
+    Form
   },
   data() {
     return {
@@ -199,43 +208,43 @@ export default {
     init() {},
 
     // 提交表单
-    handleSubmit(formName) {
-      let that = this;
-      that.$refs["form"].$refs[formName]
-        .validate()
-        .then(() => {
-          if (!that.form.id) {
-            add(that.form).then(() => {
-              that.box = false;
-              that.getGoodsData();
-              that.$message({
-                type: "success",
-                message: "操作成功！",
-              });
-            });
-          } else {
-            update(that.form).then(() => {
-              that.box = false;
-              that.getGoodsData();
-              that.$message({
-                type: "success",
-                message: "操作成功！",
-              });
-            });
-          }
-        })
-        .catch(() => {
-          that.$message({
-            type: "error",
-            message: "操作失败!",
-          });
-        });
-    },
+    // handleSubmit(formName) {
+    //   let that = this;
+    //   that.$refs["form"].$refs[formName]
+    //     .validate()
+    //     .then(() => {
+    //       if (!that.form.id) {
+    //         add(that.form).then(() => {
+    //           that.box = false;
+    //           that.getGoodsData();
+    //           that.$message({
+    //             type: "success",
+    //             message: "操作成功！",
+    //           });
+    //         });
+    //       } else {
+    //         update(that.form).then(() => {
+    //           that.box = false;
+    //           that.getGoodsData();
+    //           that.$message({
+    //             type: "success",
+    //             message: "操作成功！",
+    //           });
+    //         });
+    //       }
+    //     })
+    //     .catch(() => {
+    //       that.$message({
+    //         type: "error",
+    //         message: "操作失败!",
+    //       });
+    //     });
+    // },
 
     // 增加商品
     handleAdd() {
-      this.title = "新增商品";
-      this.form = {};
+      // this.title = "新增商品";
+      // this.form = {};
       this.box = true;
     },
     // 编辑商品
@@ -363,7 +372,7 @@ export default {
 
 <style lang="scss" scoped>
 // 修改element全局样式
-.steps-display .el-step__icon{
-    display: none;
+.steps-display .el-step__icon {
+  display: none;
 }
 </style>

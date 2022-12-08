@@ -1,13 +1,5 @@
 <template>
-  <!-- 表单模块（弹窗） -->
-  <el-dialog
-    :title="title"
-    :visible.sync="box"
-    width="60%"
-    :before-close="beforeClose"
-    append-to-body
-    class="body"
-  >
+    
     <!-- <el-form
         :disabled="view"
         :size="option.size"
@@ -103,8 +95,9 @@
           ></el-input>
         </el-form-item>
       </el-form> -->
-
+    
     <!-- 内容 -->
+
     <div id="product" v-cloak>
       <div class="preview-body">
         <el-steps class="steps-display" :active="stepActive" simple>
@@ -115,6 +108,7 @@
 
         <div class="good-detail-body">
           <el-form :rules="rules" label-width="110px" class="demo-product" ref="product">
+            
             <div v-if="stepActive == 1">
               <el-form-item label="商品形式：" :prop="type">
                 <div class="display-flex">
@@ -122,7 +116,7 @@
                     class="goods-type"
                     :style="{
                       border:
-                        product.type == 'normal'
+                        this.displaytype.type == 'normal'
                           ? '1px solid #7438D5'
                           : '1px solid #E6E6E6',
                     }"
@@ -134,8 +128,7 @@
                     />
                     <div
                       class="goods-type-selected"
-                      :style="{
-                        display: product.type == 'normal' ? 'block' : '',
+                      :style="{display: this.displaytype.type == 'normal' ? 'block' : '',
                       }"
                     >
                       <img
@@ -148,8 +141,7 @@
                     class="goods-type"
                     @click="changeGoodsType('virtual')"
                     :style="{
-                      border:
-                        product.type == 'virtual'
+                      border: this.displaytype.type == 'virtual'
                           ? '1px solid #7438D5'
                           : '1px solid #E6E6E6',
                     }"
@@ -161,7 +153,7 @@
                     <div
                       class="goods-type-selected"
                       :style="{
-                        display: product.type == 'virtual' ? 'block' : '',
+                        display: this.displaytype.type == 'virtual' ? 'block' : '',
                       }"
                     >
                       <img
@@ -245,13 +237,13 @@
                         v-model="product.categoryTab"
                       >
                         <el-tab-pane
-                          v-for="(tab, indexn) in categoryOptions"
+                          v-for="(tab, indexn) in this.categoryOptions"
                           :label="tab.name"
                           :name="tab.id"
                           :key="indexn"
                         >
+                            <!-- v-model="product.category_ids_all[categoryTab]" -->
                           <el-cascader-panel
-                            v-model="category_ids_all[categoryTab]"
                             :options="tab.children"
                             :props="{
                               multiple: true,
@@ -309,7 +301,7 @@
               </el-form-item>
 
               <el-form-item label="浏览人数：">
-                <el-input type="number" size="small"></el-input>
+                <el-input type="number" v-model="product.views" size="small"></el-input>
               </el-form-item>
 
               <div>
@@ -349,14 +341,14 @@
                   label="物流快递："
                   prop="express_ids"
                   v-if="
-                    product.dispatch_type == 1 ||
-                    product.dispatch_type == 12 ||
-                    product.dispatch_type == 123 ||
-                    product.dispatch_type == 13 ||
-                    product.dispatch_type == 132 ||
-                    product.dispatch_type == 321 ||
-                    product.dispatch_type == 21 ||
-                    product.dispatch_type == 31
+                    this.dispatch_type == 1 ||
+                    this.dispatch_type == 12 ||
+                    this.dispatch_type == 123 ||
+                    this.dispatch_type == 13 ||
+                    this.dispatch_type == 132 ||
+                    this.dispatch_type == 321 ||
+                    this.dispatch_type == 21 ||
+                    this.dispatch_type == 31
                   "
                 >
                   <div class="display-flex">
@@ -383,14 +375,14 @@
                   label="商家配送："
                   prop="store_ids"
                   v-if="
-                    product.dispatch_type == 3 ||
-                    product.dispatch_type == 23 ||
-                    product.dispatch_type == 123 ||
-                    product.dispatch_type == 13 ||
-                    product.dispatch_type == 132 ||
-                    product.dispatch_type == 321 ||
-                    product.dispatch_type == 32 ||
-                    product.dispatch_type == 31
+                    this.dispatch_type == 3 ||
+                    this.dispatch_type == 23 ||
+                    this.dispatch_type == 123 ||
+                    this.dispatch_type == 13 ||
+                    this.dispatch_type == 132 ||
+                    this.dispatch_type == 321 ||
+                    this.dispatch_type == 32 ||
+                    this.dispatch_type == 31
                   "
                 >
                   <div class="display-flex">
@@ -417,16 +409,16 @@
                   label="到店/自提："
                   prop="selfetch_ids"
                   v-if="
-                    product.dispatch_type == 23 ||
-                    product.dispatch_type == 2 ||
-                    product.dispatch_type == 12 ||
-                    product.dispatch_type == 123 ||
-                    product.dispatch_type == 132 ||
-                    product.dispatch_type == 321 ||
-                    product.dispatch_type == 21 ||
-                    product.dispatch_type == 213 ||
-                    product.dispatch_type == 231 ||
-                    product.dispatch_type == 32
+                    this.dispatch_type == 23 ||
+                    this.dispatch_type == 12 ||
+                    this.dispatch_type == 2 ||
+                    this.dispatch_type == 123 ||
+                    this.dispatch_type == 132 ||
+                    this.dispatch_type == 321 ||
+                    this.dispatch_type == 21 ||
+                    this.dispatch_type == 213 ||
+                    this.dispatch_type == 231 ||
+                    this.dispatch_type == 32
                   "
                 >
                   <div class="display-flex">
@@ -448,6 +440,7 @@
                     <div class="create-template">新建模板</div>
                   </div>
                 </el-form-item>
+              
               </div>
             </div>
 
@@ -580,402 +573,6 @@
                   </div>
                 </el-form-item>
               </div>
-              <!-- <div v-if="product.is_sku == 1">
-                  <div class="add-sku-box">
-                    <div class="" v-for="(s, k) in skuList">
-                      <div
-                        class="display-flex sku-item"
-                        style="justify-content: space-between"
-                      >
-                        <div class="display-flex">
-                          <div>规格名称：</div>
-                          <div style="width: 120px">
-                            <el-input
-                              type="input"
-                              v-model="skuList[k]['name']"
-                              maxlength="5"
-                              placeholder="请输入名称"
-                            >
-                            </el-input>
-                          </div>
-                        </div>
-
-                        <div
-                          style="width: 20px; height: 20px"
-                          @click="deleteMainSku(k)"
-                        >
-                          <img
-                            class="label-auto"
-                            src="/assets/addons/shopro/img/goods/close.png"
-                          />
-                        </div>
-                      </div>
-                      <div
-                        class="display-flex sku-item sku-item-level"
-                        style="background: #fff; padding: 10px 20px"
-                      >
-                        <div style="width: 60px">规格值：</div>
-                        <div class="display-flex sku-item sku-item-level2">
-                          <div
-                            class="sku-children"
-                            v-for="(sc, c) in s.children"
-                          >
-                            <el-input
-                              type="input"
-                              v-model="skuList[k]['children'][c]['name']"
-                              size="small"
-                              placeholder="请输入规格值"
-                              maxlength="22"
-                            >
-                            </el-input>
-                            <div
-                              class="display-flex sku-children-del"
-                              @click="deleteChildrenSku(k, c)"
-                            >
-                              <img
-                                class="label-auto"
-                                src="/assets/addons/shopro/img/goods/close.png"
-                              />
-                            </div>
-                          </div>
-                          <span
-                            style="color: #7536d0; cursor: pointer"
-                            @click="addChildrenSku(k)"
-                            >添加</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <div class="display-flex sku-item">
-                      <div
-                        class="btn-common add-level1-sku"
-                        @click="addMainSku"
-                      >
-                        <i class="el-icon-plus"></i>
-                        <span>添加规格</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="table-box"
-                    v-show="skuPrice.length && skuList.length"
-                  >
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <template v-for="(item, i) in skuList" :key="i">
-                            <th v-if="item.children.length">
-                              {{ item.name }}
-                            </th>
-                          </template>
-                          <th>图片</th>
-                          <th>
-                            <div class="display-flex">
-                              <span>价格(元)</span>
-                              <el-popover
-                                placement="top"
-                                width="160"
-                                v-model="allEditPopover.price"
-                              >
-                                <el-input
-                                  v-enter-number
-                                  v-model="allEditDatas"
-                                  placeholder="请输入内容"
-                                  size="small"
-                                >
-                                </el-input>
-                                <div style="text-align: right; margin: 0">
-                                  <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="allEditData('price', 'cancel')"
-                                    >取消</el-button
-                                  >
-                                  <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="allEditData('price', 'define')"
-                                    >确定</el-button
-                                  >
-                                </div>
-                                <div slot="reference">
-                                  <img
-                                    class="all-edit-img"
-                                    src="/assets/addons/shopro/img/goods/batch.png"
-                                  />
-                                </div>
-                              </el-popover>
-                            </div>
-                          </th>
-                          <th>
-                            <div class="display-flex">
-                              <span>库存(个)</span>
-                              <el-popover
-                                placement="top"
-                                width="160"
-                                v-model="allEditPopover.stock"
-                              >
-                                <el-input
-                                  v-positive-integer
-                                  v-model="allEditDatas"
-                                  placeholder="请输入内容"
-                                  size="small"
-                                >
-                                </el-input>
-                                <div style="text-align: right; margin: 0">
-                                  <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="allEditData('stock', 'cancel')"
-                                    >取消</el-button
-                                  >
-                                  <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="allEditData('stock', 'define')"
-                                    >确定</el-button
-                                  >
-                                </div>
-                                <div slot="reference">
-                                  <img
-                                    class="all-edit-img"
-                                    src="/assets/addons/shopro/img/goods/batch.png"
-                                  />
-                                </div>
-                              </el-popover>
-                            </div>
-                          </th>
-                          <th>
-                            <div class="display-flex">
-                              <span>库存预警(个)</span>
-                              <el-popover
-                                placement="top"
-                                width="200"
-                                v-model="allEditPopover.stock_warning"
-                              >
-                                <div class="table-stock-warning-switch">
-                                  <el-switch
-                                    v-model="allstock_warning_switch"
-                                    active-color="#7438D5"
-                                    inactive-color="#eee"
-                                  ></el-switch>
-                                  <span
-                                    v-if="!allstock_warning_switch"
-                                    class="stock-warning-switch-tip table-stock-warning-switch-tip"
-                                    >使用默认库存预警</span
-                                  >
-                                </div>
-                                <el-input
-                                  v-positive-integer
-                                  v-if="allstock_warning_switch"
-                                  v-model="allEditDatas"
-                                  placeholder="请输入内容"
-                                  size="small"
-                                >
-                                </el-input>
-                                <div style="text-align: right; margin: 0">
-                                  <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="
-                                      allEditData('stock_warning', 'cancel')
-                                    "
-                                    >取消
-                                  </el-button>
-                                  <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="
-                                      allEditData(
-                                        'stock_warning',
-                                        'define',
-                                        'stock_warning_switch'
-                                      )
-                                    "
-                                  >
-                                    确定</el-button
-                                  >
-                                </div>
-                                <div slot="reference">
-                                  <img
-                                    class="all-edit-img"
-                                    src="/assets/addons/shopro/img/goods/batch.png"
-                                  />
-                                </div>
-                              </el-popover>
-                            </div>
-                          </th>
-                          <th>
-                            <div class="display-flex">
-                              <span>重量</span>
-                              <el-popover
-                                placement="top"
-                                width="160"
-                                v-model="allEditPopover.weight"
-                              >
-                                <el-input
-                                  v-model="allEditDatas"
-                                  placeholder="请输入内容"
-                                  size="small"
-                                >
-                                </el-input>
-                                <div style="text-align: right; margin: 0">
-                                  <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="allEditData('weight', 'cancel')"
-                                    >取消</el-button
-                                  >
-                                  <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="allEditData('weight', 'define')"
-                                    >确定</el-button
-                                  >
-                                </div>
-                                <div slot="reference">
-                                  <img
-                                    class="all-edit-img"
-                                    src="/assets/addons/shopro/img/goods/batch.png"
-                                  />
-                                </div>
-                              </el-popover>
-                            </div>
-                          </th>
-                          <th>
-                            <div class="display-flex">
-                              <span>编码</span>
-                              <el-popover
-                                placement="top"
-                                width="160"
-                                v-model="allEditPopover.sn"
-                              >
-                                <el-input
-                                  v-model="allEditDatas"
-                                  placeholder="请输入内容"
-                                  size="small"
-                                >
-                                </el-input>
-                                <div style="text-align: right; margin: 0">
-                                  <el-button
-                                    size="mini"
-                                    type="text"
-                                    @click="allEditData('sn', 'cancel')"
-                                    >取消</el-button
-                                  >
-                                  <el-button
-                                    type="primary"
-                                    size="mini"
-                                    @click="allEditData('sn', 'define')"
-                                    >确定</el-button
-                                  >
-                                </div>
-                                <div slot="reference">
-                                  <img
-                                    class="all-edit-img"
-                                    src="/assets/addons/shopro/img/goods/batch.png"
-                                  />
-                                </div>
-                              </el-popover>
-                            </div>
-                          </th>
-                          <th>当前状态</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(item, i) in skuPrice" :key="i">
-                          <td v-for="(v, j) in item.goods_sku_text" :key="j">
-                            <span class="th-center">{{ v }}</span>
-                          </td>
-                          <td>
-                            <div class="display-flex table-upload-img">
-                              <div class="sku-img" v-if="item.image">
-                                <img
-                                  :src="Fast.api.cdnurl(item.image)"
-                                  class="label-auto"
-                                />
-                                <i
-                                  class="el-icon-close"
-                                  @click="delImg('sku', i)"
-                                ></i>
-                              </div>
-                              <div v-else @click="addImg('sku', i, false)">
-                                <i
-                                  class="el-icon-plus"
-                                  style="font-size: 18px"
-                                ></i>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <el-input
-                              v-enter-number
-                              class="table-input"
-                              v-model="item.price"
-                            >
-                            </el-input>
-                          </td>
-                          <td>
-                            <el-input
-                              v-positive-integer
-                              class="table-input"
-                              type="number"
-                              min="0"
-                              v-model="item.stock"
-                            >
-                            </el-input>
-                          </td>
-                          <td>
-                            <div class="display-flex">
-                              <div class="table-stock-warning-switch">
-                                <el-switch
-                                  v-model="item.stock_warning_switch"
-                                  @change="changeStockWarningSwitch(1, i)"
-                                  active-color="#7438D5"
-                                  inactive-color="#eee"
-                                ></el-switch>
-                                <span
-                                  v-if="!item.stock_warning_switch"
-                                  class="stock-warning-switch-tip table-stock-warning-switch-tip"
-                                  >使用默认库存预警</span
-                                >
-                              </div>
-                              <el-input
-                                v-positive-integer
-                                type="number"
-                                min="0"
-                                class="table-input"
-                                v-if="item.stock_warning_switch"
-                                v-model="item.stock_warning"
-                              >
-                              </el-input>
-                            </div>
-                          </td>
-                          <td>
-                            <el-input
-                              class="table-input"
-                              v-model="item.weight"
-                            ></el-input>
-                          </td>
-                          <td>
-                            <el-input
-                              class="table-input"
-                              v-model="item.sn"
-                            ></el-input>
-                          </td>
-                          <td>
-                            <span
-                              class="sku-status th-center"
-                              @click="editStatus(i)"
-                            >
-                              {{ item.status == "up" ? "上架" : "下架" }}
-                            </span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-              </div> -->
             </div>
 
             <div v-if="stepActive == 3">
@@ -1010,7 +607,7 @@
                       <div class="goods-detail-move">移动</div>
                     </div>
                     <draggable
-                      :list="product.params_arr"
+                      :list="this.params_arr"
                       :options="{ animation: 500 }"
                       :animation="500"
                       tag="div"
@@ -1019,7 +616,7 @@
                     >
                       <div
                         class="display-flex goods-detail-item"
-                        v-for="(it, index) in product.params_arr"
+                        v-for="(it, index) in this.params_arr"
                         :key="index"
                       >
                         <div class="goods-detail-name">
@@ -1063,14 +660,14 @@
                 </div>
               </el-form-item>
             </div>
-            <form
+
+            <div v-if="stepActive == 3" 
               id="add-form"
               class="form-horizontal"
               role="form"
               data-toggle="validator"
               method="POST"
               action=""
-              v-show="stepActive == 3"
             >
               <div
                 class="display-flex"
@@ -1087,7 +684,6 @@
                   "
                   >图文详情 :</label
                 >
-                <!-- 富文本 -->
                 <div style="flex: 1">
                   <textarea
                     id="c-content"
@@ -1095,10 +691,11 @@
                     rows="5"
                     name="row[content]"
                     cols="50"
-                  ></textarea>
+                  >富文本</textarea>
                 </div>
               </div>
-            </form>
+            </div>
+          
           </el-form>
         </div>
       </div>
@@ -1106,26 +703,23 @@
         <div class="back-btn" v-if="stepActive > 1" @click="gonextback">
           上一步
         </div>
-        <div
+        <div v-if="stepActive < 3" @click="gotoback"
           class="btn-common sub-btn shopro-screen-button"
-          v-if="stepActive < 3"
-          @click="gotoback('product')"
         >
           下一步
         </div>
-        <div class="btn-common sub-btn shopro-screen-button" @click="saveProduct" v-if="stepActive == 3">确定</div>
+        <div class="btn-common sub-btn shopro-screen-button" v-if="stepActive == 3" @click="saveProduct" >确定</div>
       </span>
     </div>
-  </el-dialog>
 </template>
 
 <script>
 // 树表
 import { getList } from "@/api/product/productcategory";
+// 表单提交
 import { submit } from "@/api/product/product";
-import { mapGetters } from "vuex";
+
 import option from "@/const/product/product";
-import { validatenull } from "@/util/validate";
 import draggable from "vuedraggable";
 
 
@@ -1137,95 +731,13 @@ export default {
    * 父组件传来的数据
    * 父组件绑定的事件
    */
-  name: "Form",
-  props: ["title", "box", "form", "view"],
-  el: "#product",
+  // el: "#goodsSelect",
   data() {
     return {
       // 表单配置
       option: option,
-      // 表单验证规则
-      // rules: {
-      //   weigh: 2,
-      //   type: [
-      //     {
-      //       required: true,
-      //       message: "请至少选择一个商品分类",
-      //       trigger: "change",
-      //     },
-      //   ],
-      //   title: [
-      //     { required: true, message: "请输入商品标题", trigger: "blur" },
-      //     {
-      //       min: 1,
-      //       max: 100,
-      //       message: "长度在 1 到 100 个字符",
-      //       trigger: "blur",
-      //     },
-      //   ],
-      //   subtitle: [
-      //     { required: true, message: "请输入商品副标题", trigger: "blur" },
-      //     {
-      //       min: 1,
-      //       max: 100,
-      //       message: "长度在 1 到 100 个字符",
-      //       trigger: "blur",
-      //     },
-      //   ],
-      //   status: [
-      //     {
-      //       type: "number",
-      //       required: true,
-      //       message: "请至少选择一个商品状态",
-      //       trigger: "change",
-      //     },
-      //   ],
-      //   price: [{ required: true, message: "请输入商品价格", trigger: "blur" }],
-      //   originalPrice: [
-      //     { required: true, message: "请输入商品原价", trigger: "blur" },
-      //   ],
-      //   isSku: [
-      //     {
-      //       type: "boolean",
-      //       required: true,
-      //       message: "请至少选择一个选项",
-      //       trigger: "change",
-      //     },
-      //   ],
-      //   showSales: [
-      //     {
-      //       type: "number",
-      //       required: true,
-      //       message: "请输入显示销量",
-      //       trigger: "blur",
-      //     },
-      //   ],
-      //   dispatchType: [
-      //     {
-      //       required: true,
-      //       message: "请至少选择一个发货方式",
-      //       trigger: "change",
-      //     },
-      //   ],
-      // },
-      // 所有商品分类
-      goodsType: [
-        { label: "实体商品", value: "normal" },
-        { label: "虚拟商品", value: "virtual" },
-      ],
-      // 所有商品状态
-      goodsStatus: [
-        { label: "上架", value: 1 },
-        { label: "下架", value: 2 },
-        { label: "隐藏", value: 0 },
-      ],
-      // 所有发货方式
-      dispatchTypes: [
-        { label: "物流快递", value: "express" },
-        { label: "用户自提", value: "selfetch" },
-        { label: "商家配送", value: "store" },
-        { label: "自动发货", value: "autosend" },
-      ],
+      
+      
       // 请求表单
       product: {
         // 商品形式
@@ -1239,34 +751,59 @@ export default {
         // 排序
         weigh: 1,
         // // 商品分类 暂时不管
-        // visible:1,
+        visible:1,
         // categoryTab:'',
-
-
-        params_arr: [{ title: "", content: "" }],
-        service_ids: "",
-        dispatch_ids_arr: [],
-        dispatch_ids: "",
-        dispatch_type_arr: [],
-        dispatch_type: "",
-        express_ids: "",
-        store_ids: "",
-        selfetch_ids: "",
-        is_sku: "",
-        price: "",
-        original_price: "",
-        stock: "",
-        stock_warning_switch: "",
-        stock_warning: "",
-        weight: "",
-        sn: "",
+        // category_ids_all[categoryTab]
+        
+        // 虚增销量
+        show_sales:1,
+        // 浏览人数
+        views:1,
+        // // 配送方式
+        // dispatch_type_arr: 1,
+        // 物流快递
+        express_ids:1,
+        // 商家配送
+        store_ids:1,
+        // 到店/自提
+        selfetch_ids:1,
+        // 商品规格
+        is_sku:1,
+        // 售卖价格
+        price:1,
+        // 划线价格
+        original_price:1,
+        // 商品库存
+        stock:'',
+        // 开启库存预警
+        stock_warning_switch:'',
+        // 库存预警
+        stock_warning:'',
+        // 商品重量
+        weight:'',
+        // 商品编号
+        sn:'',
+        // 服务标签
+        service_ids_arr:'',
+        // 参数详情
+        title:'',
       },
+
+      dispatch_type: "",
+      params_arr: [{ title: "", content: "" }],
+
+      dispatch_type_arr: [],
+      // 报错
+      stepActive:1,
+      displaytype:{
+        type:'',
+      },
+
 
       // 原页面
       categoryOptions: [],
-      category_ids_all: {},
-      categoryTab: null,
-      stepActive: 1,
+      category_ids_all: [],
+      categoryTab: 1,
       visiblesb: false,
 
       dispatchOptions: {
@@ -1308,6 +845,7 @@ export default {
         { value: "aj", id: "5", name: "正品保证" },
       ],
 
+      // 表单验证
       rules: {
         type: "normal",
         weigh: 2,
@@ -1467,14 +1005,6 @@ export default {
     this.getcommoditydata();
   },
   computed: {
-    ...mapGetters(["permission"]),
-    ids() {
-      let ids = [];
-      this.selectionList.forEach((ele) => {
-        ids.push(ele.id);
-      });
-      return ids.join(",");
-    },
   },
 
   methods: {
@@ -1513,59 +1043,56 @@ export default {
       // that.product.category_ids = that.product.category_ids.join(",");
     },
     dispatchTypeChange(val) {
-      this.product.dispatch_type = val.join("");
-      console.log("va2", this.product.dispatch_type);
+      this.dispatch_type = val.join("");
+      console.log("va1", val);
     },
     getDispatchTemplateData(vala) {
+      console.log('va2',vala)
       // this.goodsDetailida
-      // console.log('va2',vala)
     },
-    serviceChange(val) {
-      this.product.service_ids = val.join(",");
-    },
+    // serviceChange(val) {
+    //   this.product.service_ids = val.join(",");
+    // },
+
     addParams() {
-      this.product.params_arr.push({
+      this.params_arr.push({
         title: "",
         content: "",
       });
     },
     delParams(index) {
-      this.product.params_arr.splice(index, 1);
+      this.params_arr.splice(index, 1);
     },
+
     changeGoodsType(type) {
-      this.product.type = type;
-      this.product.dispatch_ids_arr = [];
-      this.product.dispatch_ids = "";
-      this.product.dispatch_type_arr = [];
-      this.product.dispatch_type = "";
-      this.timeData.dispatch_type_arr = [];
-      this.product.express_ids = "";
-      this.product.store_ids = "";
-      this.product.selfetch_ids = "";
+      this.displaytype.type = type;
+      console.log('type',this.displaytype.type)
+      // this.product.dispatch_ids_arr = [];
+      // this.product.dispatch_ids = "";
+      // this.product.dispatch_type = "";
+      // this.product.dispatch_type_arr = [];
+      // this.timeData.dispatch_type_arr = [];
+      // this.product.express_ids = "";
+      // this.product.store_ids = "";
+      // this.product.selfetch_ids = "";
     },
     // 上下翻页
     gonextback() {
       this.stepActive--;
     },
-    gotoback(formName) {
+    gotoback() {
       this.stepActive++;
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     this.stepActive++;
-      //   } else {
-      //     return false;
-      //   }
-      // });
     },
 
     // 发请求
     saveProduct(){
-      console.log('res')
-      submit(this.product
-      ).then((res) => {
-        console.log(res)
-      });
+      console.log('res',this.product)
+      // submit(this.product
+      // ).then((res) => {
+      //   console.log(res)
+      // });
     },
+
     getcommoditydata(page, params = {}) {
       let that = this;
       that.loading = true;
@@ -1578,6 +1105,7 @@ export default {
         // console.log("树的数据：", that.categoryOptions);
       });
     },
+
   },
 };
 </script>
