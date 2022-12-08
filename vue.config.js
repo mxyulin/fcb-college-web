@@ -30,7 +30,7 @@ module.exports = {
         target: 'http://127.0.0.1:8090',
         // target: 'http://116.204.112.191:8090',
         //远程演示服务地址,可用于直接启动项目
-        //target: 'https://fcb.fcbx.vip/api',
+        // target: 'https://fcb.fcbx.vip/api',
         ws: true,
         pathRewrite: {
           '^/api': '/'

@@ -105,15 +105,16 @@
       </el-form> -->
 
     <!-- 内容 -->
-    <div id="goodsDetail" v-cloak>
+    <div id="product" v-cloak>
       <div class="preview-body">
         <el-steps class="steps-display" :active="stepActive" simple>
           <el-step title="1、基础信息"></el-step>
           <el-step title="2、规格/价格"></el-step>
           <el-step title="3、商品详情"></el-step>
         </el-steps>
+
         <div class="good-detail-body">
-          <el-form :rules="rules" label-width="110px" class="demo-goodsDetail">
+          <el-form :rules="rules" label-width="110px" class="demo-product" ref="product">
             <div v-if="stepActive == 1">
               <el-form-item label="商品形式：" :prop="type">
                 <div class="display-flex">
@@ -121,7 +122,7 @@
                     class="goods-type"
                     :style="{
                       border:
-                        goodsDetail.type == 'normal'
+                        product.type == 'normal'
                           ? '1px solid #7438D5'
                           : '1px solid #E6E6E6',
                     }"
@@ -134,7 +135,7 @@
                     <div
                       class="goods-type-selected"
                       :style="{
-                        display: goodsDetail.type == 'normal' ? 'block' : '',
+                        display: product.type == 'normal' ? 'block' : '',
                       }"
                     >
                       <img
@@ -148,7 +149,7 @@
                     @click="changeGoodsType('virtual')"
                     :style="{
                       border:
-                        goodsDetail.type == 'virtual'
+                        product.type == 'virtual'
                           ? '1px solid #7438D5'
                           : '1px solid #E6E6E6',
                     }"
@@ -160,7 +161,7 @@
                     <div
                       class="goods-type-selected"
                       :style="{
-                        display: goodsDetail.type == 'virtual' ? 'block' : '',
+                        display: product.type == 'virtual' ? 'block' : '',
                       }"
                     >
                       <img
@@ -174,7 +175,7 @@
               <el-form-item label="商品标题：" prop="title">
                 <el-input
                   type="input"
-                  v-model="goodsDetail.title"
+                  v-model="product.title"
                   size="small"
                 ></el-input>
               </el-form-item>
@@ -182,13 +183,13 @@
               <el-form-item label="副标题：" prop="subtitle">
                 <el-input
                   type="input"
-                  v-model="goodsDetail.subtitle"
+                  v-model="product.subtitle"
                   size="small"
                 ></el-input>
               </el-form-item>
 
               <el-form-item label="商品状态：" prop="status">
-                <el-radio-group v-model="goodsDetail.status">
+                <el-radio-group v-model="product.status">
                   <el-radio label="up">上架</el-radio>
                   <el-radio label="hidden">隐藏</el-radio>
                   <el-radio label="down">下架</el-radio>
@@ -199,7 +200,7 @@
                 <div class="display-flex">
                   <el-input
                     type="number"
-                    v-model="goodsDetail.weigh"
+                    v-model="product.weigh"
                     style="width: 300px"
                     size="small"
                   >
@@ -235,13 +236,13 @@
                   <el-popover
                     placement="bottom-start"
                     width="600"
-                    v-model="visible"
+                    v-model="product.visible"
                     class="display-flex-c"
                   >
                     <div>
                       <el-tabs
                         v-if="categoryOptions && categoryOptions.length > 0"
-                        v-model="categoryTab"
+                        v-model="product.categoryTab"
                       >
                         <el-tab-pane
                           v-for="(tab, indexn) in categoryOptions"
@@ -276,15 +277,6 @@
 
                     <div slot="reference">
                       <div class="display-flex commodity-classification">
-                        <!-- <div style="margin-right: 5px;
-                                            bottom: 5px;
-                                            height: 28px;
-                                            line-height: 28px;
-                                            padding: 0 5px;
-                                            border: 1px solid #e6e6e6;
-                                            border-radius: 4px;background: #f9f9f9;" >
-                                                <i class="el-icon-close"></i>
-                                            </div> -->
                         <el-input
                           class="category-inputs"
                           size="mini"
@@ -313,7 +305,7 @@
               </el-form-item>
 
               <el-form-item label="虚增销量：">
-                <el-input type="number" size="small"></el-input>
+                <el-input type="number" v-model="product.show_sales" size="small"></el-input>
               </el-form-item>
 
               <el-form-item label="浏览人数：">
@@ -357,20 +349,20 @@
                   label="物流快递："
                   prop="express_ids"
                   v-if="
-                    goodsDetail.dispatch_type == 1 ||
-                    goodsDetail.dispatch_type == 12 ||
-                    goodsDetail.dispatch_type == 123 ||
-                    goodsDetail.dispatch_type == 13 ||
-                    goodsDetail.dispatch_type == 132 ||
-                    goodsDetail.dispatch_type == 321 ||
-                    goodsDetail.dispatch_type == 21 ||
-                    goodsDetail.dispatch_type == 31
+                    product.dispatch_type == 1 ||
+                    product.dispatch_type == 12 ||
+                    product.dispatch_type == 123 ||
+                    product.dispatch_type == 13 ||
+                    product.dispatch_type == 132 ||
+                    product.dispatch_type == 321 ||
+                    product.dispatch_type == 21 ||
+                    product.dispatch_type == 31
                   "
                 >
                   <div class="display-flex">
                     <div class="flex-1">
                       <el-select
-                        v-model="goodsDetail.express_ids"
+                        v-model="product.express_ids"
                         placeholder="请选择"
                         size="small"
                       >
@@ -391,20 +383,20 @@
                   label="商家配送："
                   prop="store_ids"
                   v-if="
-                    goodsDetail.dispatch_type == 3 ||
-                    goodsDetail.dispatch_type == 23 ||
-                    goodsDetail.dispatch_type == 123 ||
-                    goodsDetail.dispatch_type == 13 ||
-                    goodsDetail.dispatch_type == 132 ||
-                    goodsDetail.dispatch_type == 321 ||
-                    goodsDetail.dispatch_type == 32 ||
-                    goodsDetail.dispatch_type == 31
+                    product.dispatch_type == 3 ||
+                    product.dispatch_type == 23 ||
+                    product.dispatch_type == 123 ||
+                    product.dispatch_type == 13 ||
+                    product.dispatch_type == 132 ||
+                    product.dispatch_type == 321 ||
+                    product.dispatch_type == 32 ||
+                    product.dispatch_type == 31
                   "
                 >
                   <div class="display-flex">
                     <div class="flex-1">
                       <el-select
-                        v-model="goodsDetail.store_ids"
+                        v-model="product.store_ids"
                         placeholder="请选择"
                         size="small"
                       >
@@ -425,22 +417,22 @@
                   label="到店/自提："
                   prop="selfetch_ids"
                   v-if="
-                    goodsDetail.dispatch_type == 23 ||
-                    goodsDetail.dispatch_type == 2 ||
-                    goodsDetail.dispatch_type == 12 ||
-                    goodsDetail.dispatch_type == 123 ||
-                    goodsDetail.dispatch_type == 132 ||
-                    goodsDetail.dispatch_type == 321 ||
-                    goodsDetail.dispatch_type == 21 ||
-                    goodsDetail.dispatch_type == 213 ||
-                    goodsDetail.dispatch_type == 231 ||
-                    goodsDetail.dispatch_type == 32
+                    product.dispatch_type == 23 ||
+                    product.dispatch_type == 2 ||
+                    product.dispatch_type == 12 ||
+                    product.dispatch_type == 123 ||
+                    product.dispatch_type == 132 ||
+                    product.dispatch_type == 321 ||
+                    product.dispatch_type == 21 ||
+                    product.dispatch_type == 213 ||
+                    product.dispatch_type == 231 ||
+                    product.dispatch_type == 32
                   "
                 >
                   <div class="display-flex">
                     <div class="flex-1">
                       <el-select
-                        v-model="goodsDetail.selfetch_ids"
+                        v-model="product.selfetch_ids"
                         placeholder="请选择"
                         size="small"
                       >
@@ -462,7 +454,7 @@
             <div v-if="stepActive == 2">
               <el-form-item label="商品规格：" prop="is_sku">
                 <div class="display-flex">
-                  <el-radio-group v-model="goodsDetail.is_sku">
+                  <el-radio-group v-model="product.is_sku">
                     <el-radio :label="0">单规格</el-radio>
                     <el-radio :label="1">多规格</el-radio>
                   </el-radio-group>
@@ -474,13 +466,13 @@
               <el-form-item
                 label="售卖价格："
                 prop="price"
-                v-if="goodsDetail.is_sku == 1"
+                v-if="product.is_sku == 1"
               >
                 <div class="display-flex">
                   <el-input
                     v-enter-number
                     type="text"
-                    v-model="goodsDetail.price"
+                    v-model="product.price"
                     style="width: 300px"
                     size="small"
                   >
@@ -491,13 +483,13 @@
               <el-form-item
                 label="售卖价格："
                 prop="price"
-                v-if="goodsDetail.is_sku == 0"
+                v-if="product.is_sku == 0"
               >
                 <div class="display-flex">
                   <el-input
                     v-enter-number
                     type="number"
-                    v-model="goodsDetail.price"
+                    v-model="product.price"
                     style="width: 300px"
                     size="small"
                   >
@@ -510,7 +502,7 @@
                   <el-input
                     v-enter-number
                     type="number"
-                    v-model="goodsDetail.original_price"
+                    v-model="product.original_price"
                     style="width: 300px"
                     size="small"
                   >
@@ -521,14 +513,14 @@
                   </div>
                 </div>
               </el-form-item>
-              <div v-if="goodsDetail.is_sku == 0">
+              <div v-if="product.is_sku == 0">
                 <el-form-item label="商品库存：" prop="stock">
                   <div class="display-flex">
                     <el-input
                       v-positive-integer
                       type="number"
                       min="0"
-                      v-model="goodsDetail.stock"
+                      v-model="product.stock"
                       style="width: 300px"
                       size="small"
                     >
@@ -538,26 +530,26 @@
                 </el-form-item>
                 <el-form-item label="开启库存预警：">
                   <el-switch
-                    v-model="goodsDetail.stock_warning_switch"
+                    v-model="product.stock_warning_switch"
                     active-color="#7438D5"
                     inactive-color="#eee"
                   ></el-switch>
                   <span
-                    v-if="!goodsDetail.stock_warning_switch"
+                    v-if="!product.stock_warning_switch"
                     class="stock-warning-switch-tip"
                     >使用默认库存预警</span
                   >
                 </el-form-item>
                 <el-form-item
                   label="库存预警："
-                  v-if="goodsDetail.stock_warning_switch"
+                  v-if="product.stock_warning_switch"
                 >
                   <div class="display-flex">
                     <el-input
                       v-positive-integer
                       type="number"
                       min="0"
-                      v-model="goodsDetail.stock_warning"
+                      v-model="product.stock_warning"
                       style="width: 300px"
                       size="small"
                     >
@@ -569,7 +561,7 @@
                   <div class="display-flex">
                     <el-input
                       type="input"
-                      v-model="goodsDetail.weight"
+                      v-model="product.weight"
                       style="width: 300px"
                       size="small"
                     >
@@ -580,7 +572,7 @@
                   <div class="display-flex">
                     <el-input
                       type="input"
-                      v-model="goodsDetail.sn"
+                      v-model="product.sn"
                       style="width: 300px"
                       size="small"
                     >
@@ -588,7 +580,7 @@
                   </div>
                 </el-form-item>
               </div>
-              <!-- <div v-if="goodsDetail.is_sku == 1">
+              <!-- <div v-if="product.is_sku == 1">
                   <div class="add-sku-box">
                     <div class="" v-for="(s, k) in skuList">
                       <div
@@ -1018,7 +1010,7 @@
                       <div class="goods-detail-move">移动</div>
                     </div>
                     <draggable
-                      :list="goodsDetail.params_arr"
+                      :list="product.params_arr"
                       :options="{ animation: 500 }"
                       :animation="500"
                       tag="div"
@@ -1027,7 +1019,7 @@
                     >
                       <div
                         class="display-flex goods-detail-item"
-                        v-for="(it, index) in goodsDetail.params_arr"
+                        v-for="(it, index) in product.params_arr"
                         :key="index"
                       >
                         <div class="goods-detail-name">
@@ -1117,11 +1109,11 @@
         <div
           class="btn-common sub-btn shopro-screen-button"
           v-if="stepActive < 3"
-          @click="gotoback('goodsDetail')"
+          @click="gotoback('product')"
         >
           下一步
         </div>
-        <div class="btn-common sub-btn shopro-screen-button" v-if="stepActive == 3">确定</div>
+        <div class="btn-common sub-btn shopro-screen-button" @click="saveProduct" v-if="stepActive == 3">确定</div>
       </span>
     </div>
   </el-dialog>
@@ -1130,11 +1122,12 @@
 <script>
 // 树表
 import { getList } from "@/api/product/productcategory";
-
+import { submit } from "@/api/product/product";
 import { mapGetters } from "vuex";
 import option from "@/const/product/product";
 import { validatenull } from "@/util/validate";
 import draggable from "vuedraggable";
+
 
 export default {
   components: {
@@ -1146,7 +1139,7 @@ export default {
    */
   name: "Form",
   props: ["title", "box", "form", "view"],
-  el: "#goodsDetail",
+  el: "#product",
   data() {
     return {
       // 表单配置
@@ -1216,38 +1209,42 @@ export default {
       //   ],
       // },
       // 所有商品分类
-      // goodsType: [
-      //   { label: "实体商品", value: "normal" },
-      //   { label: "虚拟商品", value: "virtual" },
-      // ],
+      goodsType: [
+        { label: "实体商品", value: "normal" },
+        { label: "虚拟商品", value: "virtual" },
+      ],
       // 所有商品状态
-      // goodsStatus: [
-      //   { label: "上架", value: 1 },
-      //   { label: "下架", value: 2 },
-      //   { label: "隐藏", value: 0 },
-      // ],
+      goodsStatus: [
+        { label: "上架", value: 1 },
+        { label: "下架", value: 2 },
+        { label: "隐藏", value: 0 },
+      ],
       // 所有发货方式
-      // dispatchTypes: [
-      //   { label: "物流快递", value: "express" },
-      //   { label: "用户自提", value: "selfetch" },
-      //   { label: "商家配送", value: "store" },
-      //   { label: "自动发货", value: "autosend" },
-      // ],
+      dispatchTypes: [
+        { label: "物流快递", value: "express" },
+        { label: "用户自提", value: "selfetch" },
+        { label: "商家配送", value: "store" },
+        { label: "自动发货", value: "autosend" },
+      ],
+      // 请求表单
+      product: {
+        // 商品形式
+        type: 1,
+        // 商品标题
+        title: "标题",
+        // 副标题
+        subtitle: "副标题",
+        // 商品状态
+        status: 1,
+        // 排序
+        weigh: 1,
+        // // 商品分类 暂时不管
+        // visible:1,
+        // categoryTab:'',
 
-      // 原页面
-      categoryOptions: [],
-      category_ids_all: {},
-      categoryTab: null,
-      stepActive: 1,
-      visiblesb: false,
-      goodsDetail: {
+
         params_arr: [{ title: "", content: "" }],
         service_ids: "",
-        type: "normal",
-        weigh: 1,
-        status: "up",
-        title: "标题",
-        subtitle: "副标题",
         dispatch_ids_arr: [],
         dispatch_ids: "",
         dispatch_type_arr: [],
@@ -1264,6 +1261,13 @@ export default {
         weight: "",
         sn: "",
       },
+
+      // 原页面
+      categoryOptions: [],
+      category_ids_all: {},
+      categoryTab: null,
+      stepActive: 1,
+      visiblesb: false,
 
       dispatchOptions: {
         express: [
@@ -1303,6 +1307,7 @@ export default {
         { value: "ah", id: "4", name: "七天退换" },
         { value: "aj", id: "5", name: "正品保证" },
       ],
+
       rules: {
         type: "normal",
         weigh: 2,
@@ -1486,7 +1491,7 @@ export default {
       let that = this;
       that.$set(that.category_ids_all, that.categoryTab, ids);
       // that.selectedcatArr = [];
-      // that.goodsDetail.category_ids = [];
+      // that.product.category_ids = [];
       // for (let tab in that.category_ids_all) {
       //   that.category_ids_all[tab].forEach((id) => {
       //     that.selectedcatArr = [
@@ -1503,40 +1508,40 @@ export default {
       //       ]),
       //     ];
       //   });
-      //   that.goodsDetail.category_ids.push(...that.category_ids_all[tab]);
+      //   that.product.category_ids.push(...that.category_ids_all[tab]);
       // }
-      // that.goodsDetail.category_ids = that.goodsDetail.category_ids.join(",");
+      // that.product.category_ids = that.product.category_ids.join(",");
     },
     dispatchTypeChange(val) {
-      this.goodsDetail.dispatch_type = val.join("");
-      console.log("va2", this.goodsDetail.dispatch_type);
+      this.product.dispatch_type = val.join("");
+      console.log("va2", this.product.dispatch_type);
     },
     getDispatchTemplateData(vala) {
       // this.goodsDetailida
       // console.log('va2',vala)
     },
     serviceChange(val) {
-      this.goodsDetail.service_ids = val.join(",");
+      this.product.service_ids = val.join(",");
     },
     addParams() {
-      this.goodsDetail.params_arr.push({
+      this.product.params_arr.push({
         title: "",
         content: "",
       });
     },
     delParams(index) {
-      this.goodsDetail.params_arr.splice(index, 1);
+      this.product.params_arr.splice(index, 1);
     },
     changeGoodsType(type) {
-      this.goodsDetail.type = type;
-      this.goodsDetail.dispatch_ids_arr = [];
-      this.goodsDetail.dispatch_ids = "";
-      this.goodsDetail.dispatch_type_arr = [];
-      this.goodsDetail.dispatch_type = "";
+      this.product.type = type;
+      this.product.dispatch_ids_arr = [];
+      this.product.dispatch_ids = "";
+      this.product.dispatch_type_arr = [];
+      this.product.dispatch_type = "";
       this.timeData.dispatch_type_arr = [];
-      this.goodsDetail.express_ids = "";
-      this.goodsDetail.store_ids = "";
-      this.goodsDetail.selfetch_ids = "";
+      this.product.express_ids = "";
+      this.product.store_ids = "";
+      this.product.selfetch_ids = "";
     },
     // 上下翻页
     gonextback() {
@@ -1554,6 +1559,13 @@ export default {
     },
 
     // 发请求
+    saveProduct(){
+      console.log('res')
+      submit(this.product
+      ).then((res) => {
+        console.log(res)
+      });
+    },
     getcommoditydata(page, params = {}) {
       let that = this;
       that.loading = true;

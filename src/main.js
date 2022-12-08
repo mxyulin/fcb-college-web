@@ -65,15 +65,15 @@ Vue.config.productionTip = false;
 
 /* vue 调试工具(适用于v2) */
 // 获取 devtools 的全局变量
-const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+// const devtools = window.__VUE_DEVTOOLS_GLOBAL_HOOK__;
 // * 关键一步：初始化当前 Vue 构造函数的调试工具
-devtools.emit('init', Vue);
-// 开发环境启用 devtools 否则不启用
-if (process.env.NODE_ENV == 'development') {
-  Vue.config.devtools = true;
-} else {
-  Vue.config.devtools = false;
-}
+// devtools.emit('init', Vue);
+// // 开发环境启用 devtools 否则不启用
+// if (process.env.NODE_ENV == 'development') {
+//   Vue.config.devtools = true;
+// } else {
+//   Vue.config.devtools = false;
+// }
 
 
 new Vue({
