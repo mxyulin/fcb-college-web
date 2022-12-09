@@ -6,7 +6,7 @@
     <el-dialog
       append-to-body="ture"
       :visible.sync="box"
-      width="80%"
+      width="60%"
       center
     >
     <Form></Form>
