@@ -21,18 +21,10 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
-  }, {
-    path: '/dodecorate',
-    name: '装修设计',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate')
   }
   ]
 }, {
-  path: '/logs',
+  path: '/test',
   component: Layout,
   redirect: '/test/index',
   children: [{
@@ -42,7 +34,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
+      import( /* webpackChunkName: "views" */ '@/views/util/test')
   }]
 }, {
   path: '/dict-horizontal',
@@ -112,7 +104,27 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
 
-  } 
+  }
   ]
+}, {
+  path: '/shopdecorate',
+  component: Layout,
+  redirect: '/shopdecorate/index',
+  children: [{
+    path: 'index',
+    name: '店铺装修',
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/shopdecorate')
+  }]
+}, {
+  path: '/pagedecorate',
+  component: Layout,
+  redirect: '/pagedecorate/index',
+  children: [{
+    path: 'index',
+    name: '页面装修',
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/decorate/pagedecorate')
+  }]
 }
 ]

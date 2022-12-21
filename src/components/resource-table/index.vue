@@ -6,10 +6,15 @@
     :close-on-click-modal="false"
     :before-close="beforeClose"
   >
-    <div slot="title">选择{{ dialogTitle }}</div>
-    <!-- 资源表 -->
-    <el-row gutter="0" type="flex" justify="space-between">
-      <el-col :span="4">
+    <div slot="title">{{ dialogTitle }}</div>
+    <!-- 图文表 -->
+    <el-row
+      gutter="0"
+      type="flex"
+      justify="space-between"
+      v-if="tableType == 'tuwenbiao'"
+    >
+      <el-col :span="3">
         <div>
           <el-scrollbar>
             <el-input
@@ -32,10 +37,10 @@
           </el-scrollbar>
         </div>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="20">
         <avue-crud
           :data="data"
-          :option="avueOption"
+          :option="tuwenAvueOption"
           :table-loading="loading"
           :page.sync="page"
           :search.sync="search"
@@ -45,6 +50,7 @@
         >
           <template slot="menuLeft">
             <el-button
+              v-if="resourceType == 'picture'"
               type="primary"
               :size="option.size"
               icon="el-icon-upload2"
@@ -96,7 +102,96 @@
         </el-dialog>
       </el-col>
     </el-row>
-    <div slot="footer"></div>
+    <!-- 商品表 -->
+    <el-row
+      gutter="0"
+      type="flex"
+      justify="space-between"
+      v-if="tableType == 'shangpinbiao'"
+    >
+      <el-col :span="3">
+        <div>
+          <el-scrollbar>
+            <el-input
+              :size="option.size"
+              placeholder="搜索分类"
+              v-model="filterText"
+              style="margin-bottom: 10px"
+            >
+            </el-input>
+            <el-tree
+              ref="tree"
+              :props="defaultProps"
+              :data="treeData"
+              :node-key="id"
+              highlight-current
+              :filter-node-method="filterNode"
+              @node-click="handleNodeClick"
+            >
+            </el-tree>
+          </el-scrollbar>
+        </div>
+      </el-col>
+      <el-col :span="20">
+        <avue-crud
+          :data="data"
+          :option="shangpinAvueOption"
+          :table-loading="loading"
+          :page.sync="page"
+          :search.sync="search"
+          :permission="permissionList"
+          @refresh-change="refreshTable"
+          ref="crud"
+        >
+          <template slot="menuLeft">
+            <el-button
+              type="primary"
+              :size="option.size"
+              v-if="resourceType == 'goods-list'"
+              >确定</el-button
+            >
+          </template>
+          <template slot="goods" slot-scope="scope">
+            <el-row :gutter="10" type="flex" align="middle">
+              <el-col :span="12">
+                <el-image
+                  style="width: 80px; height: 80px"
+                  :src="scope.row.image"
+                  :preview-src-list="[scope.row.image]"
+                  :fit="fit"
+                ></el-image>
+              </el-col>
+              <el-col :span="12">
+                <div>{{ scope.row.title }}</div>
+                <div>{{ scope.row.subtitle }}</div>
+                <div
+                  v-for="(tag, idx) of scope.row.activity_discounts_tags"
+                  :key="idx"
+                >
+                  {{ tag }}
+                </div>
+              </el-col>
+            </el-row>
+          </template>
+          <template slot-scope="{ row }" slot="menu">
+            <el-button
+              :size="option.size"
+              type="primary"
+              @click="handleSlect(row)"
+              >选择</el-button
+            >
+          </template>
+        </avue-crud>
+      </el-col>
+    </el-row>
+    <template slot="footer">
+      <el-button
+        type="primary"
+        :size="option.size"
+        v-if="tableType == 'shangpinbiao' && resourceType != 'goods-list'"
+        >确定</el-button
+      >
+    </template>
   </el-dialog>
 </template>
 
@@ -105,7 +200,9 @@ import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
 import { validatenull } from "@/util/validate";
 import { getList as getCategoryList } from "@/api/resource/attachcategory";
-import { getList } from "@/api/resource/attach";
+import { getList as getPictureList } from "@/api/resource/attach";
+import { getList as getGoodsList } from "@/api/product/product";
+import { getTree } from "@/api/product/productcategory";
 
 export default {
   name: "resourceTable",
@@ -125,24 +222,22 @@ export default {
       },
       query: {},
 
-      /*
-       *节点树
-       */
+      // 节点树
       treeData: [],
       filterText: "",
+      // 树组件默认配置
       defaultProps: {
-        children: "children",
         label: "name",
+        children: "children"
       },
       nodeData: {},
       nodeId: null,
-      /*
-       *表格
-       */
-      avueOption: {
+      // 图文表配置
+      tuwenAvueOption: {
         header: true,
         search: true,
         border: true,
+        menu: true,
         menuWidth: 100,
         align: "center",
         search: {
@@ -154,26 +249,71 @@ export default {
             prop: "name",
             sortable: true,
             overHidden: true,
-            hide: false
+            hide: false,
           },
           {
             label: "预览",
             prop: "link",
             overHidden: true,
-            hide: false
+            hide: false,
           },
           {
             label: "文件类型",
             prop: "extension",
             overHidden: true,
-            hide: false
+            hide: false,
+          },
+          {
+            label: "宽度",
+            prop: "width",
+            overHidden: true,
+            hide: false,
+          },
+          {
+            label: "高度",
+            prop: "height",
+            overHidden: true,
+            hide: false,
           },
           {
             label: "创建时间",
             prop: "createTime",
             sortable: true,
             overHidden: true,
-            hide: false
+            hide: false,
+          },
+        ],
+      },
+      // 商品表配置
+      shangpinAvueOption: {
+        header: true,
+        search: true,
+        border: true,
+        menu: true,
+        menuWidth: 100,
+        selection: true,
+        align: "center",
+        search: {
+          name: "",
+        },
+        column: [
+          {
+            label: "商品",
+            prop: "goods",
+            overHidden: true,
+            hide: false,
+          },
+          {
+            label: "参与活动",
+            prop: "activity_type",
+            overHidden: true,
+            hide: false,
+          },
+          {
+            label: "库存",
+            prop: "stock",
+            overHidden: true,
+            hide: false,
           },
         ],
       },
@@ -201,69 +341,82 @@ export default {
         delBtn: false,
       };
     },
+    resourceType() {
+      return this.$attrs.resourceType;
+    },
+    tableType() {
+      const { resourceType } = this;
+      let result = "";
+      switch (resourceType) {
+        case "picture":
+          result = "tuwenbiao";
+          break;
+        case "link":
+          result = "tuwenbiao";
+          break;
+        case "goods-group":
+          result = "shangpinbiao";
+          break;
+        case "goods-list":
+          result = "shangpinbiao";
+          break;
+      }
+      return result;
+    },
   },
   watch: {
     // 树节点过滤
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
+    // 表格初始化
     dialogVisible(newVal) {
-      const { resourceType } = this.$attrs;
+      const { resourceType } = this;
       // 重置列表和表格
       this.treeData = [];
       this.data = [];
-      // 获取节点树
       if (newVal) {
-        // 根据用户所选资源类型不同，提供不同的节点树
+        // 根据选择的资源类型不同，提供差异化的表格
         switch (resourceType) {
           case "picture":
-            this.loadCategoryTree();
-            this.hideClumn();
+            this.defaultProps.label = 'name';
+            this.loadCategoryTree("picture");
             break;
           case "link":
-            this.treeData = [
-              {
-                id: "img",
-                name: "图片",
-                parentId: "0",
-              },
-              {
-                id: "goods",
-                name: "商品",
-                parentId: "0",
-              },
-              {
-                id: "page",
-                name: "营销页",
-                parentId: "0",
-              },
-              {
-                id: "doc",
-                name: "文章",
-                parentId: "0",
-              },
-            ];
-            this.hideClumn("extension");
+            this.defaultProps.label = 'name';
+            this.loadCategoryTree("link");
+            this.hideClumn("extension", "width", "height");
+            break;
+          case "goods-group":
+            this.defaultProps.label = 'title';
+            this.loadCategoryTree("goods");
+            this.shangpinAvueOption.menu = false;
+            this.shangpinAvueOption.selection = false;
+            break;
+          case "goods-list":
+            this.defaultProps.label = 'title';
+            this.loadCategoryTree("goods");
+            this.shangpinAvueOption.menu = true;
+            this.shangpinAvueOption.selection = true;
             break;
         }
-      } else {
-        this.treeData = [];
       }
     },
   },
   methods: {
-    init() {
-      
-    },
     // 列隐藏显示
     hideClumn(...args) {
-      this.avueOption.column.forEach((col) => {
-        if (args.indexOf(col.prop) != -1) {
-          col.hide = true;
-        } else {
-          col.hide = false;
-        }
-      })
+      const { tableType } = this;
+      if (tableType == "tuwenbiao") {
+        this.tuwenAvueOption.column.forEach((col) => {
+          if (args.indexOf(col.prop) != -1) {
+            col.hide = true;
+          } else {
+            col.hide = false;
+          }
+        });
+      } else {
+      }
     },
     // 关闭弹窗
     beforeClose(done) {
@@ -271,26 +424,73 @@ export default {
       done();
     },
     // 获取节点树
-    loadCategoryTree() {
-      getCategoryList().then(({ data: { data } }) => {
-        this.treeData = data;
-      });
+    loadCategoryTree(resourceType) {
+      // 根据不同的资源类型返回不同的树节点数据
+      switch (resourceType) {
+        case "picture":
+          getCategoryList().then(({ data: { data } }) => {
+            this.treeData = data;
+          });
+          break;
+        case "link":
+          this.treeData = [
+            {
+              id: "img",
+              name: "图片",
+              parentId: "0",
+            },
+            {
+              id: "goods",
+              name: "商品",
+              parentId: "0",
+            },
+            {
+              id: "page",
+              name: "营销页",
+              parentId: "0",
+            },
+            {
+              id: "doc",
+              name: "文章",
+              parentId: "0",
+            },
+          ];
+          break;
+        case "goods":
+          getTree().then(({data: {data}}) => {
+            this.treeData = data;
+          })
+          break;
+      }
     },
     // 获取表格数据
     loadDataList(page, params = {}) {
-      let that = this;
-      that.loading = true;
-      getList(page.currentPage, page.pageSize, params).then(
-        ({ data: { data } }) => {
-          that.page.total = data.total;
-          that.data = data.records;
-          that.pictUrl = that.data.map((item) => {
-            return item.domainUrl;
-          });
-          that.loading = false;
-          that.selectionClear();
-        }
-      );
+      const { resourceType } = this;
+      this.loading = true;
+      if (resourceType == "picture") {
+        getPictureList(page.currentPage, page.pageSize, params).then(
+          ({ data: { data } }) => {
+            this.page.total = data.total;
+            this.data = data.records;
+            this.pictUrl = this.data.map((item) => {
+              return item.domainUrl;
+            });
+            this.loading = false;
+            this.selectionClear();
+          }
+        );
+      } else if (resourceType == "link") {
+        // 获取链接列表数据
+      } else if (resourceType == 'goods-group' || resourceType == 'goods-list') {
+        getGoodsList(page.currentPage, page.pageSize, params).then(
+          ({ data: { data } }) => {
+            // this.page.total = data.total;
+            // this.data = data.records;
+            this.loading = false;
+            this.selectionClear();
+          }
+        );
+      }
     },
     // 过滤（搜索）分类
     filterNode(val, data, node) {

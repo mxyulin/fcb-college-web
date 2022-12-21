@@ -509,7 +509,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('goods-group')"
+                  @click="chooseResource('goods-group')"
                 >
                   选择
                 </el-button>
@@ -519,7 +519,7 @@
         </el-row>
       </div>
     </div>
-    <!-- 自定义商品分类 -->
+    <!-- 自定义商品 -->
     <div v-if="templateForm.type == 'goods-list'" class="decorate-right-write">
       <div class="select-style-item">
         <div class="select-style-item-title">商品列表</div>
@@ -555,7 +555,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('goods-list')"
+                  @click="chooseResource('goods-list')"
                 >
                   选择
                 </el-button>
@@ -1458,7 +1458,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('category-tabs')"
+                  @click="chooseResource('category-tabs')"
                 >
                   选择
                 </el-button>
@@ -2069,7 +2069,7 @@
                   slot="append"
                   type="primary"
                   plain
-                 @click="chooseResource('picture', index)"
+                  @click="chooseResource('picture', index)"
                 >
                   {{ item.btnimage ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2310,15 +2310,26 @@ export default {
       this.$forceUpdate();
     },
     // 选择装修资源
-    chooseResource(type, index) {
+    chooseResource(type, index = null) {
       this.currentListIdx = index;
       this.resourceType = type;
       switch (type) {
         case "picture":
-          this.dialogTitle = "图片";
+          this.dialogTitle = "选择图片";
           break;
         case "link":
-          this.dialogTitle = "链接";
+          this.dialogTitle = "选择链接";
+          break;
+        case "goods-group":
+          this.dialogTitle = "选择分类";
+          break;
+        case 'goods-list':
+          this.dialogTitle = "商品列表"
+          break;
+        case 'category-tabs':
+          this.dialogTitle = "选择分类"
+          this.resourceType = 'goods-group'
+          break;
       }
       this.dialogVisible = true;
     },

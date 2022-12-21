@@ -1036,6 +1036,7 @@
                 v-if="compotent.content.timeData.length > 0"
                 class="compotent-goods-list-1-container"
               >
+                <!-- 宫格排列 -->
                 <template v-if="compotent.content.style == 1">
                   <el-row
                     :gutter="8"
@@ -1136,6 +1137,7 @@
                     </el-col>
                   </el-row>
                 </template>
+                <!-- 列表排列 -->
                 <template v-for="(gitem, index) in compotent.content.timeData">
                   <div
                     class="compotent-goods-list-2-container"
@@ -1249,6 +1251,7 @@
                   </div>
                 </template>
               </div>
+              <!-- 骨架模板 -->
               <template
                 v-if="
                   compotent.content.timeData &&

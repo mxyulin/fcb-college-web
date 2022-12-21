@@ -74,7 +74,8 @@ if (process.env.NODE_ENV == 'development') {
 } else {
   Vue.config.devtools = false;
 }
-
+// Mockjs
+import '@/mock/index';
 
 new Vue({
   router,
