@@ -637,6 +637,7 @@ import { submitProduct } from "@/api/product/product";
 
 import option from "@/const/product/product";
 import draggable from "vuedraggable";
+import querystring from 'querystring'
 
 export default {
   components: {
@@ -668,7 +669,6 @@ export default {
         visible: 1,
         // categoryTab:'',
         // category_ids_all[categoryTab]
-
         // 虚增销量
         showSales: 1,
         // 浏览人数
@@ -703,6 +703,20 @@ export default {
         image:
           "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
         // 轮播图
+        // images: [
+        //   {
+        //     id: 1,
+        //     iamge: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+        //     name: '图片',
+        //     createDate: '',
+        //   },
+        //   {
+        //     id: 2,
+        //     iamge: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
+        //     name: '图片',
+        //     createDate: 'q',
+        //   },
+        // ],
         images: [
           "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
           "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png",
@@ -1005,9 +1019,13 @@ export default {
 
     // 发请求
     saveProduct() {
+      JSON.stringify(this.product.images).push.this.product.images
       console.log("res1", this.product);
-      // console.log('res2',this.product.images)
-      console.log("res3", this.product.images.toString());
+      console.log('res2',this.product.images)
+      // console.log("res3", this.product.images.toString());
+      // JSON.stringify()
+      // console.log("res5", JSON.stringify(this.product.images));
+      // console.log("res4", querystring.stringify(this.product.images));
       // console.log('res4',this.product.images.join(","))
       //  let a=this.product.images.join(",")
       //  console.log(a)
@@ -1022,7 +1040,6 @@ export default {
       let that = this;
       that.loading = true;
       getList(
-        that.page.currentPage,
         that.page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {

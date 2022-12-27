@@ -28,6 +28,8 @@
         </el-button>
       </template>
     </avue-crud>
+
+    
   </basic-container>
 </template>
 
@@ -49,7 +51,8 @@
         },
         selectionList: [],
         option: option,
-        data: []
+        data: [],
+
       };
     },
     computed: {
@@ -84,9 +87,11 @@
           window.console.log(error);
         });
       },
+
+      // 有问题
       rowUpdate(row, index, done, loading) {
         update(row).then(() => {
-          this.onLoad(this.page);
+          console.log('this.page',this.page)
           this.$message({
             type: "success",
             message: "操作成功!"
@@ -174,7 +179,6 @@
         this.loading = true;
         getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
           this.data = res.data.data;
-          console.log(this.data);
           this.loading = false;
           getTree().then(res => {
             const column = this.findObject(this.option.column, "parentId");

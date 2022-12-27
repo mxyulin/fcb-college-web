@@ -4,8 +4,56 @@
       <div class="left-panel">
         <el-scrollbar>
           <basic-container>
-            <el-input placeholder="输入关键字进行过滤" v-model="filterText">
-            </el-input>
+            <el-button type="primary" size="small" plain @click="dialogadded = true" >新增</el-button>
+            <el-dialog title="新增" append-to-body="ture" :visible.sync="dialogadded">
+              <el-form :model="form">
+                <el-form-item  :label-width="formLabelWidth">
+                  <el-input class="inputwidth"  size="medium" placeholder="请输入" v-model="form.name" ></el-input>
+                </el-form-item>
+                <el-form-item label="父ID:" :label-width="formLabelWidth" >
+                  <el-select class="seectwidth" clearable v-model="form.region" placeholder="请选择父ID" size="medium">
+                    <el-input  class="inputwidth inputwidthb"  size="mini" placeholder="请输入" v-model="form.name" ></el-input>
+                    <el-option >
+                      <span>暂无数据</span>
+                    </el-option>
+                    <el-option>
+                      <el-tree :data="list" :props="defaultProps" @node-click="handledata"></el-tree>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="rowSave">保存</el-button>
+                <el-button @click="dialogadded = false">取 消</el-button>
+              </div>
+            </el-dialog>
+            <el-button type="info" size="small"  @click="dialogmodify = true" plain >编辑</el-button>
+            <el-dialog title="编辑" append-to-body="ture" :visible.sync="dialogmodify">
+              <el-form :model="form">
+                <el-form-item  :label-width="formLabelWidth">
+                  <el-input class="inputwidth"  size="medium" placeholder="请输入" v-model="form.name" ></el-input>
+                </el-form-item>
+                <el-form-item label="父ID:" :label-width="formLabelWidth" >
+                  <el-select class="seectwidth" v-model="form.region" placeholder="请选择父ID" size="medium">
+                    <el-select class="seectwidth" v-model="selectvalue"
+                      placeholder="输入关键字进行过滤"
+                      size="mini"
+                      multiple
+                      filterable
+                      remote
+                      reserve-keyword>
+                    </el-select>
+                    <el-option label="区域二" value="beijing"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-form>
+              <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="dialogmodify = false">保存</el-button>
+                <el-button @click="dialogmodify = false">取 消</el-button>
+              </div>
+            </el-dialog>
+            <el-button type="danger" size="small"  plain >删 除</el-button>
+            
             <el-tree class="filter-tree" :data="list" :props="defaultProps" default-expand-all
               :filter-node-method="filterNode" @node-click="handleNodeClick" ref="tree">
             </el-tree>
@@ -51,7 +99,7 @@
 </template>
 
 <script>
-import { getList as getCategoryList } from "@/api/resource/attachcategory";
+import { getList as getCategoryList,add ,update } from "@/api/resource/attachcategory";
 import { getList, getDetail, remove } from "@/api/resource/attach";
 import { mapGetters } from "vuex";
 
@@ -63,6 +111,25 @@ export default {
   },
   data() {
     return {
+      dialogmodify:false,
+
+      dialogadded:false,
+      form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+      formLabelWidth: '80px',
+      options: [],
+      selectvalue: [],
+      list: [],
+      loading: false,
+
       filterText: '',
       list: [],
       defaultProps: {
@@ -202,6 +269,72 @@ export default {
     }
   },
   methods: {
+    // 新增
+    rowSave() {
+      // parentId只能传数字
+        let row={name:'rt',parentId:10}
+        console.log('row',row)
+        // laading=this.loading
+        // add(row).then(() => {
+        //   this.onLoad(this.page);
+        //   this.$message({
+        //     type: "success",
+        //     message: "操作成功!"
+        //   });
+        //   done();
+        // }, error => {
+        //   loading();
+        //   window.console.log(error);
+        // });
+        this.dialogadded = false
+      },
+
+      // 修改
+      // 有问题
+      // rowUpdate(row, index, done, loading) {
+      //   // console.log('row',row)
+      //   // console.log('done',done)
+      //   // console.log('loading',loading)
+      //   update(row).then(() => {
+      //     // this.onLoad(this.page);
+      //     console.log('this.page',this.page)
+      //     this.$message({
+      //       type: "success",
+      //       message: "操作成功!"
+      //     });
+      //     done();
+      //   }, error => {
+      //     loading();
+      //     console.log(error);
+      //   });
+      // },
+
+      // 删除handleDelete rowDel
+      // row.id是数字
+      // rowDel(row) {
+      //  
+      //   console.log('row.id',row.id)
+      //   this.$confirm("确定将选择数据删除?", {
+      //     confirmButtonText: "确定",
+      //     cancelButtonText: "取消",
+      //     type: "warning"
+      //   })
+      //     .then(() => {
+      //       return remove(row.id);
+      //     })
+      //     .then(() => {
+      //       this.onLoad(this.page);
+      //       this.$message({
+      //         type: "success",
+      //         message: "操作成功!"
+      //       });
+      //     });
+      // },
+
+      handledata(){},
+
+
+    ////////////////////////////////////////////////
     handleNodeClick(node) {
       this.query['categoryIds'] = this.attachOption.column[0].data.categoryIds = node.id; 
       this.loadDataList(this.page, this.query);
@@ -295,6 +428,7 @@ export default {
     refreshChange() {
       this.loadDataList(this.page, this.query);
     }, 
+
     loadCategoryTree(page, params = {}) {
       const that = this;
       that.loading = true;
@@ -306,6 +440,7 @@ export default {
         this.selectionClear();
       });
     },
+
     loadDataList(page, params = {}) {
       const that = this;
       that.loading = true;
@@ -330,9 +465,17 @@ export default {
 <style lang="scss" scoped> 
 .left-panel {
   height: 800px;
+  // min-width: 250px;
 }
 
 .img-item {
   width: 100%;
+}
+.seectwidth,.inputwidth{
+  width: 100%;
+  min-width: 200px;
+}
+.inputwidthb{
+  z-index: 20;
 }
 </style>
