@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    width="75%"
+    :width="width"
     :visible.sync="dialogVisible"
     :append-to-body="true"
     :close-on-click-modal="false"
@@ -9,33 +9,23 @@
     <div slot="title">{{ dialogTitle }}</div>
     <!-- 图文表 -->
     <el-row
-      gutter="0"
+      :gutter="0"
       type="flex"
       justify="space-between"
       v-if="tableType == 'tuwenbiao'"
     >
       <el-col :span="3">
-        <div>
-          <el-scrollbar>
-            <el-input
-              :size="option.size"
-              placeholder="搜索分类"
-              v-model="filterText"
-              style="margin-bottom: 10px"
-            >
-            </el-input>
-            <el-tree
-              :props="defaultProps"
-              :data="treeData"
-              :node-key="id"
-              :highlight-current="true"
-              :filter-node-method="filterNode"
-              @node-click="handleNodeClick"
-              ref="tree"
-            >
-            </el-tree>
-          </el-scrollbar>
-        </div>
+        <el-tree
+          accordion
+          :data="treeData"
+          :props="defaultProps"
+          :node-key="id"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+          @node-click="handleNodeClick"
+          ref="tree"
+        >
+        </el-tree>
       </el-col>
       <el-col :span="20">
         <avue-crud
@@ -49,6 +39,12 @@
           ref="crud"
         >
           <template slot="menuLeft">
+            <el-radio-group  v-model="linkType" :size="option.size">
+              <el-radio-button label="image" border>图片</el-radio-button>
+              <el-radio-button label="goods" border>商品</el-radio-button>
+              <el-radio-button label="marketing" border>营销页</el-radio-button>
+              <el-radio-button label="article" border>文章</el-radio-button>
+            </el-radio-group>
             <el-button
               v-if="resourceType == 'picture'"
               type="primary"
@@ -103,8 +99,8 @@
       </el-col>
     </el-row>
     <!-- 商品表 -->
-    <el-row
-      gutter="0"
+    <!-- <el-row
+      :gutter="0"
       type="flex"
       justify="space-between"
       v-if="tableType == 'shangpinbiao'"
@@ -183,7 +179,7 @@
           </template>
         </avue-crud>
       </el-col>
-    </el-row>
+    </el-row> -->
     <template slot="footer">
       <el-button
         type="primary"
@@ -198,7 +194,6 @@
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import { validatenull } from "@/util/validate";
 import { getList as getCategoryList } from "@/api/resource/attachcategory";
 import { getList as getPictureList } from "@/api/resource/attach";
 import { getList as getGoodsList } from "@/api/product/product";
@@ -209,6 +204,7 @@ export default {
   props: {
     dialogVisible: Boolean,
     dialogTitle: String,
+    width: String,
   },
   data() {
     return {
@@ -221,14 +217,15 @@ export default {
         pagerCount: 7,
       },
       query: {},
-
+      // 链接表类型
+      linkType: 'image',
       // 节点树
       treeData: [],
       filterText: "",
       // 树组件默认配置
       defaultProps: {
         label: "name",
-        children: "children"
+        children: "children",
       },
       nodeData: {},
       nodeId: null,
@@ -360,6 +357,9 @@ export default {
         case "goods-list":
           result = "shangpinbiao";
           break;
+        case "image":
+          result = "tuwenbiao";
+          break;
       }
       return result;
     },
@@ -372,6 +372,7 @@ export default {
     // 表格初始化
     dialogVisible(newVal) {
       const { resourceType } = this;
+
       // 重置列表和表格
       this.treeData = [];
       this.data = [];
@@ -379,25 +380,29 @@ export default {
         // 根据选择的资源类型不同，提供差异化的表格
         switch (resourceType) {
           case "picture":
-            this.defaultProps.label = 'name';
+            this.defaultProps.label = "name";
             this.loadCategoryTree("picture");
             break;
           case "link":
-            this.defaultProps.label = 'name';
+            this.defaultProps.label = "name";
             this.loadCategoryTree("link");
             this.hideClumn("extension", "width", "height");
             break;
           case "goods-group":
-            this.defaultProps.label = 'title';
+            this.defaultProps.label = "title";
             this.loadCategoryTree("goods");
             this.shangpinAvueOption.menu = false;
             this.shangpinAvueOption.selection = false;
             break;
           case "goods-list":
-            this.defaultProps.label = 'title';
+            this.defaultProps.label = "title";
             this.loadCategoryTree("goods");
             this.shangpinAvueOption.menu = true;
             this.shangpinAvueOption.selection = true;
+            break;
+          case "image":
+            this.defaultProps.label = "name";
+            this.loadCategoryTree("picture");
             break;
         }
       }
@@ -457,9 +462,14 @@ export default {
           ];
           break;
         case "goods":
-          getTree().then(({data: {data}}) => {
+          getTree().then(({ data: { data } }) => {
             this.treeData = data;
-          })
+          });
+          break;
+        case "iamge":
+          getCategoryList().then(({ data: { data } }) => {
+            this.treeData = data;
+          });
           break;
       }
     },
@@ -467,7 +477,7 @@ export default {
     loadDataList(page, params = {}) {
       const { resourceType } = this;
       this.loading = true;
-      if (resourceType == "picture") {
+      if (resourceType == "picture" || resourceType == "image") {
         getPictureList(page.currentPage, page.pageSize, params).then(
           ({ data: { data } }) => {
             this.page.total = data.total;
@@ -481,11 +491,15 @@ export default {
         );
       } else if (resourceType == "link") {
         // 获取链接列表数据
-      } else if (resourceType == 'goods-group' || resourceType == 'goods-list') {
+      } else if (
+        resourceType == "goods-group" ||
+        resourceType == "goods-list"
+      ) {
         getGoodsList(page.currentPage, page.pageSize, params).then(
           ({ data: { data } }) => {
-            // this.page.total = data.total;
-            // this.data = data.records;
+            console.log("测试", data);
+            this.page.total = data.total;
+            this.data = data.records;
             this.loading = false;
             this.selectionClear();
           }

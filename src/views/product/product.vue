@@ -9,7 +9,7 @@
           :size="option.size"
           type="primary"
           icon="el-icon-plus"
-          @click="handleAdd"
+          @click="addHandler"
           class="create-btn"
           >新增</el-button
         >
@@ -51,15 +51,189 @@
       </el-col>
     </el-row>
     <!-- 列表模块 -->
-    <Table
-      ref="table"
-      :goodsData="goodsData"
-      @getGoodsData="getGoodsData"
-      @handleEdit="handleEdit"
-      @selectionChange="selectionChange"
-      :loading="loading"
-    />
-    <!-- 底部模块 -->
+    <el-row :gutter="0">
+      <div v-loading="loading">
+        <el-table
+          stripe
+          ref="table"
+          style="width: 100%"
+          tooltip-effect="dark"
+          :data="goodsData"
+          :size="option.size"
+          :header-cell-style="{ background: '#FAFAFA' }"
+          @selection-change="selectionChange"
+        >
+          <el-table-column type="selection" width="50"></el-table-column>
+          <el-table-column label="商品" min-width="100">
+            <template slot-scope="scope">
+              <div class="display-flex goods-name">
+                <!-- 商品图 -->
+                <div>
+                  <el-image
+                    fit="contain"
+                    class="image-slot"
+                    style="width: 58px; height: 58px"
+                    :src="scope.row.image"
+                    :preview-src-list="[scope.row.image]"
+                  >
+                    <div slot="error">
+                      <i class="el-icon-picture-outline"></i>
+                    </div>
+                  </el-image>
+                </div>
+                <!-- 商品名和规格 -->
+                <div>
+                  <div
+                    class="ellipsis-item"
+                    style="margin-top: 8px; line-height: 1"
+                  >
+                    {{ scope.row.title }}
+                  </div>
+                  <div style="margin-top: 13px">
+                    <span
+                      v-if="scope.row.isSku == 1"
+                      style="color: #444; margin-right: 12px; line-height: 20px"
+                    >
+                      {{ scope.row.isSku == 1 ? "多规格" : "" }}
+                    </span>
+                    <div
+                      v-if="scope.row.activity_type || scope.row.app_type"
+                      class="activity-type display-flex"
+                    >
+                      <div
+                        v-if="scope.row.app_type"
+                        class="activity-tags full-activity-tag"
+                      >
+                        {{ scope.row.app_type_text }}
+                      </div>
+                      <!-- 暂不使用 -->
+                      <!-- <template
+                          v-for="(b, a) in scope.row.activity_type_text_arr"
+                        >
+                          <template v-if="a == 'groupon'">
+                            <div class="activity-tags groupon-activity-tag">
+                              拼团
+                            </div>
+                          </template>
+                          <div
+                            v-if="a == 'seckill'"
+                            class="activity-tags seckill-activity-tag"
+                          >
+                            {{ b }}
+                          </div>
+                          <div
+                            v-if="
+                              a == 'full_reduce' ||
+                              a == 'full_discount' ||
+                              a == 'free_shipping'
+                            "
+                            class="activity-tags full-activity-tag"
+                          >
+                            {{ b }}
+                          </div>
+                        </template> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="price" label="价格" min-width="100" sortable>
+          </el-table-column>
+          <el-table-column prop="sales" label="销量" min-width="100" sortable>
+          </el-table-column>
+          <el-table-column prop="views" label="浏览量" min-width="100" sortable>
+          </el-table-column>
+          <el-table-column prop="stock" label="库存" min-width="100" sortable>
+          </el-table-column>
+          <el-table-column label="更新时间" min-width="100">
+            <template slot-scope="scope">
+              <div>
+                {{ scope.row.updateTime }}
+              </div>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" min-width="180">
+            <template slot-scope="scope">
+              <!-- 上架的下拉菜单 -->
+              <el-popover placement="bottom" trigger="hover" width="150">
+                <div class="display-flex status-box">
+                  <el-button
+                    plain
+                    type="primary"
+                    class="common-btn status-btn"
+                    v-if="scope.row.status != 1"
+                    @click="updateStatus(scope.row.id, 1)"
+                  >
+                    上架
+                  </el-button>
+                  <el-button
+                    plain
+                    type="warning"
+                    class="common-btn status-btn"
+                    v-if="scope.row.status != 2"
+                    @click="updateStatus(scope.row.id, 2)"
+                  >
+                    下架
+                  </el-button>
+                  <el-button
+                    plain
+                    type="info"
+                    class="common-btn status-btn"
+                    v-if="scope.row.status != 0"
+                    @click="updateStatus(scope.row.id, 0)"
+                  >
+                    隐藏
+                  </el-button>
+                </div>
+                <!-- 上架按钮 -->
+                <span
+                  slot="reference"
+                  style="cursor: pointer; margin-right: 5px"
+                >
+                  <el-button
+                    icon="icon-move-up"
+                    type="text"
+                    v-if="scope.row.status == 1"
+                    >上架
+                  </el-button>
+                  <el-button
+                    icon="icon-move-down"
+                    type="text"
+                    v-if="scope.row.status == 2"
+                    >下架
+                  </el-button>
+                  <el-button
+                    icon="icon-hideinvisiblehidden"
+                    type="text"
+                    v-if="scope.row.status == 0"
+                    >隐藏
+                  </el-button>
+                </span>
+              </el-popover>
+              <!-- 编辑 -->
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.row)"
+                >编辑
+              </el-button>
+              <!-- 复制 -->
+              <el-button type="text" icon="el-icon-s-order" disabled
+                >复制
+              </el-button>
+              <!-- 删除 -->
+              <el-button
+                type="text"
+                icon="el-icon-delete"
+                @click="rowDel(scope.row)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-row>
     <el-row
       :gutter="0"
       type="flex"
@@ -70,7 +244,7 @@
       <el-col :span="12">
         <el-button
           plain
-          type="primary"
+          type="success"
           :size="option.size"
           @click="slectedAction('up')"
           v-if="activeStatus != 1"
@@ -96,25 +270,24 @@
       <el-col :span="9">
         <el-pagination
           background
-          @size-change="sizeChange"
-          @current-change="currentChange"
-          :current-page="page.currentPage"
-          :page-sizes="[10, 20, 30, 40, 50, 100]"
-          :page-size="page.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="page.total"
+          :page-size="page.pageSize"
+          :current-page="page.currentPage"
+          :page-sizes="[10, 20, 30, 40, 50, 100]"
+          @size-change="onSizeChange"
+          @current-change="onCurrentChange"
         >
         </el-pagination>
       </el-col>
     </el-row>
+    <!-- 表单模块 -->
     <Form
       ref="form"
       :title="title"
-      :box="box"
-      :form="form"
-      :view="view"
-      @beforeClose="beforeClose"
-      @handleSubmit="handleSubmit"
+      :currentRow="currentRow"
+      :dialogFormVisible.sync="dialogFormVisible"
+      @getGoodsData="getGoodsData"
     />
   </basic-container>
 </template>
@@ -122,42 +295,30 @@
 <script>
 import {
   getList,
-  getDetail,
-  add,
   update,
   remove,
   slectionsUpdate,
 } from "@/api/product/product";
 import option from "@/const/product/product";
-
-import Query from "@/views/product/components/product/query";
-import Table from "@/views/product/components/product/table";
-import Form from "@/views/product/components/product/form";
-
-// import Query from "@/views/product/components/query";
-// import Table from "@/views/product/components/table";
-// import Form from "@/views/product/components/form";
+import Query from "@/views/product/components/query";
+import Form from "@/views/product/components/form";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     Query,
-    Table,
     Form,
   },
   data() {
     return {
-      // 弹框标题
       title: "",
-      // 是否展示弹框
-      box: false,
-      // 是否显示查询
+      dialogFormVisible: false,
+      currentRow: null,
+      // 是否查询
       search: true,
       // 加载中
       loading: true,
-      // 是否为查看模式
-      view: false,
-      // 上架状态(3是全部展示)
+      // 商品上架状态(3是全部展示)
       activeStatus: 3,
       // 分页信息
       page: {
@@ -165,8 +326,6 @@ export default {
         pageSize: 10,
         total: 40,
       },
-      // 表单数据
-      form: {},
       // 选择行
       selectionList: [],
       // 表单配置
@@ -177,9 +336,11 @@ export default {
       goodsData: [],
     };
   },
+  mounted() {
+    this.getGoodsData();
+  },
   computed: {
     ...mapGetters(["permission"]),
-    // 获取所有选择行ID拼成的字符串
     ids() {
       let ids = [];
       this.selectionList.forEach((ele) => {
@@ -189,99 +350,12 @@ export default {
     },
   },
   watch: {
-    // 根据上架状态获取数据
+    // 根据上架状态拉取商品数据
     activeStatus() {
       this.getGoodsData();
     },
   },
   methods: {
-    // 初始化
-    init() {},
-
-    // 提交表单
-    handleSubmit(formName) {
-      let that = this;
-      that.$refs["form"].$refs[formName]
-        .validate()
-        .then(() => {
-          if (!that.form.id) {
-            add(that.form).then(() => {
-              that.box = false;
-              that.getGoodsData();
-              that.$message({
-                type: "success",
-                message: "操作成功！",
-              });
-            });
-          } else {
-            update(that.form).then(() => {
-              that.box = false;
-              that.getGoodsData();
-              that.$message({
-                type: "success",
-                message: "操作成功！",
-              });
-            });
-          }
-        })
-        .catch(() => {
-          that.$message({
-            type: "error",
-            message: "操作失败!",
-          });
-        });
-    },
-
-    // 增加商品
-    handleAdd() {
-      this.title = "新增商品";
-      this.form = {};
-      this.box = true;
-    },
-    // 编辑商品
-    handleEdit(row) {
-      this.title = "编辑商品";
-      this.box = true;
-      getDetail(row.id).then((res) => {
-        this.form = res.data.data;
-      });
-    },
-    // 查看商品详情
-    handleView(row) {
-      this.title = "查看商品";
-      this.view = true;
-      this.box = true;
-      getDetail(row.id).then((res) => {
-        this.form = res.data.data;
-      });
-    },
-    // 关闭表单前的重置表单
-    beforeClose(done) {
-      this.form = {};
-      this.view = false;
-      this.box = false;
-      done();
-    },
-    // 保存已选列表
-    selectionChange(list) {
-      this.selectionList = list;
-    },
-    // 清空列表已选
-    selectionClear() {
-      this.selectionList = [];
-      // 父组件访问自组件的 refs, 通过 this.$refs.table.$refs 访问
-      this.$refs.table.$refs.table.clearSelection();
-    },
-    // 分页器当前页
-    currentChange(currentPage) {
-      this.page.currentPage = currentPage;
-      this.getGoodsData();
-    },
-    sizeChange(pageSize) {
-      this.page.pageSize = pageSize;
-      this.getGoodsData();
-    },
-
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this;
@@ -303,10 +377,66 @@ export default {
         that.selectionClear();
       });
     },
+    // 增加商品
+    addHandler() {
+      this.title = "新增商品";
+      this.dialogFormVisible = true;
+    },
+    // 修改上架状态
+    updateStatus(id, status) {
+      update({ id, status }).then((res) => {
+        if (res.data.code == 200) {
+          this.getGoodsData();
+        }
+      });
+    },
+    // 编辑商品
+    handleEdit(row) {
+      this.currentRow = row;
+      this.title = "编辑商品";
+      this.dialogFormVisible = true;
+    },
+    // 删除当前行
+    rowDel(row) {
+      this.$confirm("确定将选择数据删除?", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          return remove(row.id);
+        })
+        .then(() => {
+          this.getGoodsData();
+          this.$message({
+            type: "success",
+            message: "操作成功!",
+          });
+        });
+    },
+    // 保存已选列表
+    selectionChange(list) {
+      this.selectionList = list;
+    },
+    // 清空列表已选
+    selectionClear() {
+      this.selectionList = [];
+      this.$refs.table.clearSelection();
+    },
+    // 分页器当前页
+    onCurrentChange(currentPage) {
+      this.page.currentPage = currentPage;
+      this.getGoodsData();
+    },
+    // 一页显示数量
+    onSizeChange(pageSize) {
+      this.page.pageSize = pageSize;
+      this.getGoodsData();
+    },
     // 删除所有选中行
     selectionsDelete() {
       if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
+        this.$message.warning("请至少选择一条数据");
         return;
       }
       this.$confirm("确定将选择数据删除?", {
@@ -326,44 +456,32 @@ export default {
           });
         });
     },
-    // 选中行上架 or 下架
-    async slectedAction(action) {
-      let that = this;
-      if (that.selectionList.length === 0) {
-        that.$message.warning("请选择至少一条数据");
+    // 批量上架下架
+    slectedAction(action) {
+      if (this.selectionList.length === 0) {
+        this.$message.warning("请至少选择一条数据");
         return;
       }
-      // 状态码
       let statusCode = action == "up" ? 1 : 2;
-      let result = await slectionsUpdate(that.ids, statusCode);
-      if (result.data.code == 200) {
-        that.getGoodsData();
-        return that.$message({
-          type: "success",
-          message: "操作成功！",
-        });
-      }
-      return that.$message({
-        type: "error",
-        message: "操作失败！",
+      slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
+        if (code == 200) {
+          this.getGoodsData();
+          this.$message({
+            type: "success",
+            message: "操作成功！",
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: "操作失败！",
+          });
+        }
       });
     },
-  },
-  // 页面初始化
-  mounted() {
-    this.init();
-    this.getGoodsData();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/views/product/styles/product";
-</style>
-
-<style lang="scss" scoped>
-// 修改element全局样式
-.steps-display .el-step__icon{
-    display: none;
-}
 </style>
