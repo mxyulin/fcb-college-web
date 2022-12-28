@@ -106,25 +106,5 @@ export default [{
 
   }
   ]
-}, {
-  path: '/shopdecorate',
-  component: Layout,
-  redirect: '/shopdecorate/index',
-  children: [{
-    path: 'index',
-    name: '店铺装修',
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/shopdecorate')
-  }]
-}, {
-  path: '/pagedecorate',
-  component: Layout,
-  redirect: '/pagedecorate/index',
-  children: [{
-    path: 'index',
-    name: '页面装修',
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/pagedecorate')
-  }]
 }
 ]

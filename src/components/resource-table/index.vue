@@ -5,48 +5,58 @@
     :append-to-body="true"
     :close-on-click-modal="false"
     :before-close="beforeClose"
+    @open="beforeOpen"
   >
     <div slot="title">{{ dialogTitle }}</div>
-    <!-- 图文表 -->
-    <el-row
-      :gutter="0"
-      type="flex"
-      justify="space-between"
-      v-if="tableType == 'tuwenbiao'"
-    >
+    <!-- 资源表 -->
+    <el-row :gutter="0" type="flex" justify="space-between">
       <el-col :span="3">
+        <el-input
+          placeholder="搜索类别"
+          style="height: 45px"
+          v-model="filterText"
+          :size="option.size"
+        >
+        </el-input>
         <el-tree
           accordion
-          :data="treeData"
-          :props="defaultProps"
-          :node-key="id"
-          :highlight-current="true"
-          :filter-node-method="filterNode"
-          @node-click="handleNodeClick"
           ref="tree"
+          empty-text="暂无节点数据"
+          :node-key="id"
+          :data="nodeTree"
+          :props="defaultProps"
+          :highlight-current="true"
+          :filter-node-method="filterNodeTree"
+          @node-click="onNodeClick"
         >
         </el-tree>
       </el-col>
       <el-col :span="20">
         <avue-crud
-          :data="data"
-          :option="tuwenAvueOption"
+          :data="avueList"
+          :option="avueOption"
           :table-loading="loading"
           :page.sync="page"
           :search.sync="search"
           :permission="permissionList"
           @refresh-change="refreshTable"
+          @select="onSelect"
+          @select-all="onSelect"
           ref="crud"
         >
           <template slot="menuLeft">
-            <el-radio-group  v-model="linkType" :size="option.size">
+            <el-radio-group
+              v-if="tableType == 'link'"
+              v-model="linkType"
+              :size="option.size"
+            >
               <el-radio-button label="image" border>图片</el-radio-button>
               <el-radio-button label="goods" border>商品</el-radio-button>
               <el-radio-button label="marketing" border>营销页</el-radio-button>
               <el-radio-button label="article" border>文章</el-radio-button>
             </el-radio-group>
             <el-button
-              v-if="resourceType == 'picture'"
+              v-if="tableType == 'image' || tableType == 'images'"
               type="primary"
               :size="option.size"
               icon="el-icon-upload2"
@@ -62,14 +72,23 @@
               :fit="fit"
             ></el-image>
           </template>
-          <template slot="categoryName">{{ nodeData.name }}</template>
           <template slot-scope="{ row }" slot="menu">
             <el-button
               :size="option.size"
               type="primary"
-              @click="handleSlect(row)"
+              @click="singleSlect(row)"
               >选择</el-button
             >
+          </template>
+          <template slot="page" v-if="isMutiple">
+            <el-col :span="1">
+              <el-button
+                type="primary"
+                :size="option.size"
+                @click="mutipleSlect"
+                >确定</el-button
+              >
+            </el-col>
           </template>
         </avue-crud>
         <el-dialog
@@ -103,7 +122,6 @@
       :gutter="0"
       type="flex"
       justify="space-between"
-      v-if="tableType == 'shangpinbiao'"
     >
       <el-col :span="3">
         <div>
@@ -118,11 +136,11 @@
             <el-tree
               ref="tree"
               :props="defaultProps"
-              :data="treeData"
+              :data="nodeTree"
               :node-key="id"
               highlight-current
-              :filter-node-method="filterNode"
-              @node-click="handleNodeClick"
+              :filter-node-method="filterNodeTree"
+              @node-click="onNodeClick"
             >
             </el-tree>
           </el-scrollbar>
@@ -143,7 +161,7 @@
             <el-button
               type="primary"
               :size="option.size"
-              v-if="resourceType == 'goods-list'"
+              v-if="tableType == 'goods-list'"
               >确定</el-button
             >
           </template>
@@ -173,31 +191,23 @@
             <el-button
               :size="option.size"
               type="primary"
-              @click="handleSlect(row)"
+              @click="singleSlect(row)"
               >选择</el-button
             >
           </template>
         </avue-crud>
       </el-col>
     </el-row> -->
-    <template slot="footer">
-      <el-button
-        type="primary"
-        :size="option.size"
-        v-if="tableType == 'shangpinbiao' && resourceType != 'goods-list'"
-        >确定</el-button
-      >
-    </template>
   </el-dialog>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import { getList as getCategoryList } from "@/api/resource/attachcategory";
-import { getList as getPictureList } from "@/api/resource/attach";
+import { getList as getImageCategory } from "@/api/resource/attachcategory";
+import { getList as getImageList } from "@/api/resource/attach";
 import { getList as getGoodsList } from "@/api/product/product";
-import { getTree } from "@/api/product/productcategory";
+import { getTree as getGoodsCategory } from "@/api/product/productcategory";
 
 export default {
   name: "resourceTable",
@@ -205,81 +215,44 @@ export default {
     dialogVisible: Boolean,
     dialogTitle: String,
     width: String,
+    tableType: String,
   },
   data() {
     return {
-      option: option,
       loading: false,
       page: {
-        pageSize: 10,
         currentPage: 1,
+        pageSize: 10,
         total: 0,
         pagerCount: 7,
+        layout: "slot, total, sizes, prev, pager, next, jumper, ->",
       },
-      query: {},
       // 链接表类型
-      linkType: 'image',
-      // 节点树
-      treeData: [],
+      linkType: "image",
+      //
+      nodeTree: [],
+      avueList: [],
+      selectionList: [],
+      pictUrl: [],
       filterText: "",
-      // 树组件默认配置
       defaultProps: {
         label: "name",
         children: "children",
       },
       nodeData: {},
       nodeId: null,
-      // 图文表配置
-      tuwenAvueOption: {
+      avueOption: {
         header: true,
         search: true,
         border: true,
         menu: true,
+        selection: false,
         menuWidth: 100,
         align: "center",
         search: {
           name: "",
         },
-        column: [
-          {
-            label: "标题",
-            prop: "name",
-            sortable: true,
-            overHidden: true,
-            hide: false,
-          },
-          {
-            label: "预览",
-            prop: "link",
-            overHidden: true,
-            hide: false,
-          },
-          {
-            label: "文件类型",
-            prop: "extension",
-            overHidden: true,
-            hide: false,
-          },
-          {
-            label: "宽度",
-            prop: "width",
-            overHidden: true,
-            hide: false,
-          },
-          {
-            label: "高度",
-            prop: "height",
-            overHidden: true,
-            hide: false,
-          },
-          {
-            label: "创建时间",
-            prop: "createTime",
-            sortable: true,
-            overHidden: true,
-            hide: false,
-          },
-        ],
+        column: [],
       },
       // 商品表配置
       shangpinAvueOption: {
@@ -314,9 +287,7 @@ export default {
           },
         ],
       },
-      data: [],
-      selectionList: [],
-      pictUrl: [],
+      //
       attachBox: false,
       fileList: [],
     };
@@ -330,7 +301,7 @@ export default {
       });
       return ids.join(",");
     },
-    // 表格按钮权限
+    // 表格按钮权限控制
     permissionList() {
       return {
         addBtn: false,
@@ -338,199 +309,231 @@ export default {
         delBtn: false,
       };
     },
-    resourceType() {
-      return this.$attrs.resourceType;
+    // el-ui组件全局配置
+    option() {
+      return option;
     },
-    tableType() {
-      const { resourceType } = this;
-      let result = "";
-      switch (resourceType) {
-        case "picture":
-          result = "tuwenbiao";
-          break;
-        case "link":
-          result = "tuwenbiao";
-          break;
-        case "goods-group":
-          result = "shangpinbiao";
-          break;
-        case "goods-list":
-          result = "shangpinbiao";
-          break;
-        case "image":
-          result = "tuwenbiao";
-          break;
-      }
-      return result;
+    // 多选状态
+    isMutiple() {
+      const { tableType } = this;
+      return tableType == "images" || tableType == "goods" ? true : false;
     },
   },
   watch: {
-    // 树节点过滤
+    // 节点树过滤
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
-    // 表格初始化
-    dialogVisible(newVal) {
-      const { resourceType } = this;
-
-      // 重置列表和表格
-      this.treeData = [];
-      this.data = [];
-      if (newVal) {
-        // 根据选择的资源类型不同，提供差异化的表格
-        switch (resourceType) {
-          case "picture":
-            this.defaultProps.label = "name";
-            this.loadCategoryTree("picture");
-            break;
-          case "link":
-            this.defaultProps.label = "name";
-            this.loadCategoryTree("link");
-            this.hideClumn("extension", "width", "height");
-            break;
-          case "goods-group":
-            this.defaultProps.label = "title";
-            this.loadCategoryTree("goods");
-            this.shangpinAvueOption.menu = false;
-            this.shangpinAvueOption.selection = false;
-            break;
-          case "goods-list":
-            this.defaultProps.label = "title";
-            this.loadCategoryTree("goods");
-            this.shangpinAvueOption.menu = true;
-            this.shangpinAvueOption.selection = true;
-            break;
-          case "image":
-            this.defaultProps.label = "name";
-            this.loadCategoryTree("picture");
-            break;
-        }
-      }
-    },
   },
   methods: {
-    // 列隐藏显示
-    hideClumn(...args) {
-      const { tableType } = this;
-      if (tableType == "tuwenbiao") {
-        this.tuwenAvueOption.column.forEach((col) => {
-          if (args.indexOf(col.prop) != -1) {
-            col.hide = true;
-          } else {
-            col.hide = false;
-          }
-        });
-      } else {
+    getNodeTree(tableType) {
+      switch (tableType) {
+        case "image":
+          getImageCategory().then(({ data: { data } }) => {
+            this.nodeTree = data;
+            this.$nextTick(() => {
+              this.refreshTable();
+            });
+          });
+          break;
+        case "link":
+          break;
+        case "goods":
+          getGoodsCategory().then(({ data: { data } }) => {
+            this.nodeTree = data;
+          });
+          break;
       }
     },
-    // 关闭弹窗
+    getList(page, params = {}) {
+      const { tableType } = this;
+      this.loading = true;
+      if (tableType == "image" || tableType == "images") {
+        getImageList(page.currentPage, page.pageSize, params).then(
+          ({ data: { data } }) => {
+            this.page.total = data.total;
+            this.avueList = data.records;
+            this.pictUrl = this.avueList.map((item) => {
+              return item.domainUrl;
+            });
+            this.loading = false;
+            this.clearSelection();
+          }
+        );
+      } else if (tableType == "link") {
+        // 获取链接列表数据
+      } else if (tableType == "goods-group" || tableType == "goods-list") {
+        getGoodsList(page.currentPage, page.pageSize, params).then(
+          ({ data: { data } }) => {
+            this.page.total = data.total;
+            this.avueList = data.records;
+            this.loading = false;
+            this.clearSelection();
+          }
+        );
+      }
+    },
+    // 组件初始化
+    beforeOpen() {
+      const { tableType } = this;
+      // 重置列表和表格
+      this.nodeTree = [];
+      this.avueList = [];
+      // 根据选择的资源类型不同，提供差异化的表格
+      switch (tableType) {
+        case "image":
+          this.defaultProps.label = "name";
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "标题",
+              prop: "name",
+              sortable: true,
+              overHidden: true,
+            },
+            {
+              label: "预览",
+              prop: "link",
+              overHidden: true,
+            },
+            {
+              label: "文件类型",
+              prop: "extension",
+              overHidden: true,
+            },
+            {
+              label: "宽度",
+              prop: "width",
+              overHidden: true,
+            },
+            {
+              label: "高度",
+              prop: "height",
+              overHidden: true,
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
+              sortable: true,
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("image");
+          break;
+        case "images":
+          this.defaultProps.label = "name";
+          this.avueOption.menu = false;
+          this.avueOption.selection = true;
+          this.avueOption.column = [
+            {
+              label: "标题",
+              prop: "name",
+              sortable: true,
+              overHidden: true,
+            },
+            {
+              label: "预览",
+              prop: "link",
+              overHidden: true,
+            },
+            {
+              label: "文件类型",
+              prop: "extension",
+              overHidden: true,
+            },
+            {
+              label: "宽度",
+              prop: "width",
+              overHidden: true,
+            },
+            {
+              label: "高度",
+              prop: "height",
+              overHidden: true,
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
+              sortable: true,
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("image");
+          break;
+        case "link":
+          this.defaultProps.label = "name";
+          this.getNodeTree("link");
+          this.hideClumn("extension", "width", "height");
+          break;
+        case "goods-group":
+          this.defaultProps.label = "title";
+          this.getNodeTree("goods");
+          this.shangpinAvueOption.menu = false;
+          this.shangpinAvueOption.selection = false;
+          break;
+        case "goods-list":
+          this.defaultProps.label = "title";
+          this.getNodeTree("goods");
+          this.shangpinAvueOption.menu = true;
+          this.shangpinAvueOption.selection = true;
+          break;
+      }
+    },
     beforeClose(done) {
       this.$emit("update:dialogVisible", false);
       done();
     },
-    // 获取节点树
-    loadCategoryTree(resourceType) {
-      // 根据不同的资源类型返回不同的树节点数据
-      switch (resourceType) {
-        case "picture":
-          getCategoryList().then(({ data: { data } }) => {
-            this.treeData = data;
-          });
-          break;
-        case "link":
-          this.treeData = [
-            {
-              id: "img",
-              name: "图片",
-              parentId: "0",
-            },
-            {
-              id: "goods",
-              name: "商品",
-              parentId: "0",
-            },
-            {
-              id: "page",
-              name: "营销页",
-              parentId: "0",
-            },
-            {
-              id: "doc",
-              name: "文章",
-              parentId: "0",
-            },
-          ];
-          break;
-        case "goods":
-          getTree().then(({ data: { data } }) => {
-            this.treeData = data;
-          });
-          break;
-        case "iamge":
-          getCategoryList().then(({ data: { data } }) => {
-            this.treeData = data;
-          });
-          break;
-      }
-    },
-    // 获取表格数据
-    loadDataList(page, params = {}) {
-      const { resourceType } = this;
-      this.loading = true;
-      if (resourceType == "picture" || resourceType == "image") {
-        getPictureList(page.currentPage, page.pageSize, params).then(
-          ({ data: { data } }) => {
-            this.page.total = data.total;
-            this.data = data.records;
-            this.pictUrl = this.data.map((item) => {
-              return item.domainUrl;
-            });
-            this.loading = false;
-            this.selectionClear();
-          }
-        );
-      } else if (resourceType == "link") {
-        // 获取链接列表数据
-      } else if (
-        resourceType == "goods-group" ||
-        resourceType == "goods-list"
-      ) {
-        getGoodsList(page.currentPage, page.pageSize, params).then(
-          ({ data: { data } }) => {
-            console.log("测试", data);
-            this.page.total = data.total;
-            this.data = data.records;
-            this.loading = false;
-            this.selectionClear();
-          }
-        );
-      }
+    // 隐藏表格列
+    hideClumn(...args) {
+      this.avueOption.column.forEach((item) => {
+        if (args.indexOf(item.prop) != -1) {
+          item.hide = true;
+        } else {
+          item.hide = false;
+        }
+      });
     },
     // 过滤（搜索）分类
-    filterNode(val, data, node) {
+    filterNodeTree(val, data, node) {
       if (!val) return true;
       return data.name.indexOf(val) != -1 ? true : false;
     },
     // 获取对应分类表格数据
-    handleNodeClick(data, node) {
+    onNodeClick(data, node) {
       this.nodeId = node.id;
       this.nodeData = data;
-      this.loadDataList(this.page, { categoryIds: this.nodeData.id });
+      this.getList(this.page, { categoryIds: this.nodeData.id });
     },
-    // 选择资源
-    handleSlect(row) {
-      const { resourceType, currentListIdx, updateForm } = this.$attrs;
-      updateForm(resourceType, currentListIdx, row);
+    // 单选
+    singleSlect(row) {
+      const {
+        tableType,
+        $attrs: { currentSelection, updateForm },
+      } = this;
+      updateForm(tableType, currentSelection, row);
+      this.$emit("update:dialogVisible", false);
+    },
+    onSelect(selection, row) {
+      this.selectionList = selection;
+    },
+    // 多选
+    mutipleSlect() {
+      const {
+        tableType,
+        selectionList,
+        $attrs: { currentSelection, updateForm },
+      } = this;
+      updateForm(tableType, currentSelection, selectionList)
       this.$emit("update:dialogVisible", false);
     },
     // 刷新表格
     refreshTable() {
-      // 优化用户体验，刷新即刻得到第一个节点数据
+      // 优化用户体验，刷新即可得到第一个节点数据
       this.$refs.tree.$children[0].handleClick();
-      this.$refs.crud.refreshTable();
     },
     // 清空已选
-    selectionClear() {
+    clearSelection() {
       this.selectionList = [];
       // this.$refs.crud.clearSelection();
     },

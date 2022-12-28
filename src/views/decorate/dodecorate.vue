@@ -674,7 +674,7 @@ export default {
       const that = this;
       const { name, link, path, pathName } = data;
       switch (type) {
-        case "picture":
+        case "image":
           if (index != -1) {
             that.templateForm.content.list[index].name = name;
             that.templateForm.content.list[index].image = link;
