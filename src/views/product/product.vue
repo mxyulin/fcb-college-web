@@ -219,7 +219,10 @@
                 >编辑
               </el-button>
               <!-- 复制 -->
-              <el-button type="text" icon="el-icon-s-order" disabled
+              <el-button
+                type="text"
+                icon="el-icon-s-order"
+                @click="copyGoods(scope.row)"
                 >复制
               </el-button>
               <!-- 删除 -->
@@ -295,6 +298,7 @@
 <script>
 import {
   getList,
+  add,
   update,
   remove,
   slectionsUpdate,
@@ -396,7 +400,18 @@ export default {
       this.title = "编辑商品";
       this.dialogFormVisible = true;
     },
-    // 删除当前行
+    // 复制商品
+    copyGoods(row) {
+      delete row.id;
+      add(row).then(() => {
+        this.getGoodsData();
+        this.$message({
+          type: "success",
+          message: "操作成功！",
+        });
+      });
+    },
+    // 删除商品
     rowDel(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",

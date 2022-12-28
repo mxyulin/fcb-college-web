@@ -56,9 +56,9 @@
                 >
                   <i class="el-icon-plus"></i>
                 </div>
-                <div v-else key="image-result" style="position: relative">
+                <div v-else key="image-result" class="goods-images">
                   <el-image
-                    style="width: 60px; height: 60px"
+                    style="width= 100%; height: 100%;"
                     :src="form.image"
                     :fit="fit"
                     :preview-src-list="[form.image]"
@@ -84,7 +84,7 @@
                     >
                       <el-image
                         style="width= 100%; height: 100%;"
-                        :src="image.link"
+                        :src="'link' in image ? image.link : undefined"
                         :fit="fit"
                         :preview-src-list="[image.link]"
                       ></el-image>
@@ -116,6 +116,7 @@
                 :props="{
                   multiple: true,
                   emitPath: false,
+                  checkStrictly: true,
                   label: 'name',
                   children: 'children',
                   value: 'id',
