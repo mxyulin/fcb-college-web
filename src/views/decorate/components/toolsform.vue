@@ -564,11 +564,10 @@
           </el-col>
         </el-row>
         <div
+          class="select-style-item-box"
           style="
             display: flex;
             flex-wrap: wrap;
-            padding-left: 15px;
-            padding-top: 16px;
           "
           v-if="templateData[centerSelect].content.timeData"
         >
@@ -609,7 +608,7 @@
                   height: 12px;
                   right: -6px;
                   top: -6px;
-                  color: #7438d5;
+                  color: #333;
                 "
                 class="el-icon-error"
                 @click="customList(index)"
@@ -2323,7 +2322,7 @@ export default {
           this.dialogTitle = "选择链接";
           break;
         case "goods-list":
-          this.dialogTitle = "商品列表";
+          this.dialogTitle = "选择商品";
           break;
         case "goods-group":
           this.dialogTitle = "选择商品分类";

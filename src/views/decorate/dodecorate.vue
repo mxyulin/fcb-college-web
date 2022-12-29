@@ -328,9 +328,6 @@ export default {
 
       // 装修类型
       isPageType: "home",
-      // 表单类型（shop & page）
-      // fromtype: "shop",
-
       // 模板数据（默认带首页轮播图)
       templateData: [],
       // 表单数据
@@ -599,7 +596,7 @@ export default {
       if (newVal) {
         this.init();
       }
-    }
+    },
   },
   methods: {
     // 装修数据初始化
@@ -672,24 +669,34 @@ export default {
     // 更新表单数据
     updateForm(type, index, data) {
       const that = this;
-      const { name, link, path, pathName } = data;
       switch (type) {
         case "image":
+          const { name, link } = data;
           if (index != -1) {
             that.templateForm.content.list[index].name = name;
             that.templateForm.content.list[index].image = link;
           } else {
-            // 悬浮主按钮处理
+            // 悬浮主按钮
             that.templateForm.content.image = link;
           }
           break;
         case "link":
-          that.templateForm.content.list[index].path = path;
-          that.templateForm.content.list[index].path_name = pathName;
+          const { id, linkType } = data;
+          if (linkType == "goods") {
+            that.templateForm.content.list[index].path_name = 'goods';
+            that.templateForm.content.list[index].path = id;
+          } else if (linkType == "marketing") {
+            that.templateForm.content.list[index].path_name = 'marketing';
+            that.templateForm.content.list[index].path = id;
+          }
+          break;
+        case "goods-list":
+          that.templateForm.content.timeData = data;
+          that.templateForm.content.ids = that.getIds(data);
           break;
       }
     },
-    // 缓存之前的装修数据
+    // 暂存上一次装修数据
     cachePreData(type) {
       switch (type) {
         case "home":
@@ -1069,9 +1076,10 @@ export default {
       }
       return form;
     },
-    // 禁止分类选项卡上移
+    // 装修组件排序
     reSortList() {
       let length = this.templateData.length;
+      // 禁止分类选项卡上移
       if (this.templateData[length - 2].type == "category-tabs") {
         const [categoryTabs] = this.templateData.splice(length - 2, 1);
         this.templateData.push(categoryTabs);
@@ -1094,7 +1102,6 @@ export default {
         that.showForm(that.centerSelect - 1);
       }
     },
-    // 保存装修数据
     saveDecorateData() {
       const {
         homeData,
@@ -1135,11 +1142,17 @@ export default {
           });
         });
     },
-    // 关闭装修 Dialog
     dialogBeforeClose(done) {
       this.dialogOpt.dialogVisible = false;
       done();
     },
+    // 获取 ids
+    getIds(arr) {
+      return arr.map((item) => {
+        return item.id;
+      })
+      .join(',');
+    }
   },
 };
 </script>
