@@ -30,7 +30,9 @@
     </avue-crud>
 
     
+    <!-- <div style="height:200px;"></div> -->
   </basic-container>
+
 </template>
 
 <script>
@@ -41,6 +43,8 @@
   export default {
     data() {
       return {
+        
+        //////////////
         form: {},
         query: {},
         loading: true,
@@ -54,6 +58,10 @@
         data: [],
 
       };
+    },
+    watch:{
+    },
+    mounted () {
     },
     computed: {
       ...mapGetters(["permission"]),
@@ -74,7 +82,10 @@
       }
     },
     methods: {
+      ////////
+
       rowSave(row, done, loading) {
+        console.log(row)
         add(row).then(() => {
           this.onLoad(this.page);
           this.$message({
@@ -90,6 +101,7 @@
 
       // 有问题
       rowUpdate(row, index, done, loading) {
+        console.log(row)
         update(row).then(() => {
           console.log('this.page',this.page)
           this.$message({
@@ -103,6 +115,7 @@
         });
       },
       rowDel(row) {
+        console.log(row)
         this.$confirm("确定将选择数据删除?", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",

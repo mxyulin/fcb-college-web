@@ -121,7 +121,7 @@ export default [{
       i18n: 'work'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/promote/components/couponsedit')
+      import( /* webpackChunkName: "views" */ '@/views/release/publish')
 
   } 
   ]
