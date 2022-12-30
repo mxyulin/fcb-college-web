@@ -1,6 +1,7 @@
 <template>
   <el-dialog
     :width="width"
+    top="5vh"
     :visible.sync="dialogVisible"
     :append-to-body="true"
     :close-on-click-modal="false"
@@ -9,7 +10,12 @@
   >
     <div slot="title">{{ dialogTitle }}</div>
     <!-- 资源表 -->
-    <el-row :gutter="0" type="flex" justify="space-between">
+    <el-row
+      :gutter="0"
+      type="flex"
+      justify="space-between"
+      v-if="!isShowCategorySelector"
+    >
       <el-col :span="TableLayout.colLeft">
         <el-input
           placeholder="搜索类别"
@@ -120,7 +126,7 @@
             >
           </template>
           <!-- 多选按钮 -->
-          <template slot="page" v-if="isMutiple">
+          <template slot="page" v-if="isShowMutipleCheckbox">
             <el-col :span="1">
               <el-button
                 type="primary"
@@ -158,6 +164,27 @@
       </el-col>
     </el-row>
     <!-- 商品分类级联选择器 -->
+    <el-row
+      :gutter="15"
+      type="flex"
+      style="height: 75vh"
+      justify="start"
+      v-if="isShowCategorySelector"
+    >
+      <el-col :span="4">
+        <el-cascader
+          size="medium"
+          clearable
+          :options="nodeTree"
+          :props="cascaderProps"
+          v-model="goodsCategorySelection"
+        >
+        </el-cascader>
+      </el-col>
+      <el-col :span="20">
+        <el-button type="primary" size="medium"> 确定 </el-button>
+      </el-col>
+    </el-row>
   </el-dialog>
 </template>
 
@@ -196,6 +223,16 @@ export default {
         colLeft: 3,
         colRight: 20,
       },
+      // 级联配置
+      cascaderProps: {
+        multiple: false,
+        checkStrictly: false,
+        emitPath: false,
+        value: "value",
+        label: "title",
+        children: "children",
+      },
+      goodsCategorySelection: [],
       nodeTree: [],
       avueList: [],
       selectionList: [],
@@ -211,6 +248,7 @@ export default {
         menu: true,
         selection: false,
         menuWidth: 100,
+        height: 500,
         align: "center",
         search: {
           name: "",
@@ -243,10 +281,19 @@ export default {
     option() {
       return option;
     },
-    // 多选状态
-    isMutiple() {
+    isShowMutipleCheckbox() {
       const { tableType } = this;
-      return tableType == "images" || tableType == "goods-list" ? true : false;
+      return tableType == "images" ||
+        tableType == "goods-list" ||
+        tableType == "category-tabs"
+        ? true
+        : false;
+    },
+    isShowCategorySelector() {
+      const { tableType } = this;
+      return tableType == "category-tabs" || tableType == "goods-group"
+        ? true
+        : false;
     },
   },
   watch: {
@@ -272,7 +319,9 @@ export default {
       if (code == 200) {
         this.nodeTree = data;
         this.$nextTick(() => {
-          this.refreshTable();
+          if (!this.isShowCategorySelector) {
+            this.refreshTable();
+          }
         });
       }
     },
@@ -434,6 +483,9 @@ export default {
           this.getNodeTree("goods");
           break;
         case "goods-group":
+          this.cascaderProps.multiple = false;
+          this.cascaderProps.checkStrictly = true;
+          this.getNodeTree("goods");
           break;
         case "goods-list":
           this.defaultProps.label = "title";
