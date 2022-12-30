@@ -32,8 +32,8 @@
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/dispatch/dispatchStore";
-  import option from "@/const/dispatch/dispatchStore";
+  import {getList, getDetail, add, update, remove} from "@/api/dispatch/dispatchstore";
+  import option from "@/const/dispatch/dispatchstore";
   import {mapGetters} from "vuex";
 
   export default {
