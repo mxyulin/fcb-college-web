@@ -2,7 +2,7 @@ import request from '@/router/axios';
 
 export const getList = (current, size, params) => {
   return request({
-    url: '/api/fcb-productSku/productSku/list',
+    url: '/api/fcb-product/sku/list',
     method: 'get',
     params: {
       ...params,
@@ -14,7 +14,7 @@ export const getList = (current, size, params) => {
 
 export const getDetail = (id) => {
   return request({
-    url: '/api/fcb-productSku/productSku/detail',
+    url: '/api/fcb-product/sku/detail',
     method: 'get',
     params: {
       id
@@ -24,7 +24,7 @@ export const getDetail = (id) => {
 
 export const remove = (ids) => {
   return request({
-    url: '/api/fcb-productSku/productSku/remove',
+    url: '/api/fcb-product/sku/remove',
     method: 'post',
     params: {
       ids,
@@ -34,7 +34,7 @@ export const remove = (ids) => {
 
 export const add = (row) => {
   return request({
-    url: '/api/fcb-productSku/productSku/submit',
+    url: '/api/fcb-product/sku/submit',
     method: 'post',
     data: row
   })
@@ -42,7 +42,7 @@ export const add = (row) => {
 
 export const update = (row) => {
   return request({
-    url: '/api/fcb-productSku/productSku/submit',
+    url: '/api/fcb-product/sku/submit',
     method: 'post',
     data: row
   })

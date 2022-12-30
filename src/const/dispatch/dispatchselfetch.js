@@ -20,38 +20,33 @@ export default {
       hide: true,
     },
     {
-      label: "名称",
-      prop: "name",
+      label: "租户ID",
+      prop: "tenantId",
       type: "input",
-      span: 24,
-      search: true,
-      rules: [{
-        required: true,
-        message: "请输入名称",
-        trigger: "blur"
-      }],
+      addDisplay: false,
+      editDisplay: false,
+      viewDisplay: false,
+      hide: true,
     },
     {
-      label: "路径",
-      prop: "path",
+      label: "包含门店",
+      prop: "storeIds",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入路径",
-        trigger: "blur"
-      }],
     },
     {
-      label: "所属分组",
-      prop: "linkGroup",
+      label: "过期类型:day=天数,time=截至日期",
+      prop: "expireType",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入所属分组",
-        trigger: "blur"
-      }],
+    },
+    {
+      label: "X天过期",
+      prop: "expireDay",
+      type: "input",
+    },
+    {
+      label: "截至日期",
+      prop: "expireTime",
+      type: "input",
     },
     {
       label: "创建人",
