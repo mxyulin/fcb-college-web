@@ -540,6 +540,7 @@
                         >
                         </el-input>
                       </div>
+
                       <div class="goods-detail-del">
                         <div
                           class="goods-detail-del-icon"
@@ -553,6 +554,7 @@
                           src="https://demo.shopro.top/assets/addons/shopro/img/goods/move.png"
                         />
                       </div>
+                      
                     </div>
                   </draggable>
                 </div>
