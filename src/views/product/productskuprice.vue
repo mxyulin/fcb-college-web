@@ -23,7 +23,7 @@
                    size="small"
                    icon="el-icon-delete"
                    plain
-                   v-if="permission.attachCategory_delete"
+                   v-if="permission.productSkuPrice_delete"
                    @click="handleDelete">删 除
         </el-button>
       </template>
@@ -32,8 +32,8 @@
 </template>
 
 <script>
-  import {getList, getDetail, getTree, add, update, remove} from "@/api/resource/attachcategory";
-  import option from "@/const/resource/attachcategory";
+  import {getList, getDetail, add, update, remove} from "@/api/product/productskuprice";
+  import option from "@/const/product/productskuprice";
   import {mapGetters} from "vuex";
 
   export default {
@@ -56,10 +56,10 @@
       ...mapGetters(["permission"]),
       permissionList() {
         return {
-          addBtn: true,//this.vaildData(this.permission.attachCategory_add, false),
-          viewBtn: true,//this.vaildData(this.permission.attachCategory_view, false),
-          delBtn: true,//this.vaildData(this.permission.attachCategory_delete, false),
-          editBtn: true,//this.vaildData(this.permission.attachCategory_edit, false)
+          addBtn: this.vaildData(this.permission.productSkuPrice_add, false),
+          viewBtn: this.vaildData(this.permission.productSkuPrice_view, false),
+          delBtn: this.vaildData(this.permission.productSkuPrice_delete, false),
+          editBtn: this.vaildData(this.permission.productSkuPrice_edit, false)
         };
       },
       ids() {
@@ -173,13 +173,11 @@
       onLoad(page, params = {}) {
         this.loading = true;
         getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
-          this.data = res.data.data;
-          console.log(this.data);
+          const data = res.data.data;
+          this.page.total = data.total;
+          this.data = data.records;
           this.loading = false;
-          getTree().then(res => {
-            const column = this.findObject(this.option.column, "parentId");
-            column.dicData = res.data.data;
-          });
+          this.selectionClear();
         });
       }
     }
