@@ -44,7 +44,7 @@ export const remove = (ids) => {
   })
 }
 
-export const submitProduct = (row) => {
+export const add = (row) => {
   return request({
     url: '/api/fcb-product/product/submit',
     method: 'post',
@@ -52,7 +52,13 @@ export const submitProduct = (row) => {
   })
 }
 
- 
+export const update = (row) => {
+  return request({
+    url: '/api/fcb-product/product/submit',
+    method: 'post',
+    data: row
+  })
+}
 
 export const slectionsUpdate = (ids, status) => {
   return request({
