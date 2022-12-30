@@ -2,6 +2,15 @@
   <basic-container>
     <!-- 查询模块 -->
     <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
+    <!--  -->
+    <el-dialog
+      append-to-body="ture"
+      :visible.sync="box"
+      width="60%"
+      center
+    >
+    <Form></Form>
+    </el-dialog>
     <!-- 列表菜单 -->
     <el-row :gutter="0" type="flex" justify="space-between">
       <el-col :span="2">
@@ -284,6 +293,7 @@
         </el-pagination>
       </el-col>
     </el-row>
+
     <!-- 表单模块 -->
     <Form
       ref="form"
@@ -311,7 +321,7 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     Query,
-    Form,
+    Form
   },
   data() {
     return {
@@ -359,7 +369,7 @@ export default {
       this.getGoodsData();
     },
   },
-  methods: {
+  methods: { 
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this;
@@ -500,3 +510,5 @@ export default {
 <style lang="scss" scoped>
 @import "@/views/product/styles/product";
 </style>
+ 
+

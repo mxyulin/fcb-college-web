@@ -1,0 +1,102 @@
+#publish{
+    background-color: #ffffff;
+}
+
+// 防粘连
+.clearboder::before{
+    content: "";
+    display: table;
+} 
+// 弹性横向居中
+.displayflexs{
+    display: flex;
+    align-items: center;
+}
+// 弹性竖向居中
+.displayflexh{
+    display: flex;
+    justify-content: center;
+}
+// 弹性横竖居中
+.displayflex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.head{
+    width: 90%;
+    min-width: 500px;
+    margin: auto;
+}
+
+.headone{
+    display: flex;
+    justify-content: space-between;
+    padding: 30px;
+}
+.boderr{
+    box-sizing: border-box;
+    border: 1px solid #a99999;
+    background-color: #f8f8f8;
+    width: 28px;
+    height: 28px;
+    text-align: center;
+    line-height: 28px;
+    border-radius: 50%;
+}
+.wzfontsize{
+    height: 28px;
+    line-height: 28px;
+    margin-left: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #222222;
+}
+
+.gffontsize{
+    margin-right: 20px;
+    font-size: 13px;
+    color: #898989;
+}
+
+.xxfontsize{
+    font-size: 14px;
+    color: #666666;
+    margin-right: 20px;
+}
+
+.richtext{
+    text-align: center;
+    width: 100%;
+    height: 55px;
+    line-height: 55px;
+    background-color: #fafafa;
+}
+
+.body{
+    width: 900px;
+    margin: auto;
+    padding: 0 26px;
+}
+.displayflexh h2{
+    padding: 0;
+    margin: 0;
+    color: #999;
+}
+.displayflexh div{
+    color: #999;
+    font-size: 12px;
+}
+.edit{
+    justify-content: space-between;
+    margin-top: 20px;
+    margin-bottom: 16px;
+    height: 42px;
+    line-height: 42px;
+}
+.edittext{
+    min-height: 500px;
+    height: 600px;
+    border: 1px solid grey;
+}

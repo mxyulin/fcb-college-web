@@ -24,7 +24,7 @@ export default [{
   }
   ]
 }, {
-  path: '/test',
+  path: '/logs',
   component: Layout,
   redirect: '/test/index',
   children: [{
@@ -34,7 +34,7 @@ export default [{
       i18n: 'test'
     },
     component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/util/test')
+      import( /* webpackChunkName: "views" */ '@/views/util/logs.vue')
   }]
 }, {
   path: '/dict-horizontal',
@@ -104,7 +104,7 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
 
-  }
+  } 
   ]
 }
 ]

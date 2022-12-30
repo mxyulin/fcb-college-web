@@ -348,7 +348,7 @@ export default {
         page.pageSize,
         Object.assign(params, that.query)
       ).then((res) => {
-        console.log("data", res);
+        // console.log("data", res);
         that.listData = res.data.data.records;
         // that.page.total = data.total;
         // that.data = data.records;
