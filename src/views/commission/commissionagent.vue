@@ -766,7 +766,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         that.listData = res.data.data.records;
-        console.log("data数据", that.listData);
+        // console.log("data数据", that.listData);
         // that.page.total = data.total;
         // this.data = data.records;
         that.loading = false;
