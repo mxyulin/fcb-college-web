@@ -1,50 +1,108 @@
 <template>
   <el-dialog
-    width="75%"
+    :width="width"
     :visible.sync="dialogVisible"
     :append-to-body="true"
     :close-on-click-modal="false"
     :before-close="beforeClose"
+    @open="beforeOpen"
   >
-    <div slot="title">选择{{ dialogTitle }}</div>
+    <div slot="title">{{ dialogTitle }}</div>
     <!-- 资源表 -->
-    <el-row gutter="0" type="flex" justify="space-between">
-      <el-col :span="4">
-        <div>
-          <el-scrollbar>
-            <el-input
-              :size="option.size"
-              placeholder="搜索分类"
-              v-model="filterText"
-              style="margin-bottom: 10px"
-            >
-            </el-input>
-            <el-tree
-              :props="defaultProps"
-              :data="treeData"
-              :node-key="id"
-              :highlight-current="true"
-              :filter-node-method="filterNode"
-              @node-click="handleNodeClick"
-              ref="tree"
-            >
-            </el-tree>
-          </el-scrollbar>
-        </div>
+    <el-row :gutter="0" type="flex" justify="space-between">
+      <el-col :span="TableLayout.colLeft">
+        <el-input
+          placeholder="搜索类别"
+          style="height: 45px"
+          v-model="filterText"
+          :size="option.size"
+        >
+        </el-input>
+        <el-tree
+          accordion
+          ref="tree"
+          empty-text="暂无节点数据"
+          :node-key="id"
+          :data="nodeTree"
+          :props="defaultProps"
+          :highlight-current="true"
+          :filter-node-method="filterNodeTree"
+          @node-click="onNodeClick"
+        >
+        </el-tree>
       </el-col>
-      <el-col :span="19">
+      <el-col :span="TableLayout.colRight">
         <avue-crud
-          :data="data"
+          :data="avueList"
           :option="avueOption"
           :table-loading="loading"
           :page.sync="page"
           :search.sync="search"
           :permission="permissionList"
           @refresh-change="refreshTable"
+          @select="onSelect"
+          @select-all="onSelect"
           ref="crud"
         >
+          <!-- 图片表预览列 -->
+          <template slot="link" slot-scope="scope">
+            <el-image
+              style="width: 80px; height: 80px"
+              :src="scope.row.link"
+              :preview-src-list="[scope.row.link]"
+              :fit="fit"
+            ></el-image>
+          </template>
+          <!-- 商品表预览列 -->
+          <template slot="goods" slot-scope="scope">
+            <div class="display-flex">
+              <el-image
+                style="width: 80px; height: 80px"
+                :src="scope.row.image"
+                :preview-src-list="[scope.row.image]"
+                :fit="fit"
+              ></el-image>
+              <div>
+                <div>{{ scope.row.title }}</div>
+                <div>{{ scope.row.subtitle }}</div>
+              </div>
+            </div>
+          </template>
+          <!-- 商品表类型列 -->
+          <template slot="type" slot-scope="scope">
+            <span v-if="scope.row.type == 'normal'">实体商品</span>
+            <span v-if="scope.row.type == 'virtual'">虚拟商品</span>
+          </template>
+          <!-- 商品表上架列 -->
+          <template slot="status" slot-scope="scope">
+            <span v-if="scope.row.status == 0">隐藏中</span>
+            <span v-if="scope.row.status == 1">上架中</span>
+            <span v-if="scope.row.status == 2">下架中</span>
+          </template>
+          <!-- 营销页预览列 -->
+          <template slot="image" slot-scope="scope">
+            <el-image
+              style="width: 80px; height: 80px"
+              :src="scope.row.image"
+              :preview-src-list="[scope.row.image]"
+              :fit="fit"
+            ></el-image>
+          </template>
           <template slot="menuLeft">
+            <!-- 链接类别按钮组 -->
+            <el-radio-group
+              v-if="tableType == 'link'"
+              v-model="linkType"
+              :size="option.size"
+              @input="onLinkTypeChange"
+            >
+              <el-radio-button label="goods" border>商品</el-radio-button>
+              <el-radio-button label="marketing" border>营销页</el-radio-button>
+              <el-radio-button label="article" border>文章</el-radio-button>
+            </el-radio-group>
+            <!-- 上传图片 -->
             <el-button
+              v-if="tableType == 'image' || tableType == 'images'"
               type="primary"
               :size="option.size"
               icon="el-icon-upload2"
@@ -52,22 +110,25 @@
               >上传</el-button
             >
           </template>
-          <template slot="link" slot-scope="scope">
-            <el-image
-              style="width: 80px; height: 80px"
-              :src="scope.link"
-              :preview-src-list="[scope.link]"
-              :fit="fit"
-            ></el-image>
-          </template>
-          <template slot="categoryName">{{ nodeData.name }}</template>
+          <!-- 单选按钮 -->
           <template slot-scope="{ row }" slot="menu">
             <el-button
               :size="option.size"
               type="primary"
-              @click="handleSlect(row)"
+              @click="singleSlect(row)"
               >选择</el-button
             >
+          </template>
+          <!-- 多选按钮 -->
+          <template slot="page" v-if="isMutiple">
+            <el-col :span="1">
+              <el-button
+                type="primary"
+                :size="option.size"
+                @click="mutipleSlect"
+                >确定</el-button
+              >
+            </el-col>
           </template>
         </avue-crud>
         <el-dialog
@@ -96,90 +157,67 @@
         </el-dialog>
       </el-col>
     </el-row>
-    <div slot="footer"></div>
+    <!-- 商品分类级联选择器 -->
   </el-dialog>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import option from "@/const/decorate/dodecorate";
-import { validatenull } from "@/util/validate";
-import { getList as getCategoryList } from "@/api/resource/attachcategory";
-import { getList } from "@/api/resource/attach";
+import { getList as getImageCategory } from "@/api/resource/attachcategory";
+import { getList as getImageList } from "@/api/resource/attach";
+import { getTree as getGoodsCategory } from "@/api/product/productcategory";
+import { getList as getGoodsList } from "@/api/product/product";
+import { getList as getPageList } from "@/api/decorate/decorate";
+import { getList as getArticleList } from "@/api/news/article";
 
 export default {
   name: "resourceTable",
   props: {
     dialogVisible: Boolean,
     dialogTitle: String,
+    width: String,
+    tableType: String,
   },
   data() {
     return {
-      option: option,
       loading: false,
       page: {
-        pageSize: 10,
         currentPage: 1,
+        pageSize: 10,
         total: 0,
         pagerCount: 7,
+        layout: "slot, total, sizes, prev, pager, next, jumper, ->",
       },
-      query: {},
-
-      /*
-       *节点树
-       */
-      treeData: [],
+      // 链接表类型
+      linkType: "goods",
+      // 表格布局
+      TableLayout: {
+        colLeft: 3,
+        colRight: 20,
+      },
+      nodeTree: [],
+      avueList: [],
+      selectionList: [],
       filterText: "",
       defaultProps: {
-        children: "children",
         label: "name",
+        children: "children",
       },
-      nodeData: {},
-      nodeId: null,
-      /*
-       *表格
-       */
       avueOption: {
         header: true,
         search: true,
         border: true,
+        menu: true,
+        selection: false,
         menuWidth: 100,
         align: "center",
         search: {
           name: "",
         },
-        column: [
-          {
-            label: "标题",
-            prop: "name",
-            sortable: true,
-            overHidden: true,
-            hide: false
-          },
-          {
-            label: "预览",
-            prop: "link",
-            overHidden: true,
-            hide: false
-          },
-          {
-            label: "文件类型",
-            prop: "extension",
-            overHidden: true,
-            hide: false
-          },
-          {
-            label: "创建时间",
-            prop: "createTime",
-            sortable: true,
-            overHidden: true,
-            hide: false
-          },
-        ],
+        column: [],
       },
-      data: [],
-      selectionList: [],
-      pictUrl: [],
+      // 图片上传
       attachBox: false,
       fileList: [],
     };
@@ -193,7 +231,7 @@ export default {
       });
       return ids.join(",");
     },
-    // 表格按钮权限
+    // 表格按钮状态
     permissionList() {
       return {
         addBtn: false,
@@ -201,122 +239,345 @@ export default {
         delBtn: false,
       };
     },
+    // el-ui组件全局配置
+    option() {
+      return option;
+    },
+    // 多选状态
+    isMutiple() {
+      const { tableType } = this;
+      return tableType == "images" || tableType == "goods-list" ? true : false;
+    },
   },
   watch: {
-    // 树节点过滤
+    // 节点树过滤
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
-    dialogVisible(newVal) {
-      const { resourceType } = this.$attrs;
-      // 重置列表和表格
-      this.treeData = [];
-      this.data = [];
-      // 获取节点树
-      if (newVal) {
-        // 根据用户所选资源类型不同，提供不同的节点树
-        switch (resourceType) {
-          case "picture":
-            this.loadCategoryTree();
-            this.hideClumn();
-            break;
-          case "link":
-            this.treeData = [
-              {
-                id: "img",
-                name: "图片",
-                parentId: "0",
-              },
-              {
-                id: "goods",
-                name: "商品",
-                parentId: "0",
-              },
-              {
-                id: "page",
-                name: "营销页",
-                parentId: "0",
-              },
-              {
-                id: "doc",
-                name: "文章",
-                parentId: "0",
-              },
-            ];
-            this.hideClumn("extension");
-            break;
-        }
-      } else {
-        this.treeData = [];
-      }
-    },
   },
   methods: {
-    init() {
-      
+    async getNodeTree(tableType) {
+      let result = null;
+      switch (tableType) {
+        case "image":
+          result = await getImageCategory();
+          break;
+        case "goods":
+          result = await getGoodsCategory();
+          break;
+      }
+      const {
+        data: { code, data },
+      } = result;
+      if (code == 200) {
+        this.nodeTree = data;
+        this.$nextTick(() => {
+          this.refreshTable();
+        });
+      }
     },
-    // 列隐藏显示
-    hideClumn(...args) {
-      this.avueOption.column.forEach((col) => {
-        if (args.indexOf(col.prop) != -1) {
-          col.hide = true;
-        } else {
-          col.hide = false;
+    async getList(page, params = {}) {
+      const { tableType } = this;
+      let result = null;
+      this.loading = true;
+      if (tableType == "image" || tableType == "images") {
+        result = await getImageList(page.currentPage, page.pageSize, params);
+      } else if (tableType == "link") {
+        const { linkType } = this;
+        switch (linkType) {
+          case "goods":
+            result = await getGoodsList(
+              page.currentPage,
+              page.pageSize,
+              params
+            );
+            break;
+          case "marketing":
+            result = await getPageList(page.currentPage, page.pageSize, params);
+            break;
+          case "article":
+            result = await getArticleList(
+              page.currentPage,
+              page.pageSize,
+              params
+            );
+            break;
         }
-      })
+      } else if (tableType == "goods-group" || tableType == "goods-list") {
+        result = await getGoodsList(page.currentPage, page.pageSize, params);
+      } else {
+      }
+      const {
+        data: { code, data },
+      } = result;
+      if (code == 200) {
+        this.page.total = data.total;
+        this.avueList = data.records;
+        this.loading = false;
+        this.clearSelection();
+      }
     },
-    // 关闭弹窗
+    // 初始化表格
+    beforeOpen() {
+      const { tableType } = this;
+      // 重置列表和表格
+      this.nodeTree = [];
+      this.avueList = [];
+      // 根据选择的资源类型不同，提供差异化的表格
+      switch (tableType) {
+        case "image":
+          this.defaultProps.label = "name";
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "标题",
+              prop: "name",
+              sortable: true,
+              overHidden: true,
+            },
+            {
+              label: "预览",
+              prop: "link",
+              overHidden: true,
+            },
+            {
+              label: "文件类型",
+              prop: "extension",
+              overHidden: true,
+            },
+            {
+              label: "宽度",
+              prop: "width",
+              overHidden: true,
+            },
+            {
+              label: "高度",
+              prop: "height",
+              overHidden: true,
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
+              sortable: true,
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("image");
+          break;
+        case "images":
+          this.defaultProps.label = "name";
+          this.avueOption.menu = false;
+          this.avueOption.selection = true;
+          this.avueOption.column = [
+            {
+              label: "标题",
+              prop: "name",
+              sortable: true,
+              overHidden: true,
+            },
+            {
+              label: "预览",
+              prop: "link",
+              overHidden: true,
+            },
+            {
+              label: "文件类型",
+              prop: "extension",
+              overHidden: true,
+            },
+            {
+              label: "宽度",
+              prop: "width",
+              overHidden: true,
+            },
+            {
+              label: "高度",
+              prop: "height",
+              overHidden: true,
+            },
+            {
+              label: "创建时间",
+              prop: "createTime",
+              sortable: true,
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("image");
+          break;
+        case "link":
+          this.defaultProps.label = "title";
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "商品",
+              prop: "goods",
+              overHidden: true,
+            },
+            {
+              label: "商品类型",
+              prop: "type",
+              overHidden: true,
+            },
+            {
+              label: "上架状态",
+              prop: "status",
+              overHidden: true,
+            },
+            {
+              label: "更新时间",
+              prop: "updateTime",
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("goods");
+          break;
+        case "goods-group":
+          break;
+        case "goods-list":
+          this.defaultProps.label = "title";
+          this.avueOption.menu = false;
+          this.avueOption.selection = true;
+          this.avueOption.column = [
+            {
+              label: "商品",
+              prop: "goods",
+              overHidden: true,
+            },
+            {
+              label: "商品类型",
+              prop: "type",
+              overHidden: true,
+            },
+            {
+              label: "上架状态",
+              prop: "status",
+              overHidden: true,
+            },
+            {
+              label: "更新时间",
+              prop: "updateTime",
+              overHidden: true,
+            },
+          ];
+          this.getNodeTree("goods");
+          break;
+      }
+    },
+    // 表格重置
     beforeClose(done) {
+      this.linkType = "goods";
+      this.TableLayout.colLeft = 3;
+      this.TableLayout.colRight = 20;
       this.$emit("update:dialogVisible", false);
       done();
     },
-    // 获取节点树
-    loadCategoryTree() {
-      getCategoryList().then(({ data: { data } }) => {
-        this.treeData = data;
+    // 切换连接表
+    onLinkTypeChange(linkType) {
+      this.nodeTree = [];
+      this.avueList = [];
+      switch (linkType) {
+        case "goods":
+          this.TableLayout.colLeft = 3;
+          this.TableLayout.colRight = 20;
+          this.beforeOpen();
+          break;
+        case "marketing":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "模板名称",
+              prop: "name",
+              overHidden: true,
+            },
+            {
+              label: "预览",
+              prop: "image",
+              overHidden: true,
+            },
+            {
+              label: "备注",
+              prop: "memo",
+              overHidden: true,
+            },
+            {
+              label: "更新时间",
+              prop: "updateTime",
+              overHidden: true,
+            },
+          ];
+          this.getList(this.page, { type: "page" });
+          break;
+        case "article":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [];
+          // this.getList(this.page);
+          break;
+      }
+    },
+    // 隐藏表格列
+    hideClumn(...args) {
+      this.avueOption.column.forEach((item) => {
+        if (args.indexOf(item.prop) != -1) {
+          item.hide = true;
+        } else {
+          item.hide = false;
+        }
       });
     },
-    // 获取表格数据
-    loadDataList(page, params = {}) {
-      let that = this;
-      that.loading = true;
-      getList(page.currentPage, page.pageSize, params).then(
-        ({ data: { data } }) => {
-          that.page.total = data.total;
-          that.data = data.records;
-          that.pictUrl = that.data.map((item) => {
-            return item.domainUrl;
-          });
-          that.loading = false;
-          that.selectionClear();
-        }
-      );
-    },
     // 过滤（搜索）分类
-    filterNode(val, data, node) {
+    filterNodeTree(val, data, node) {
       if (!val) return true;
       return data.name.indexOf(val) != -1 ? true : false;
     },
-    // 获取对应分类表格数据
-    handleNodeClick(data, node) {
-      this.nodeId = node.id;
-      this.nodeData = data;
-      this.loadDataList(this.page, { categoryIds: this.nodeData.id });
+    // 获取一个分类表格数据
+    onNodeClick(data, node) {
+      const { id } = data;
+      this.getList(this.page, { categoryIds: id });
     },
-    // 选择资源
-    handleSlect(row) {
-      const { resourceType, currentListIdx, updateForm } = this.$attrs;
-      updateForm(resourceType, currentListIdx, row);
+    // 单选
+    singleSlect(row) {
+      const {
+        tableType,
+        linkType,
+        $attrs: { currentSelection, updateForm },
+      } = this;
+      if (tableType == "link") {
+        row.linkType = linkType;
+      }
+      updateForm(tableType, currentSelection, row);
+      this.linkType = "goods";
+      this.TableLayout.colLeft = 3;
+      this.TableLayout.colRight = 20;
+      this.$emit("update:dialogVisible", false);
+    },
+    onSelect(selection, row) {
+      this.selectionList = selection;
+    },
+    // 多选
+    mutipleSlect() {
+      const {
+        tableType,
+        selectionList,
+        $attrs: { currentSelection, updateForm },
+      } = this;
+      updateForm(tableType, currentSelection, selectionList);
       this.$emit("update:dialogVisible", false);
     },
     // 刷新表格
     refreshTable() {
-      // 优化用户体验，刷新即刻得到第一个节点数据
+      // 优化用户体验，刷新即可得到第一个节点数据
       this.$refs.tree.$children[0].handleClick();
-      this.$refs.crud.refreshTable();
     },
     // 清空已选
-    selectionClear() {
+    clearSelection() {
       this.selectionList = [];
       // this.$refs.crud.clearSelection();
     },
@@ -340,4 +601,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.display-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
 </style>

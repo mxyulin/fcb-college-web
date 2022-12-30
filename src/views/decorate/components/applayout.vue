@@ -1,12 +1,14 @@
 <template>
   <!-- 拖放模块 -->
   <draggable
-    :list="templateData"
-    :animation="500"
     tag="div"
     ghostClass="ghost"
-    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ``"
+    filter=".undraggable"
     class="center-draggable"
+    :animation="500"
+    :list="templateData"
+    :class="isPageType == 'home' || fromtype == 'custom' ? 'home-custom' : ``"
+    @update="reSortList"
   >
     <transition-group>
       <template v-if="templateData && templateData.length > 0">
@@ -1034,6 +1036,7 @@
                 v-if="compotent.content.timeData.length > 0"
                 class="compotent-goods-list-1-container"
               >
+                <!-- 宫格排列 -->
                 <template v-if="compotent.content.style == 1">
                   <el-row
                     :gutter="8"
@@ -1048,11 +1051,11 @@
                       <div
                         class="compotent-goods-list-1"
                         :class="
-                          it.activity_type &&
-                          it.activity_type.includes('seckill')
+                          it.activityType &&
+                          it.activityType.includes('seckill')
                             ? 'compotent-goods-list-1-seckill'
-                            : it.activity_type &&
-                              it.activity_type.includes('groupon')
+                            : it.activityType &&
+                              it.activityType.includes('groupon')
                             ? 'compotent-goods-list-1-groupon'
                             : ''
                         "
@@ -1070,8 +1073,8 @@
                           >
                             <div
                               v-if="
-                                it.activity_type &&
-                                it.activity_type.includes('groupon')
+                                it.activityType &&
+                                it.activityType.includes('groupon')
                               "
                               class="
                                 compotent-goods-list-title-tags
@@ -1082,8 +1085,8 @@
                             </div>
                             <div
                               v-if="
-                                it.activity_type &&
-                                it.activity_type.includes('seckill')
+                                it.activityType &&
+                                it.activityType.includes('seckill')
                               "
                               class="
                                 compotent-goods-list-title-tags
@@ -1105,7 +1108,7 @@
                           <div class="display-flex" style="flex-wrap: wrap">
                             <div
                               class="compotent-discounts-tags"
-                              v-for="(t, index) in it.activity_discounts_tags"
+                              v-for="(t, index) in it.activityDiscountsTags"
                               :key="index"
                             >
                               <span>{{ t }}</span>
@@ -1114,14 +1117,14 @@
                           <div class="compotent-goods-list-1-pricecontainer">
                             <div class="compotent-goods-list-1-price">
                               ￥{{
-                                it.activity_type &&
-                                it.activity_type.includes("groupon")
+                                it.activityType &&
+                                it.activityType.includes("groupon")
                                   ? it.groupon_price
                                   : it.price
                               }}
                             </div>
                             <div class="compotent-goods-list-1-sales">
-                              ￥{{ it.original_price }}
+                              ￥{{ it.originalPrice }}
                             </div>
                           </div>
                           <div class="compotent-goods-list-1-cart">
@@ -1134,6 +1137,7 @@
                     </el-col>
                   </el-row>
                 </template>
+                <!-- 列表排列 -->
                 <template v-for="(gitem, index) in compotent.content.timeData">
                   <div
                     class="compotent-goods-list-2-container"
@@ -1143,11 +1147,11 @@
                     <div
                       class="compotent-goods-list"
                       :class="
-                        gitem.activity_type &&
-                        gitem.activity_type.indexOf('groupon') > -1
+                        gitem.activityType &&
+                        gitem.activityType.indexOf('groupon') > -1
                           ? 'compotent-goods-list-2-groupon'
-                          : gitem.activity_type &&
-                            gitem.activity_type.indexOf('seckill') > -1
+                          : gitem.activityType &&
+                            gitem.activityType.indexOf('seckill') > -1
                           ? 'compotent-goods-list-2-seckill'
                           : ''
                       "
@@ -1163,8 +1167,8 @@
                         <div class="compotent-goods-list-title ellipsis-item">
                           <div
                             v-if="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('groupon') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('groupon') > -1
                             "
                             class="
                               compotent-goods-list-title-tags
@@ -1175,8 +1179,8 @@
                           </div>
                           <div
                             v-if="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('seckill') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('seckill') > -1
                             "
                             class="
                               compotent-goods-list-title-tags
@@ -1199,7 +1203,7 @@
                           <div
                             class="compotent-discounts-tags"
                             style="margin-top: 0"
-                            v-for="(t, index) in gitem.activity_discounts_tags"
+                            v-for="(t, index) in gitem.activityDiscountsTags"
                             :key="index"
                           >
                             <span>{{ t }}</span>
@@ -1222,21 +1226,21 @@
                           <div
                             class="compotent-goods-list-button"
                             :class="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('groupon') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('groupon') > -1
                                 ? 'compotent-goods-list-button-groupon'
-                                : gitem.activity_type &&
-                                  gitem.activity_type.indexOf('seckill') > -1
+                                : gitem.activityType &&
+                                  gitem.activityType.indexOf('seckill') > -1
                                 ? 'compotent-goods-list-button-seckill'
                                 : ''
                             "
                           >
                             {{
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf("groupon") > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf("groupon") > -1
                                 ? "马上拼"
-                                : gitem.activity_type &&
-                                  gitem.activity_type.indexOf("seckill") > -1
+                                : gitem.activityType &&
+                                  gitem.activityType.indexOf("seckill") > -1
                                 ? "去抢购"
                                 : "去购买"
                             }}
@@ -1247,6 +1251,7 @@
                   </div>
                 </template>
               </div>
+              <!-- 骨架模板 -->
               <template
                 v-if="
                   compotent.content.timeData &&
@@ -1733,6 +1738,9 @@ export default {
     showForm(idx) {
       this.$emit("showForm", idx);
     },
+    reSortList() {
+      this.$emit("reSortList");
+    }
   },
 };
 </script>

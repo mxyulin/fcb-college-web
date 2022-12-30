@@ -84,10 +84,6 @@ import option from "@/const/product/product";
 import { validatenull } from "@/util/validate";
 
 export default {
-  /*
-   * 父组件传来的数据 page, search
-   * 父组件绑定的事件 getGoodsData
-   */
   name: "Query",
   props: ["page", "search"],
   data() {

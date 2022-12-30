@@ -74,7 +74,8 @@ Vue.config.productionTip = false;
 // } else {
 //   Vue.config.devtools = false;
 // }
-
+// Mockjs
+import '@/mock/index'; 
 
 new Vue({
   router,

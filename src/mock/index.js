@@ -1,12 +1,5 @@
 import user from './user'; 
-import menu from './menu'; 
-import oauth from './oauth'; 
-import param from './param'; 
-
-import decorate from "./decorate/decorate"
-import commission from './commission/commission';
-import product from '@/mock/product/product';
- 
+import resourceTable from './resource/resource-table';
 
  /**
  * 模拟数据mock
@@ -17,15 +10,4 @@ import product from '@/mock/product/product';
 const options = {mock: false};
 
 // user(options);
- 
-// menu(options);
-
-// oauth(options);
- 
-// param(options);
-
-
-commission(options)
-decorate(options) 
-product(options) 
- 
+resourceTable(options);

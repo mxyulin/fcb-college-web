@@ -21,14 +21,6 @@ export default [{
     },
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/wel/dashboard')
-  }, {
-    path: '/dodecorate',
-    name: '装修设计',
-    meta: {
-      i18n: 'work'
-    },
-    component: () =>
-      import( /* webpackChunkName: "views" */ '@/views/decorate/dodecorate')
   }
   ]
 }, {

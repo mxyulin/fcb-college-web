@@ -212,10 +212,13 @@
         </el-pagination>
       </el-row>
     </div>
+    <DoDecorate :dialogOpt="dialogOpt"/>
   </basic-container>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import option from "@/const/decorate/decorate";
 import {
   getList,
   getDetail,
@@ -224,8 +227,7 @@ import {
   remove,
   copy,
 } from "@/api/decorate/decorate";
-import option from "@/const/decorate/decorate";
-import { mapGetters } from "vuex";
+import DoDecorate from "@/views/decorate/dodecorate"
 
 export default {
   data() {
@@ -254,11 +256,19 @@ export default {
       option: option,
       // 表单列表
       templateList: [],
+      dialogOpt: {
+        dialogVisible: false,
+        decorateId: null,
+        formType: ""
+      }
     };
   },
   mounted() {
     this.init();
     this.onLoad(this.page);
+  },
+  components: {
+    DoDecorate
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -340,8 +350,10 @@ export default {
         that.form.platform = platform.split(",");
       });
     },
-    handleDecorate(id) {
-      this.$router.push({ path: "/dodecorate", query: { decorateId: id, type: "page"  } });
+    handleDecorate(decorateId) {
+      this.dialogOpt.formType = "page";
+      this.dialogOpt.decorateId = decorateId;
+      this.dialogOpt.dialogVisible = true;
     },
     handleRelease(id) {
       update({ id: id, status: 1 }).then(() => {

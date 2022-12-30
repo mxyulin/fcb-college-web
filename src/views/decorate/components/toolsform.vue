@@ -124,7 +124,7 @@
                   type="primary"
                   :size="option.size"
                   class="margin-left-20"
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -160,7 +160,7 @@
                   :size="option.size"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -284,7 +284,7 @@
                   plain
                   :size="option.size"
                   class="margin-left-20 choosePicture"
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -319,7 +319,7 @@
                   plain
                   :size="option.size"
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -421,7 +421,7 @@
                   :size="option.size"
                   plain
                   class="margin-left-20 choosePicture"
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -453,7 +453,7 @@
                   :size="option.size"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -509,7 +509,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('goods-group')"
+                  @click="openResourceTable('goods-group')"
                 >
                   选择
                 </el-button>
@@ -519,7 +519,7 @@
         </el-row>
       </div>
     </div>
-    <!-- 自定义商品分类 -->
+    <!-- 自定义商品 -->
     <div v-if="templateForm.type == 'goods-list'" class="decorate-right-write">
       <div class="select-style-item">
         <div class="select-style-item-title">商品列表</div>
@@ -555,7 +555,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('goods-list')"
+                  @click="openResourceTable('goods-list')"
                 >
                   选择
                 </el-button>
@@ -564,11 +564,10 @@
           </el-col>
         </el-row>
         <div
+          class="select-style-item-box"
           style="
             display: flex;
             flex-wrap: wrap;
-            padding-left: 15px;
-            padding-top: 16px;
           "
           v-if="templateData[centerSelect].content.timeData"
         >
@@ -609,7 +608,7 @@
                   height: 12px;
                   right: -6px;
                   top: -6px;
-                  color: #7438d5;
+                  color: #333;
                 "
                 class="el-icon-error"
                 @click="customList(index)"
@@ -962,7 +961,7 @@
                   type="primary"
                   plain
                   class="margin-left-20 choosePicture"
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -1014,7 +1013,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1093,7 +1092,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -1141,7 +1140,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1285,7 +1284,7 @@
                 ><el-button
                   :size="option.size"
                   type="text"
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                   >选择图片</el-button
                 >
               </div>
@@ -1410,7 +1409,7 @@
                 :size="option.size"
                 type="primary"
                 plain
-                @click="chooseResource('picture', index)"
+                @click="openResourceTable('image', index)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -1458,7 +1457,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('category-tabs')"
+                  @click="openResourceTable('category-tabs')"
                 >
                   选择
                 </el-button>
@@ -1539,7 +1538,7 @@
                 type="primary"
                 plain
                 class="margin-left-20 choosePicture"
-                @click="chooseResource('picture', index)"
+                @click="openResourceTable('image', index)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -1628,7 +1627,7 @@
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    @click="chooseResource('picture', index)"
+                    @click="openResourceTable('image', index)"
                   >
                     {{ item.image ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1655,7 +1654,7 @@
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    @click="chooseResource('picture', index)"
+                    @click="openResourceTable('image', index)"
                   >
                     {{ item.activeImage ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1711,7 +1710,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1867,7 +1866,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -1903,7 +1902,7 @@
                   type="primary"
                   plain
                   class="choosePath"
-                  @click="chooseResource('link', index)"
+                  @click="openResourceTable('link', index)"
                 >
                   选择链接
                 </el-button>
@@ -1995,7 +1994,7 @@
                 type="primary"
                 slot="append"
                 plain
-                @click="chooseResource('picture', -1)"
+                @click="openResourceTable('image', -1)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
@@ -2069,7 +2068,7 @@
                   slot="append"
                   type="primary"
                   plain
-                 @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.btnimage ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2112,7 +2111,7 @@
                   type="primary"
                   slot="append"
                   plain
-                  @click="chooseResource('picture', index)"
+                  @click="openResourceTable('image', index)"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2149,7 +2148,7 @@
                     type="primary"
                     plain
                     class="choosePath"
-                    @click="chooseResource('link', index)"
+                    @click="openResourceTable('link', index)"
                   >
                     选择链接
                   </el-button>
@@ -2190,10 +2189,11 @@
     <!--  -->
     <!-- 资源表弹窗组件 -->
     <resourceTable
-      :dialogVisible.sync="dialogVisible"
+      width="75%"
       :dialogTitle="dialogTitle"
-      :currentListIdx="currentListIdx"
-      :resourceType="resourceType"
+      :dialogVisible.sync="dialogVisible"
+      :tableType="tableType"
+      :currentSelection="currentSelection"
       v-bind="$attrs"
     />
   </div>
@@ -2201,7 +2201,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { validatenull } from "@/util/validate";
 import option from "@/const/decorate/dodecorate";
 import draggable from "vuedraggable";
 
@@ -2224,8 +2223,6 @@ export default {
       option: option,
       // 广告样式抽屉状态
       advdrawer: false,
-      // 资源表弹窗状态
-      dialogVisible: false,
       // 广告魔方数据
       advStyleImage: [
         {
@@ -2284,12 +2281,16 @@ export default {
         ],
         currentImage: "",
       },
-      // 弹窗名称
+
+      /* 资源表 */
+      // 资源表状态
+      dialogVisible: false,
+      // 资源表名称
       dialogTitle: "",
-      // 当前表单列表
-      currentListIdx: null,
-      // 资源类型
-      resourceType: "",
+      // 当前所选表单项
+      currentSelection: null,
+      // 资源表类型
+      tableType: "",
     };
   },
   computed: {
@@ -2309,16 +2310,26 @@ export default {
       this.templateData[this.centerSelect].content.list.splice(index, 1);
       this.$forceUpdate();
     },
-    // 选择装修资源
-    chooseResource(type, index) {
-      this.currentListIdx = index;
-      this.resourceType = type;
+    // 打开资源表
+    openResourceTable(type, index = null) {
+      this.currentSelection = index;
+      this.tableType = type;
       switch (type) {
-        case "picture":
-          this.dialogTitle = "图片";
+        case "image":
+          this.dialogTitle = "选择图片";
           break;
         case "link":
-          this.dialogTitle = "链接";
+          this.dialogTitle = "选择链接";
+          break;
+        case "goods-list":
+          this.dialogTitle = "选择商品";
+          break;
+        case "goods-group":
+          this.dialogTitle = "选择商品分类";
+          break;
+        case "category-tabs":
+          this.dialogTitle = "选择商品分类";
+          break;
       }
       this.dialogVisible = true;
     },
