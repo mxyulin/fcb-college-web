@@ -189,7 +189,7 @@ export default {
         Object.assign(params, that.query)
       ).then((res) => {
         that.levellist = res.data.data.records;
-        console.log('level数据',res)
+        // console.log('level数据',res)
         // that.page.total = data.total;
         // that.data = data.records;
         // that.loading = false;
