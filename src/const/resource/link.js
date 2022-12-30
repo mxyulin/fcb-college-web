@@ -43,7 +43,7 @@ export default {
     },
     {
       label: "所属分组",
-      prop: "group",
+      prop: "linkGroup",
       type: "input",
       span: 24,
       rules: [{
