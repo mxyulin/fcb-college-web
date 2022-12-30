@@ -98,5 +98,124 @@
 .edittext{
     min-height: 500px;
     height: 600px;
-    border: 1px solid grey;
+}
+.singletitle{
+    margin-top: 10px;
+    background-color: #fafafa;
+    height: 48px;
+    line-height: 48px;
+    color:grey ;
+    padding-left: 32px;
+}
+
+.btmargin{
+    margin-top: 10px;
+}
+.btpadding{
+    display: flex;
+    margin-left: 30px;
+}
+.elinputw{
+    width: 90%;
+}
+.iconh{
+    margin-left: 20px;
+    height: 32px;
+    width: 32px;
+}
+.displayf{
+    display: flex;
+    align-items: flex-end;
+}
+.boxsizi p{
+    margin: 0;
+    height: 32px;
+    line-height: 32px;
+    margin-left: 20px;
+    color: #808080;
+}
+.boxsizi{
+    margin-left: 30px;
+    height: 32px;
+}
+.bgimage-add {
+    background-color: #fafafa;
+    width: 154px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: #999;
+  }
+.displayf div{
+    margin-right: 20px;
+}
+
+.stylespan{
+    margin-left: -10px;
+    margin-bottom: 10px;
+    color: #1356bd;
+    width: 28px;
+    height: 21px;
+    font-size: 14px;
+}
+
+.fontsizi{
+    font-size: 12px;
+    margin: 0;
+    color: #808080;
+}
+
+.container{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: calc(100% - 300px);
+    height: 60px;
+    padding: 0 16px;
+    position: fixed;
+    bottom: 0px;
+    right: 16px;
+    background-color: #ffffff; 
+}
+
+.shopro-submit-button {
+    width: 88px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background: #7438d5;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+.spanbetween{
+    justify-content: space-between;
+}
+.popoverm{
+    margin-right: 50px;
+}
+.popoverm p{
+    font-size: 14px;
+    margin-top: 0;
+    margin-top: 0;
+}
+.popoverm span{
+    color: #1356bd;
+}
+.dsdiv h2{
+    padding-top: 0;
+    margin-top: 0;
+    text-align: center;
+}
+.elimage{
+    margin: auto;
+    display: block;
+    width: 200px;
+}
+.buttoncenter{
+    display: block;
+    margin: auto;
+    margin-top: 10px;
 }
