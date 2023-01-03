@@ -1,6 +1,7 @@
 <template>
   <div id="publish">
     <div class="richtext" >富文本编辑功能</div>
+    <quillEditor></quillEditor>
 
     <div class="body">
       <div class="displayflexh edit">
@@ -165,9 +166,15 @@
 
 <script>
 // api api/news/article.js
-
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 import { getList, getDetail, submit } from "@/api/news/article";
 export default {
+  components: {
+    quillEditor
+  },
   data() {
     return {
       // 锚点
