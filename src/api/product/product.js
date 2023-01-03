@@ -11,18 +11,7 @@ export const getList = (current, size, params) => {
     }
   })
 }
-
-export const getListByCategory = (current, size, params) => {
-  return request({
-    url: '/api/fcb-product/product/page-bycategory-ids',
-    method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
-  })
-}
+ 
 
 export const getDetail = (id) => {
   return request({

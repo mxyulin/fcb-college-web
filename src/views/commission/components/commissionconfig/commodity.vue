@@ -72,7 +72,7 @@
 // 树表
 import { getList } from "@/api/product/productcategory";
 // 树元素标题绑定表
-import { getListByCategory } from "@/api/product/product";
+import { getList as getListByCategory } from "@/api/product/product";
 import option from "@/const/product/productcategory";
 export default {
   data() {
