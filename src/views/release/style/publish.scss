@@ -24,47 +24,6 @@
     align-items: center;
 }
 
-.head{
-    width: 90%;
-    min-width: 500px;
-    margin: auto;
-}
-
-.headone{
-    display: flex;
-    justify-content: space-between;
-    padding: 30px;
-}
-.boderr{
-    box-sizing: border-box;
-    border: 1px solid #a99999;
-    background-color: #f8f8f8;
-    width: 28px;
-    height: 28px;
-    text-align: center;
-    line-height: 28px;
-    border-radius: 50%;
-}
-.wzfontsize{
-    height: 28px;
-    line-height: 28px;
-    margin-left: 20px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #222222;
-}
-
-.gffontsize{
-    margin-right: 20px;
-    font-size: 13px;
-    color: #898989;
-}
-
-.xxfontsize{
-    font-size: 14px;
-    color: #666666;
-    margin-right: 20px;
-}
 
 .richtext{
     text-align: center;
@@ -168,16 +127,20 @@
 }
 
 .container{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    width: calc(100% - 300px);
+    
+    width: calc(100% - 260px);
     height: 60px;
     padding: 0 16px;
     position: fixed;
     bottom: 0px;
     right: 16px;
     background-color: #ffffff; 
+}
+.containerflex{
+    min-width: 500px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
 
 .shopro-submit-button {
@@ -218,4 +181,9 @@
     display: block;
     margin: auto;
     margin-top: 10px;
+}
+.elimagestyle{
+    display: block;
+    width: 154px;
+    height: 120px;
 }
