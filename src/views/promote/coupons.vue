@@ -1,186 +1,188 @@
 <template>
   <basic-container>
-    <div id="indexPage" v-cloak>
-      <div class="custom-header display-flex">
-        <div class="choose-status">优惠券</div>
-        <div class="custom-search">
-          <el-input placeholder="请输入标题" suffix-icon="el-icon-search">
-          </el-input>
-        </div>
-      </div>
-
-      <div class="custom-table">
-        <div class="custom-table-header display-flex-b">
-          <div class="display-flex">
-            <div class="custom-refresh display-flex-c">
-              <i class="el-icon-refresh"></i>
-            </div>
-            <div class="create-btn display-flex-c shopro-screen-button" @click="dialogcopons">
-              <i class="el-icon-plus"></i>
-              <span>新建优惠券</span>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <el-table
-            ref="multipleTable"
-            :data="coponsdata"
-            tooltip-effect="dark"
-            style="width: 100%"
-            border
-            @row-dblclick="operation"
-          >
-            <el-table-column type="selection" min-width="40"> </el-table-column>
-            <el-table-column label="id" min-width="60" prop="id">
-            </el-table-column>
-            <el-table-column label="优惠券名称" min-width="150">
-              <template slot-scope="scope">
-                <div class="ellipsis-item">
-                  {{ scope.row.name }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="优惠券描述" min-width="160">
-              <template slot-scope="scope">
-                <div class="ellipsis-item">
-                  {{ scope.row.description }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column label="优惠内容" min-width="180">
-              <template slot-scope="scope">
-                <div>满{{ scope.row.enough }}元,减{{ scope.row.amount }}元</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="优惠券类型" min-width="100">
-              <template slot-scope="scope">
-                <div>
-                  {{ scope.row.type_text }}
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column prop="getnum" label="已领取" min-width="80">
-            </el-table-column>
-            <el-table-column prop="usenum" label="已使用" min-width="80">
-            </el-table-column>
-            <el-table-column prop="stock" label="剩余" min-width="70">
-            </el-table-column>
-            <el-table-column prop="gettime" label="有效期" min-width="300">
-            </el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="110">
-              <template>
-                <span class="table-edit-text">编辑 </span>
-
-                <span class="table-delete-text">删除</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
-
-        <div class="pagination-container display-flex">
-          <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page="page.currentPage"
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="page.pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="page.total"
-          >
-          </el-pagination>
-        </div>
-
-        <!-- 组件调用 -->
-        <el-dialog append-to-body="ture" :visible.sync="box" width="60%" center>
-          <couponsedit></couponsedit>
-        </el-dialog>
-      </div>
-    </div>
+    <avue-crud :option="option"
+               :table-loading="loading"
+               :data="data"
+               :page.sync="page"
+               :permission="permissionList"
+               :before-open="beforeOpen"
+               v-model="form"
+               ref="crud"
+               @row-update="rowUpdate"
+               @row-save="rowSave"
+               @row-del="rowDel"
+               @search-change="searchChange"
+               @search-reset="searchReset"
+               @selection-change="selectionChange"
+               @current-change="currentChange"
+               @size-change="sizeChange"
+               @refresh-change="refreshChange"
+               @on-load="onLoad">
+      <template slot="menuLeft">
+        <el-button type="danger"
+                   size="small"
+                   icon="el-icon-delete"
+                   plain
+                   v-if="permission.coupons_delete"
+                   @click="handleDelete">删 除
+        </el-button>
+      </template>
+    </avue-crud>
   </basic-container>
 </template>
 
 <script>
-import { getList } from "@/api/promote/coupons";
-import option from "@/const/promote/coupons";
-// 组件
-import couponsedit from "./components/couponsedit.vue";
+  import {getList, getDetail, add, update, remove} from "@/api/promote/coupons";
+  import option from "@/const/promote/coupons";
+  import {mapGetters} from "vuex";
 
-export default {
-  components: { couponsedit },
-  data() {
-    return {
-      coponsdata: [
-        {
-          selection: 0,
-          id: "1",
-          name: "默默1",
-          description: "待定",
-          enough: 100,
-          amount: 80,
-          type_text: "不知道",
-          getnum: "1",
-          usenum: "2",
-          stock: "3",
-          gittime: "有效日期",
+  export default {
+    data() {
+      return {
+        form: {},
+        query: {},
+        loading: true,
+        page: {
+          pageSize: 10,
+          currentPage: 1,
+          total: 0
         },
-      ],
-
-      // 弹框标题
-      title: "",
-      // 是否展示弹框
-      box: false,
-      // 是否显示查询
-      search: true,
-      // 加载中
-      loading: true,
-      // 是否为查看模式
-      view: false,
-      // 查询信息
-      query: {},
-      // 分页信息
-      page: {
-        currentPage: 1,
-        pageSize: 10,
-        total: 40,
+        selectionList: [],
+        option: option,
+        data: []
+      };
+    },
+    computed: {
+      ...mapGetters(["permission"]),
+      permissionList() {
+        return {
+          addBtn: this.vaildData(this.permission.coupons_add, false),
+          viewBtn: this.vaildData(this.permission.coupons_view, false),
+          delBtn: this.vaildData(this.permission.coupons_delete, false),
+          editBtn: this.vaildData(this.permission.coupons_edit, false)
+        };
       },
-      // 表单数据
-      form: {},
-      // 选择行
-      selectionList: [],
-      // 表单配置
-      option: option,
-      // 表单列表
-      data: [],
-    };
-  },
-  mounted() {
-    this.init();
-    this.onLoad(this.page);
-  },
-  computed: {},
-  methods: {
-    dialogcopons(){
-      this.box= true
+      ids() {
+        let ids = [];
+        this.selectionList.forEach(ele => {
+          ids.push(ele.id);
+        });
+        return ids.join(",");
+      }
     },
-    init() {},
-    // 发请求
-    onLoad(page, params = {}) {
-      this.loading = true;
-      getList(
-        page.currentPage,
-        page.pageSize,
-        Object.assign(params, this.query)
-      ).then((res) => {
-        console.log(res);
-      });
-    },
-  },
-};
+    methods: {
+      rowSave(row, done, loading) {
+        add(row).then(() => {
+          this.onLoad(this.page);
+          this.$message({
+            type: "success",
+            message: "操作成功!"
+          });
+          done();
+        }, error => {
+          loading();
+          window.console.log(error);
+        });
+      },
+      rowUpdate(row, index, done, loading) {
+        update(row).then(() => {
+          this.onLoad(this.page);
+          this.$message({
+            type: "success",
+            message: "操作成功!"
+          });
+          done();
+        }, error => {
+          loading();
+          console.log(error);
+        });
+      },
+      rowDel(row) {
+        this.$confirm("确定将选择数据删除?", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            return remove(row.id);
+          })
+          .then(() => {
+            this.onLoad(this.page);
+            this.$message({
+              type: "success",
+              message: "操作成功!"
+            });
+          });
+      },
+      handleDelete() {
+        if (this.selectionList.length === 0) {
+          this.$message.warning("请选择至少一条数据");
+          return;
+        }
+        this.$confirm("确定将选择数据删除?", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            return remove(this.ids);
+          })
+          .then(() => {
+            this.onLoad(this.page);
+            this.$message({
+              type: "success",
+              message: "操作成功!"
+            });
+            this.$refs.crud.toggleSelection();
+          });
+      },
+      beforeOpen(done, type) {
+        if (["edit", "view"].includes(type)) {
+          getDetail(this.form.id).then(res => {
+            this.form = res.data.data;
+          });
+        }
+        done();
+      },
+      searchReset() {
+        this.query = {};
+        this.onLoad(this.page);
+      },
+      searchChange(params, done) {
+        this.query = params;
+        this.page.currentPage = 1;
+        this.onLoad(this.page, params);
+        done();
+      },
+      selectionChange(list) {
+        this.selectionList = list;
+      },
+      selectionClear() {
+        this.selectionList = [];
+        this.$refs.crud.toggleSelection();
+      },
+      currentChange(currentPage){
+        this.page.currentPage = currentPage;
+      },
+      sizeChange(pageSize){
+        this.page.pageSize = pageSize;
+      },
+      refreshChange() {
+        this.onLoad(this.page, this.query);
+      },
+      onLoad(page, params = {}) {
+        this.loading = true;
+        getList(page.currentPage, page.pageSize, Object.assign(params, this.query)).then(res => {
+          const data = res.data.data;
+          this.page.total = data.total;
+          this.data = data.records;
+          this.loading = false;
+          this.selectionClear();
+        });
+      }
+    }
+  };
 </script>
 
-<style lang="scss" scoped>
-@import "@/views/promote/style/coupons.scss";
+<style>
 </style>
-
-<style lang="scss"></style>
