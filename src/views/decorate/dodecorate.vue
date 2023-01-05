@@ -711,6 +711,11 @@ export default {
           that.templateForm.content.timeData = records;
           break;
         }
+        case "coupons": {
+          that.templateForm.content.timeData = data;
+          that.templateForm.content.ids = that.getIds(data);
+          break;
+        }
       }
     },
     // 暂存上一次装修数据

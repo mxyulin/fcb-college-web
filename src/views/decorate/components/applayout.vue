@@ -18,7 +18,7 @@
           @click.stop="showForm(index)"
           :key="index"
         >
-          <!-- <div class="seat-item">可放在此处(拖放参照块)</div> -->
+          <!-- <div class="seat-item">可放在此处(拖放预览)</div> -->
           <!-- 装修布局 -->
           <div class="compotent-item-container">
             <!-- 搜索 -->
@@ -623,7 +623,7 @@
                           <div class="coupons-enough">
                             满{{ it.enough }}可用
                           </div>
-                          <div class="coupons-time">
+                          <!-- <div class="coupons-time">
                             有效期：{{
                               moment(it.usetimestart * 1000).format(
                                 "YYYY.MM.DD"
@@ -631,7 +631,7 @@
                             }}至{{
                               moment(it.usetimeend * 1000).format("YYYY.MM.DD")
                             }}
-                          </div>
+                          </div> -->
                         </div>
                         <div>
                           <div

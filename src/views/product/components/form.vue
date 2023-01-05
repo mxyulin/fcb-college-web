@@ -360,7 +360,7 @@
 </template>
 
 <script>
-import { getDetail, submitProduct } from "@/api/product/product";
+import { getDetail, add } from "@/api/product/product";
 import { getTree as getGoodsCategory } from "@/api/product/productcategory";
 import { mapGetters } from "vuex";
 import option from "@/const/product/product";
@@ -685,19 +685,13 @@ export default {
     },
     // 提交表单
     handleSubmit() {
-      // 格式化表单字段
-      const { form } = this,
-        formatForm = {
-          categoryIds: form.categoryIds.join(","),
-          serviceIds: form.serviceIds.join(","),
-          images: JSON.stringify(form.images),
-          params: JSON.stringify(form.params),
-        };
-      // 深拷贝 form
-      let copyForm = Object.assign({}, form);
-      // 合并格式化后的字段
-      copyForm = Object.assign(copyForm, formatForm);
-      submitProduct(copyForm).then(() => {
+      // 格式化表单
+      const { categoryIds, serviceIds, images, params } = this.form;
+      this.form.categoryIds = categoryIds.join(",");
+      this.form.serviceIds = serviceIds.join(",");
+      this.form.images = JSON.stringify(images);
+      this.form.params = JSON.stringify(params);
+      add(this.form).then(() => {
         this.resetForm();
         this.$emit("getGoodsData");
         this.$emit("update:dialogFormVisible", false);

@@ -1,12 +1,8 @@
 <template>
   <basic-container>
-    <!-- 查询模块 -->
+    <!-- 查询 -->
     <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
     <!--  -->
-    <el-dialog append-to-body="ture" :visible.sync="box" width="60%" center>
-      <Form></Form>
-    </el-dialog>
-    <!-- 列表菜单 -->
     <el-row :gutter="0" type="flex" justify="space-between">
       <el-col :span="2">
         <el-button
@@ -18,7 +14,7 @@
           >新增</el-button
         >
       </el-col>
-      <el-col :span="19">
+      <el-col :span="20">
         <el-radio-group
           v-model="activeStatus"
           :size="option.size"
@@ -31,7 +27,7 @@
           <el-radio-button :label="0">已隐藏</el-radio-button>
         </el-radio-group>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="2">
         <el-button
           :size="option.size"
           icon="el-icon-refresh"
@@ -45,12 +41,6 @@
           @click="search = !search"
           class="refresh-btn"
           circle
-        ></el-button>
-        <el-button
-          :size="option.size"
-          icon="el-icon-delete"
-          circle=""
-          disabled
         ></el-button>
       </el-col>
     </el-row>
@@ -288,7 +278,6 @@
         </el-pagination>
       </el-col>
     </el-row>
-
     <!-- 表单模块 -->
     <Form
       ref="form"
@@ -303,7 +292,7 @@
 <script>
 import {
   getList,
-  submitProduct,
+  add,
   slectionsUpdate,
   remove,
 } from "@/api/product/product";
@@ -407,7 +396,7 @@ export default {
     // 复制商品
     copyGoods(row) {
       delete row.id;
-      submitProduct(row).then(() => {
+      add(row).then(() => {
         this.getGoodsData();
         this.$message({
           type: "success",
@@ -482,7 +471,6 @@ export default {
         return;
       }
       let statusCode = (action == "up" ? 1 : 2);
-      console.log('测试', this.ids, statusCode)
       slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
         if (code == 200) {
           this.getGoodsData();

@@ -9,7 +9,7 @@
     @close="onDialogClose"
   >
     <div slot="title">{{ dialogTitle }}</div>
-    <!-- 资源表 -->
+    <!-- 资源表模块 -->
     <el-row
       :gutter="0"
       type="flex"
@@ -21,7 +21,7 @@
           placeholder="搜索类别"
           style="height: 45px"
           v-model="filterText"
-          :size="option.size"
+          size="small"
         >
         </el-input>
         <el-tree
@@ -61,7 +61,7 @@
           </template>
           <!-- 商品表预览列 -->
           <template slot="goods" slot-scope="scope">
-            <div class="display-flex">
+            <div class="display-flex" style="justify-content: space-evenly">
               <el-image
                 lazy
                 style="width: 80px; height: 80px"
@@ -77,8 +77,14 @@
           </template>
           <!-- 商品表类型列 -->
           <template slot="type" slot-scope="scope">
-            <span v-if="scope.row.type == 'normal'">实体商品</span>
-            <span v-if="scope.row.type == 'virtual'">虚拟商品</span>
+            <div v-if="tableType == 'goods-list' || linkType == 'goods'" key="goods-list-type">
+              <span v-if="scope.row.type == 'normal'" key="normal">实体商品</span>
+              <span v-else key="virtual">虚拟商品</span>
+            </div>
+            <div v-else key="coupons-type">
+              <span v-if="scope.row.type == 'cash'" key="cash">代金券</span>
+              <span v-else key="discount">折扣券</span>
+            </div>
           </template>
           <!-- 商品表上架列 -->
           <template slot="status" slot-scope="scope">
@@ -101,7 +107,7 @@
             <el-radio-group
               v-if="tableType == 'link'"
               v-model="linkType"
-              :size="option.size"
+              size="small"
               @input="onLinkTypeChange"
             >
               <el-radio-button label="goods" border>商品</el-radio-button>
@@ -112,7 +118,7 @@
             <el-button
               v-if="tableType == 'image' || tableType == 'images'"
               type="primary"
-              :size="option.size"
+              size="small"
               icon="el-icon-upload2"
               @click="handleUpload"
               >上传</el-button
@@ -121,7 +127,7 @@
           <!-- 单选按钮 -->
           <template slot-scope="{ row }" slot="menu">
             <el-button
-              :size="option.size"
+              size="small"
               type="primary"
               @click="onSelected(row)"
               >选择</el-button
@@ -132,7 +138,7 @@
             <el-col :span="1">
               <el-button
                 type="primary"
-                :size="option.size"
+                size="small"
                 @click="onMutipleSlect"
                 >确定</el-button
               >
@@ -201,7 +207,6 @@
 
 <script>
 import { mapGetters } from "vuex";
-import option from "@/const/decorate/dodecorate";
 import { getList as getImageCategory } from "@/api/resource/attachcategory";
 import { getList as getImageList } from "@/api/resource/attach";
 import { getList as getGoodsCategory } from "@/api/product/productcategory";
@@ -292,14 +297,12 @@ export default {
         delBtn: false,
       };
     },
-    option() {
-      return option;
-    },
     isShowMutipleCheckbox() {
       const { tableType } = this;
       return tableType == "images" ||
         tableType == "goods-list" ||
-        tableType == "category-tabs"
+        tableType == "category-tabs" ||
+        tableType == "coupons"
         ? true
         : false;
     },
@@ -377,7 +380,6 @@ export default {
         data: { code, data },
       } = result;
       if (code == 200) {
-        console.log("测试", data);
         this.page.total = data.total;
         this.avueList = data.records;
         this.loading = false;
@@ -388,7 +390,6 @@ export default {
     // 初始化组件
     onDialogOpen() {
       const { tableType } = this;
-      this.resetData();
       // 根据选择的资源类型不同，提供差异化的表格或级联选择器
       switch (tableType) {
         case "image":
@@ -541,7 +542,27 @@ export default {
               label: "名称",
               prop: "name",
               overHidden: true,
-            },
+            },{
+              label: "类型",
+              prop: "type",
+              overHidden: true,
+            },{
+              label: "优惠面额",
+              prop: "amount",
+              overHidden: true,
+            },{
+              label: "消费门槛",
+              prop: "enough",
+              overHidden: true,
+            },{
+              label: "消费门槛",
+              prop: "enough",
+              overHidden: true,
+            },{
+              label: "库存",
+              prop: "stock",
+              overHidden: true,
+            }
           ];
           this.getList(this.page);
           break;
@@ -553,12 +574,15 @@ export default {
       // *参考：https://github.com/ElemeFE/element/issues/16967
       if (this.isShowCategorySelector) {
         this.$refs.goodsCategoryCascader.$children[1].activePath = [];
+      } else {
+        this.resetData();
       }
-      this.resetData();
       this.$emit("update:dialogVisible", false);
     },
     // 切换连接表
     onLinkTypeChange(linkType) {
+      this.categoryList = [];
+      this.avueList = [];
       switch (linkType) {
         case "goods":
           this.TableLayout.colLeft = 3;
@@ -694,7 +718,10 @@ export default {
     refreshTable() {
       // 优化用户体验，刷新即可得到第一个节点数据
       if (this.categoryList.length > 0) {
-        this.$refs.tree.$children[0].handleClick();
+        return this.$refs.tree.$children[0].handleClick();
+      };
+      if (this.TableLayout.colLeft == 0) {
+        return this.getList(this.page);
       }
     },
     resetData() {
@@ -705,6 +732,9 @@ export default {
       this.linkType = "goods";
       this.TableLayout.colLeft = 3;
       this.TableLayout.colRight = 20;
+      if (this.isShowMutipleCheckbox) {
+        this.$refs.crud.$refs.table.clearSelection();
+      }
     },
     /*
      *上传图片
@@ -729,6 +759,5 @@ export default {
 .display-flex {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
 }
 </style>
