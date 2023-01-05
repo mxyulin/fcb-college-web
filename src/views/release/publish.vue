@@ -1,22 +1,34 @@
 <template>
   <div id="publish">
-    <div class="richtext" >富文本编辑功能</div>
-    <quillEditor v-model="richtext">
+    <quillEditor 
+    class="richtext" v-model="richtext"
+    :options="editorOption"
+    >
 
     </quillEditor>
 
+  <!-- <div class="quill-editor" 
+       v-quill:myQuillEditor="editorOption">
+       
+  </div>
+  <div class="quill-editor" 
+       :content="content"
+       @change="onEditorChange($event)"
+       v-quill:myQuillEditor="editorOption">
+       
+  </div> -->
+  <div class="titleposition">
+    <div class="displayflexh edit">
+        <el-input  v-model="inptitle" placeholder="请输入文章标题(2~30个字)"></el-input>
+        <div style="width: 120px;">还需要输入</div>
+    </div>
+    <hr>
+  </div>
     <div class="body">
-      <div class="displayflexh edit">
-        <h2>标题是单独h标签</h2>
-        <div>文字输入范围</div>
-      </div>
-      <div>
+      <!-- <div>
         <hr />
-      </div>
-      <div class="edittext">富文本编写区</div>
-      <div>
-        <hr />
-      </div>
+      </div> -->
+      <br>
 
       <div class="mdBottom">
       <el-form>
@@ -181,6 +193,36 @@ export default {
     return {
       // 富文本
       richtext:null,
+      editorOption: { /* quill options */
+        placeholder:'请在这输入',
+        modules:{
+          toolbar:[
+            [
+              'bold','italic','underline','strike','blockquote','code-block',
+              {'header':1},{'header':2},{'list':'ordered'},{'list':'bulleet'},
+              {'script':'sub'},{'script':'super'},{'indent':'-1'},{'indent':'+1'},
+              {'direction':'rtl'},{ 'size': ['small', false, 'large', 'huge'] },
+              { 'align': [] },'clean'
+            ],
+            // ['bold','italic','underline','strike'],//加粗，斜体，下划线，删除线
+            // // ['blockquote','code-block'],//引用，代码块
+            // [{'header':1},{'header':2}],//标题，1，2代表字体大小
+            // [{'list':'ordered'},{'list':'bulleet'}],//列表
+            // [{'script':'sub'},{'script':'super'}],//上下标
+            // [{'indent':'-1'},{'indent':'+1'}],//缩进
+            // [{'direction':'rtl'}],//文本方向
+            // [{ 'size': ['small', false, 'large', 'huge'] }],  // 字体大小
+            // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],  //几级标题
+            // [{ 'color': [] }, { 'background': [] }],    //字体颜色与背景颜色
+            // // [{ 'font': [] }],                   //字体
+            // [{ 'align': [] }],      //对齐方式
+            // ['clean'],                         // 删除字体样式
+            // // ['image','video']//上传图片 ，上传视频
+
+          ]
+
+        }
+      },
       // 锚点
       mdtop: true,
       mdtbottom: false,
@@ -189,9 +231,9 @@ export default {
       dialogbrowse: false,
       imgchoice: '1',//图片判断判断0代表无图1单图2多图
       curImgIndex:null,
-      coverImgUrls:[//单多图片
-        null,null,null
-      ],
+      // coverImgUrls:[//单多图片
+      //   null,null,null
+      // ],
       coverImgUrls:[//单多图片
       ],
       titleType: '1',//判断标题1 = 单标题，2= 多标题
@@ -200,7 +242,7 @@ export default {
         "https://lf6-cdn-tos.bytegoofy.com/goofy/pgcfe/mp/graphic/1ac3bb7600f29b9a8025ef0e4f8abbf9.png",
       imageurl:
         "https://lf6-cdn-tos.bytegoofy.com/goofy/pgcfe/mp/graphic/60963ee5fa0b51ff805c17eafb3b0eeb.png",
-      
+      inptitle:'',
       formLabelWidth: "100px",
       //
       resourcedata:[],   
@@ -253,8 +295,8 @@ export default {
       }else if(this.curImgIndex==2){
         this.coverImgUrls.length<3?this.coverImgUrls.push(data.link):this.coverImgUrls[2] = data.link;
       }
-      console.log('图片',data.link)
-      console.log('数组',this.coverImgUrls)
+      // console.log('图片',data.link)
+      // console.log('数组',this.coverImgUrls)
     },
 
     
@@ -288,10 +330,11 @@ export default {
       });
     },
     obtainsubmit() {
+      // let that = this;
       // private微头条 String文章 coverType;问答
       let form={
         category: "2",//
-        title: "标题",//h1标题
+        title: this.inptitle,//h1标题
         titleType:this.titleType,//文章标题:1 = 单标题，2= 多标题
         otherTitle:'',//多标题
         content: this.richtext,//富文本
@@ -323,16 +366,42 @@ export default {
       // let params_title=JSON.stringify(this.params_title)//多标题
       // let coverImgUrls=JSON.stringify(this.coverImgUrls)//图片数组 单多合并
       console.log(form)
-      let that = this;
+      
       
       // submit(form).then((res) => {
       //   console.log(res);
       // });
     },
+    onEditorChange(event) {
+        console.log('onEditorChange')
+      },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/views/release/style/publish.scss"; //publish
+</style>
+
+<style scoped>
+#publish /deep/ .quill-editor{
+height: 500px;
+}
+#publish /deep/ .ql-toolbar{
+  width: 100%;
+  min-width: 1000px;
+  text-align: center;
+  border: 0;
+}
+#publish /deep/  .quill-editor .ql-container{
+  margin: auto;
+  display: block;
+  margin-top: 140px;
+  border-left: 0;
+  border-right: 0;
+  width: 900px;
+  height: 300px;
+  padding-bottom: 10px;
+}
+
 </style>
