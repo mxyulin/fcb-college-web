@@ -1,209 +1,204 @@
 <template>
   <basic-container>
-    <div class="avue-crud">
-      <!-- 头部功能菜单 -->
-      <el-row>
-        <div class="avue-crud__menu">
-          <!-- 头部左侧按钮模块 -->
-          <div class="avue-crud__left">
-            <el-button
-              :size="option.size"
-              plain
-              icon="el-icon-refresh"
-              @click="searchChange"
-            ></el-button>
-            <el-button
-              :size="option.size"
-              type="primary"
-              icon="el-icon-plus"
-              @click="handleAdd"
-              >新增</el-button
-            >
-            <el-button
-              :size="option.size"
-              type="danger"
-              icon="el-icon-delete"
-              @click="handleDelete"
-              plain
-              >删除
-            </el-button>
-          </div>
-          <!-- 头部右侧按钮模块 -->
-          <div class="avue-crud__right"></div>
-        </div>
-      </el-row>
-      <!-- 列表模块 -->
-      <el-row>
-        <el-table
-          stripe
-          ref="table"
-          row-key="id"
-          v-loading="loading"
-          :data="data"
-          :size="option.size"
-          :border="option.border"
-          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-          @selection-change="selectionChange"
-          style="width: 100%"
+    <el-row :gutter="0">
+      <el-col :span="24">
+        <el-button
+          plain
+          size="small"
+          icon="el-icon-refresh"
+          @click="refreshTheTable"
+        ></el-button>
+        <el-button
+          size="small"
+          type="primary"
+          icon="el-icon-plus"
+          @click="addNewCategory"
+          >新 增</el-button
         >
-          <el-table-column
-            v-if="option.selection"
-            type="selection"
-            width="55"
-            align="center"
-          ></el-table-column>
-          <!-- 预留展开按钮 -->
-          <el-table-column
-            v-if="option.expand"
-            type="expand"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            v-if="option.index"
-            label="排序"
-            type="index"
-            align="center"
-            width="50"
-          >
-          </el-table-column>
-          <template v-for="(item, index) of option.column">
-            <!-- table字段 -->
-            <el-table-column
-              v-if="!item.hide"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :key="index"
+        <el-button
+          plain
+          size="small"
+          type="danger"
+          icon="el-icon-delete"
+          @click="deleteSelectionCategory"
+          >删 除
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-table
+        ref="table"
+        size="small"
+        row-key="id"
+        v-loading="loading"
+        :data="data"
+        :fit="true"
+        :stripe="false"
+        :border="true"
+        :max-height="500"
+        :select-on-indeterminate="false"
+        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        @selection-change="onSelectionChange"
+      >
+        <el-table-column
+          width="55"
+          align="center"
+          type="selection"
+        ></el-table-column>
+        <template v-for="(item, index) of column">
+          <el-table-column :key="index" :prop="item.prop" :label="item.label">
+            <div
+              style="display: inline-block; width: 60%;"
+              v-if="item.prop == 'name'"
+              key="categoryTypeColumn"
+              slot-scope="{ row }"
             >
-              <!-- 分类图 -->
-              <template slot-scope="{ row }" v-if="item.prop == 'name'">
+              <div class="display-flex" style="justify-content: space-around;">
                 <el-image
-                  style="width: 58px; height: 58px"
+                  style="width: 60px; height: 60px"
                   :src="row.image"
                   :fit="contain"
+                  :preview-src-list="[row.image]"
                 ></el-image>
-                <span>{{row.name}}</span>
-              </template>
-            </el-table-column>
-          </template>
-          <!-- 操作栏模块 -->
-          <el-table-column
-            prop="menu"
-            label="操作"
-            :min-width="100"
-            align="center"
-          >
-            <template slot-scope="{ row }">
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="icon-hideinvisiblehidden"
-                @click="rowHide(row)"
-              >
-                隐藏
-              </el-button>
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-view"
-                @click="handleView(row)"
-                >查看</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleEdit(row)"
-                >编辑</el-button
-              >
-              <el-button
-                :size="option.size"
-                type="text"
-                icon="el-icon-delete"
-                @click="rowDel(row)"
-                >删除</el-button
-              >
-            </template>
+                <span>{{ row.name }}</span>
+              </div>
+            </div>
+            <div
+              v-else-if="item.prop == 'type'"
+              key="typeColumn"
+              slot-scope="{ row }"
+            >
+              <span v-if="row.type == 'default'" key="default">默认</span>
+              <span v-else-if="row.type == 'books'" key="books">书籍</span>
+              <span v-else key="other">其他</span>
+            </div>
+            <div
+              v-else-if="item.prop == 'status'"
+              key="statusColumn"
+              slot-scope="{ row }"
+            >
+              <span v-if="row.status == 1" :key="1">显示</span>
+              <span v-else :key="0">隐藏</span>
+            </div>
+            <div v-else key="descriptionColumn" slot-scope="{ row }">
+              <span>{{ row.description }}</span>
+            </div>
           </el-table-column>
-        </el-table>
-      </el-row>
-      <!-- 表单模块 -->
-      <el-dialog
-        :title="title"
-        :visible.sync="box"
-        width="50%"
-        :before-close="beforeClose"
-        append-to-body
+        </template>
+        <el-table-column prop="menu" label="操作" align="center">
+          <template slot-scope="{ row }">
+            <el-button
+              size="small"
+              type="text"
+              icon="el-icon-edit"
+              @click="editCategoryInfo(row)"
+              >编辑</el-button
+            >
+            <el-button
+              size="small"
+              type="text"
+              icon="el-icon-delete"
+              @click="deleteCotegory(row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-row>
+    <el-dialog
+      width="50%"
+      append-to-body
+      :title="title"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      :before-close="beforeCloseDialog"
+      @open="onDialogFormOpen"
+      @close="onDialogFormClose"
+    >
+      <el-form
+        ref="form"
+        size="small"
+        label-width="auto"
+        :model="form"
+        :rules="rules"
       >
-        <el-form
-          :disabled="view"
-          :size="option.size"
-          ref="form"
-          :model="form"
-          label-width="80px"
-          :rules="category"
+        <!-- 表单字段 -->
+        <el-form-item label="分类名称：" prop="name">
+          <el-input v-model="form.name" placeholder="请输入分类名" />
+        </el-form-item>
+        <el-form-item label="分类类型：" prop="type">
+          <el-select v-model="form.type" placeholder="请选择栏目类型">
+            <el-option
+              v-for="item in categoryType"
+              :key="item.dictKey"
+              :label="item.dictValue"
+              :value="item.dictKey"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="父级分类：" prop="parentId">
+          <el-cascader
+            clearable
+            filterable
+            ref="goodsCategoryCascader"
+            v-model="form.parentId"
+            :props="cascaderProps"
+            :options="goodsCategory"
+            :show-all-levels="false"
+            :disabled="isDisableCascader"
+          >
+          </el-cascader>
+        </el-form-item>
+        <el-form-item label="分类状态：" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio :label="1">显示</el-radio>
+            <el-radio :label="0">隐藏</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="分类图片：" prop="image">
+          <div class="display-flex" style="justify-content: flex-start">
+            <div
+              class="display-flex add-img-button"
+              key="image-button"
+              v-if="!form.image"
+              @click="addImage"
+            >
+              <i class="el-icon-plus"></i>
+            </div>
+            <div class="display-flex main-img-result" key="image-result" v-else>
+              <el-image
+                style="width: 100%; height: 100%"
+                :src="form.image"
+                :fit="fit"
+                :preview-src-list="[form.image]"
+              ></el-image>
+              <i class="el-icon-error top-right-error" @click="removeImage"></i>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item label="分类描述：" prop="description">
+          <el-input v-model="form.description" placeholder="请输入描述" />
+        </el-form-item>
+      </el-form>
+      <template slot="footer">
+        <el-button
+          type="primary"
+          icon="el-icon-circle-check"
+          size="small"
+          @click="submitTheForm"
+          >提 交</el-button
         >
-          <!-- 表单字段 -->
-          <el-form-item label="分类名称" prop="name">
-            <el-input v-model="form.name" placeholder="请输入" @blur="valiForm('分类名称' ,form.name)" />
-          </el-form-item>
-          <el-form-item label="分类类型" prop="type">
-            <el-select
-              v-model="form.type"
-              clearable
-              placeholder="请选择栏目类型"
-            >
-              <el-option
-                v-for="item in typeData"
-                :key="item.dictKey"
-                :label="item.dictValue"
-                :value="item.dictKey"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="分类图片" prop="image">
-            <el-input v-model="form.image" placeholder="请输入图片地址" @blur="valiForm('分类图片' ,form.image)"/>
-          </el-form-item>
-          <el-form-item label="上级分类" prop="parentId">
-            <el-tree
-              :data="treeData"
-              v-model="form.parentId"
-              placeholder="请选择父ID"
-              :props="defaultProps"
-              @node-click="handleNodeClick"
-            >
-            </el-tree>
-          </el-form-item>
-          <!-- 结构返回数据字段有误，应该是 weight -->
-          <el-form-item label="分类权重" prop="weigh">
-            <el-input v-model="form.weigh" placeholder="请输入权重" />
-          </el-form-item>
-          <el-form-item label="分类描述" prop="description">
-            <el-input v-model="form.description" placeholder="请输入描述" />
-          </el-form-item>
-          <el-form-item label="分类状态" prop="status">
-            <el-input v-model="form.status" placeholder="请输入状态" />
-          </el-form-item>
-        </el-form>
-        <!-- 表单按钮 -->
-        <span v-if="!view" slot="footer" class="dialog-footer">
-          <el-button
-            type="primary"
-            icon="el-icon-circle-check"
-            :size="option.size"
-            @click="handleSubmit"
-            >提 交</el-button
-          >
-          <el-button
-            icon="el-icon-circle-close"
-            :size="option.size"
-            @click="box = false"
-            >取 消</el-button
-          >
-        </span>
-      </el-dialog>
-    </div>
+      </template>
+    </el-dialog>
+    <resourceTable
+      width="60%"
+      dialogTitle="选择图片"
+      tableType="image"
+      :dialogVisible.sync="dialogResourceTableVisible"
+      :updateForm="updateForm"
+      v-bind="$attrs"
+    />
   </basic-container>
 </template>
 
@@ -216,62 +211,98 @@ import {
   update,
   remove,
 } from "@/api/product/productcategory";
-import option from "@/const/product/productcategory";
 import { mapGetters } from "vuex";
-import { validatenull } from "@/util/validate";
 
 export default {
   data() {
     return {
-      // 弹框标题
-      title: "",
-      // 是否展示弹框
-      box: false,
-      // 是否显示查询
-      search: true,
-      // 加载中
+      /* 配置状态 */
       loading: true,
-      // 是否为查看模式
-      view: false,
-      // 查询信息
-      query: {},
-      // 分页信息
+      dialogFormVisible: false,
+      dialogResourceTableVisible: false,
       page: {
         currentPage: 1,
         pageSize: 10,
         total: 40,
       },
-      // 树型组件默认配置
-      defaultProps: {
-        children: "children",
-        label: "name",
-      },
-      // 表单
-      form: {},
-      // 选择行
-      selectionList: [],
-      // 表单配置
-      option: option,
-      // 表格
-      data: [],
-      // 父节点列表
-      treeData: [],
-      // 表单树组件配置选项
-      defaultProps: {
-        label: "title",
-        children: "children",
-      },
-      // 商品分类类型
-      typeData: [
-        { dictKey: 1, dictValue: "食品" },
-        { dictKey: 2, dictValue: "数码" },
-        { dictKey: 3, dictValue: "学习" },
+      column: [
+        {
+          label: "分类",
+          prop: "name",
+        },
+        {
+          label: "类型",
+          prop: "type",
+        },
+        {
+          label: "状态",
+          prop: "status",
+        },
+        {
+          label: "描述",
+          prop: "description",
+        },
       ],
+      rules: {
+        name: [
+          {
+            required: true,
+            message: "请输入商品标题",
+            trigger: "blur",
+          },
+        ],
+        type: [
+          {
+            required: true,
+            message: "请选择分类类型",
+            trigger: "change",
+          },
+        ],
+        parentId: [
+          {
+            required: true,
+            message: "请选择父级分类",
+            trigger: "change",
+          },
+        ],
+        status: [
+          {
+            required: true,
+            message: "请选择分类状态",
+            trigger: "change",
+          },
+        ],
+      },
+      categoryType: [
+        { dictKey: "default", dictValue: "默认" },
+        { dictKey: "books", dictValue: "书籍" },
+        { dictKey: "other", dictValue: "其他" },
+      ],
+      cascaderProps: {
+        multiple: false,
+        checkStrictly: true,
+        emitPath: false,
+        label: "title",
+        value: "value",
+        children: "children",
+      },
+      /* 数据 */
+      title: "",
+      data: [],
+      selectionList: [],
+      goodsCategory: [],
+      form: {
+        name: null,
+        type: "default",
+        image: null,
+        description: null,
+        status: 1,
+        parentId: null,
+      },
     };
   },
   mounted() {
-    this.init();
-    this.onLoad(this.page);
+    this.getGoodsCategoryList(this.page);
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -282,74 +313,36 @@ export default {
       });
       return ids.join(",");
     },
+    isEditMode() {
+      return this.title == "编辑分类" ? true : false;
+    },
+    isDisableCascader() {
+      const { parentId } = this.form;
+      return parentId == "0" ? true : false;
+    }
   },
   methods: {
-    init() {},
-    handleNodeClick(data) {
-      this.form.parentId = data.id;
+    getGoodsCategoryList(page, params = {}) {
+      this.loading = true;
+      getList(page.currentPage, page.pageSize, params).then(
+        ({ data: { code, data } }) => {
+          if (code == 200) {
+            this.data = data;
+            this.loading = false;
+          }
+        }
+      );
     },
-    searchHide() {
-      this.search = !this.search;
+    refreshTheTable() {
+      this.getGoodsCategoryList(this.page);
     },
-    searchChange() {
-      this.onLoad(this.page);
-    },
-    searchReset() {
-      this.query = {};
-      this.page.currentPage = 1;
-      this.onLoad(this.page);
-    },
-    handleSubmit() {
-      if (validatenull(this.form.parentId)) {
-        this.form.parentId = 0;
-      }
-      if (!this.form.id) {
-        add(this.form).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!",
-          });
-        });
-      } else {
-        update(this.form).then(() => {
-          this.box = false;
-          this.onLoad(this.page);
-          this.$message({
-            type: "success",
-            message: "操作成功!",
-          });
-        });
-      }
-    },
-    // 新增分类
-    handleAdd() {
+    addNewCategory() {
       this.title = "新增分类";
-      this.form = {};
-      this.box = true;
+      this.dialogFormVisible = true;
     },
-    // 编辑分类
-    handleEdit(row) {
-      this.title = "编辑分类";
-      this.box = true;
-      getDetail(row.id).then((res) => {
-        this.form = res.data.data;
-      });
-    },
-    // 查看分类
-    handleView(row) {
-      this.title = "查看分类";
-      this.view = true;
-      this.box = true;
-      getDetail(row.id).then((res) => {
-        this.form = res.data.data;
-      });
-    },
-    handleDelete() {
+    deleteSelectionCategory() {
       if (this.selectionList.length === 0) {
-        this.$message.warning("请选择至少一条数据");
-        return;
+        return this.$message.warning("请选择至少一条数据");
       }
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
@@ -360,15 +353,24 @@ export default {
           return remove(this.ids);
         })
         .then(() => {
-          this.selectionClear();
-          this.onLoad(this.page);
+          this.$refs.table.clearSelection();
+          this.getGoodsCategoryList(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
           });
         });
     },
-    rowDel(row) {
+    editCategoryInfo(row) {
+      getDetail(row.id).then(({ data: { code, data } }) => {
+        if (code == 200) {
+          Object.assign(this.form, data);
+        }
+      });
+      this.title = "编辑分类";
+      this.dialogFormVisible = true;
+    },
+    deleteCotegory(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -378,86 +380,95 @@ export default {
           return remove(row.id);
         })
         .then(() => {
-          this.onLoad(this.page);
+          this.getGoodsCategoryList(this.page);
           this.$message({
             type: "success",
             message: "操作成功!",
           });
         });
     },
-    rowHide(row) {
-      let that = this;
-
-      that
-        .$confirm("确定隐藏该分类？", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-        .then((res) => {
-          that.$message({
-            message: "已隐藏",
-            type: "success",
-          });
-        })
-        .catch((err) => {
-          that.$message({
-            message: "已取消隐藏",
-            type: "warning",
-          });
-        });
+    onSelectionChange(selection) {
+      this.selectionList = selection;
     },
-    // 关闭弹窗前的回调
-    beforeClose(done) {
-      done();
-      this.form = {};
-      this.view = false;
-    },
-    selectionChange(list) {
-      this.selectionList = list;
-    },
-    selectionClear() {
-      this.selectionList = [];
-      this.$refs.table.clearSelection();
-    },
-    currentChange(currentPage) {
-      this.page.currentPage = currentPage;
-      this.onLoad(this.page);
-    },
-    sizeChange(pageSize) {
-      this.page.pageSize = pageSize;
-      this.onLoad(this.page);
-    },
-    onLoad(page, params = {}) {
-      this.loading = true;
-      getList(
-        page.currentPage,
-        page.pageSize,
-        Object.assign(params, this.query)
-      ).then((res) => {
-        this.data = res.data.data;
-        this.loading = false;
-        getTree().then((res) => {
-          this.treeData = res.data.data;
-        });
+    onDialogFormOpen() {
+      getTree().then(({ data: { code, data } }) => {
+        if (code == 200) {
+          this.goodsCategory = data;
+        }
       });
     },
-    // 验证表单不为空
-    valiForm(key ,val) {
-      let that = this;
-      if (validatenull(val)) {
-        return that.$message({
-          message: `${key}不能为空！`,
-          type: "error"
-        })
-      }
-    }
+    onDialogFormClose() {
+      this.$refs.form.resetFields();
+      this.dialogFormVisible = false;
+    },
+    addImage() {
+      this.dialogResourceTableVisible = true;
+    },
+    removeImage() {
+      this.form.image = "";
+    },
+    updateForm(tableType, selection, data) {
+      this.form.image = data.link;
+    },
+    submitTheForm() {
+      const { isEditMode, form } = this;
+      this.$refs.form.validate().then((isPassValidate) => {
+        if (isPassValidate) {
+          if (isEditMode) {
+            update(form).then(({ data: { code } }) => {
+              if (code == 200) {
+                this.$refs.form.resetFields();
+                this.dialogFormVisible = false;
+                this.getGoodsCategoryList(this.page);
+                this.$message({
+                  type: "success",
+                  message: "操作成功!",
+                });
+              }
+            });
+          } else {
+            add(form).then(({ data: { code } }) => {
+              if (code == 200) {
+                this.$refs.form.resetFields();
+                this.dialogFormVisible = false;
+                this.getGoodsCategoryList(this.page);
+                this.$message({
+                  type: "success",
+                  message: "操作成功!",
+                });
+              }
+            });
+          }
+        }
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.el-pagination {
-  margin-top: 20px;
+.display-flex {
+  display: flex;
+  align-items: center;
+}
+.add-img-button {
+  width: 60px;
+  height: 60px;
+  border: 3px dashed #e6e6e6;
+  border-radius: 4px;
+  justify-content: center;
+}
+.main-img-result {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border: 3px dashed #e6e6e6;
+  border-radius: 4px;
+  justify-content: center;
+}
+.top-right-error {
+  position: absolute;
+  top: -8px;
+  right: -8px;
 }
 </style>

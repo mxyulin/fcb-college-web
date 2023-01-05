@@ -3,13 +3,8 @@
     <!-- 查询模块 -->
     <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
     <!--  -->
-    <el-dialog
-      append-to-body="ture"
-      :visible.sync="box"
-      width="60%"
-      center
-    >
-    <Form></Form>
+    <el-dialog append-to-body="ture" :visible.sync="box" width="60%" center>
+      <Form></Form>
     </el-dialog>
     <!-- 列表菜单 -->
     <el-row :gutter="0" type="flex" justify="space-between">
@@ -308,10 +303,9 @@
 <script>
 import {
   getList,
-  add,
-  update,
-  remove,
+  submitProduct,
   slectionsUpdate,
+  remove,
 } from "@/api/product/product";
 import option from "@/const/product/product";
 import Query from "@/views/product/components/query";
@@ -321,7 +315,7 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     Query,
-    Form
+    Form,
   },
   data() {
     return {
@@ -369,7 +363,7 @@ export default {
       this.getGoodsData();
     },
   },
-  methods: { 
+  methods: {
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this;
@@ -398,7 +392,7 @@ export default {
     },
     // 修改上架状态
     updateStatus(id, status) {
-      update({ id, status }).then((res) => {
+      slectionsUpdate(id, status).then((res) => {
         if (res.data.code == 200) {
           this.getGoodsData();
         }
@@ -413,7 +407,7 @@ export default {
     // 复制商品
     copyGoods(row) {
       delete row.id;
-      add(row).then(() => {
+      submitProduct(row).then(() => {
         this.getGoodsData();
         this.$message({
           type: "success",
@@ -487,7 +481,8 @@ export default {
         this.$message.warning("请至少选择一条数据");
         return;
       }
-      let statusCode = action == "up" ? 1 : 2;
+      let statusCode = (action == "up" ? 1 : 2);
+      console.log('测试', this.ids, statusCode)
       slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
         if (code == 200) {
           this.getGoodsData();
@@ -510,5 +505,3 @@ export default {
 <style lang="scss" scoped>
 @import "@/views/product/styles/product";
 </style>
- 
-

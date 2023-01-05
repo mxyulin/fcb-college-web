@@ -756,7 +756,7 @@
                           ￥{{ it.price }}
                         </div>
                         <div class="compotent-activity-item-originalprice">
-                          <span>￥{{ it.original_price }}</span>
+                          <span>￥{{ it.originalPrice }}</span>
                         </div>
                       </div>
                     </div>
@@ -904,7 +904,7 @@
                           {{ it.title }}
                         </div>
                         <div class="compotent-activity-item-price">
-                          ￥{{ it.groupon_price }}
+                          ￥{{ it.grouponPrice }}
                         </div>
                         <div class="compotent-activity-item-pin">
                           <span>9527人正在拼</span>
@@ -963,7 +963,7 @@
                                 ￥{{ gitem.groupon_price }}
                               </div>
                               <div class="compotent-goods-list-originalprice">
-                                ￥{{ gitem.original_price }}
+                                ￥{{ gitem.originalPrice }}
                               </div>
                             </div>
                             <div
@@ -1119,7 +1119,7 @@
                               ￥{{
                                 it.activityType &&
                                 it.activityType.includes("groupon")
-                                  ? it.groupon_price
+                                  ? it.grouponPrice
                                   : it.price
                               }}
                             </div>
@@ -1219,7 +1219,7 @@
                                 style="margin-top: 8px"
                                 class="compotent-goods-list-originalprice"
                               >
-                                ￥{{ gitem.original_price }}
+                                ￥{{ gitem.originalPrice }}
                               </div>
                             </div>
                           </div>
@@ -1333,11 +1333,11 @@
                       <div
                         class="compotent-goods-list-1"
                         :class="
-                          it.activity_type &&
-                          it.activity_type.indexOf('seckill') > -1
+                          it.activityType &&
+                          it.activityType.indexOf('seckill') > -1
                             ? 'compotent-goods-list-1-seckill'
-                            : it.activity_type &&
-                              it.activity_type.indexOf('groupon') > -1
+                            : it.activityType &&
+                              it.activityType.indexOf('groupon') > -1
                             ? 'compotent-goods-list-1-groupon'
                             : ''
                         "
@@ -1355,8 +1355,8 @@
                           >
                             <div
                               v-if="
-                                it.activity_type &&
-                                it.activity_type.indexOf('groupon') > -1
+                                it.activityType &&
+                                it.activityType.indexOf('groupon') > -1
                               "
                               class="
                                 compotent-goods-list-title-tags
@@ -1367,8 +1367,8 @@
                             </div>
                             <div
                               v-if="
-                                it.activity_type &&
-                                it.activity_type.indexOf('seckill') > -1
+                                it.activityType &&
+                                it.activityType.indexOf('seckill') > -1
                               "
                               class="
                                 compotent-goods-list-title-tags
@@ -1390,7 +1390,7 @@
                           <div class="display-flex" style="flex-wrap: wrap">
                             <div
                               class="compotent-discounts-tags"
-                              v-for="(t, index) in it.activity_discounts_tags"
+                              v-for="(t, index) in it.activityDiscountsTags"
                               :key="index"
                             >
                               <span>{{ t }}</span>
@@ -1399,14 +1399,14 @@
                           <div class="compotent-goods-list-1-pricecontainer">
                             <div class="compotent-goods-list-1-price">
                               ￥{{
-                                it.activity_type &&
-                                it.activity_type.indexOf("groupon") > -1
-                                  ? it.groupon_price
+                                it.activityType &&
+                                it.activityType.indexOf("groupon") > -1
+                                  ? it.grouponPrice
                                   : it.price
                               }}
                             </div>
                             <div class="compotent-goods-list-1-sales">
-                              ￥{{ it.original_price }}
+                              ￥{{ it.originalPrice }}
                             </div>
                           </div>
                           <div class="compotent-goods-list-1-cart">
@@ -1424,11 +1424,11 @@
                     <div
                       class="compotent-goods-list"
                       :class="
-                        gitem.activity_type &&
-                        gitem.activity_type.indexOf('groupon') > -1
+                        gitem.activityType &&
+                        gitem.activityType.indexOf('groupon') > -1
                           ? 'compotent-goods-list-2-groupon'
-                          : gitem.activity_type &&
-                            gitem.activity_type.indexOf('seckill') > -1
+                          : gitem.activityType &&
+                            gitem.activityType.indexOf('seckill') > -1
                           ? 'compotent-goods-list-2-seckill'
                           : ''
                       "
@@ -1446,8 +1446,8 @@
                         <div class="compotent-goods-list-title ellipsis-item">
                           <div
                             v-if="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('groupon') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('groupon') > -1
                             "
                             class="
                               compotent-goods-list-title-tags
@@ -1458,8 +1458,8 @@
                           </div>
                           <div
                             v-if="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('seckill') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('seckill') > -1
                             "
                             class="
                               compotent-goods-list-title-tags
@@ -1482,7 +1482,7 @@
                           <div
                             class="compotent-discounts-tags"
                             style="margin-top: 0"
-                            v-for="(t, index) in gitem.activity_discounts_tags"
+                            v-for="(t, index) in gitem.activityDiscountsTags"
                             :key="index"
                           >
                             <span>{{ t }}</span>
@@ -1498,28 +1498,28 @@
                                 style="margin-top: 8px"
                                 class="compotent-goods-list-originalprice"
                               >
-                                ￥{{ gitem.original_price }}
+                                ￥{{ gitem.originalPrice }}
                               </div>
                             </div>
                           </div>
                           <div
                             class="compotent-goods-list-button"
                             :class="
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf('groupon') > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf('groupon') > -1
                                 ? 'compotent-goods-list-button-groupon'
-                                : gitem.activity_type &&
-                                  gitem.activity_type.indexOf('seckill') > -1
+                                : gitem.activityType &&
+                                  gitem.activityType.indexOf('seckill') > -1
                                 ? 'compotent-goods-list-button-seckill'
                                 : ''
                             "
                           >
                             {{
-                              gitem.activity_type &&
-                              gitem.activity_type.indexOf("groupon") > -1
+                              gitem.activityType &&
+                              gitem.activityType.indexOf("groupon") > -1
                                 ? "马上拼"
-                                : gitem.activity_type &&
-                                  gitem.activity_type.indexOf("seckill") > -1
+                                : gitem.activityType &&
+                                  gitem.activityType.indexOf("seckill") > -1
                                 ? "去抢购"
                                 : "去购买"
                             }}

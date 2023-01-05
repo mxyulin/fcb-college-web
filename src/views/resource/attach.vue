@@ -63,11 +63,9 @@
                   </el-alert>
                 </el-form-item>
               </el-form>
-              
+
               <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rowUpdate"
-                  >保存</el-button
-                >
+                <el-button type="primary" @click="rowUpdate">保存</el-button>
                 <el-button @click="dialogmodify = false">取 消</el-button>
               </div>
             </el-dialog>
@@ -110,12 +108,13 @@
           @refresh-change="refreshChange"
           @on-load="loadDataList"
         >
-          <template slot="link">
-            <img
-              class="img-item"
-              src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76"
-              alt=""
-            />
+          <template slot="link" slot-scope="scope">
+            <el-image
+              style="width: 50px; height: 50px"
+              :src="scope.row.link"
+              :preview-src-list="[scope.row.link]"
+              :fit="fit"
+            ></el-image>
           </template>
           <template slot="menuLeft">
             <el-button
@@ -195,7 +194,7 @@ export default {
       nodeName: null,
       alertif: false,
       // 编辑
-      dialogmodify:false,
+      dialogmodify: false,
       nameupdate: null,
       // 增删改
       curSelectNode: null,
@@ -242,42 +241,6 @@ export default {
               {
                 required: true,
                 message: "请输入附件地址",
-                trigger: "blur",
-              },
-            ],
-          },
-          {
-            label: "附件域名",
-            prop: "domainUrl",
-            search: true,
-            rules: [
-              {
-                required: true,
-                message: "请输入附件域名",
-                trigger: "blur",
-              },
-            ],
-          },
-          {
-            label: "附件名称",
-            prop: "name",
-            search: true,
-            rules: [
-              {
-                required: true,
-                message: "请输入附件名称",
-                trigger: "blur",
-              },
-            ],
-          },
-          {
-            label: "附件原名",
-            prop: "originalName",
-            search: true,
-            rules: [
-              {
-                required: true,
-                message: "请输入附件原名",
                 trigger: "blur",
               },
             ],
@@ -408,23 +371,29 @@ export default {
       }
     },
     rowUpdate() {
-      let params = this.curSelectNode
-      if(func.isEmpty(this.nameupdate)||this.nameupdate===this.curSelectNode.name){
+      let params = this.curSelectNode;
+      if (
+        func.isEmpty(this.nameupdate) ||
+        this.nameupdate === this.curSelectNode.name
+      ) {
         this.alertif = true;
         return;
       }
-      params.name=this.nameupdate
+      params.name = this.nameupdate;
       // console.log(params)
-      update(params).then(() => {
-        this.loadCategoryTree();
-        this.$message({
-          type: "success",
-          message: "操作成功!"
-        });
-        this.dialogmodify = false;
-      }, error => {
-        console.log(error);
-      });
+      update(params).then(
+        () => {
+          this.loadCategoryTree();
+          this.$message({
+            type: "success",
+            message: "操作成功!",
+          });
+          this.dialogmodify = false;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
 
     // 删除handleDelete rowDel

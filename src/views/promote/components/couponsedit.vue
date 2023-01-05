@@ -40,7 +40,6 @@
           format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="changeTime('gettime')"
         >
         </el-date-picker>
       </el-form-item>
@@ -54,7 +53,6 @@
           format="yyyy-MM-dd HH:mm:ss"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="changeTime('usetime')"
         >
         </el-date-picker>
       </el-form-item>
@@ -118,10 +116,10 @@
         </div>
       </el-form-item>
 
-      <el-form-item label="适用商品：" prop="goods_type">
+      <el-form-item label="适用商品：" prop="goodsType">
         <div>
 
-          <el-radio-group v-model="detailData.goods_type">
+          <el-radio-group v-model="detailData.goodsType">
             <el-radio label="all">全部商品可用</el-radio>
             <el-radio label="part">指定商品可用</el-radio>
           </el-radio-group>
@@ -129,7 +127,7 @@
           <div
             class="display-flex"
             style="flex-wrap: wrap"
-            v-if="detailData.goods_type == 'part'"
+            v-if="detailData.goodsType == 'part'"
           >
             <!-- <div
               class="select-goods display-flex"
@@ -153,7 +151,7 @@
             </div> -->
           </div>
 
-          <!-- <div class="display-flex" v-if="detailData.goods_type == 'part'">
+          <!-- <div class="display-flex" v-if="detailData.goodsType == 'part'">
             <div class="display-flex">
               <div
                 class="theme-color cursor-pointer modify-text"
@@ -180,7 +178,7 @@
         取消
       </div>
       <div
-        class="shopro-button shopro-screen-button" @click="saveProduct"
+        class="shopro-button shopro-screen-button" @click="onSubmit"
       >
         确定
       </div>
@@ -198,9 +196,9 @@ export default {
         name: '',
         type:'',
         description:'',
-        gettime:'',
+        gettime: [],
         // 用券时间
-        usetime:'',
+        usetime: [],
         // 发券总量
         stock:'',
         // 每人限领
@@ -210,7 +208,7 @@ export default {
         // 减免金额
         amount:'',
         // 适用商品
-        oods_type:'',
+        goodsType:'',
       },
       // 表单验证
       rules: {
@@ -256,13 +254,6 @@ export default {
             trigger: "change",
           },
         ],
-        goods_ids: [
-          {
-            required: true,
-            message: "请选择商品",
-            trigger: "change",
-          },
-        ],
       },
 
 
@@ -281,11 +272,15 @@ export default {
   },
   methods: {
     // 发请求
-    saveProduct(){
-      console.log('表单数据',this.detailData)
-      // add().then((res) => {
-      //   console.log(res);
-      // });
+    onSubmit(){
+      const { detailData: {usetime, gettime} } = this;
+      Object.assign(this.detailData, {
+        usetime: JSON.stringify(usetime),
+        gettime: JSON.stringify(gettime)
+      })
+      add(this.detailData).then((res) => {
+        console.log(res);
+      });
     }
   },
 };

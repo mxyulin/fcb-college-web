@@ -24,7 +24,7 @@ export default [{
   }
   ]
 }, {
-  path: '/logs',
+  path: '/test',
   component: Layout,
   redirect: '/test/index',
   children: [{

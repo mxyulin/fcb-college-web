@@ -546,6 +546,12 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
+                style="
+                wif
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                "
                 :size="option.size"
                 v-model="templateForm.content.ids"
                 disabled
@@ -565,10 +571,7 @@
         </el-row>
         <div
           class="select-style-item-box"
-          style="
-            display: flex;
-            flex-wrap: wrap;
-          "
+          style="display: flex; flex-wrap: wrap"
           v-if="templateData[centerSelect].content.timeData"
         >
           <draggable
@@ -654,7 +657,7 @@
                   :size="option.size"
                   type="primary"
                   plain
-                  @click="operation('coupons')"
+                  @click="openResourceTable('coupons')"
                 >
                   选择
                 </el-button>
@@ -2329,6 +2332,12 @@ export default {
           break;
         case "category-tabs":
           this.dialogTitle = "选择商品分类";
+          break;
+        case "category-tabs":
+          this.dialogTitle = "选择商品分类";
+          break;
+        case "coupons":
+          this.dialogTitle = "选择优惠券";
           break;
       }
       this.dialogVisible = true;
