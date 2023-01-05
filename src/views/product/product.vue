@@ -366,7 +366,7 @@ export default {
   methods: {
     // 获取商品数据
     getGoodsData(params = {}) {
-      let that = this;
+      let that = this; 
       let { activeStatus } = that;
       that.loading = true;
       getList(that.page.currentPage, that.page.pageSize, params).then((res) => {

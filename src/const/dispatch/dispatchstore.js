@@ -20,38 +20,18 @@ export default {
       hide: true,
     },
     {
-      label: "名称",
-      prop: "name",
+      label: "租户ID",
+      prop: "tenantId",
       type: "input",
-      span: 24,
-      search: true,
-      rules: [{
-        required: true,
-        message: "请输入名称",
-        trigger: "blur"
-      }],
+      addDisplay: false,
+      editDisplay: false,
+      viewDisplay: false,
+      hide: true,
     },
     {
-      label: "路径",
-      prop: "path",
+      label: "包含门店",
+      prop: "storeIds",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入路径",
-        trigger: "blur"
-      }],
-    },
-    {
-      label: "所属分组",
-      prop: "linkGroup",
-      type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入所属分组",
-        trigger: "blur"
-      }],
     },
     {
       label: "创建人",

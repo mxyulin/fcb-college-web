@@ -20,38 +20,58 @@ export default {
       hide: true,
     },
     {
-      label: "名称",
-      prop: "name",
+      label: "租户ID",
+      prop: "tenantId",
       type: "input",
-      span: 24,
-      search: true,
-      rules: [{
-        required: true,
-        message: "请输入名称",
-        trigger: "blur"
-      }],
+      addDisplay: false,
+      editDisplay: false,
+      viewDisplay: false,
+      hide: true,
     },
     {
-      label: "路径",
-      prop: "path",
+      label: "计费方式:number=件数,weight=重量",
+      prop: "type",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入路径",
-        trigger: "blur"
-      }],
     },
     {
-      label: "所属分组",
-      prop: "linkGroup",
+      label: "权重",
+      prop: "weigh",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入所属分组",
-        trigger: "blur"
-      }],
+    },
+    {
+      label: "首(重/件)数",
+      prop: "firstNum",
+      type: "input",
+    },
+    {
+      label: "首(重/件)",
+      prop: "firstPrice",
+      type: "input",
+    },
+    {
+      label: "续(重/件)数",
+      prop: "additionalNum",
+      type: "input",
+    },
+    {
+      label: "续(重/件)",
+      prop: "additionalPrice",
+      type: "input",
+    },
+    {
+      label: "省份",
+      prop: "provinceIds",
+      type: "input",
+    },
+    {
+      label: "市级",
+      prop: "cityIds",
+      type: "input",
+    },
+    {
+      label: "区域",
+      prop: "areaIds",
+      type: "input",
     },
     {
       label: "创建人",

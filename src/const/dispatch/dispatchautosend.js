@@ -20,38 +20,23 @@ export default {
       hide: true,
     },
     {
-      label: "名称",
-      prop: "name",
+      label: "租户ID",
+      prop: "tenantId",
       type: "input",
-      span: 24,
-      search: true,
-      rules: [{
-        required: true,
-        message: "请输入名称",
-        trigger: "blur"
-      }],
+      addDisplay: false,
+      editDisplay: false,
+      viewDisplay: false,
+      hide: true,
     },
     {
-      label: "路径",
-      prop: "path",
+      label: "自动发货类型:card=卡密,text=固定内容,params=自定义内容",
+      prop: "type",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入路径",
-        trigger: "blur"
-      }],
     },
     {
-      label: "所属分组",
-      prop: "linkGroup",
+      label: "发货内容",
+      prop: "content",
       type: "input",
-      span: 24,
-      rules: [{
-        required: true,
-        message: "请输入所属分组",
-        trigger: "blur"
-      }],
     },
     {
       label: "创建人",

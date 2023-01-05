@@ -11,18 +11,7 @@ export const getList = (current, size, params) => {
     }
   })
 }
-
-export const getListByCategory = (current, size, params) => {
-  return request({
-    url: '/api/fcb-product/product/page-bycategory-ids',
-    method: 'get',
-    params: {
-      ...params,
-      current,
-      size,
-    }
-  })
-}
+ 
 
 export const getDetail = (id) => {
   return request({
@@ -44,7 +33,7 @@ export const remove = (ids) => {
   })
 }
 
-export const submitProduct = (row) => {
+export const add = (row) => {
   return request({
     url: '/api/fcb-product/product/submit',
     method: 'post',
@@ -52,7 +41,13 @@ export const submitProduct = (row) => {
   })
 }
 
- 
+export const update = (row) => {
+  return request({
+    url: '/api/fcb-product/product/submit',
+    method: 'post',
+    data: row
+  })
+}
 
 export const slectionsUpdate = (ids, status) => {
   return request({
