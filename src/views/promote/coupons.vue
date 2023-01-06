@@ -79,6 +79,7 @@
 import { getList, getDetail, submit, remove } from "@/api/promote/coupons";
 import tableOptions from "@/const/promote/coupons";
 import { mapGetters } from "vuex";
+import func from "@/util/func";
 
 export default {
   data() {
@@ -290,7 +291,8 @@ export default {
             usetime = usetime.split("~");
             data.usetime = usetime;
           }
-
+           
+          this.useScope = func.isEmpty(data.goodsIds) ? "all" : "some";
           this.form = data;
           this.dialogVisible = true;
           this.formTitle = '编辑优惠券';
@@ -349,6 +351,15 @@ export default {
         }
       }
 
+      if(this.useScope =="all"){
+        that.form.goodsIds = "";
+      }else{
+        if(func.isEmpty(that.form.goodsIds)){
+          this.$message.warning("请设置适用的商品");
+          return ; 
+        } 
+      }
+  
       submit(that.form).then(res => {
         this.$message({
           type: "success",
