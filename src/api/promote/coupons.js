@@ -32,19 +32,13 @@ export const remove = (ids) => {
   })
 }
 
-export const add = (row) => {
+export const submit = (form) => {
+  debugger;
   return request({
     url: '/api/fcb-promote/coupons/submit',
     method: 'post',
-    data: row
+    data: form
   })
 }
 
-export const update = (row) => {
-  return request({
-    url: '/api/fcb-promote/coupons/submit',
-    method: 'post',
-    data: row
-  })
-}
-
+ 
