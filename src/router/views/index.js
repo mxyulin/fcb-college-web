@@ -104,6 +104,15 @@ export default [{
     component: () =>
       import( /* webpackChunkName: "views" */ '@/views/work/process/leave/detail')
 
+  } ,{
+    path: '/ceshi',
+    name: '测试',
+    meta: {
+      i18n: 'work'
+    },
+    component: () =>
+      import( /* webpackChunkName: "views" */ '@/views/release/publish')
+
   } 
   ]
 }
