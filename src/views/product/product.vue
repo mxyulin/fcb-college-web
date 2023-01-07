@@ -1,17 +1,8 @@
 <template>
   <basic-container>
-    <!-- 查询模块 -->
+    <!-- 查询 -->
     <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
     <!--  -->
-    <el-dialog
-      append-to-body="ture"
-      :visible.sync="box"
-      width="60%"
-      center
-    >
-    <Form></Form>
-    </el-dialog>
-    <!-- 列表菜单 -->
     <el-row :gutter="0" type="flex" justify="space-between">
       <el-col :span="2">
         <el-button
@@ -23,7 +14,7 @@
           >新增</el-button
         >
       </el-col>
-      <el-col :span="19">
+      <el-col :span="20">
         <el-radio-group
           v-model="activeStatus"
           :size="option.size"
@@ -36,7 +27,7 @@
           <el-radio-button :label="0">已隐藏</el-radio-button>
         </el-radio-group>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="2">
         <el-button
           :size="option.size"
           icon="el-icon-refresh"
@@ -50,12 +41,6 @@
           @click="search = !search"
           class="refresh-btn"
           circle
-        ></el-button>
-        <el-button
-          :size="option.size"
-          icon="el-icon-delete"
-          circle=""
-          disabled
         ></el-button>
       </el-col>
     </el-row>
@@ -293,7 +278,6 @@
         </el-pagination>
       </el-col>
     </el-row>
-
     <!-- 表单模块 -->
     <Form
       ref="form"
@@ -309,9 +293,8 @@
 import {
   getList,
   add,
-  update,
-  remove,
   slectionsUpdate,
+  remove,
 } from "@/api/product/product";
 import option from "@/const/product/product";
 import Query from "@/views/product/components/query";
@@ -321,7 +304,7 @@ import { mapGetters } from "vuex";
 export default {
   components: {
     Query,
-    Form
+    Form,
   },
   data() {
     return {
@@ -369,7 +352,7 @@ export default {
       this.getGoodsData();
     },
   },
-  methods: { 
+  methods: {
     // 获取商品数据
     getGoodsData(params = {}) {
       let that = this; 
@@ -398,7 +381,7 @@ export default {
     },
     // 修改上架状态
     updateStatus(id, status) {
-      update({ id, status }).then((res) => {
+      slectionsUpdate(id, status).then((res) => {
         if (res.data.code == 200) {
           this.getGoodsData();
         }
@@ -487,7 +470,7 @@ export default {
         this.$message.warning("请至少选择一条数据");
         return;
       }
-      let statusCode = action == "up" ? 1 : 2;
+      let statusCode = (action == "up") ? 1 : 2;
       slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
         if (code == 200) {
           this.getGoodsData();
@@ -510,5 +493,3 @@ export default {
 <style lang="scss" scoped>
 @import "@/views/product/styles/product";
 </style>
- 
-

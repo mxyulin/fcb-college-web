@@ -1,7 +1,7 @@
 <template>
   <!-- 表单模块（弹窗） -->
   <el-dialog
-    width="55%"
+    width="60%"
     top="5vh"
     class="body"
     append-to-body
@@ -17,10 +17,8 @@
       </el-steps>
       <div class="good-detail-body">
         <el-form
-          label-width="auto"
-          label-position="right"
-          class="demo-goodsDetail"
           ref="form"
+          label-width="15%"
           :model="form"
           :rules="rules"
           :size="option.size"
@@ -49,9 +47,9 @@
             <el-form-item label="商品主图：" prop="image">
               <div class="display-flex">
                 <div
-                  v-if="!form.image"
                   key="image-button"
                   class="add-img display-flex"
+                  v-if="!form.image"
                   @click="addImage('image')"
                 >
                   <i class="el-icon-plus"></i>
@@ -112,14 +110,13 @@
                 filterable
                 clearable
                 v-model="form.categoryIds"
-                placeholder="点击选择商品分类"
                 :props="{
                   multiple: true,
                   emitPath: false,
                   checkStrictly: true,
-                  label: 'name',
+                  label: 'title',
                   children: 'children',
-                  value: 'id',
+                  value: 'value',
                 }"
                 :size="option.size"
                 :options="goodsCategory"
@@ -351,7 +348,7 @@
       >
     </div>
     <resourceTable
-      width="55%"
+      width="60%"
       dialogTitle="选择图片"
       :tableType="tableType"
       :dialogVisible.sync="dialogVisible"
@@ -363,8 +360,8 @@
 </template>
 
 <script>
-import { getDetail, add, update } from "@/api/product/product";
-import { getList as getGoodsCategory } from "@/api/product/productcategory";
+import { getDetail, add } from "@/api/product/product";
+import { getTree as getGoodsCategory } from "@/api/product/productcategory";
 import { mapGetters } from "vuex";
 import option from "@/const/product/product";
 import draggable from "vuedraggable";
@@ -688,19 +685,13 @@ export default {
     },
     // 提交表单
     handleSubmit() {
-      // 格式化表单字段
-      const { form } = this,
-        formatForm = {
-          categoryIds: form.categoryIds.join(","),
-          serviceIds: form.serviceIds.join(","),
-          images: JSON.stringify(form.images),
-          params: JSON.stringify(form.params),
-        };
-      // 深拷贝 form
-      let copyForm = Object.assign({}, form);
-      // 合并格式化后的字段
-      copyForm = Object.assign(copyForm, formatForm);
-      add(copyForm).then(() => {
+      // 格式化表单
+      const { categoryIds, serviceIds, images, params } = this.form;
+      this.form.categoryIds = categoryIds.join(",");
+      this.form.serviceIds = serviceIds.join(",");
+      this.form.images = JSON.stringify(images);
+      this.form.params = JSON.stringify(params);
+      add(this.form).then(() => {
         this.resetForm();
         this.$emit("getGoodsData");
         this.$emit("update:dialogFormVisible", false);

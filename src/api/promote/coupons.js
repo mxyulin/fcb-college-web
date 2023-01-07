@@ -32,8 +32,7 @@ export const remove = (ids) => {
   })
 }
 
-export const submit = (form) => {
-  debugger;
+export const submit = (form) => { 
   return request({
     url: '/api/fcb-promote/coupons/submit',
     method: 'post',
