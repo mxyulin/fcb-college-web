@@ -670,7 +670,7 @@ export default {
     updateForm(type, index, data) {
       const that = this;
       switch (type) {
-        case "image":
+        case "image": {
           const { name, link } = data;
           if (index != -1) {
             that.templateForm.content.list[index].name = name;
@@ -680,20 +680,42 @@ export default {
             that.templateForm.content.image = link;
           }
           break;
-        case "link":
+        }
+        case "link": {
           const { id, linkType } = data;
           if (linkType == "goods") {
-            that.templateForm.content.list[index].path_name = 'goods';
+            that.templateForm.content.list[index].path_name = "goods";
             that.templateForm.content.list[index].path = id;
           } else if (linkType == "marketing") {
-            that.templateForm.content.list[index].path_name = 'marketing';
+            that.templateForm.content.list[index].path_name = "marketing";
             that.templateForm.content.list[index].path = id;
           }
           break;
-        case "goods-list":
+        }
+        case "goods-list": {
           that.templateForm.content.timeData = data;
           that.templateForm.content.ids = that.getIds(data);
           break;
+        }
+        case "goods-group": {
+          const { ids, categoryNames, records } = data;
+          that.templateForm.content.id = ids;
+          that.templateForm.content.category_name = categoryNames;
+          that.templateForm.content.timeData = records;
+          break;
+        }
+        case "category-tabs": {
+          const { ids, categoryTabs, records } = data;
+          that.templateForm.content.ids = ids;
+          that.templateForm.content.category_arr = categoryTabs;
+          that.templateForm.content.timeData = records;
+          break;
+        }
+        case "coupons": {
+          that.templateForm.content.timeData = data;
+          that.templateForm.content.ids = that.getIds(data);
+          break;
+        }
       }
     },
     // 暂存上一次装修数据
@@ -1000,27 +1022,6 @@ export default {
                   path_name: "",
                   path_type: 1,
                 },
-                {
-                  name: "标题",
-                  image: "",
-                  path: "",
-                  path_name: "",
-                  path_type: 1,
-                },
-                {
-                  name: "标题",
-                  image: "",
-                  path: "",
-                  path_name: "",
-                  path_type: 1,
-                },
-                {
-                  name: "标题",
-                  image: "",
-                  path: "",
-                  path_name: "",
-                  path_type: 1,
-                },
               ],
             },
           };
@@ -1148,11 +1149,12 @@ export default {
     },
     // 获取 ids
     getIds(arr) {
-      return arr.map((item) => {
-        return item.id;
-      })
-      .join(',');
-    }
+      return arr
+        .map((item) => {
+          return item.id;
+        })
+        .join(",");
+    },
   },
 };
 </script>

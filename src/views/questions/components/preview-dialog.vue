@@ -8,13 +8,12 @@
 					<el-container>
 						<el-header style="text-align: center;">
 							<el-row>
-								<el-col :span="4">
+								<el-col :span="24" style="text-align:right;"> 
+									<el-button type="primary" size="small" plain v-if="permission.questions_edit && qsId" icon="el-icon-edit"
+									@click="editQuestion">编辑本题
+									</el-button> 
 								</el-col>
-								<el-col :span="16" style="font-size:18px;font-wigth:2;">
-									试题预览
-								</el-col>
-								<el-col :span="4">
-								</el-col>
+								 
 							</el-row>
 						</el-header>
 						<el-main>
@@ -43,12 +42,15 @@
 
 <script>
 import questionItemView from "./question-item-view";
-
+import { mapGetters } from "vuex";
 export default {
 	name: "preview-dialog",
 	components: {
 		questionItemView
 	},
+	computed: {
+    ...mapGetters(["permission"])
+    },
 	data() {
 		return {
 			dialogVisible: false,
@@ -62,7 +64,8 @@ export default {
 			},
 			loading: true,
 			questionPreviewList: [],
-			errorMsg: ''
+			errorMsg: '',
+			qsId:null
 		}
 	},
 	created() {
@@ -74,15 +77,14 @@ export default {
 			try {
 				return JSON.parse(data);
 			} catch (e) {
-				this.errorMsg = "解析试题出错";
-				debugger;
+				this.errorMsg = "解析试题出错"; 
 			}
 			return {};
 		},
 		showQuestion(qs) {
 			const that = this;
 			that.errorMsg = '';
-			debugger;
+			that.qsId = null; 
 			that.questionPreviewList = [];
 			if (!qs) {
 				this.errorMsg = "没有试题数据";
@@ -90,6 +92,7 @@ export default {
 			}
 
 			let qsItem = {};
+			that.qsId = qs.id;
 			qsItem["id"] = qs.id;
 			qsItem["type"] = that.qsTypeMap[qs.type];
 
@@ -142,6 +145,11 @@ export default {
 			this.dialogVisible = true;
 		},
 		handleClose(done) {
+			this.dialogVisible = false;
+		},
+		editQuestion(){
+			debugger;
+			this.$emit("editQuestion",this.qsId);
 			this.dialogVisible = false;
 		}
 

@@ -1,21 +1,27 @@
 <template>
   <el-dialog
+    top="5vh"
+    append-to-body
     :width="width"
     :visible.sync="dialogVisible"
-    :append-to-body="true"
     :close-on-click-modal="false"
-    :before-close="beforeClose"
-    @open="beforeOpen"
+    @open="onDialogOpen"
+    @close="onDialogClose"
   >
     <div slot="title">{{ dialogTitle }}</div>
-    <!-- 资源表 -->
-    <el-row :gutter="0" type="flex" justify="space-between">
+    <!-- 资源表模块 -->
+    <el-row
+      :gutter="0"
+      type="flex"
+      justify="space-between"
+      v-if="!isShowCategorySelector"
+    >
       <el-col :span="TableLayout.colLeft">
         <el-input
           placeholder="搜索类别"
           style="height: 45px"
           v-model="filterText"
-          :size="option.size"
+          size="small"
         >
         </el-input>
         <el-tree
@@ -23,7 +29,7 @@
           ref="tree"
           empty-text="暂无节点数据"
           :node-key="id"
-          :data="nodeTree"
+          :data="categoryList"
           :props="defaultProps"
           :highlight-current="true"
           :filter-node-method="filterNodeTree"
@@ -40,13 +46,13 @@
           :search.sync="search"
           :permission="permissionList"
           @refresh-change="refreshTable"
-          @select="onSelect"
-          @select-all="onSelect"
+          @selection-change="onSelectionChange"
           ref="crud"
         >
           <!-- 图片表预览列 -->
           <template slot="link" slot-scope="scope">
             <el-image
+              lazy
               style="width: 80px; height: 80px"
               :src="scope.row.link"
               :preview-src-list="[scope.row.link]"
@@ -55,8 +61,9 @@
           </template>
           <!-- 商品表预览列 -->
           <template slot="goods" slot-scope="scope">
-            <div class="display-flex">
+            <div class="display-flex" style="justify-content: space-evenly">
               <el-image
+                lazy
                 style="width: 80px; height: 80px"
                 :src="scope.row.image"
                 :preview-src-list="[scope.row.image]"
@@ -70,8 +77,14 @@
           </template>
           <!-- 商品表类型列 -->
           <template slot="type" slot-scope="scope">
-            <span v-if="scope.row.type == 'normal'">实体商品</span>
-            <span v-if="scope.row.type == 'virtual'">虚拟商品</span>
+            <div v-if="tableType == 'goods-list' || linkType == 'goods'" key="goods-list-type">
+              <span v-if="scope.row.type == 'normal'" key="normal">实体商品</span>
+              <span v-else key="virtual">虚拟商品</span>
+            </div>
+            <div v-else key="coupons-type">
+              <span v-if="scope.row.type == 'cash'" key="cash">代金券</span>
+              <span v-else key="discount">折扣券</span>
+            </div>
           </template>
           <!-- 商品表上架列 -->
           <template slot="status" slot-scope="scope">
@@ -82,6 +95,7 @@
           <!-- 营销页预览列 -->
           <template slot="image" slot-scope="scope">
             <el-image
+              lazy
               style="width: 80px; height: 80px"
               :src="scope.row.image"
               :preview-src-list="[scope.row.image]"
@@ -93,7 +107,7 @@
             <el-radio-group
               v-if="tableType == 'link'"
               v-model="linkType"
-              :size="option.size"
+              size="small"
               @input="onLinkTypeChange"
             >
               <el-radio-button label="goods" border>商品</el-radio-button>
@@ -104,7 +118,7 @@
             <el-button
               v-if="tableType == 'image' || tableType == 'images'"
               type="primary"
-              :size="option.size"
+              size="small"
               icon="el-icon-upload2"
               @click="handleUpload"
               >上传</el-button
@@ -113,19 +127,19 @@
           <!-- 单选按钮 -->
           <template slot-scope="{ row }" slot="menu">
             <el-button
-              :size="option.size"
+              size="small"
               type="primary"
-              @click="singleSlect(row)"
+              @click="onSelected(row)"
               >选择</el-button
             >
           </template>
           <!-- 多选按钮 -->
-          <template slot="page" v-if="isMutiple">
+          <template slot="page" v-if="isShowMutipleCheckbox">
             <el-col :span="1">
               <el-button
                 type="primary"
-                :size="option.size"
-                @click="mutipleSlect"
+                size="small"
+                @click="onMutipleSlect"
                 >确定</el-button
               >
             </el-col>
@@ -158,18 +172,48 @@
       </el-col>
     </el-row>
     <!-- 商品分类级联选择器 -->
+    <el-row
+      :gutter="15"
+      type="flex"
+      style="height: 75vh"
+      justify="start"
+      v-if="isShowCategorySelector"
+    >
+      <el-col :span="4">
+        <el-cascader
+          clearable
+          filterable
+          size="medium"
+          ref="goodsCategoryCascader"
+          v-model="goodsCategorySelection"
+          :options="categoryList"
+          :props="cascaderProps"
+          :show-all-levels="false"
+        >
+        </el-cascader>
+      </el-col>
+      <el-col :span="20">
+        <el-button
+          type="primary"
+          size="medium"
+          @click="onSelectedGoodsCategory"
+        >
+          确定
+        </el-button>
+      </el-col>
+    </el-row>
   </el-dialog>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import option from "@/const/decorate/dodecorate";
 import { getList as getImageCategory } from "@/api/resource/attachcategory";
 import { getList as getImageList } from "@/api/resource/attach";
-import { getTree as getGoodsCategory } from "@/api/product/productcategory";
+import { getList as getGoodsCategory } from "@/api/product/productcategory";
 import { getList as getGoodsList } from "@/api/product/product";
 import { getList as getPageList } from "@/api/decorate/decorate";
 import { getList as getArticleList } from "@/api/news/article";
+import { getList as getCouponsList } from "@/api/promote/coupons";
 
 export default {
   name: "resourceTable",
@@ -182,6 +226,11 @@ export default {
   data() {
     return {
       loading: false,
+      // 图片上传
+      attachBox: false,
+      // 链接表类型
+      linkType: "goods",
+      /* 配置项 */
       page: {
         currentPage: 1,
         pageSize: 10,
@@ -189,17 +238,10 @@ export default {
         pagerCount: 7,
         layout: "slot, total, sizes, prev, pager, next, jumper, ->",
       },
-      // 链接表类型
-      linkType: "goods",
-      // 表格布局
       TableLayout: {
         colLeft: 3,
         colRight: 20,
       },
-      nodeTree: [],
-      avueList: [],
-      selectionList: [],
-      filterText: "",
       defaultProps: {
         label: "name",
         children: "children",
@@ -210,15 +252,31 @@ export default {
         border: true,
         menu: true,
         selection: false,
+        reserveSelection: true,
+        rowKey: "id",
         menuWidth: 100,
+        height: 500,
         align: "center",
         search: {
           name: "",
         },
         column: [],
       },
-      // 图片上传
-      attachBox: false,
+      cascaderProps: {
+        multiple: false,
+        checkStrictly: true,
+        emitPath: false,
+        label: "name",
+        value: "id",
+        children: "children",
+      },
+      /* 数据 */
+      filterText: "",
+      categoryList: [],
+      avueList: [],
+      selectionList: [],
+      goodsCategorySelection: [],
+      goodsCategorySelectionNodes: [],
       fileList: [],
     };
   },
@@ -231,7 +289,7 @@ export default {
       });
       return ids.join(",");
     },
-    // 表格按钮状态
+    // 表格按钮权限
     permissionList() {
       return {
         addBtn: false,
@@ -239,18 +297,24 @@ export default {
         delBtn: false,
       };
     },
-    // el-ui组件全局配置
-    option() {
-      return option;
-    },
-    // 多选状态
-    isMutiple() {
+    isShowMutipleCheckbox() {
       const { tableType } = this;
-      return tableType == "images" || tableType == "goods-list" ? true : false;
+      return tableType == "images" ||
+        tableType == "goods-list" ||
+        tableType == "category-tabs" ||
+        tableType == "coupons"
+        ? true
+        : false;
+    },
+    isShowCategorySelector() {
+      const { tableType } = this;
+      return tableType == "category-tabs" || tableType == "goods-group"
+        ? true
+        : false;
     },
   },
   watch: {
-    // 节点树过滤
+    // 节点搜索
     filterText(newVal) {
       this.$refs.tree.filter(newVal);
     },
@@ -270,11 +334,15 @@ export default {
         data: { code, data },
       } = result;
       if (code == 200) {
-        this.nodeTree = data;
+        this.categoryList = data;
         this.$nextTick(() => {
-          this.refreshTable();
+          if (!this.isShowCategorySelector) {
+            this.refreshTable();
+          }
         });
+        return "ok";
       }
+      return Promise.reject(new Error("faile"));
     },
     async getList(page, params = {}) {
       const { tableType } = this;
@@ -303,9 +371,10 @@ export default {
             );
             break;
         }
-      } else if (tableType == "goods-group" || tableType == "goods-list") {
+      } else if (tableType == "goods-list") {
         result = await getGoodsList(page.currentPage, page.pageSize, params);
-      } else {
+      } else if (tableType == "coupons") {
+        result = await getCouponsList(page.currentPage, page.pageSize, params);
       }
       const {
         data: { code, data },
@@ -314,19 +383,16 @@ export default {
         this.page.total = data.total;
         this.avueList = data.records;
         this.loading = false;
-        this.clearSelection();
+        return "ok";
       }
+      return Promise.reject(new Error("faile"));
     },
-    // 初始化表格
-    beforeOpen() {
+    // 初始化组件
+    onDialogOpen() {
       const { tableType } = this;
-      // 重置列表和表格
-      this.nodeTree = [];
-      this.avueList = [];
-      // 根据选择的资源类型不同，提供差异化的表格
+      // 根据选择的资源类型不同，提供差异化的表格或级联选择器
       switch (tableType) {
         case "image":
-          this.defaultProps.label = "name";
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -366,7 +432,6 @@ export default {
           this.getNodeTree("image");
           break;
         case "images":
-          this.defaultProps.label = "name";
           this.avueOption.menu = false;
           this.avueOption.selection = true;
           this.avueOption.column = [
@@ -406,7 +471,6 @@ export default {
           this.getNodeTree("image");
           break;
         case "link":
-          this.defaultProps.label = "title";
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -434,9 +498,10 @@ export default {
           this.getNodeTree("goods");
           break;
         case "goods-group":
+          this.cascaderProps.multiple = false;
+          this.getNodeTree("goods");
           break;
         case "goods-list":
-          this.defaultProps.label = "title";
           this.avueOption.menu = false;
           this.avueOption.selection = true;
           this.avueOption.column = [
@@ -463,25 +528,66 @@ export default {
           ];
           this.getNodeTree("goods");
           break;
+        case "category-tabs":
+          this.cascaderProps.multiple = true;
+          this.getNodeTree("goods");
+          break;
+        case "coupons":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = false;
+          this.avueOption.selection = true;
+          this.avueOption.column = [
+            {
+              label: "名称",
+              prop: "name",
+              overHidden: true,
+            },{
+              label: "类型",
+              prop: "type",
+              overHidden: true,
+            },{
+              label: "优惠面额",
+              prop: "amount",
+              overHidden: true,
+            },{
+              label: "消费门槛",
+              prop: "enough",
+              overHidden: true,
+            },{
+              label: "消费门槛",
+              prop: "enough",
+              overHidden: true,
+            },{
+              label: "库存",
+              prop: "stock",
+              overHidden: true,
+            }
+          ];
+          this.getList(this.page);
+          break;
       }
     },
-    // 表格重置
-    beforeClose(done) {
-      this.linkType = "goods";
-      this.TableLayout.colLeft = 3;
-      this.TableLayout.colRight = 20;
+    // 重置组件
+    onDialogClose() {
+      // *争对 el-cascader 组件自身 bug 打的补丁
+      // *参考：https://github.com/ElemeFE/element/issues/16967
+      if (this.isShowCategorySelector) {
+        this.$refs.goodsCategoryCascader.$children[1].activePath = [];
+      } else {
+        this.resetData();
+      }
       this.$emit("update:dialogVisible", false);
-      done();
     },
     // 切换连接表
     onLinkTypeChange(linkType) {
-      this.nodeTree = [];
+      this.categoryList = [];
       this.avueList = [];
       switch (linkType) {
         case "goods":
           this.TableLayout.colLeft = 3;
           this.TableLayout.colRight = 20;
-          this.beforeOpen();
+          this.onDialogOpen();
           break;
         case "marketing":
           this.TableLayout.colLeft = 0;
@@ -518,32 +624,22 @@ export default {
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [];
-          // this.getList(this.page);
+          this.getList(this.page);
           break;
       }
     },
-    // 隐藏表格列
-    hideClumn(...args) {
-      this.avueOption.column.forEach((item) => {
-        if (args.indexOf(item.prop) != -1) {
-          item.hide = true;
-        } else {
-          item.hide = false;
-        }
-      });
-    },
-    // 过滤（搜索）分类
+    // 搜索分类
     filterNodeTree(val, data, node) {
       if (!val) return true;
       return data.name.indexOf(val) != -1 ? true : false;
     },
-    // 获取一个分类表格数据
+    // 获取一个分类的数据
     onNodeClick(data, node) {
       const { id } = data;
       this.getList(this.page, { categoryIds: id });
     },
     // 单选
-    singleSlect(row) {
+    onSelected(row) {
       const {
         tableType,
         linkType,
@@ -553,33 +649,92 @@ export default {
         row.linkType = linkType;
       }
       updateForm(tableType, currentSelection, row);
-      this.linkType = "goods";
-      this.TableLayout.colLeft = 3;
-      this.TableLayout.colRight = 20;
       this.$emit("update:dialogVisible", false);
     },
-    onSelect(selection, row) {
+    // 获取多选行
+    onSelectionChange(selection) {
       this.selectionList = selection;
     },
     // 多选
-    mutipleSlect() {
+    onMutipleSlect() {
       const {
         tableType,
         selectionList,
         $attrs: { currentSelection, updateForm },
       } = this;
+      if (selectionList.length == 0) {
+        return this.$message({
+          message: "请至少选择一条数据",
+          type: "warning",
+        });
+      }
       updateForm(tableType, currentSelection, selectionList);
       this.$emit("update:dialogVisible", false);
     },
-    // 刷新表格
+    onSelectedGoodsCategory() {
+      const {
+        tableType,
+        goodsCategorySelection,
+        page,
+        $attrs: { currentSelection, updateForm },
+      } = this;
+      let ids = "",
+        categoryName = "",
+        categoryTabs = [];
+      if (goodsCategorySelection.length == 0) {
+        return this.$message({
+          message: "请至少选择一条数据",
+          type: "warning",
+        });
+      }
+      if (tableType == "goods-group") {
+        ids = goodsCategorySelection;
+        categoryName =
+          this.$refs.goodsCategoryCascader.getCheckedNodes()[0].label;
+      } else {
+        ids = goodsCategorySelection
+          .map((item) => {
+            return item;
+          })
+          .join(",");
+        categoryTabs = this.$refs.goodsCategoryCascader
+          .getCheckedNodes()
+          .map(({ data: { name, description } }) => {
+            return { name, description };
+          });
+      }
+      getGoodsList(page.currentPage, page.pageSize, { categoryIds: ids }).then(
+        ({ data: { code, data } }) => {
+          if (code == 200) {
+            data.ids = ids;
+            data.categoryName = categoryName;
+            data.categoryTabs = categoryTabs;
+            updateForm(tableType, currentSelection, data);
+            this.onDialogClose();
+          }
+        }
+      );
+    },
     refreshTable() {
       // 优化用户体验，刷新即可得到第一个节点数据
-      this.$refs.tree.$children[0].handleClick();
+      if (this.categoryList.length > 0) {
+        return this.$refs.tree.$children[0].handleClick();
+      };
+      if (this.TableLayout.colLeft == 0) {
+        return this.getList(this.page);
+      }
     },
-    // 清空已选
-    clearSelection() {
+    resetData() {
+      this.categoryList = [];
+      this.avueList = [];
       this.selectionList = [];
-      // this.$refs.crud.clearSelection();
+      this.goodsCategorySelection = [];
+      this.linkType = "goods";
+      this.TableLayout.colLeft = 3;
+      this.TableLayout.colRight = 20;
+      if (this.isShowMutipleCheckbox) {
+        this.$refs.crud.$refs.table.clearSelection();
+      }
     },
     /*
      *上传图片
@@ -604,6 +759,5 @@ export default {
 .display-flex {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
 }
 </style>
