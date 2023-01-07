@@ -31,17 +31,4 @@ export const submit = (params) => {
 }
 
  
-// {
-// 	coverType: "封面类型",
-// 	category: "2",
-// 	title: "标题",
-// 	body: {
-// 		title: "标题",
-// 		content: "文章内容",
-// 		picUrls: "图片URL JSON数组",
-// 		copyRight: "",
-// 		author: ""
 
-// 	},
-// 	tags: "" 
-// }
