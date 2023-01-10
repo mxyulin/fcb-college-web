@@ -30,5 +30,23 @@ export const submit = (params) => {
   })
 }
 
- 
+
+
+export const remove = (id) => {
+  return request({
+    url: '/api/fcb-news/article/remove',
+    method: 'get',
+    params: {
+      id,
+    }
+  })
+} 
+
+export const update = (row) => {
+  return request({
+    url: '/api/fcb-news/article/update',
+    method: 'post',
+    data: row
+  })
+}
 

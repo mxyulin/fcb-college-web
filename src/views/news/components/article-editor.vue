@@ -12,8 +12,8 @@
         <el-row>
           <el-col :span="24">
             <el-radio-group v-model="form.titleType" @input="onTitleTypeChange">
-              <el-radio label="1">单标题</el-radio>
-              <el-radio label="2">多标题</el-radio>
+              <el-radio label=1>单标题</el-radio>
+              <el-radio label=2>多标题</el-radio>
             </el-radio-group>
           </el-col>
         </el-row>
@@ -69,7 +69,7 @@
             </el-image>
           </el-col>
         </el-row>
-        <el-row v-if="form.coverType == 2">
+        <el-row v-if="form.coverType == 2 ">
           <el-col :span="24">
             <el-image class="cover-image" v-for="(it, index) in theCoverUrls" :key="index" :src="it"
               :preview-src-list="theCoverUrls[index]">
@@ -174,11 +174,11 @@ export default {
             dicData: [
               {
                 label: "原创",
-                value: "1"
+                value: 1
               },
               {
                 label: "转载",
-                value: "2"
+                value: 2
               }
             ],
             hide: true,
@@ -223,21 +223,28 @@ export default {
   methods: {
     resetForm() {
       this.form = {
-        category: "2",
-        title: "文章标题",
-        titleType: "1",   //文章标题:1 = 单标题，2= 多标题
+        category: 2,
+        title: "",
+        titleType: 1,    
         otherTitle: "",  
-        content: "",    //富文本
-        coverType: "1",   //图片类型判断0代表无图1单图2多图
+        content: "",     
+        coverType: 1,   
         picUrls: "",     
-        copyRight: "原创",
-        author: "作者",
+        copyRight: 1,
+        author: "",
         tags: ""
       };
       this.theCoverUrls = ['','',''];
       this.theOtherTitle = [''];
     },
-    showBox() {
+    showBox(article) {
+      this.resetForm();
+      if(article != null){
+        this.theCoverUrls = article.picUrls;
+        this.theOtherTitle = article.otherTitle; 
+        this.form = article;
+      }
+
 			this.drawerVisible = true;
 		},
     handleClose() {
