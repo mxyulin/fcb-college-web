@@ -23,7 +23,7 @@ export default {
       label: "封面",
       prop: "picUrls",
       type: "input",
-      width: 110,//列宽度
+      width: 130,//列宽度
     },
     {
       label: "文章标题",
@@ -35,7 +35,7 @@ export default {
       label: "状态",
       prop: "status",
       type: "input",
-      width: 70,//列宽度
+      width: 75,//列宽度
     },
     {
       label: "修改人",

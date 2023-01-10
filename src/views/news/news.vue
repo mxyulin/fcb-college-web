@@ -1,6 +1,6 @@
 <template>
   <basic-container>
-    <avue-crud :option="option" :table-loading="loading" :data="questiongList" :page.sync="page" :permission="permissionList"
+    <avue-crud :option="option" :table-loading="loading" :data="newsList" :page.sync="page" :permission="permissionList"
        v-model="form" ref="crud"   
       @search-change="searchChange" @search-reset="searchReset" @selection-change="selectionChange"
       @current-change="currentChange" @size-change="sizeChange" @refresh-change="refreshChange" @on-load="onLoad">
@@ -13,10 +13,15 @@
       <!-- <template slot-scope="{row}" slot="questionType">
          {{row.diffLevel}} 
       </template> 
-      <template slot-scope="{row}" slot="questionBody">
-        {{row.type}} {{row.profile}} {{row.options}}
-      </template>
        -->
+       <template slot-scope="{row}" slot="picUrls">
+        <el-image class="cover-image" :src="row.picUrls[0]" :preview-src-list="row.picUrls">
+              <div slot="error" class="image-add-btn"  >
+                <i class="el-icon-picture-outline" style="font-size:64px;color:#dddddd"></i>
+              </div>
+            </el-image>
+      </template>
+     
        <template slot-scope="{row}" slot="status">
          <el-tag type="success" v-if="row.status == 1" effect="plain" size="small">已发布</el-tag>
          <el-tag type="warning" v-else effect="plain" size="small">未发布</el-tag>
@@ -71,7 +76,7 @@ export default {
       }, 
       selectionList: [],
       option: option,
-      questiongList: []
+      newsList: []
     };
   },
   computed: {
@@ -150,7 +155,18 @@ export default {
       getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
         let data = res.data.data;
         that.page.total = data.total;
-        that.questiongList = data.records;
+        let list  = data.records;
+        for(let i = 0 ; i< list.length; ++i){
+          if(list[i].picUrls != ""){
+            list[i].picUrls = JSON.parse(list[i].picUrls);
+          }
+          if(list[i].otherTitle != ""){
+            list[i].otherTitle = JSON.parse(list[i].otherTitle); 
+          }
+        }
+
+        that.newsList = list;
+
         that.loading = false;
         that.selectionClear();
       });
@@ -164,5 +180,23 @@ export default {
   background-color: #B3C0D1;
   color: #333;
   line-height: 60px;
+}
+.cover-image {
+  width: 100px;
+  height: 100px;
+  margin: 0 8px;
+}
+
+.image-add-btn {
+  background-color: #fafafa;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 26px;
+  color: #999;
+  border: 1px dashed #e6e6e6;
+  border-radius: 4px;
 }
 </style>

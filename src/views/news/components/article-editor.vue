@@ -262,8 +262,6 @@ export default {
       }else{
         that.form.otherTitle = "";
       }
- 
-      console.log(that.form);  
       submit(that.form).then(res => {
         this.$message({
           type: "success",
