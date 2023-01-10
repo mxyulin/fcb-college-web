@@ -34,8 +34,11 @@
               <el-input placeholder="请输入内容" style="margin:8px 0;" v-model="theOtherTitle[index]"
                 v-for="(it, index) in theOtherTitle" :key="index" maxlength="30" show-word-limit size="small">
                 <template slot="append"><i class="el-icon-delete" style="cursor:pointer;"
-                    @click="onRemoveOtherTitle(index)"></i></template>
+                    @click="onRemoveOtherTitle(index)"></i>
+                  </template> 
               </el-input>
+
+              <div class="error-tip">{{ otherTitleTip }}</div>
               <div style="text-align:center;margin-top:10px;" v-if="otherTitleCount > 0">
                 <el-button type="primary" icon="el-icon-plus" circle plain @click="onAddOtherTitle"></el-button>
                 <span style="padding-left:5px;">添加标题</span>
@@ -67,6 +70,7 @@
                 <i class="el-icon-plus"></i>
               </div>
             </el-image>
+            <div class="error-tip">{{ coverImageTip }}</div>
           </el-col>
         </el-row>
         <el-row v-if="form.coverType == 2">
@@ -77,6 +81,7 @@
                 <i class="el-icon-plus"></i>
               </div>
             </el-image>
+            <div class="error-tip">{{ coverImageTip }}</div>
           </el-col>
         </el-row>
       </template>
@@ -104,6 +109,8 @@ export default {
       form: {},
       theCoverUrls: ['', '', ''],
       theOtherTitle: [''],
+      coverImageTip: '',
+      otherTitleTip: '',
       formOption: {
         height: 'auto',
         calcHeight: 30,
@@ -130,7 +137,14 @@ export default {
             label: "",
             labelWidth: 0,
             prop: "content",
-            span: 24
+            span: 24,
+            rules: [
+              {
+                required: true,
+                message: "请输入内容",
+                trigger: "blur"
+              }
+            ]
           },
           {
             label: "标题设置",
@@ -217,28 +231,26 @@ export default {
   },
   methods: {
     resetForm() {
-      this.$nextTick(res => {
-        this.$refs.newsForm.resetForm();
-        this.form = {
-          category: 2,
-          title: "",
-          titleType: "1",
-          otherTitle: "",
-          content: "",
-          coverType: "1",
-          picUrls: "",
-          copyRight: "1",
-          author: "",
-          tags: ""
-        };
-        this.theCoverUrls = ['', '', ''];
-        this.theOtherTitle = [''];
-      });
+      this.form = {
+        category: 2,
+        title: "",
+        titleType: "1",
+        otherTitle: "",
+        content: "",
+        coverType: "1",
+        picUrls: "",
+        copyRight: "1",
+        author: "",
+        tags: ""
+      };
+      this.theCoverUrls = ['', '', ''];
+      this.theOtherTitle = [''];
+      this.otherTitleTip = '';
+      this.coverImageTip = '';
 
     },
     showBox(article) {
       this.resetForm();
-      debugger
 
       if (article != null) {
         if (article.picUrls != "") {
@@ -264,27 +276,74 @@ export default {
     },
     handleSubmit() {
       const that = this;
-      debugger;
+      // let rel = that.$refs.newsForm.validate();
+      // if (!rel) {
+      //   return;
+      // }
+      that.coverImageTip = "";
+      that.otherTitleTip = "";
+
+      if (that.form.titleType > 1) {
+        let titles = [];
+
+        if (that.form.titleType == 2) {
+          for (let i = 0; i < that.theOtherTitle.length; i++) {
+            let t = that.theOtherTitle[i];
+            if (t == '') {
+              that.otherTitleTip = "请填写标题";
+              return;
+            }
+
+            titles.push(t);
+          }
+        }
+        that.form.otherTitle = JSON.stringify(that.titles);
+
+      } else {
+        that.form.otherTitle = "";
+      }
+
       if (that.form.coverType > 0) {
-        that.form.picUrls = JSON.stringify(that.theCoverUrls);
+        let picUrls = [];
+        if (that.form.coverType == 1) {
+          let url = that.theCoverUrls[0];
+          if (url == '') {
+            that.coverImageTip = "请选择封展示封面";
+            return;
+          }
+        }
+
+        if (that.form.coverType == 2) {
+          for (let i = 0; i < that.theCoverUrls.length; i++) {
+            let url = that.theCoverUrls[i];
+            if (url == '') {
+              that.coverImageTip = "请选择封展示封面";
+              return;
+            }
+            picUrls.push(url);
+          }
+        }
+        that.form.picUrls = JSON.stringify(picUrls);
       } else {
         that.form.picUrls = "";
       }
 
-      if (that.form.titleType > 1) {
-        that.form.otherTitle = JSON.stringify(that.theOtherTitle);
-      } else {
-        that.form.otherTitle = "";
-      }
+
+
       submit(that.form).then(res => {
         this.$message({
           type: "success",
           message: "操作成功!"
         });
 
-        that.resetForm();
-        that.$emit("refreshChange");
-        that.handleClose();
+        that.$nextTick(res => {
+          that.$emit("refreshChange");
+          that.$refs.newsForm.resetForm();
+          that.resetForm();
+          that.handleClose();
+
+        });
+
       });
     },
     onAddOtherTitle() {
@@ -320,6 +379,12 @@ export default {
   color: #999;
   border: 1px dashed #e6e6e6;
   border-radius: 4px;
+}
+
+.error-tip {
+  color: #F56C6C;
+  font-size: 12px;
+  line-height: 1;
 }
 </style>
 
