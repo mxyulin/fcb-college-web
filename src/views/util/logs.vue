@@ -9,7 +9,7 @@
 </template>
 
 <script>
-  export default {
+  export default {    
     methods: {
       handleNewError() {
         window.console.log(a); // eslint-disable-line

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <el-dialog
           class="components-image-libs-wrapper"
           title="我的图片"
@@ -129,4 +129,4 @@
       padding: 0 20px 20px;
     }
   }
-</style>
+</style> -->

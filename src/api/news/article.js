@@ -3,8 +3,8 @@ import request from '@/router/axios';
 export const getList = (current, size, params) => {
   return request({
     url: '/api/fcb-news/article/list',
-    method: 'get',
-    params: {
+    method: 'post',
+    data: {
       ...params,
       current,
       size,
@@ -24,7 +24,7 @@ export const getDetail = (id) => {
  
 export const submit = (params) => {
   return request({
-    url: '/api/fcb-news/article/save-or-insert',
+    url: '/api/fcb-news/article/submit',
     method: 'post',
     data: params
   })
