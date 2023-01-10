@@ -221,7 +221,7 @@
         </el-pagination>
       </el-row>
     </div>
-    <DoDecorate :dialogOpt="dialogOpt"/>
+    <DoDecorate :dodecorateVisible.sync="dodecorateVisible" :dodecorateOptions="dodecorateOptions"/>
   </basic-container>
 </template>
 
@@ -265,10 +265,10 @@ export default {
       option: option,
       // 表单列表
       templateList: [],
-      dialogOpt: {
-        dialogVisible: false,
+      dodecorateVisible: false,
+      dodecorateOptions: {
         decorateId: null,
-        formType: ""
+        fromType: "shop"
       }
     };
   },
@@ -297,7 +297,6 @@ export default {
         });
         return;
       }
-
       that.form.platform = that.form.platform.join(",");
       if (!that.form.id) {
         add(that.form).then(() => {
@@ -367,9 +366,8 @@ export default {
       });
     },
     handleDecorate(decorateId) {
-      this.dialogOpt.formType = "shop";
-      this.dialogOpt.decorateId = decorateId;
-      this.dialogOpt.dialogVisible = true;
+      this.dodecorateOptions.decorateId = decorateId;
+      this.dodecorateVisible = true;
     },
     handleRelease(id) {
       update({ id: id, status: 1 }).then(() => {

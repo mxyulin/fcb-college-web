@@ -1,20 +1,19 @@
 <template>
-  <!-- home user 工具箱模块 -->
-  <div>
+  <!-- 工具按钮模块（首页、个人中心、自定义） -->
+  <div class="decorate-left" style="text-align: center">
     <template v-for="(item, idx) in toolsBox">
-      <div :key="idx" v-if="toolsShow(item.show)">
+      <div :key="idx" v-if="ShowToolsButton(item.show)">
         <div class="left-menu-title">
           <span>{{ item.name }}</span>
         </div>
-        <!-- 拖放暂不实现) -->
         <div class="left-menu-container">
           <template v-for="(ite, idx) in item.data">
             <div
               :key="idx"
-              v-if="toolsShow(ite.show)"
+              v-if="ShowToolsButton(ite.show)"
               class="left-menu-container-item"
               :class="ite.type"
-              @click.stop="selectTools(ite.type)"
+              @click.stop="addDecorateComponent(ite.type)"
             >
               <el-link
                 type="primary"
@@ -31,24 +30,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import draggable from "vuedraggable";
-import option from "@/const/decorate/dodecorate";
-
 export default {
   name: "ToolsBox",
-  components: {
-    draggable,
-  },
   props: {
     fromtype: String,
     isPageType: String,
   },
   data() {
     return {
-      // 页面配置
-      option: option,
-      // 工具箱数据
       toolsBox: [
         {
           name: "图文",
@@ -149,13 +138,13 @@ export default {
               flag: false,
               show: "home",
             },
-            {
-              name: "小程序直播",
-              type: "live",
-              icon: "icon-xianchangzhibo",
-              flag: false,
-              show: "home",
-            },
+            // {
+            //   name: "小程序直播",
+            //   type: "live",
+            //   icon: "icon-xianchangzhibo",
+            //   flag: false,
+            //   show: "home",
+            // },
           ],
         },
         {
@@ -195,25 +184,27 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapGetters(["permission"]),
-  },
+  computed: {},
   methods: {
-    // *渲染工具的逻辑判断
-    toolsShow(toolsBelong) {
+    ShowToolsButton(showType) {
       return (
-        this.fromtype == "page" ||
-        toolsBelong == "common" ||
-        toolsBelong == this.isPageType
+        this.fromtype == "custom" || // 自定义页面展示所有按钮
+        showType == "common" || // common 类型意味着首页和个人中心页都展示
+        showType == this.isPageType // hoem 类型只在首页展示，user 类型只在个人中心页展示
       );
     },
-    selectTools(type) {
-      this.$emit("selectTools", type);
-    }
+    addDecorateComponent(type) {
+      this.$emit("addDecorateComponent", type);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "@/views/decorate/style/dodecorate_origin";
+
+.tools-box {
+  width: 100%;
+  height: 100%;
+}
 </style>

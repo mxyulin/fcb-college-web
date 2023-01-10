@@ -49,7 +49,6 @@
           @selection-change="onSelectionChange"
           ref="crud"
         >
-          <!-- 图片表预览列 -->
           <template slot="link" slot-scope="scope">
             <el-image
               lazy
@@ -59,7 +58,6 @@
               :fit="fit"
             ></el-image>
           </template>
-          <!-- 商品表预览列 -->
           <template slot="goods" slot-scope="scope">
             <div class="display-flex" style="justify-content: space-evenly">
               <el-image
@@ -75,24 +73,26 @@
               </div>
             </div>
           </template>
-          <!-- 商品表类型列 -->
           <template slot="type" slot-scope="scope">
-            <div v-if="tableType == 'goods-list' || linkType == 'goods'" key="goods-list-type">
-              <span v-if="scope.row.type == 'normal'" key="normal">实体商品</span>
+            <div
+              v-if="tableType == 'goods-list' || linkType == 'goods'"
+              key="goods-type"
+            >
+              <span v-if="scope.row.type == 'normal'" key="normal"
+                >实体商品</span
+              >
               <span v-else key="virtual">虚拟商品</span>
             </div>
-            <div v-else key="coupons-type">
+            <div v-else-if="tableType == 'coupons'" key="coupons-type">
               <span v-if="scope.row.type == 'cash'" key="cash">代金券</span>
               <span v-else key="discount">折扣券</span>
             </div>
           </template>
-          <!-- 商品表上架列 -->
           <template slot="status" slot-scope="scope">
             <span v-if="scope.row.status == 0">隐藏中</span>
             <span v-if="scope.row.status == 1">上架中</span>
             <span v-if="scope.row.status == 2">下架中</span>
           </template>
-          <!-- 营销页预览列 -->
           <template slot="image" slot-scope="scope">
             <el-image
               lazy
@@ -126,20 +126,14 @@
           </template>
           <!-- 单选按钮 -->
           <template slot-scope="{ row }" slot="menu">
-            <el-button
-              size="small"
-              type="primary"
-              @click="onSelected(row)"
+            <el-button size="small" type="primary" @click="onSelected(row)"
               >选择</el-button
             >
           </template>
           <!-- 多选按钮 -->
           <template slot="page" v-if="isShowMutipleCheckbox">
             <el-col :span="1">
-              <el-button
-                type="primary"
-                size="small"
-                @click="onMutipleSlect"
+              <el-button type="primary" size="small" @click="onMutipleSlect"
                 >确定</el-button
               >
             </el-col>
@@ -148,7 +142,7 @@
         <el-dialog
           title="图片上传"
           append-to-body
-          :visible.sync="attachBox"
+          :visible.sync="upload"
           width="555px"
         >
           <el-upload
@@ -214,6 +208,7 @@ import { getList as getGoodsList } from "@/api/product/product";
 import { getList as getPageList } from "@/api/decorate/decorate";
 import { getList as getArticleList } from "@/api/news/article";
 import { getList as getCouponsList } from "@/api/promote/coupons";
+import { getList as getGrouponList } from "@/api/promote/promotegroupon";
 
 export default {
   name: "resourceTable",
@@ -227,7 +222,7 @@ export default {
     return {
       loading: false,
       // 图片上传
-      attachBox: false,
+      upload: false,
       // 链接表类型
       linkType: "goods",
       /* 配置项 */
@@ -320,7 +315,7 @@ export default {
     },
   },
   methods: {
-    async getNodeTree(tableType) {
+    async getCategoryList(tableType) {
       let result = null;
       switch (tableType) {
         case "image":
@@ -375,6 +370,56 @@ export default {
         result = await getGoodsList(page.currentPage, page.pageSize, params);
       } else if (tableType == "coupons") {
         result = await getCouponsList(page.currentPage, page.pageSize, params);
+      } else if (tableType == "groupon") {
+        result = {
+          data: {
+            code: 200,
+            data: {
+              total: 3,
+              records: [
+                {
+                  id: "001",
+                  grouponName: "测试拼团",
+                  teamNum: "789",
+                  records: [
+                    {
+                      title: "thinkBook14+",
+                      subtitle: "百亿补贴",
+                      grouponPrice: "89",
+                      originalPrice: "99",
+                      image:
+                        "http://file.shopro.top/uploads/20210518/49de49c7c28bb727aec9b171b2511383.jpeg",
+                      sales: "199",
+                    },
+                    {
+                      title: "thinkBook14+",
+                      subtitle: "百亿补贴",
+                      grouponPrice: "89",
+                      originalPrice: "99",
+                      image:
+                        "http://file.shopro.top/uploads/20210518/67cf223ca545805491e07e107db0772d.jpg",
+                      sales: "199",
+                    },
+                    {
+                      title: "thinkBook14+",
+                      subtitle: "百亿补贴",
+                      grouponPrice: "89",
+                      originalPrice: "99",
+                      image:
+                        "http://file.shopro.top/uploads/20210518/1f85f33dbbe7c930831687052b1ba3fc.jpg",
+                      sales: "199",
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        };
+        // result = await getCouponsList(page.currentPage, page.pageSize, params);
+      } else if (tableType == "seckill") {
+        // result = await getGrouponList(page.currentPage, page.pageSize, params);
+      } else if (tableType == "rich-text") {
+        // result = await getGrouponList(page.currentPage, page.pageSize, params);
       }
       const {
         data: { code, data },
@@ -429,7 +474,7 @@ export default {
               overHidden: true,
             },
           ];
-          this.getNodeTree("image");
+          this.getCategoryList("image");
           break;
         case "images":
           this.avueOption.menu = false;
@@ -468,7 +513,7 @@ export default {
               overHidden: true,
             },
           ];
-          this.getNodeTree("image");
+          this.getCategoryList("image");
           break;
         case "link":
           this.avueOption.menu = true;
@@ -495,11 +540,11 @@ export default {
               overHidden: true,
             },
           ];
-          this.getNodeTree("goods");
+          this.getCategoryList("goods");
           break;
         case "goods-group":
           this.cascaderProps.multiple = false;
-          this.getNodeTree("goods");
+          this.getCategoryList("goods");
           break;
         case "goods-list":
           this.avueOption.menu = false;
@@ -526,11 +571,11 @@ export default {
               overHidden: true,
             },
           ];
-          this.getNodeTree("goods");
+          this.getCategoryList("goods");
           break;
         case "category-tabs":
           this.cascaderProps.multiple = true;
-          this.getNodeTree("goods");
+          this.getCategoryList("goods");
           break;
         case "coupons":
           this.TableLayout.colLeft = 0;
@@ -542,27 +587,64 @@ export default {
               label: "名称",
               prop: "name",
               overHidden: true,
-            },{
+            },
+            {
               label: "类型",
               prop: "type",
               overHidden: true,
-            },{
-              label: "优惠面额",
+            },
+            {
+              label: "开始时间",
               prop: "amount",
               overHidden: true,
-            },{
-              label: "消费门槛",
+            },
+            {
+              label: "结束时间",
               prop: "enough",
               overHidden: true,
-            },{
-              label: "消费门槛",
-              prop: "enough",
+            },
+          ];
+          this.getList(this.page);
+          break;
+        case "groupon":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "名称",
+              prop: "grouponName",
               overHidden: true,
-            },{
-              label: "库存",
-              prop: "stock",
+            },
+          ];
+          this.getList(this.page);
+          break;
+        case "seckill":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "名称",
+              prop: "name",
               overHidden: true,
-            }
+            },
+          ];
+          this.getList(this.page);
+          break;
+        case "rich-text":
+          this.TableLayout.colLeft = 0;
+          this.TableLayout.colRight = 24;
+          this.avueOption.menu = true;
+          this.avueOption.selection = false;
+          this.avueOption.column = [
+            {
+              label: "名称",
+              prop: "name",
+              overHidden: true,
+            },
           ];
           this.getList(this.page);
           break;
@@ -719,7 +801,7 @@ export default {
       // 优化用户体验，刷新即可得到第一个节点数据
       if (this.categoryList.length > 0) {
         return this.$refs.tree.$children[0].handleClick();
-      };
+      }
       if (this.TableLayout.colLeft == 0) {
         return this.getList(this.page);
       }
@@ -741,7 +823,7 @@ export default {
      */
     // 打开上传
     handleUpload() {
-      this.attachBox = true;
+      this.upload = true;
     },
     // 上传成功
     uploadSuccess(res, file, fileList) {},

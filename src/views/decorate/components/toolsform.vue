@@ -1,6 +1,7 @@
 <template>
   <!-- 组件表单模块 -->
   <div class="decorate-right" v-if="centerSelect != null">
+    <!-- 标题 -->
     <div class="decorate-right-header">
       <span
         v-if="
@@ -16,14 +17,15 @@
         placement="bottom-start"
         width="200"
         trigger="hover"
+        content="这是一段内容,这是一段内容,这是一段内容,这是一段内容。"
       >
-        <el-link
+        <!-- <el-link
           type="primary"
-          href="https://doc.fastadmin.net/shopro/825.html"
+          href=""
           target="_blank"
         >
           自定义底部导航文档
-        </el-link>
+        </el-link> -->
         <i
           v-if="templateForm.type == 'tabbar'"
           slot="reference"
@@ -100,7 +102,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -122,7 +124,7 @@
                 <el-button
                   plain
                   type="primary"
-                  :size="option.size"
+                  size="small"
                   class="margin-left-20"
                   @click="openResourceTable('image', index)"
                 >
@@ -141,7 +143,7 @@
             <el-col :xs="16" :sm="16">
               <div class="select-style-item-select">
                 <el-radio-group
-                  :size="option.size"
+                  size="small"
                   class="item-radio-group"
                   v-model="item.path_type"
                   @change="clearlink('banner', index)"
@@ -157,7 +159,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
                   type="primary"
-                  :size="option.size"
+                  size="small"
                   plain
                   class="choosePath"
                   @click="openResourceTable('link', index)"
@@ -171,32 +173,32 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
             </el-col>
           </el-row>
-          <el-row class="select-style-item-box">
+          <!-- <el-row class="select-style-item-box">
             <el-col :xs="6" :sm="6">
               <div class="select-style-item-tip">背景颜色:</div>
             </el-col>
             <el-col :xs="16" :sm="16">
               <div class="select-style-item-select input-select-inline">
-                <el-input v-model="item.bgcolor" :size="option.size"></el-input>
+                <el-input v-model="item.bgcolor" size="small"></el-input>
                 <el-color-picker
                   v-model="item.bgcolor"
-                  :size="option.size"
+                  size="small"
                 ></el-color-picker>
               </div>
             </el-col>
-          </el-row>
+          </el-row> -->
         </div>
       </draggable>
       <div class="select-style-item-tip">
         <el-button
           type="primary"
-          :size="option.size"
+          size="small"
           plain
           @click.stop="addForm('banner')"
           >添加</el-button
@@ -212,7 +214,7 @@
         <el-col :xs="16" :sm="16">
           <div class="select-style-item-select">
             <el-radio-group
-              :size="option.size"
+              size="small"
               v-model="templateForm.content.style"
               class="item-radio-group"
             >
@@ -245,7 +247,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -257,7 +259,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  :size="option.size"
+                  size="small"
                   v-model="item.name"
                   maxlength="5"
                 >
@@ -282,7 +284,7 @@
                 <el-button
                   type="primary"
                   plain
-                  :size="option.size"
+                  size="small"
                   class="margin-left-20 choosePicture"
                   @click="openResourceTable('image', index)"
                 >
@@ -317,7 +319,7 @@
                 <el-button
                   type="primary"
                   plain
-                  :size="option.size"
+                  size="small"
                   class="choosePath"
                   @click="openResourceTable('link', index)"
                 >
@@ -330,7 +332,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -342,7 +344,7 @@
         <el-button
           type="primary"
           plain
-          :size="option.size"
+          size="small"
           @click.stop="addForm('menu')"
           >添加</el-button
         >
@@ -418,7 +420,7 @@
                 />
                 <el-button
                   type="primary"
-                  :size="option.size"
+                  size="small"
                   plain
                   class="margin-left-20 choosePicture"
                   @click="openResourceTable('image', index)"
@@ -450,7 +452,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
                   type="primary"
-                  :size="option.size"
+                  size="small"
                   plain
                   class="choosePath"
                   @click="openResourceTable('link', index)"
@@ -464,7 +466,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -500,13 +502,13 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.category_name"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('goods-group')"
@@ -552,13 +554,13 @@
                   text-overflow: ellipsis;
                   white-space: nowrap;
                 "
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.ids"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('goods-list')"
@@ -648,13 +650,13 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.ids"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('coupons')"
@@ -673,11 +675,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.bgcolor1"
-                :size="option.size"
+                size="small"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.bgcolor1"
-                :size="option.size"
+                size="small"
               >
               </el-color-picker>
             </div>
@@ -691,11 +693,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.bgcolor2"
-                :size="option.size"
+                size="small"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.bgcolor2"
-                :size="option.size"
+                size="small"
               >
               </el-color-picker>
             </div>
@@ -709,11 +711,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.pricecolor"
-                :size="option.size"
+                size="small"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.pricecolor"
-                :size="option.size"
+                size="small"
               >
               </el-color-picker>
             </div>
@@ -727,11 +729,11 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.color"
-                :size="option.size"
+                size="small"
               ></el-input>
               <el-color-picker
                 v-model="templateForm.content.color"
-                :size="option.size"
+                size="small"
               ></el-color-picker>
             </div>
           </el-col>
@@ -750,7 +752,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                :size="option.size"
+                size="small"
               ></el-input>
             </div>
           </el-col>
@@ -778,16 +780,16 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.groupon_name"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
-                  @click="operation('groupon')"
+                  @click="openResourceTable('groupon')"
                 >
                   选择
                 </el-button>
@@ -809,7 +811,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                :size="option.size"
+                size="small"
               ></el-input>
             </div>
           </el-col>
@@ -837,16 +839,16 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.seckill_name"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
-                  @click="operation('seckill')"
+                  @click="openResourceTable('seckill')"
                 >
                   选择
                 </el-button>
@@ -884,7 +886,7 @@
             <div class="select-style-item-select">
               <el-input
                 v-model="templateForm.content.name"
-                :size="option.size"
+                size="small"
               ></el-input>
             </div>
           </el-col>
@@ -896,13 +898,13 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.ids"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="operation('live')"
@@ -940,7 +942,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -960,7 +962,7 @@
                 />
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   class="margin-left-20 choosePicture"
@@ -982,7 +984,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多12个文字"
-                  :size="option.size"
+                  size="small"
                   v-model="item.name"
                   maxlength="12"
                 >
@@ -1012,7 +1014,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   class="choosePath"
@@ -1027,7 +1029,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -1038,7 +1040,7 @@
       <div class="select-style-item-tip">
         <el-button
           slot="append"
-          :size="option.size"
+          size="small"
           type="primary"
           plain
           @click="addForm('nav-list')"
@@ -1072,7 +1074,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -1092,7 +1094,7 @@
                 />
                 <el-button
                   class="margin-left-20 choosePicture"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('image', index)"
@@ -1110,7 +1112,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  :size="option.size"
+                  size="small"
                   v-model="item.name"
                   maxlength="4"
                 >
@@ -1139,7 +1141,7 @@
             <el-col :xs="16" :sm="16" :offset="6">
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   class="choosePath"
@@ -1154,7 +1156,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -1165,7 +1167,7 @@
       <div class="select-style-item-tip">
         <el-button
           slot="append"
-          :size="option.size"
+          size="small"
           type="primary"
           plain
           @click="addForm('grid-list')"
@@ -1190,15 +1192,15 @@
             <el-input
               v-model="templateForm.content.name"
               placeholder=""
-              :size="option.size"
+              size="small"
               disabled
             >
               <el-button
                 type="primary"
                 slot="append"
-                :size="option.size"
+                size="small"
                 plain
-                @click="operation('live')"
+                @click="openResourceTable('rich-text')"
                 >富文本</el-button
               >
             </el-input>
@@ -1280,12 +1282,12 @@
                 style="justify-content: space-around; display: flex"
               >
                 <el-button
-                  :size="option.size"
+                  size="small"
                   type="text"
                   @click="selectTitleBlock(null)"
                   >选择样式</el-button
                 ><el-button
-                  :size="option.size"
+                  size="small"
                   type="text"
                   @click="openResourceTable('image', index)"
                   >选择图片</el-button
@@ -1310,7 +1312,7 @@
               <el-input
                 placeholder="最多4个文字"
                 maxlength="4"
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.name"
               >
               </el-input>
@@ -1326,13 +1328,13 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
                 <el-color-picker
                   v-model="templateForm.content.color"
-                  :size="option.size"
+                  size="small"
                 >
                 </el-color-picker>
               </p>
@@ -1377,7 +1379,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
@@ -1409,7 +1411,7 @@
               />
               <el-button
                 class="margin-left-20 choosePicture"
-                :size="option.size"
+                size="small"
                 type="primary"
                 plain
                 @click="openResourceTable('image', index)"
@@ -1451,13 +1453,13 @@
           <el-col :xs="16" :sm="16">
             <div class="select-style-item-select input-select-inline">
               <el-input
-                :size="option.size"
+                size="small"
                 v-model="templateForm.content.ids"
                 disabled
               >
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('category-tabs')"
@@ -1506,7 +1508,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
@@ -1537,18 +1539,21 @@
                 "
               />
               <el-button
-                :size="option.size"
+                size="small"
                 type="primary"
                 plain
                 class="margin-left-20 choosePicture"
-                @click="openResourceTable('image', index)"
+                @click="openResourceTable('image', -1)"
               >
                 {{ templateForm.content.image ? "重新选择" : "选择图片" }}
               </el-button>
             </div>
           </el-col>
         </el-row>
-        <el-row style="margin: 10px 0; padding-left: 10px; color: #999">
+        <el-row
+          style="margin: 10px 0; padding-left: 10px; color: #999"
+          v-if="templateForm.content.style == '2'"
+        >
           <el-col :xs="16" :sm="16" :offset="6"> 建议尺寸:750x320 </el-col>
         </el-row>
       </div>
@@ -1605,7 +1610,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -1626,11 +1631,11 @@
                   />
                   <el-button
                     slot="append"
-                    :size="option.size"
+                    size="small"
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    @click="openResourceTable('image', index)"
+                    @click="openResourceTable('image', {idx: index, key: 'image'})"
                   >
                     {{ item.image ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1653,11 +1658,11 @@
                   />
                   <el-button
                     slot="append"
-                    :size="option.size"
+                    size="small"
                     type="primary"
                     plain
                     class="margin-left-20 choosePicture"
-                    @click="openResourceTable('image', index)"
+                    @click="openResourceTable('image', {idx: index, key: 'activeImage'})"
                   >
                     {{ item.activeImage ? "重新选择" : "选择图片" }}
                   </el-button>
@@ -1680,7 +1685,7 @@
                 <el-input
                   placeholder="最多4个文字"
                   maxlength="4"
-                  :size="option.size"
+                  size="small"
                   v-model="item.name"
                 >
                 </el-input>
@@ -1709,7 +1714,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   class="choosePath"
@@ -1724,7 +1729,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="必须填写http(s)://"
                 >
                 </el-input>
@@ -1739,7 +1744,7 @@
       >
         <el-button
           slot="append"
-          :size="option.size"
+          size="small"
           type="primary"
           plain
           @click.stop="addForm('tabbar')"
@@ -1762,7 +1767,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.color"
                 >
                 </el-input>
@@ -1784,7 +1789,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.activeColor"
                 >
                 </el-input>
@@ -1813,7 +1818,7 @@
               <p class="select-color">
                 <el-input
                   placeholder=""
-                  :size="option.size"
+                  size="small"
                   v-model="templateForm.content.bgcolor"
                 >
                 </el-input>
@@ -1846,7 +1851,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -1866,7 +1871,7 @@
                 />
                 <el-button
                   class="margin-left-20 choosePicture"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   @click="openResourceTable('image', index)"
@@ -1901,7 +1906,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 1">
                 <el-button
                   slot="append"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   plain
                   class="choosePath"
@@ -1916,7 +1921,7 @@
               <div class="select-style-item-select" v-if="item.path_type == 2">
                 <el-input
                   v-model="item.path"
-                  :size="option.size"
+                  size="small"
                   placeholder="http(s)://"
                 ></el-input>
               </div>
@@ -1956,7 +1961,7 @@
       <div class="select-style-item-tip">
         <el-button
           slot="append"
-          :size="option.size"
+          size="small"
           type="primary"
           plain
           @click="addForm('popup')"
@@ -1993,7 +1998,7 @@
               </el-image>
               <el-button
                 class="margin-left-20 choosePicture"
-                :size="option.size"
+                size="small"
                 type="primary"
                 slot="append"
                 plain
@@ -2031,7 +2036,7 @@
             </el-col>
             <el-col :xs="12" :sm="12">
               <div class="detele-item">
-                <span @click.stop="rightDel(index)">删除</span>
+                <span @click.stop="deleteDecorateItem(index)">删除</span>
               </div>
             </el-col>
           </el-row>
@@ -2043,7 +2048,7 @@
               <div class="select-style-item-select">
                 <el-input
                   placeholder="最多4个文字"
-                  :size="option.size"
+                  size="small"
                   v-model="item.name"
                   maxlength="4"
                 >
@@ -2067,11 +2072,11 @@
                 />
                 <el-button
                   class="margin-left-20 choosePicture"
-                  :size="option.size"
+                  size="small"
                   slot="append"
                   type="primary"
                   plain
-                  @click="openResourceTable('image', index)"
+                  @click="openResourceTable('image', { idx: index, key: 'btnimage'})"
                 >
                   {{ item.btnimage ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2110,11 +2115,11 @@
                 />
                 <el-button
                   class="margin-left-20 choosePicture"
-                  :size="option.size"
+                  size="small"
                   type="primary"
                   slot="append"
                   plain
-                  @click="openResourceTable('image', index)"
+                  @click="openResourceTable('image', { idx: index, key: 'image'})"
                 >
                   {{ item.image ? "重新选择" : "选择图片" }}
                 </el-button>
@@ -2147,7 +2152,7 @@
                 >
                   <el-button
                     slot="append"
-                    :size="option.size"
+                    size="small"
                     type="primary"
                     plain
                     class="choosePath"
@@ -2165,7 +2170,7 @@
                 >
                   <el-input
                     v-model="item.path"
-                    :size="option.size"
+                    size="small"
                     placeholder="http(s)://"
                   >
                   </el-input>
@@ -2178,7 +2183,7 @@
       <div class="select-style-item-tip">
         <el-button
           slot="append"
-          :size="option.size"
+          size="small"
           type="primary"
           plain
           @click="addForm('float-button')"
@@ -2203,8 +2208,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import option from "@/const/decorate/dodecorate";
 import draggable from "vuedraggable";
 
 export default {
@@ -2213,17 +2216,13 @@ export default {
     draggable,
   },
   props: {
-    isfloat: Boolean,
-    popupIndex: Number,
-    centerSelect: Number,
     fromtype: String,
+    centerSelect: Number,
     templateData: Array,
     templateForm: Object,
   },
   data() {
     return {
-      // 表单配置
-      option: option,
       // 广告样式抽屉状态
       advdrawer: false,
       // 广告魔方数据
@@ -2296,24 +2295,12 @@ export default {
       tableType: "",
     };
   },
-  computed: {
-    ...mapGetters(["permission"]),
-    ids() {
-      let ids = [];
-      this.selectionList.forEach((ele) => {
-        ids.push(ele.id);
-      });
-      return ids.join(",");
-    },
-  },
+  computed: {},
   methods: {
-    // 删除表单列表项
-    rightDel(index) {
-      this.$emit("update:popupIndex", null);
+    // 删除装修表单项
+    deleteDecorateItem(index) {
       this.templateData[this.centerSelect].content.list.splice(index, 1);
-      this.$forceUpdate();
     },
-    // 打开资源表
     openResourceTable(type, index = null) {
       this.currentSelection = index;
       this.tableType = type;
@@ -2339,6 +2326,15 @@ export default {
         case "coupons":
           this.dialogTitle = "选择优惠券";
           break;
+        case "groupon":
+          this.dialogTitle = "选择拼团活动";
+          break;
+        case "seckill":
+          this.dialogTitle = "选择秒杀活动";
+          break;
+        case "rich-text":
+          this.dialogTitle = "选择富文本";
+          break;
       }
       this.dialogVisible = true;
     },
@@ -2348,7 +2344,6 @@ export default {
         this.templateForm.content.list[index].path = "";
         this.templateForm.content.list[index].path_name = "";
       }
-      this.$forceUpdate();
     },
     // 添加表单
     addForm(type) {
@@ -2424,7 +2419,6 @@ export default {
           break;
       }
       this.templateData[this.centerSelect].content.list.push(form);
-      this.$forceUpdate();
     },
     // 展开广告样式抽屉
     showDrawer() {
@@ -2443,10 +2437,7 @@ export default {
           path_type: 1,
         });
       }
-      const { centerSelect } = this;
-      this.$emit("showForm", centerSelect);
       this.advdrawer = false;
-      this.$forceUpdate();
     },
     // 选择标题栏样式
     selectTitleBlock(index) {
@@ -2468,7 +2459,6 @@ export default {
         idsArr.push(t.id);
       });
       this.templateForm.content.ids = idsArr.join(",");
-      this.$forceUpdate();
     },
     // 删除自定义列表商品图片
     customList(index) {
@@ -2477,7 +2467,6 @@ export default {
       idsArr.splice(index, 1);
       this.templateData[this.centerSelect].content.ids = idsArr.join(",");
       this.templateForm.content.ids = idsArr.join(",");
-      this.$forceUpdate();
     },
   },
 };

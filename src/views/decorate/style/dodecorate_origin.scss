@@ -512,7 +512,7 @@
 .web-preview {
   height: 594px;
   width: 300px;
-  background: url('/assets/addons/shopro/img/decorate/preview_bg.png');
+  background: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/preview_bg.png');
   padding: 18px;
   display: flex;
   align-items: center;
@@ -851,8 +851,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  -webkit-mask: url('/assets/addons/shopro/img/decorate/coupon_bg1.png') no-repeat;
-  mask: url('/assets/addons/shopro/img/decorate/coupon_bg1.png') no-repeat;
+  -webkit-mask: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/coupon_bg1.png') no-repeat;
+  mask: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/coupon_bg1.png') no-repeat;
   -webkit-mask-size: 350px 84px;
   mask-size: 350px 84px;
   padding: 0 20px;
@@ -1082,6 +1082,7 @@
   border: 1px solid #eee;
   border-bottom-right-radius: 4px;
   border-bottom-left-radius: 4px;
+  justify-content: flex-start;
 }
 
 .left-menu-container-item {
@@ -1451,11 +1452,11 @@
 }
 
 .compotent-goods-list-1-seckill {
-  background-image: url('/assets/addons/shopro/img/decorate/seckill-card11.png');
+  background-image: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/seckill-card11.png');
 }
 
 .compotent-goods-list-1-groupon {
-  background-image: url('/assets/addons/shopro/img/decorate/groupon-card11.png');
+  background-image: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/groupon-card11.png');
 }
 
 .compotent-goods-list-1-image {
@@ -1773,6 +1774,7 @@
   padding-left: 12px;
   overflow: hidden;
   padding-bottom: 6px;
+  flex-wrap: wrap;
 }
 
 .compotent-activity-item {
@@ -1911,8 +1913,8 @@
   /* background-position: left center;
   background-size: 171px 84px;
   background-repeat: no-repeat; */
-  -webkit-mask: url('/assets/addons/shopro/img/decorate/coupon_bg2.png') no-repeat;
-  mask: url('/assets/addons/shopro/img/decorate/coupon_bg2.png') no-repeat;
+  -webkit-mask: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/coupon_bg2.png') no-repeat;
+  mask: url('https://demo.shopro.top/assets/addons/shopro/img/decorate/coupon_bg2.png') no-repeat;
   -webkit-mask-size: 171px 84px;
   mask-size: 171px 84px;
 
