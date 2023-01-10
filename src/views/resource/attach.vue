@@ -63,9 +63,11 @@
                   </el-alert>
                 </el-form-item>
               </el-form>
-
+              
               <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rowUpdate">保存</el-button>
+                <el-button type="primary" @click="rowUpdate"
+                  >保存</el-button
+                >
                 <el-button @click="dialogmodify = false">取 消</el-button>
               </div>
             </el-dialog>
@@ -194,7 +196,7 @@ export default {
       nodeName: null,
       alertif: false,
       // 编辑
-      dialogmodify: false,
+      dialogmodify:false,
       nameupdate: null,
       // 增删改
       curSelectNode: null,
@@ -241,6 +243,17 @@ export default {
               {
                 required: true,
                 message: "请输入附件地址",
+                trigger: "blur",
+              },
+            ],
+          },{
+            label: "附件名称",
+            prop: "name",
+            search: true,
+            rules: [
+              {
+                required: true,
+                message: "请输入附件名称",
                 trigger: "blur",
               },
             ],

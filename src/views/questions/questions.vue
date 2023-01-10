@@ -45,7 +45,7 @@
 
     </avue-crud>  
     <import-dialog ref="questionPanel" @refreshChange="refreshChange"/>
-    <preview-dialog ref="previewPanel"/>
+    <preview-dialog ref="previewPanel" @editQuestion="editQuestion"/>
     
   </basic-container>
 </template>
@@ -161,6 +161,9 @@ export default {
     },
     refreshChange() {
       this.onLoad(this.page, this.query);
+    },
+    editQuestion(qsId){
+      
     },
     onLoad(page, params = {}) {
       const that = this;

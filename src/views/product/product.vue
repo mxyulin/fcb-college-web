@@ -470,7 +470,7 @@ export default {
         this.$message.warning("请至少选择一条数据");
         return;
       }
-      let statusCode = (action == "up" ? 1 : 2);
+      let statusCode = (action == "up") ? 1 : 2;
       slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
         if (code == 200) {
           this.getGoodsData();

@@ -549,7 +549,7 @@
             <div class="select-style-item-select input-select-inline">
               <el-input
                 style="
-                wif
+                 
                   overflow: hidden;
                   text-overflow: ellipsis;
                   white-space: nowrap;
