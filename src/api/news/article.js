@@ -4,7 +4,7 @@ export const getList = (current, size, params) => {
   return request({
     url: '/api/fcb-news/article/list',
     method: 'post',
-    params: {
+    data: {
       ...params,
       current,
       size,
