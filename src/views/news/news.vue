@@ -97,12 +97,6 @@ export default {
       if (id) {
         getDetail(id).then(res => {
           let doc = res.data.data;
-          if (doc.picUrls != "") {
-            doc.picUrls = JSON.parse(doc.picUrls);
-          }
-          if (doc.otherTitle != "") {
-            doc.otherTitle = JSON.parse(doc.otherTitle);
-          }
           this.$refs.articleEditPanel.showBox(doc);
         });
 

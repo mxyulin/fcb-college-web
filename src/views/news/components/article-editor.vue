@@ -1,7 +1,7 @@
 <template>
-  <el-drawer :title="formTitle" :before-close="handleClose" :wrapperClosable="false" :visible.sync="drawerVisible" size="60%"
-    append-to-body="true">
-    <avue-form :option="formOption" ref='couponsForm' v-model="form" @submit="handleSubmit">
+  <el-drawer :title="formTitle" :before-close="handleClose" :wrapperClosable="false" :visible.sync="drawerVisible"
+    size="60%" append-to-body="true">
+    <avue-form :option="formOption" ref='newsForm' v-model="form" @submit="handleSubmit">
       <template slot="title">
         <el-input placeholder="请输入文章标题(2~30个字)" v-model="form.title" minlength="2" maxlength="30" show-word-limit
           style="border:0px;" clearable>
@@ -12,18 +12,21 @@
         <el-row>
           <el-col :span="24">
             <el-radio-group v-model="form.titleType" @input="onTitleTypeChange">
-              <el-radio label=1>单标题</el-radio>
-              <el-radio label=2>多标题</el-radio>
+              <el-radio label="1">单标题</el-radio>
+              <el-radio label="2">多标题</el-radio>
             </el-radio-group>
           </el-col>
         </el-row>
-        <el-row v-if="form.titleType == 2">
+        <el-row v-if="(form.titleType == 2)">
           <el-col :span="24">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>不同标题会推荐给不同用户，获得更多推荐流量</span>
-                <el-popover placement="right" width="200" trigger="hover">
-                  <span>这要放一个图片</span>
+                <el-popover placement="right" width="426" trigger="hover">
+                  <div>
+                    <div>将为每个用户推荐出对他最有吸引力的一个标题，提升读者的体验，获得更多流量</div>
+                    <img src="/img/help/title-demo.png" style="width:400px;" />
+                  </div>
                   <el-button slot="reference" style="float: right; " type="text">示例</el-button>
                 </el-popover>
               </div>
@@ -44,10 +47,7 @@
       </template>
 
       <template slot="content">
-          <AvueUeditor
-            v-model="form.content"
-            :options="contentOption"
-          ></AvueUeditor>
+        <AvueUeditor v-model="form.content" :options="contentOption"></AvueUeditor>
       </template>
 
       <template slot="coverType">
@@ -69,7 +69,7 @@
             </el-image>
           </el-col>
         </el-row>
-        <el-row v-if="form.coverType == 2 ">
+        <el-row v-if="form.coverType == 2">
           <el-col :span="24">
             <el-image class="cover-image" v-for="(it, index) in theCoverUrls" :key="index" :src="it"
               :preview-src-list="theCoverUrls[index]">
@@ -84,11 +84,9 @@
 
     <resourceTable width="75%" dialogTitle="选择图片" tableType="image" :dialogVisible.sync="resourceVisible"
       :updateForm="resourceCallback" v-bind="$attrs" />
-      <div slot="title">
-        <!-- <el-button plain>浏览</el-button>
-        <el-button plain>定时发布</el-button> -->
-        <el-button @click="handleSubmit" size="small"  icon="el-icon-s-promotion"  type="primary">浏览并发布</el-button>
-      </div>
+    <div slot="title">
+      <el-button @click="handleSubmit" size="small" icon="el-icon-s-promotion" type="primary">浏览并发布</el-button>
+    </div>
   </el-drawer>
 
 
@@ -96,16 +94,16 @@
 
 <script>
 
-import {submit } from "@/api/news/article";
-export default { 
+import { submit } from "@/api/news/article";
+export default {
   data() {
     return {
       drawerVisible: false,
       // 图片组件
       resourceVisible: false,
       form: {},
-      theCoverUrls:['','',''],
-      theOtherTitle:[''],
+      theCoverUrls: ['', '', ''],
+      theOtherTitle: [''],
       formOption: {
         height: 'auto',
         calcHeight: 30,
@@ -132,7 +130,7 @@ export default {
             label: "",
             labelWidth: 0,
             prop: "content",
-            span: 24             
+            span: 24
           },
           {
             label: "标题设置",
@@ -174,11 +172,11 @@ export default {
             dicData: [
               {
                 label: "原创",
-                value: 1
+                value: "1"
               },
               {
                 label: "转载",
-                value: 2
+                value: "2"
               }
             ],
             hide: true,
@@ -194,7 +192,7 @@ export default {
             label: "作者",
             prop: "author",
             type: "input",
-            hide: true, 
+            hide: true,
             rules: [
               {
                 required: true,
@@ -206,7 +204,7 @@ export default {
 
         ],
       },
-      contentOption:{
+      contentOption: {
 
       },
       curImgIndex: null,
@@ -217,36 +215,45 @@ export default {
       return 5 - this.theOtherTitle.length;
     }
   },
-  created() {
-    this.resetForm();
-  },
   methods: {
     resetForm() {
-      this.form = {
-        category: 2,
-        title: "",
-        titleType: 1,    
-        otherTitle: "",  
-        content: "",     
-        coverType: 1,   
-        picUrls: "",     
-        copyRight: 1,
-        author: "",
-        tags: ""
-      };
-      this.theCoverUrls = ['','',''];
-      this.theOtherTitle = [''];
+      this.$nextTick(res => {
+        this.$refs.newsForm.resetForm();
+        this.form = {
+          category: 2,
+          title: "",
+          titleType: "1",
+          otherTitle: "",
+          content: "",
+          coverType: "1",
+          picUrls: "",
+          copyRight: "1",
+          author: "",
+          tags: ""
+        };
+        this.theCoverUrls = ['', '', ''];
+        this.theOtherTitle = [''];
+      });
+
     },
     showBox(article) {
       this.resetForm();
-      if(article != null){
-        this.theCoverUrls = article.picUrls;
-        this.theOtherTitle = article.otherTitle; 
+      debugger
+
+      if (article != null) {
+        if (article.picUrls != "") {
+          this.theCoverUrls = JSON.parse(article.picUrls);
+        }
+
+        if (article.otherTitle != "") {
+          this.theOtherTitle = JSON.parse(article.otherTitle);
+        }
+
         this.form = article;
       }
 
-			this.drawerVisible = true;
-		},
+      this.drawerVisible = true;
+    },
     handleClose() {
       this.drawerVisible = false;
     },
@@ -257,16 +264,16 @@ export default {
     },
     handleSubmit() {
       const that = this;
-
-      if(that.form.coverType > 0){
-         that.form.picUrls = JSON.stringify(that.theCoverUrls);
-      }else{
-         that.form.picUrls = "";
+      debugger;
+      if (that.form.coverType > 0) {
+        that.form.picUrls = JSON.stringify(that.theCoverUrls);
+      } else {
+        that.form.picUrls = "";
       }
- 
-      if(that.form.titleType > 1 ){
+
+      if (that.form.titleType > 1) {
         that.form.otherTitle = JSON.stringify(that.theOtherTitle);
-      }else{
+      } else {
         that.form.otherTitle = "";
       }
       submit(that.form).then(res => {
@@ -274,11 +281,11 @@ export default {
           type: "success",
           message: "操作成功!"
         });
-      
+
         that.resetForm();
         that.$emit("refreshChange");
-        that.handleClose(); 
-      });      
+        that.handleClose();
+      });
     },
     onAddOtherTitle() {
       this.theOtherTitle.push('');
@@ -287,7 +294,7 @@ export default {
       this.theOtherTitle.splice(index, 1);
     },
     resourceCallback(tableType, _, data) {
-    this.theCoverUrls[this.curImgIndex] = data.link; 
+      this.theCoverUrls[this.curImgIndex] = data.link;
       // this.theCoverUrls[this.curImgIndex] = "https://lf6-cdn-tos.bytegoofy.com/goofy/pgcfe/mp/graphic/1ac3bb7600f29b9a8025ef0e4f8abbf9.png";
       console.log('图片', this.theCoverUrls);
     },
