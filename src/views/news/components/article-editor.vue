@@ -35,7 +35,7 @@
                 v-for="(it, index) in theOtherTitle" :key="index" maxlength="30" show-word-limit size="small">
                 <template slot="append"><i class="el-icon-delete" style="cursor:pointer;"
                     @click="onRemoveOtherTitle(index)"></i>
-                  </template> 
+                </template>
               </el-input>
 
               <div class="error-tip">{{ otherTitleTip }}</div>
@@ -93,8 +93,6 @@
       <el-button @click="handleSubmit" size="small" icon="el-icon-s-promotion" type="primary">浏览并发布</el-button>
     </div>
   </el-drawer>
-
-
 </template>
 
 <script>
@@ -250,8 +248,7 @@ export default {
 
     },
     showBox(article) {
-      this.resetForm();
-
+      debugger;
       if (article != null) {
         if (article.picUrls != "") {
           this.theCoverUrls = JSON.parse(article.picUrls);
@@ -261,7 +258,10 @@ export default {
           this.theOtherTitle = JSON.parse(article.otherTitle);
         }
 
-        this.form = article;
+        Object.assign(this.form,{...article});
+        //this.form = article;
+      }else{
+        this.resetForm();
       }
 
       this.drawerVisible = true;
@@ -276,29 +276,58 @@ export default {
     },
     handleSubmit() {
       const that = this;
-      // let rel = that.$refs.newsForm.validate();
-      // if (!rel) {
-      //   return;
-      // }
-      that.coverImageTip = "";
-      that.otherTitleTip = "";
-
-      if (that.form.titleType > 1) {
-        let titles = [];
+      that.$refs["newsForm"].validate((valid, done) => {
+        that.coverImageTip = "";
+        that.otherTitleTip = "";
 
         if (that.form.titleType == 2) {
           for (let i = 0; i < that.theOtherTitle.length; i++) {
             let t = that.theOtherTitle[i];
             if (t == '') {
               that.otherTitleTip = "请填写标题";
-              return;
+              valid = false;
+              break;
             }
+          }
+        }
 
+        if (that.form.coverType == 1) {
+          let url = that.theCoverUrls[0];
+          if (url == '') {
+            that.coverImageTip = "请选择封展示封面";
+            valid = false;
+          }
+        } else if (that.form.coverType == 2) {
+          for (let i = 0; i < that.theCoverUrls.length; i++) {
+            let url = that.theCoverUrls[i];
+            if (url == '') {
+              that.coverImageTip = "请选择封展示封面";
+              valid = false;
+              break;
+            }
+          }
+        }
+
+        if (valid) {
+          this.doSubmit()
+          done();
+        }
+      });
+
+    },
+
+    doSubmit() {
+      const that = this;
+      if (that.form.titleType > 1) {
+        let titles = [];
+
+        if (that.form.titleType == 2) {
+          for (let i = 0; i < that.theOtherTitle.length; i++) {
+            let t = that.theOtherTitle[i];
             titles.push(t);
           }
         }
         that.form.otherTitle = JSON.stringify(that.titles);
-
       } else {
         that.form.otherTitle = "";
       }
@@ -307,19 +336,12 @@ export default {
         let picUrls = [];
         if (that.form.coverType == 1) {
           let url = that.theCoverUrls[0];
-          if (url == '') {
-            that.coverImageTip = "请选择封展示封面";
-            return;
-          }
+          picUrls.push(url);
         }
 
         if (that.form.coverType == 2) {
           for (let i = 0; i < that.theCoverUrls.length; i++) {
             let url = that.theCoverUrls[i];
-            if (url == '') {
-              that.coverImageTip = "请选择封展示封面";
-              return;
-            }
             picUrls.push(url);
           }
         }
@@ -327,8 +349,6 @@ export default {
       } else {
         that.form.picUrls = "";
       }
-
-
 
       submit(that.form).then(res => {
         this.$message({
