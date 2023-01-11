@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { getList, getDetail, update, remove } from "@/api/news/article";
+import { getList, update, remove } from "@/api/news/article";
 import option from "@/const/news/news";
 import { mapGetters } from "vuex";
 import ArticleEditor from "./components/article-editor"
@@ -94,16 +94,7 @@ export default {
   },
   methods: {
     onOpenEditor(id) {
-      if (id) {
-        getDetail(id).then(res => {
-          let doc = res.data.data;
-          this.$refs.articleEditPanel.showBox(doc);
-        });
-
-      } else {
-        this.$refs.articleEditPanel.showBox();
-      }
-
+      this.$refs.articleEditPanel.showBox(id);
     },
     handlePreview(row) {
       // this.$refs.previewPanel.showQuestion(row);

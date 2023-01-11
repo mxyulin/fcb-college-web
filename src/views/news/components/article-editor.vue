@@ -1,9 +1,9 @@
 <template>
   <el-drawer :title="formTitle" :before-close="handleClose" :wrapperClosable="false" :visible.sync="drawerVisible"
     size="60%" append-to-body="true">
-    <avue-form :option="formOption" ref='newsForm' v-model="form" @submit="handleSubmit">
+    <avue-form :option="formOption" ref='newsForm' v-model="formData" @submit="handleSubmit">
       <template slot="title">
-        <el-input placeholder="请输入文章标题(2~30个字)" v-model="form.title" minlength="2" maxlength="30" show-word-limit
+        <el-input placeholder="请输入文章标题(2~30个字)" v-model="formData.title" minlength="2" maxlength="30" show-word-limit
           style="border:0px;" clearable>
         </el-input>
       </template>
@@ -11,13 +11,13 @@
       <template slot="titleType">
         <el-row>
           <el-col :span="24">
-            <el-radio-group v-model="form.titleType" @input="onTitleTypeChange">
+            <el-radio-group v-model="formData.titleType" @input="onTitleTypeChange">
               <el-radio label="1">单标题</el-radio>
               <el-radio label="2">多标题</el-radio>
             </el-radio-group>
           </el-col>
         </el-row>
-        <el-row v-if="(form.titleType == 2)">
+        <el-row v-if="(formData.titleType == 2)">
           <el-col :span="24">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
@@ -50,20 +50,20 @@
       </template>
 
       <template slot="content">
-        <AvueUeditor v-model="form.content" :options="contentOption"></AvueUeditor>
+        <AvueUeditor v-model="formData.content" :options="contentOption"></AvueUeditor>
       </template>
 
       <template slot="coverType">
         <el-row>
           <el-col :span="24">
-            <el-radio-group v-model="form.coverType">
+            <el-radio-group v-model="formData.coverType">
               <el-radio label="0">无图</el-radio>
               <el-radio label="1">单图</el-radio>
               <el-radio label="2">三图</el-radio>
             </el-radio-group>
           </el-col>
         </el-row>
-        <el-row v-if="form.coverType == 1">
+        <el-row v-if="formData.coverType == 1">
           <el-col :span="24">
             <el-image class="cover-image" :src="theCoverUrls[0]" :preview-src-list="theCoverUrls[0]">
               <div slot="error" class="image-add-btn" @click="onSelectImage(0)">
@@ -73,7 +73,7 @@
             <div class="error-tip">{{ coverImageTip }}</div>
           </el-col>
         </el-row>
-        <el-row v-if="form.coverType == 2">
+        <el-row v-if="formData.coverType == 2">
           <el-col :span="24">
             <el-image class="cover-image" v-for="(it, index) in theCoverUrls" :key="index" :src="it"
               :preview-src-list="theCoverUrls[index]">
@@ -97,14 +97,14 @@
 
 <script>
 
-import { submit } from "@/api/news/article";
+import { submit ,getDetail} from "@/api/news/article";
 export default {
   data() {
     return {
       drawerVisible: false,
       // 图片组件
       resourceVisible: false,
-      form: {},
+      formData: {},
       theCoverUrls: ['', '', ''],
       theOtherTitle: [''],
       coverImageTip: '',
@@ -229,7 +229,7 @@ export default {
   },
   methods: {
     resetForm() {
-      this.form = {
+      this.formData = {
         category: 2,
         title: "",
         titleType: "1",
@@ -239,32 +239,36 @@ export default {
         picUrls: "",
         copyRight: "1",
         author: "",
-        tags: ""
+        tags: "",
+        id:""
       };
+      
       this.theCoverUrls = ['', '', ''];
       this.theOtherTitle = [''];
       this.otherTitleTip = '';
       this.coverImageTip = '';
 
     },
-    showBox(article) {
-      debugger;
-      if (article != null) {
-        if (article.picUrls != "") {
-          this.theCoverUrls = JSON.parse(article.picUrls);
-        }
+    showBox(id) {
+      const that = this;
+      if (id != null) {
+        getDetail(id).then(res => {
+          let article = res.data.data;
+          if (article.picUrls != "") {
+            that.theCoverUrls = JSON.parse(article.picUrls);
+          }
 
-        if (article.otherTitle != "") {
-          this.theOtherTitle = JSON.parse(article.otherTitle);
-        }
-
-        Object.assign(this.form,{...article});
-        //this.form = article;
-      }else{
-        this.resetForm();
-      }
-
-      this.drawerVisible = true;
+          if (article.otherTitle != "") {
+            that.theOtherTitle = JSON.parse(article.otherTitle);
+          }
+          that.formData = article;
+          that.drawerVisible = true;
+        });
+        
+      } else {
+        that.resetForm(); 
+        that.drawerVisible = true;
+      }      
     },
     handleClose() {
       this.drawerVisible = false;
@@ -280,7 +284,7 @@ export default {
         that.coverImageTip = "";
         that.otherTitleTip = "";
 
-        if (that.form.titleType == 2) {
+        if (that.formData.titleType == 2) {
           for (let i = 0; i < that.theOtherTitle.length; i++) {
             let t = that.theOtherTitle[i];
             if (t == '') {
@@ -291,13 +295,13 @@ export default {
           }
         }
 
-        if (that.form.coverType == 1) {
+        if (that.formData.coverType == 1) {
           let url = that.theCoverUrls[0];
           if (url == '') {
             that.coverImageTip = "请选择封展示封面";
             valid = false;
           }
-        } else if (that.form.coverType == 2) {
+        } else if (that.formData.coverType == 2) {
           for (let i = 0; i < that.theCoverUrls.length; i++) {
             let url = that.theCoverUrls[i];
             if (url == '') {
@@ -318,39 +322,39 @@ export default {
 
     doSubmit() {
       const that = this;
-      if (that.form.titleType > 1) {
+      if (that.formData.titleType > 1) {
         let titles = [];
 
-        if (that.form.titleType == 2) {
+        if (that.formData.titleType == 2) {
           for (let i = 0; i < that.theOtherTitle.length; i++) {
             let t = that.theOtherTitle[i];
             titles.push(t);
           }
         }
-        that.form.otherTitle = JSON.stringify(that.titles);
+        that.formData.otherTitle = JSON.stringify(that.titles);
       } else {
-        that.form.otherTitle = "";
+        that.formData.otherTitle = "";
       }
 
-      if (that.form.coverType > 0) {
+      if (that.formData.coverType > 0) {
         let picUrls = [];
-        if (that.form.coverType == 1) {
+        if (that.formData.coverType == 1) {
           let url = that.theCoverUrls[0];
           picUrls.push(url);
         }
 
-        if (that.form.coverType == 2) {
+        if (that.formData.coverType == 2) {
           for (let i = 0; i < that.theCoverUrls.length; i++) {
             let url = that.theCoverUrls[i];
             picUrls.push(url);
           }
         }
-        that.form.picUrls = JSON.stringify(picUrls);
+        that.formData.picUrls = JSON.stringify(picUrls);
       } else {
-        that.form.picUrls = "";
+        that.formData.picUrls = "";
       }
 
-      submit(that.form).then(res => {
+      submit(that.formData).then(res => {
         this.$message({
           type: "success",
           message: "操作成功!"
