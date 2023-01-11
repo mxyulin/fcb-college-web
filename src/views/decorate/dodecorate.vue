@@ -624,6 +624,9 @@ export default {
           } else if (linkType == "marketing") {
             that.templateForm.content.list[index].path_name = "marketing";
             that.templateForm.content.list[index].path = id;
+          } else {
+            that.templateForm.content.list[index].path_name = "article";
+            that.templateForm.content.list[index].path = id;
           }
           break;
         }
@@ -652,11 +655,25 @@ export default {
           break;
         }
         case "groupon": {
-          const { id, grouponName, teamNum, records } = data;
+          const { id, title, rules, goods } = data;
           that.templateForm.content.id = id;
-          that.templateForm.content.groupon_name = grouponName;
-          that.templateForm.content.team_num = teamNum;
-          that.templateForm.content.timeData = records;
+          that.templateForm.content.grouponName = title;
+          that.templateForm.content.teamNum = rules.teamNum;
+          that.templateForm.content.timeData = goods;
+          break;
+        }
+        case "seckill": {
+          const { id, title, rules, goods } = data;
+          that.templateForm.content.id = id;
+          that.templateForm.content.seckillName = title;
+          that.templateForm.content.timeData = goods;
+          break;
+        }
+        case "rich-text": {
+          const { id, title, content } = data;
+          that.templateForm.content.id = id;
+          that.templateForm.content.name = title;
+          that.templateForm.content.content = content;
           break;
         }
       }
@@ -910,9 +927,9 @@ export default {
               id: "",
               name: "",
               style: 1,
-              groupon_name: "",
+              grouponName: "",
               timeData: [],
-              team_num: "",
+              teamNum: "",
             },
           };
           break;
@@ -924,7 +941,7 @@ export default {
               id: "",
               name: "",
               style: 1,
-              seckill_name: "",
+              seckillName: "",
               timeData: [],
             },
           };

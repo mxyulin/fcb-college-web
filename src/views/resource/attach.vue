@@ -525,9 +525,11 @@ export default {
       this.$refs.crud.toggleSelection();
     },
     currentChange(currentPage) {
+      debugger;
       this.page.currentPage = currentPage;
     },
     sizeChange(pageSize) {
+      debugger;
       this.page.pageSize = pageSize;
     },
     refreshChange() {

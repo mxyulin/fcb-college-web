@@ -47,6 +47,7 @@
           :permission="permissionList"
           @refresh-change="refreshTable"
           @selection-change="onSelectionChange"
+          @on-load="onPageChange"
           ref="crud"
         >
           <template slot="link" slot-scope="scope">
@@ -74,24 +75,15 @@
             </div>
           </template>
           <template slot="type" slot-scope="scope">
-            <div
-              v-if="tableType == 'goods-list' || linkType == 'goods'"
-              key="goods-type"
-            >
-              <span v-if="scope.row.type == 'normal'" key="normal"
-                >实体商品</span
-              >
-              <span v-else key="virtual">虚拟商品</span>
-            </div>
-            <div v-else-if="tableType == 'coupons'" key="coupons-type">
-              <span v-if="scope.row.type == 'cash'" key="cash">代金券</span>
-              <span v-else key="discount">折扣券</span>
-            </div>
+            <span v-show="scope.row.type == 'normal'">实体商品</span>
+            <span v-show="scope.row.type == 'virtual'">虚拟商品</span>
+            <span v-show="scope.row.type == 'cash'">代金券</span>
+            <span v-show="scope.row.type == 'discount'">折扣券</span>
           </template>
           <template slot="status" slot-scope="scope">
-            <span v-if="scope.row.status == 0">隐藏中</span>
-            <span v-if="scope.row.status == 1">上架中</span>
-            <span v-if="scope.row.status == 2">下架中</span>
+            <span v-show="scope.row.status == 0">隐藏中</span>
+            <span v-show="scope.row.status == 1">上架中</span>
+            <span v-show="scope.row.status == 2">下架中</span>
           </template>
           <template slot="image" slot-scope="scope">
             <el-image
@@ -101,6 +93,26 @@
               :preview-src-list="[scope.row.image]"
               :fit="fit"
             ></el-image>
+          </template>
+          <template slot="picUrls" slot-scope="{ row }">
+            <el-image
+              lazy
+              style="width: 80px; height: 80px"
+              :src="JSON.parse(row.picUrls)[0]"
+              :preview-src-list="[JSON.parse(row.picUrls)[0]]"
+              :fit="fit"
+            >
+              <div slot="error" class="image-slot">
+                <i
+                  class="el-icon-picture-outline"
+                  style="font-size: 64px; color: #dddddd"
+                ></i>
+              </div>
+            </el-image>
+          </template>
+          <template slot="state" slot-scope="scope">
+            <span v-show="scope.row.state == 1">已发布</span>
+            <span v-show="scope.row.state == 2">未发布</span>
           </template>
           <template slot="menuLeft">
             <!-- 链接类别按钮组 -->
@@ -201,14 +213,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { dateFormat } from "@/util/date";
 import { getList as getImageCategory } from "@/api/resource/attachcategory";
 import { getList as getImageList } from "@/api/resource/attach";
 import { getList as getGoodsCategory } from "@/api/product/productcategory";
 import { getList as getGoodsList } from "@/api/product/product";
 import { getList as getPageList } from "@/api/decorate/decorate";
-import { getList as getArticleList } from "@/api/news/article";
 import { getList as getCouponsList } from "@/api/promote/coupons";
-import { getList as getGrouponList } from "@/api/promote/promotegroupon";
+import { getList as getActivityList } from "@/api/promote/promote";
+import { getList as getArticleList } from "@/api/news/article";
 
 export default {
   name: "resourceTable",
@@ -339,38 +352,87 @@ export default {
       }
       return Promise.reject(new Error("faile"));
     },
-    async getList(page, params = {}) {
-      const { tableType } = this;
+    async getList() {
+      const { tableType, page } = this;
       let result = null;
       this.loading = true;
       if (tableType == "image" || tableType == "images") {
-        result = await getImageList(page.currentPage, page.pageSize, params);
+        result = await getImageList(page.currentPage, page.pageSize);
       } else if (tableType == "link") {
         const { linkType } = this;
         switch (linkType) {
           case "goods":
-            result = await getGoodsList(
-              page.currentPage,
-              page.pageSize,
-              params
-            );
+            result = await getGoodsList(page.currentPage, page.pageSize);
             break;
           case "marketing":
-            result = await getPageList(page.currentPage, page.pageSize, params);
+            result = await getPageList(page.currentPage, page.pageSize, {
+              type: "page",
+            });
             break;
           case "article":
-            result = await getArticleList(
-              page.currentPage,
-              page.pageSize,
-              params
-            );
+            result = await getArticleList(page.currentPage, page.pageSize);
             break;
         }
       } else if (tableType == "goods-list") {
-        result = await getGoodsList(page.currentPage, page.pageSize, params);
+        result = await getGoodsList(page.currentPage, page.pageSize);
       } else if (tableType == "coupons") {
-        result = await getCouponsList(page.currentPage, page.pageSize, params);
+        result = await getCouponsList(page.currentPage, page.pageSize);
       } else if (tableType == "groupon") {
+        result = await getActivityList(page.currentPage, page.pageSize, {
+          type: "groupon",
+        });
+        // result = {
+        //   data: {
+        //     code: 200,
+        //     data: {
+        //       total: 3,
+        //       records: [
+        //         {
+        //           id: "001",
+        //           title: "测试拼团",
+        //           status: 0,
+        //           richtextTitle: "拼团说明",
+        //           starttimeText: "2022-10-17 00:00:00",
+        //           endtimeText: "2023-11-26 00:00:00",
+        //           rules: {
+        //             teamNum: "789",
+        //           },
+        //           goods: [
+        //             {
+        //               title: "thinkBook14+",
+        //               subtitle: "超级秒杀",
+        //               grouponPrice: "89",
+        //               originalPrice: "99",
+        //               image:
+        //                 "http://file.shopro.top/uploads/20210518/49de49c7c28bb727aec9b171b2511383.jpeg",
+        //               sales: "199",
+        //             },
+        //             {
+        //               title: "thinkBook14+",
+        //               subtitle: "超级秒杀",
+        //               grouponPrice: "89",
+        //               originalPrice: "99",
+        //               image:
+        //                 "http://file.shopro.top/uploads/20210518/67cf223ca545805491e07e107db0772d.jpg",
+        //               sales: "199",
+        //             },
+        //             {
+        //               title: "thinkBook14+",
+        //               subtitle: "超级秒杀",
+        //               grouponPrice: "89",
+        //               originalPrice: "99",
+        //               image:
+        //                 "http://file.shopro.top/uploads/20210518/1f85f33dbbe7c930831687052b1ba3fc.jpg",
+        //               sales: "199",
+        //             },
+        //           ],
+        //         },
+        //       ],
+        //     },
+        //   },
+        // };
+      } else if (tableType == "seckill") {
+        // result = await getActivityList(page.currentPage, page.pageSize, { type: "seckill" });
         result = {
           data: {
             code: 200,
@@ -379,13 +441,17 @@ export default {
               records: [
                 {
                   id: "001",
-                  grouponName: "测试拼团",
-                  teamNum: "789",
-                  records: [
+                  title: "测试秒杀",
+                  status: 0,
+                  richtextTitle: "秒杀说明",
+                  starttimeText: "2022-10-17 00:00:00",
+                  endtimeText: "2023-11-26 00:00:00",
+                  rules: {},
+                  goods: [
                     {
                       title: "thinkBook14+",
-                      subtitle: "百亿补贴",
-                      grouponPrice: "89",
+                      subtitle: "超级秒杀",
+                      price: "89",
                       originalPrice: "99",
                       image:
                         "http://file.shopro.top/uploads/20210518/49de49c7c28bb727aec9b171b2511383.jpeg",
@@ -393,8 +459,8 @@ export default {
                     },
                     {
                       title: "thinkBook14+",
-                      subtitle: "百亿补贴",
-                      grouponPrice: "89",
+                      subtitle: "超级秒杀",
+                      price: "89",
                       originalPrice: "99",
                       image:
                         "http://file.shopro.top/uploads/20210518/67cf223ca545805491e07e107db0772d.jpg",
@@ -402,8 +468,8 @@ export default {
                     },
                     {
                       title: "thinkBook14+",
-                      subtitle: "百亿补贴",
-                      grouponPrice: "89",
+                      subtitle: "超级秒杀",
+                      price: "89",
                       originalPrice: "99",
                       image:
                         "http://file.shopro.top/uploads/20210518/1f85f33dbbe7c930831687052b1ba3fc.jpg",
@@ -415,11 +481,8 @@ export default {
             },
           },
         };
-        // result = await getCouponsList(page.currentPage, page.pageSize, params);
-      } else if (tableType == "seckill") {
-        // result = await getGrouponList(page.currentPage, page.pageSize, params);
       } else if (tableType == "rich-text") {
-        // result = await getGrouponList(page.currentPage, page.pageSize, params);
+        result = await getArticleList(page.currentPage, page.pageSize);
       }
       const {
         data: { code, data },
@@ -435,6 +498,7 @@ export default {
     // 初始化组件
     onDialogOpen() {
       const { tableType } = this;
+      let getCategoryListPromise = null;
       // 根据选择的资源类型不同，提供差异化的表格或级联选择器
       switch (tableType) {
         case "image":
@@ -474,7 +538,7 @@ export default {
               overHidden: true,
             },
           ];
-          this.getCategoryList("image");
+          getCategoryListPromise = this.getCategoryList("image");
           break;
         case "images":
           this.avueOption.menu = false;
@@ -513,7 +577,7 @@ export default {
               overHidden: true,
             },
           ];
-          this.getCategoryList("image");
+          getCategoryListPromise = this.getCategoryList("image");
           break;
         case "link":
           this.avueOption.menu = true;
@@ -540,11 +604,11 @@ export default {
               overHidden: true,
             },
           ];
-          this.getCategoryList("goods");
+          getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "goods-group":
           this.cascaderProps.multiple = false;
-          this.getCategoryList("goods");
+          getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "goods-list":
           this.avueOption.menu = false;
@@ -571,11 +635,11 @@ export default {
               overHidden: true,
             },
           ];
-          this.getCategoryList("goods");
+          getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "category-tabs":
           this.cascaderProps.multiple = true;
-          this.getCategoryList("goods");
+          getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "coupons":
           this.TableLayout.colLeft = 0;
@@ -589,22 +653,43 @@ export default {
               overHidden: true,
             },
             {
-              label: "类型",
-              prop: "type",
-              overHidden: true,
-            },
-            {
-              label: "开始时间",
+              label: "减免额度",
               prop: "amount",
               overHidden: true,
+              formatter: (row, column, cellVal) => {
+                return ` - ￥${cellVal}`;
+              },
             },
             {
-              label: "结束时间",
+              label: "使用门槛",
               prop: "enough",
+              overHidden: true,
+              formatter: (row, column, cellVal) => {
+                return `￥${cellVal}`;
+              },
+            },
+            {
+              label: "描述",
+              prop: "description",
+              overHidden: true,
+            },
+            {
+              label: "状态",
+              prop: "status",
+              overHidden: true,
+            },
+            {
+              label: "领取期限",
+              prop: "gettime",
+              overHidden: true,
+            },
+            {
+              label: "使用期限",
+              prop: "usetime",
               overHidden: true,
             },
           ];
-          this.getList(this.page);
+          this.getList();
           break;
         case "groupon":
           this.TableLayout.colLeft = 0;
@@ -614,11 +699,37 @@ export default {
           this.avueOption.column = [
             {
               label: "名称",
-              prop: "grouponName",
+              prop: "title",
+              overHidden: true,
+            },
+            {
+              label: "开始时间",
+              prop: "starttime",
+              overHidden: true,
+              formatter(row, val) {
+                return dateFormat(new Date(val * 1000));
+              },
+            },
+            {
+              label: "结束时间",
+              prop: "endtime",
+              overHidden: true,
+              formatter(row, val) {
+                return dateFormat(new Date(val * 1000));
+              },
+            },
+            {
+              label: "说明",
+              prop: "richtextTitle",
+              overHidden: true,
+            },
+            {
+              label: "状态",
+              prop: "status",
               overHidden: true,
             },
           ];
-          this.getList(this.page);
+          this.getList();
           break;
         case "seckill":
           this.TableLayout.colLeft = 0;
@@ -628,11 +739,31 @@ export default {
           this.avueOption.column = [
             {
               label: "名称",
-              prop: "name",
+              prop: "title",
+              overHidden: true,
+            },
+            {
+              label: "开始时间",
+              prop: "starttimeText",
+              overHidden: true,
+            },
+            {
+              label: "结束时间",
+              prop: "endtimeText",
+              overHidden: true,
+            },
+            {
+              label: "说明",
+              prop: "richtextTitle",
+              overHidden: true,
+            },
+            {
+              label: "状态",
+              prop: "status",
               overHidden: true,
             },
           ];
-          this.getList(this.page);
+          this.getList();
           break;
         case "rich-text":
           this.TableLayout.colLeft = 0;
@@ -641,14 +772,36 @@ export default {
           this.avueOption.selection = false;
           this.avueOption.column = [
             {
-              label: "名称",
-              prop: "name",
+              label: "封面",
+              prop: "picUrls",
+              overHidden: true,
+            },
+            {
+              label: "文章标题",
+              prop: "title",
+              overHidden: true,
+            },
+            {
+              label: "发布状态",
+              prop: "state",
+              overHidden: true,
+            },
+            {
+              label: "作者",
+              prop: "author",
+              overHidden: true,
+            },
+            {
+              label: "更新时间",
+              prop: "updateTime",
               overHidden: true,
             },
           ];
-          this.getList(this.page);
+          this.getList();
           break;
       }
+      console.log("测试", getCategoryListPromise);
+      // getCategoryListPromise
     },
     // 重置组件
     onDialogClose() {
@@ -698,15 +851,41 @@ export default {
               overHidden: true,
             },
           ];
-          this.getList(this.page, { type: "page" });
+          this.getList();
           break;
         case "article":
           this.TableLayout.colLeft = 0;
           this.TableLayout.colRight = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
-          this.avueOption.column = [];
-          this.getList(this.page);
+          this.avueOption.column = [
+            {
+              label: "封面",
+              prop: "picUrls",
+              overHidden: true,
+            },
+            {
+              label: "文章标题",
+              prop: "title",
+              overHidden: true,
+            },
+            {
+              label: "发布状态",
+              prop: "state",
+              overHidden: true,
+            },
+            {
+              label: "作者",
+              prop: "author",
+              overHidden: true,
+            },
+            {
+              label: "修改时间",
+              prop: "updateTime",
+              overHidden: true,
+            },
+          ];
+          this.getList();
           break;
       }
     },
@@ -803,20 +982,23 @@ export default {
         return this.$refs.tree.$children[0].handleClick();
       }
       if (this.TableLayout.colLeft == 0) {
-        return this.getList(this.page);
+        return this.getList();
       }
     },
     resetData() {
+      this.linkType = "goods";
+      this.TableLayout.colLeft = 3;
+      this.TableLayout.colRight = 20;
       this.categoryList = [];
       this.avueList = [];
       this.selectionList = [];
       this.goodsCategorySelection = [];
-      this.linkType = "goods";
-      this.TableLayout.colLeft = 3;
-      this.TableLayout.colRight = 20;
       if (this.isShowMutipleCheckbox) {
         this.$refs.crud.$refs.table.clearSelection();
       }
+    },
+    onPageChange(page) {
+      console.log("测试", page);
     },
     /*
      *上传图片

@@ -456,7 +456,7 @@
               v-if="compotent.type == 'rich-text' && compotent.content"
             >
               <div class="compotent-rich-text" v-if="compotent.content.name">
-                <div v-html="compotent.content.timeData"></div>
+                <div v-html="compotent.content.content"></div>
               </div>
               <el-image
                 v-if="!compotent.content.name"
@@ -817,7 +817,7 @@
                                 ￥{{ sitem.price }}
                               </div>
                               <div class="compotent-goods-list-originalprice">
-                                ￥{{ sitem.original_price }}
+                                ￥{{ sitem.originalPrice }}
                               </div>
                             </div>
                             <div

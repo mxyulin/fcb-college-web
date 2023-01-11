@@ -781,7 +781,7 @@
             <div class="select-style-item-select input-select-inline">
               <el-input
                 size="small"
-                v-model="templateForm.content.groupon_name"
+                v-model="templateForm.content.grouponName"
                 disabled
               >
                 <el-button
@@ -840,7 +840,7 @@
             <div class="select-style-item-select input-select-inline">
               <el-input
                 size="small"
-                v-model="templateForm.content.seckill_name"
+                v-model="templateForm.content.seckillName"
                 disabled
               >
                 <el-button
