@@ -109,6 +109,7 @@ export default {
       theOtherTitle: [''],
       coverImageTip: '',
       otherTitleTip: '',
+      currentId:'',
       formOption: {
         height: 'auto',
         calcHeight: 30,
@@ -247,6 +248,7 @@ export default {
       this.theOtherTitle = [''];
       this.otherTitleTip = '';
       this.coverImageTip = '';
+      this.currentId = null;
 
     },
     showBox(id) {
@@ -263,6 +265,8 @@ export default {
           }
           that.formData = article;
           that.drawerVisible = true;
+          that.currentId = id;
+          debugger;
         });
         
       } else {
@@ -322,22 +326,21 @@ export default {
 
     doSubmit() {
       const that = this;
+      let titles = [];
+      let picUrls = [];
+      
       if (that.formData.titleType > 1) {
-        let titles = [];
-
+        debugger;
         if (that.formData.titleType == 2) {
           for (let i = 0; i < that.theOtherTitle.length; i++) {
             let t = that.theOtherTitle[i];
             titles.push(t);
           }
         }
-        that.formData.otherTitle = JSON.stringify(that.titles);
-      } else {
-        that.formData.otherTitle = "";
       }
-
+      
       if (that.formData.coverType > 0) {
-        let picUrls = [];
+       
         if (that.formData.coverType == 1) {
           let url = that.theCoverUrls[0];
           picUrls.push(url);
@@ -349,12 +352,26 @@ export default {
             picUrls.push(url);
           }
         }
-        that.formData.picUrls = JSON.stringify(picUrls);
-      } else {
-        that.formData.picUrls = "";
       }
 
-      submit(that.formData).then(res => {
+      let formParam = {
+        category: 2,
+        title: that.formData.title,
+        titleType: that.formData.titleType,
+        otherTitle: JSON.stringify(titles),
+        content: that.formData.content,
+        coverType: that.formData.coverType,
+        picUrls: JSON.stringify(picUrls),
+        copyRight: that.formData.copyRight,
+        author: that.formData.author,
+        tags: "" 
+      };
+      debugger;
+      if(that.currentId != null){
+        formParam["id"] = that.currentId;
+      }
+      
+      submit(formParam).then(res => {
         this.$message({
           type: "success",
           message: "操作成功!"
@@ -365,7 +382,6 @@ export default {
           that.$refs.newsForm.resetForm();
           that.resetForm();
           that.handleClose();
-
         });
 
       });

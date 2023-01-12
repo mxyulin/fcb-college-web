@@ -164,7 +164,9 @@ export default {
     onLoad(page, params = {}) {
       const that = this;
       that.loading = true;
-      getList(page.currentPage, page.pageSize, Object.assign(params, that.query)).then(res => {
+      params = Object.assign(params, that.query);
+      params["descs"] = "createTimeLong";
+      getList(page.currentPage, page.pageSize, params).then(res => {
         let data = res.data.data;
         that.page.total = data.total;
         let list = data.records;
