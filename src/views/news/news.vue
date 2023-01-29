@@ -94,7 +94,20 @@ export default {
   },
   methods: {
     onOpenEditor(id) {
+<<<<<<< HEAD
       this.$refs.articleEditPanel.showBox(id);
+=======
+      if (id) {
+        getDetail(id).then(res => {
+          let doc = res.data.data;
+          this.$refs.articleEditPanel.showBox(doc);
+        });
+
+      } else {
+        this.$refs.articleEditPanel.showBox(null);
+      }
+
+>>>>>>> f06cd69 (重构附件管理页，优化页面交互和代码。)
     },
     handlePreview(row) {
       // this.$refs.previewPanel.showQuestion(row);

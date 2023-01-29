@@ -35,7 +35,7 @@
         :fit="true"
         :stripe="false"
         :border="true"
-        :max-height="500"
+        :max-height="620"
         :select-on-indeterminate="false"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         @selection-change="onSelectionChange"

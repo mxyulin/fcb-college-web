@@ -251,6 +251,7 @@ export default {
       this.currentId = null;
 
     },
+<<<<<<< HEAD
     showBox(id) {
       const that = this;
       if (id != null) {
@@ -273,6 +274,23 @@ export default {
         that.resetForm(); 
         that.drawerVisible = true;
       }      
+=======
+    showBox(article) {
+      this.form = {};
+      if (article != null) {
+        if (article.picUrls != "") {
+          this.theCoverUrls = JSON.parse(article.picUrls);
+        }
+
+        if (article.otherTitle != "") {
+          this.theOtherTitle = JSON.parse(article.otherTitle);
+        }
+
+        this.form = article;
+      }
+      // debugger;
+      this.drawerVisible = true;
+>>>>>>> f06cd69 (重构附件管理页，优化页面交互和代码。)
     },
     handleClose() {
       this.drawerVisible = false;
@@ -354,6 +372,7 @@ export default {
         }
       }
 
+<<<<<<< HEAD
       let formParam = {
         category: 2,
         title: that.formData.title,
@@ -372,15 +391,20 @@ export default {
       }
       
       submit(formParam).then(res => {
+=======
+
+
+      submit(that.form).then(res => {
+        this.form = {};
+>>>>>>> f06cd69 (重构附件管理页，优化页面交互和代码。)
         this.$message({
           type: "success",
           message: "操作成功!"
         });
-
-        that.$nextTick(res => {
+        that.$nextTick(() => {
           that.$emit("refreshChange");
-          that.$refs.newsForm.resetForm();
-          that.resetForm();
+          // that.$refs.newsForm.resetForm();
+          // that.resetForm();
           that.handleClose();
         });
 

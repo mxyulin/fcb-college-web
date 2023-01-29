@@ -16,7 +16,7 @@
       justify="space-between"
       v-if="!isShowCategorySelector"
     >
-      <el-col :span="TableLayout.colLeft">
+      <el-col :span="layout.leftCol">
         <el-input
           placeholder="搜索类别"
           style="height: 45px"
@@ -37,7 +37,7 @@
         >
         </el-tree>
       </el-col>
-      <el-col :span="TableLayout.colRight">
+      <el-col :span="layout.rightCol">
         <avue-crud
           :data="avueList"
           :option="avueOption"
@@ -45,9 +45,10 @@
           :page.sync="page"
           :search.sync="search"
           :permission="permissionList"
-          @refresh-change="refreshTable"
+          @refresh-change="onRefreshChange"
           @selection-change="onSelectionChange"
-          @on-load="onPageChange"
+          @current-change="onPageChange"
+          @size-change="onPageChange"
           ref="crud"
         >
           <template slot="link" slot-scope="scope">
@@ -98,8 +99,8 @@
             <el-image
               lazy
               style="width: 80px; height: 80px"
-              :src="JSON.parse(row.picUrls)[0]"
-              :preview-src-list="[JSON.parse(row.picUrls)[0]]"
+              :src="formatPicUrls(row)"
+              :preview-src-list="formatPicUrls(row)"
               :fit="fit"
             >
               <div slot="error" class="image-slot">
@@ -138,7 +139,7 @@
           </template>
           <!-- 单选按钮 -->
           <template slot-scope="{ row }" slot="menu">
-            <el-button size="small" type="primary" @click="onSelected(row)"
+            <el-button size="small" type="primary" @click="onSelect(row)"
               >选择</el-button
             >
           </template>
@@ -199,11 +200,7 @@
         </el-cascader>
       </el-col>
       <el-col :span="20">
-        <el-button
-          type="primary"
-          size="medium"
-          @click="onSelectedGoodsCategory"
-        >
+        <el-button type="primary" size="medium" @click="onSelectGoodsCategory">
           确定
         </el-button>
       </el-col>
@@ -233,11 +230,12 @@ export default {
   },
   data() {
     return {
+      /* 状态 */
       loading: false,
       // 图片上传
       upload: false,
-      // 链接表类型
       linkType: "goods",
+
       /* 配置项 */
       page: {
         currentPage: 1,
@@ -246,25 +244,25 @@ export default {
         pagerCount: 7,
         layout: "slot, total, sizes, prev, pager, next, jumper, ->",
       },
-      TableLayout: {
-        colLeft: 3,
-        colRight: 20,
+      layout: {
+        leftCol: 3,
+        rightCol: 20,
       },
       defaultProps: {
         label: "name",
         children: "children",
       },
       avueOption: {
-        header: true,
-        search: true,
-        border: true,
+        rowKey: "id",
+        align: "center",
+        height: 500,
+        menuWidth: 100,
         menu: true,
+        header: true,
+        border: true,
+        searchBtn: false,
         selection: false,
         reserveSelection: true,
-        rowKey: "id",
-        menuWidth: 100,
-        height: 500,
-        align: "center",
         search: {
           name: "",
         },
@@ -278,13 +276,13 @@ export default {
         value: "id",
         children: "children",
       },
-      /* 数据 */
+
+      /* 数据源 */
       filterText: "",
       categoryList: [],
       avueList: [],
       selectionList: [],
       goodsCategorySelection: [],
-      goodsCategorySelectionNodes: [],
       fileList: [],
     };
   },
@@ -297,7 +295,7 @@ export default {
       });
       return ids.join(",");
     },
-    // 表格按钮权限
+    // 表格按钮展示控制
     permissionList() {
       return {
         addBtn: false,
@@ -328,9 +326,9 @@ export default {
     },
   },
   methods: {
-    async getCategoryList(tableType) {
+    async getCategoryList(type) {
       let result = null;
-      switch (tableType) {
+      switch (type) {
         case "image":
           result = await getImageCategory();
           break;
@@ -343,11 +341,6 @@ export default {
       } = result;
       if (code == 200) {
         this.categoryList = data;
-        this.$nextTick(() => {
-          if (!this.isShowCategorySelector) {
-            this.refreshTable();
-          }
-        });
         return "ok";
       }
       return Promise.reject(new Error("faile"));
@@ -381,106 +374,10 @@ export default {
         result = await getActivityList(page.currentPage, page.pageSize, {
           type: "groupon",
         });
-        // result = {
-        //   data: {
-        //     code: 200,
-        //     data: {
-        //       total: 3,
-        //       records: [
-        //         {
-        //           id: "001",
-        //           title: "测试拼团",
-        //           status: 0,
-        //           richtextTitle: "拼团说明",
-        //           starttimeText: "2022-10-17 00:00:00",
-        //           endtimeText: "2023-11-26 00:00:00",
-        //           rules: {
-        //             teamNum: "789",
-        //           },
-        //           goods: [
-        //             {
-        //               title: "thinkBook14+",
-        //               subtitle: "超级秒杀",
-        //               grouponPrice: "89",
-        //               originalPrice: "99",
-        //               image:
-        //                 "http://file.shopro.top/uploads/20210518/49de49c7c28bb727aec9b171b2511383.jpeg",
-        //               sales: "199",
-        //             },
-        //             {
-        //               title: "thinkBook14+",
-        //               subtitle: "超级秒杀",
-        //               grouponPrice: "89",
-        //               originalPrice: "99",
-        //               image:
-        //                 "http://file.shopro.top/uploads/20210518/67cf223ca545805491e07e107db0772d.jpg",
-        //               sales: "199",
-        //             },
-        //             {
-        //               title: "thinkBook14+",
-        //               subtitle: "超级秒杀",
-        //               grouponPrice: "89",
-        //               originalPrice: "99",
-        //               image:
-        //                 "http://file.shopro.top/uploads/20210518/1f85f33dbbe7c930831687052b1ba3fc.jpg",
-        //               sales: "199",
-        //             },
-        //           ],
-        //         },
-        //       ],
-        //     },
-        //   },
-        // };
       } else if (tableType == "seckill") {
-        // result = await getActivityList(page.currentPage, page.pageSize, { type: "seckill" });
-        result = {
-          data: {
-            code: 200,
-            data: {
-              total: 3,
-              records: [
-                {
-                  id: "001",
-                  title: "测试秒杀",
-                  status: 0,
-                  richtextTitle: "秒杀说明",
-                  starttimeText: "2022-10-17 00:00:00",
-                  endtimeText: "2023-11-26 00:00:00",
-                  rules: {},
-                  goods: [
-                    {
-                      title: "thinkBook14+",
-                      subtitle: "超级秒杀",
-                      price: "89",
-                      originalPrice: "99",
-                      image:
-                        "http://file.shopro.top/uploads/20210518/49de49c7c28bb727aec9b171b2511383.jpeg",
-                      sales: "199",
-                    },
-                    {
-                      title: "thinkBook14+",
-                      subtitle: "超级秒杀",
-                      price: "89",
-                      originalPrice: "99",
-                      image:
-                        "http://file.shopro.top/uploads/20210518/67cf223ca545805491e07e107db0772d.jpg",
-                      sales: "199",
-                    },
-                    {
-                      title: "thinkBook14+",
-                      subtitle: "超级秒杀",
-                      price: "89",
-                      originalPrice: "99",
-                      image:
-                        "http://file.shopro.top/uploads/20210518/1f85f33dbbe7c930831687052b1ba3fc.jpg",
-                      sales: "199",
-                    },
-                  ],
-                },
-              ],
-            },
-          },
-        };
+        result = await getActivityList(page.currentPage, page.pageSize, {
+          type: "seckill",
+        });
       } else if (tableType == "rich-text") {
         result = await getArticleList(page.currentPage, page.pageSize);
       }
@@ -495,7 +392,6 @@ export default {
       }
       return Promise.reject(new Error("faile"));
     },
-    // 初始化组件
     onDialogOpen() {
       const { tableType } = this;
       let getCategoryListPromise = null;
@@ -604,6 +500,7 @@ export default {
               overHidden: true,
             },
           ];
+          this.linkType = "goods";
           getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "goods-group":
@@ -642,8 +539,8 @@ export default {
           getCategoryListPromise = this.getCategoryList("goods");
           break;
         case "coupons":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = false;
           this.avueOption.selection = true;
           this.avueOption.column = [
@@ -692,8 +589,8 @@ export default {
           this.getList();
           break;
         case "groupon":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -723,17 +620,17 @@ export default {
               prop: "richtextTitle",
               overHidden: true,
             },
-            {
-              label: "状态",
-              prop: "status",
-              overHidden: true,
-            },
+            // {
+            //   label: "状态",
+            //   prop: "status",
+            //   overHidden: true,
+            // },
           ];
           this.getList();
           break;
         case "seckill":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -744,30 +641,36 @@ export default {
             },
             {
               label: "开始时间",
-              prop: "starttimeText",
+              prop: "starttime",
               overHidden: true,
+              formatter(row, val) {
+                return dateFormat(new Date(val * 1000));
+              },
             },
             {
               label: "结束时间",
-              prop: "endtimeText",
+              prop: "endtime",
               overHidden: true,
+              formatter(row, val) {
+                return dateFormat(new Date(val * 1000));
+              },
             },
             {
               label: "说明",
               prop: "richtextTitle",
               overHidden: true,
             },
-            {
-              label: "状态",
-              prop: "status",
-              overHidden: true,
-            },
+            // {
+            //   label: "状态",
+            //   prop: "status",
+            //   overHidden: true,
+            // },
           ];
           this.getList();
           break;
         case "rich-text":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -800,33 +703,40 @@ export default {
           this.getList();
           break;
       }
-      console.log("测试", getCategoryListPromise);
-      // getCategoryListPromise
+      // 优化交互体验，当分类数据渲染即可自动点击第一个节点并拉取表格数据
+      if (getCategoryListPromise != null && !this.isShowCategorySelector) {
+        getCategoryListPromise.then((res) => {
+          if (res == "ok") {
+            this.onRefreshChange();
+          }
+        });
+      }
     },
-    // 重置组件
     onDialogClose() {
-      // *争对 el-cascader 组件自身 bug 打的补丁
-      // *参考：https://github.com/ElemeFE/element/issues/16967
+      // 重置 layout 是为了初始化少写代码配布局
+      this.layout.leftCol = 3;
+      this.layout.rightCol = 20;
       if (this.isShowCategorySelector) {
+        // *争对 el-cascader 组件自身 bug 打的补丁
+        // *参考：https://github.com/ElemeFE/element/issues/16967
         this.$refs.goodsCategoryCascader.$children[1].activePath = [];
       } else {
-        this.resetData();
+        this.resetTheData();
       }
       this.$emit("update:dialogVisible", false);
     },
     // 切换连接表
     onLinkTypeChange(linkType) {
-      this.categoryList = [];
-      this.avueList = [];
+      this.resetTheData();
       switch (linkType) {
         case "goods":
-          this.TableLayout.colLeft = 3;
-          this.TableLayout.colRight = 20;
-          this.onDialogOpen();
+          this.layout.leftCol = 3;
+          this.layout.rightCol = 20;
+          this.onDialogOpen(); // 复用初始化
           break;
         case "marketing":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -854,8 +764,8 @@ export default {
           this.getList();
           break;
         case "article":
-          this.TableLayout.colLeft = 0;
-          this.TableLayout.colRight = 24;
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
@@ -900,7 +810,7 @@ export default {
       this.getList(this.page, { categoryIds: id });
     },
     // 单选
-    onSelected(row) {
+    onSelect(row) {
       const {
         tableType,
         linkType,
@@ -912,7 +822,7 @@ export default {
       updateForm(tableType, currentSelection, row);
       this.$emit("update:dialogVisible", false);
     },
-    // 获取多选行
+    // 缓存多选行
     onSelectionChange(selection) {
       this.selectionList = selection;
     },
@@ -932,7 +842,8 @@ export default {
       updateForm(tableType, currentSelection, selectionList);
       this.$emit("update:dialogVisible", false);
     },
-    onSelectedGoodsCategory() {
+    // 选择一个商品分类的所有数据并更新组件预览和组件表单（级联选择器）
+    onSelectGoodsCategory() {
       const {
         tableType,
         goodsCategorySelection,
@@ -976,29 +887,39 @@ export default {
         }
       );
     },
-    refreshTable() {
+    onRefreshChange() {
       // 优化用户体验，刷新即可得到第一个节点数据
       if (this.categoryList.length > 0) {
         return this.$refs.tree.$children[0].handleClick();
       }
-      if (this.TableLayout.colLeft == 0) {
+      if (this.layout.leftCol == 0) {
         return this.getList();
       }
     },
-    resetData() {
-      this.linkType = "goods";
-      this.TableLayout.colLeft = 3;
-      this.TableLayout.colRight = 20;
+    onPageChange() {
+      this.getList();
+    },
+    resetTheData() {
+      // 重置分页器
+      this.page.currentPage = 1;
+      this.page.pageSize = 10;
+      // 重置所有数据源
+      this.filterText = "";
       this.categoryList = [];
       this.avueList = [];
       this.selectionList = [];
       this.goodsCategorySelection = [];
+      // 清空多选缓存
       if (this.isShowMutipleCheckbox) {
         this.$refs.crud.$refs.table.clearSelection();
       }
     },
-    onPageChange(page) {
-      console.log("测试", page);
+    // 格式化 picUrls
+    formatPicUrls({ picUrls }) {
+      if (picUrls != "") {
+        return JSON.parse(picUrls)[0];
+      }
+      return picUrls;
     },
     /*
      *上传图片

@@ -636,9 +636,9 @@ export default {
           break;
         }
         case "goods-group": {
-          const { ids, categoryNames, records } = data;
+          const { ids, categoryName, records } = data;
           that.templateForm.content.id = ids;
-          that.templateForm.content.category_name = categoryNames;
+          that.templateForm.content.category_name = categoryName;
           that.templateForm.content.timeData = records;
           break;
         }
@@ -656,10 +656,11 @@ export default {
         }
         case "groupon": {
           const { id, title, rules, goods } = data;
+          console.log('测试', id)
           that.templateForm.content.id = id;
           that.templateForm.content.grouponName = title;
-          that.templateForm.content.teamNum = rules.teamNum;
-          that.templateForm.content.timeData = goods;
+          // that.templateForm.content.teamNum = rules.teamNum;
+          // that.templateForm.content.timeData = goods;
           break;
         }
         case "seckill": {

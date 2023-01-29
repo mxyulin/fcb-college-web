@@ -1,114 +1,81 @@
 <template>
-  <el-row>
-    <el-col :span="5">
-      <div class="left-panel">
-        <el-scrollbar>
-          <basic-container>
-            <el-button type="primary" size="small" plain @click="onCreateNew"
-              >新增</el-button
+  <basic-container>
+    <el-row :gutter="10" type="flex">
+      <el-col :span="6">
+        <el-card v-loading="treeLoading">
+          <div
+            slot="header"
+            class="display-flex"
+            style="justify-content: space-between"
+          >
+            <span>图片分类</span>
+            <el-button
+              v-if="permission.attach_add"
+              type="primary"
+              size="small"
+              icon="el-icon-plus"
+              @click="addCategory"
+              >新 增</el-button
             >
-            <el-dialog
-              title="新增"
-              append-to-body="ture"
-              :visible.sync="showDialog"
+          </div>
+          <el-tree
+            ref="tree"
+            show-checkbox
+            check-strictly
+            highlight-current
+            render-after-expand
+            node-key="id"
+            :props="{
+              label: 'name',
+              children: 'children',
+            }"
+            :data="categoryList"
+            :expand-on-click-node="false"
+            @node-click="onNodeClick"
+          >
+            <sapn
+              class="custom-tree-node display-flex"
+              slot-scope="{ node, data }"
             >
-              <el-form>
-                <el-form-item :label-width="formLabelWidth">
-                  <el-input
-                    v-model="nodeName"
-                    clearable
-                    class="inputwidth"
-                    size="medium"
-                    placeholder="请输入"
-                  ></el-input>
-                  <el-alert
-                    v-show="alertif"
-                    class="alertsize"
-                    title="不能为空"
-                    type="warning"
-                    effect="dark"
-                  >
-                  </el-alert>
-                </el-form-item>
-              </el-form>
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rowSave">保存</el-button>
-                <el-button @click="showDialog = false">取 消</el-button>
-              </div>
-            </el-dialog>
-
-            <el-button type="info" size="small" @click="onEdit" plain
-              >编辑</el-button
-            >
-            <el-dialog
-              title="编辑"
-              append-to-body="ture"
-              :visible.sync="dialogmodify"
-            >
-              <el-form>
-                <el-form-item :label-width="formLabelWidth">
-                  <el-input
-                    class="inputwidth"
-                    size="medium"
-                    placeholder="请输入"
-                    v-model="nameupdate"
-                  ></el-input>
-                  <el-alert
-                    v-show="alertif"
-                    class="alertsize"
-                    title="不能为空和不能等于原来的名字"
-                    type="warning"
-                    effect="dark"
-                  >
-                  </el-alert>
-                </el-form-item>
-              </el-form>
-              
-              <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="rowUpdate"
-                  >保存</el-button
+              <span>{{ node.label }}</span>
+              <span>
+                <el-button
+                  type="text"
+                  size="small"
+                  v-if="permission.attach_edit"
                 >
-                <el-button @click="dialogmodify = false">取 消</el-button>
-              </div>
-            </el-dialog>
-
-            <el-button type="danger" size="small" plain @click="onRemove"
-              >删 除</el-button
-            >
-
-            <el-tree
-              class="filter-tree"
-              :data="list"
-              :props="defaultProps"
-              default-expand-all
-              :filter-node-method="filterNode"
-              @node-click="handleNodeClick"
-              ref="tree"
-            >
-            </el-tree>
-          </basic-container>
-        </el-scrollbar>
-      </div>
-    </el-col>
-    <el-col :span="19">
-      <basic-container>
+                  编辑
+                </el-button>
+                <el-button
+                  v-if="permission.attach_delete"
+                  type="text"
+                  size="small"
+                  @click.stop="deleteCurrentCategoryById(data)"
+                >
+                  删除
+                </el-button>
+              </span>
+            </sapn>
+          </el-tree>
+        </el-card>
+      </el-col>
+      <el-col :span="18">
         <avue-crud
-          :option="option"
-          :table-loading="loading"
-          :data="data"
-          :page.sync="page"
-          :permission="permissionList"
-          :before-open="beforeOpen"
-          v-model="form"
           ref="crud"
-          @row-del="rowDel"
-          @search-change="searchChange"
-          @search-reset="searchReset"
-          @selection-change="selectionChange"
-          @current-change="currentChange"
-          @size-change="sizeChange"
-          @refresh-change="refreshChange"
-          @on-load="loadDataList"
+          v-model="crudForm"
+          :data="imageList"
+          :page.sync="page"
+          :option="crudOptions"
+          :table-loading="crudloading"
+          :permission="permissionList"
+          @row-del="deleteAttach"
+          @search-change="onSearchChange"
+          @search-reset="resetSearchQueryObj"
+          @selection-change="onSelectionChange"
+          @current-change="onCurrentChange"
+          @size-change="onSizeChange"
+          @refresh-change="onRefreshChange"
+          @on-load="getImageListByCategoryId"
         >
           <template slot="link" slot-scope="scope">
             <el-image
@@ -125,7 +92,7 @@
               plain
               v-if="permission.attach_upload"
               icon="el-icon-upload2"
-              @click="handleUpload"
+              @click="attatchUpload"
               >上 传
             </el-button>
             <el-button
@@ -134,53 +101,85 @@
               icon="el-icon-delete"
               plain
               v-if="permission.attach_delete"
-              @click="handleDelete"
+              @click="deleteAttachs"
               >删 除
             </el-button>
           </template>
-          <template slot-scope="scope" slot="menu">
-            <el-button
-              type="text"
-              icon="el-icon-download"
-              size="small"
-              v-if="permission.attach_download"
-              @click="handleDownload(scope.row)"
-              >下载
-            </el-button>
-          </template>
           <template slot-scope="{ row }" slot="attachSize">
-            <el-tag>{{ `${row.attachSize} KB` }}</el-tag>
+            <el-tag>{{ `${row.attachSize / 1000} KB` }}</el-tag>
           </template>
         </avue-crud>
-        <el-dialog
-          title="附件管理"
-          append-to-body
-          :visible.sync="attachBox"
-          width="555px"
+      </el-col>
+    </el-row>
+    <el-dialog
+      title="新增分类"
+      :visible.sync="showDialogForCategory"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+    >
+      <avue-form
+        ref="categoryForm"
+        v-model="categoryForm"
+        :option="categoryFormOptions"
+        @submit="onCategoryFormSubmit"
+      >
+      </avue-form>
+    </el-dialog>
+    <el-dialog
+      append-to-body
+      title="附件上传"
+      width="25%"
+      :visible.sync="showDialogForAttach"
+      :modal-append-to-body="false"
+      :close-on-click-modal="false"
+      :before-close="onDialogForAttachClose"
+    >
+      <el-upload
+        multiple
+        ref="upload"
+        list-type="picture"
+        accept="image/png, image/jpeg"
+        action="/api/fcb-resource/oss/endpoint/put-file-attach"
+        v-loading="uploadLoading"
+        :limit="5"
+        :auto-upload="false"
+        :file-list="fileList"
+        :on-success="onUploadSuccess"
+        :on-error="onUploadError"
+        :on-progress="onUploadProgress"
+        :on-exceed="onUploadExceed"
+      >
+        <el-button slot="trigger" size="small" type="primary"
+          >选取文件</el-button
         >
-          <avue-form
-            ref="form"
-            :option="attachOption"
-            v-model="attachForm"
-            :upload-after="uploadAfter"
-          >
-          </avue-form>
-        </el-dialog>
-      </basic-container>
-    </el-col>
-  </el-row>
+        <el-button
+          style="margin-left: 10px"
+          size="small"
+          type="success"
+          @click="submitUpload"
+          >上传到服务器</el-button
+        >
+        <div slot="tip" class="el-upload__tip">
+          只能上传jpg/png文件，且不超过500kb
+        </div>
+      </el-upload>
+    </el-dialog>
+  </basic-container>
 </template>
 
 <script>
 import {
   getList as getCategoryList,
-  add,
-  update,
+  add as addCategory,
+  update as updateCategory,
   remove as removeCategory,
 } from "@/api/resource/attachcategory";
-import { getList, getDetail, remove } from "@/api/resource/attach";
+import {
+  getList as getImageList,
+  getDetail as getDetailOfImage,
+  remove as removeImage,
+} from "@/api/resource/attach";
 import { mapGetters } from "vuex";
-import func from "@/util/func";
 
 export default {
   watch: {
@@ -190,138 +189,125 @@ export default {
   },
   data() {
     return {
-      formLabelWidth: "80px",
-      // 新增
-      showDialog: false,
-      nodeName: null,
-      alertif: false,
-      // 编辑
-      dialogmodify:false,
-      nameupdate: null,
-      // 增删改
-      curSelectNode: null,
-      /////////////////////////////
-
-      options: [],
-      selectvalue: [],
-      loading: false,
-
-      filterText: "",
-      list: [],
-      defaultProps: {
-        children: "children",
-        label: "name",
+      categoryForm: {},
+      categoryList: [],
+      categoryFormOptions: {
+        size: "small",
+        labelPosition: "right",
+        menuPosition: "right",
+        column: [
+          {
+            label: "分类名称",
+            prop: "categoryName",
+            span: 24,
+            rules: {
+              required: true,
+              message: "请输入分类名称",
+              trigger: "blur",
+            },
+          },
+          {
+            label: "父级分类",
+            prop: "parentId",
+            type: "cascader",
+            showAllLevels: false,
+            checkStrictly: true,
+            emitPath: false,
+            disabled: false,
+            span: 24,
+            tip: "注意：选择一个节点作为新建节点的父级，若不选择则意味着新建一个祖先节点！",
+            tipPlacement: "top",
+            props: {
+              label: "name",
+              value: "id",
+            },
+            dicData: [],
+            focus: () => {
+              const { categoryList } = this;
+              this.categoryFormOptions.column[1].dicData = categoryList;
+            },
+          },
+        ],
       },
-      form: {},
-      query: {},
-      loading: true,
+      treeLoading: false,
+      crudloading: false,
       page: {
         pageSize: 10,
         currentPage: 1,
         total: 0,
       },
-      attachBox: false,
+      crudForm: {},
+      imageList: [],
+      /*  */
+      formLabelWidth: "80px",
+      // 新增
+      showDialogForCategory: false,
+      // 编辑
+      dialogmodify: false,
+      nameupdate: null,
+
+      options: [],
+      selectvalue: [],
+
+      filterText: "",
+
+      query: {},
+
+      showDialogForAttach: false,
       selectionList: [],
       selectNodeId: 123,
-      option: {
-        height: "auto",
-        calcHeight: 30,
-        tip: false,
-        searchShow: true,
-        searchMenuSpan: 6,
+      crudOptions: {
+        size: "small",
+        height: "61vh",
+        header: true,
         border: true,
-        index: true,
-        viewBtn: true,
+        searchShow: false,
+        searchMenuSpan: 5,
+        menuFixed: false,
+        selectionFixed: false,
+        rowKey: "id",
         selection: true,
+        reserveSelection: true,
         dialogClickModal: false,
         column: [
           {
             label: "附件图片",
             prop: "link",
-            slot: true, // 将slot 设置为true， 在模板中slot 为prop
-            rules: [
-              {
-                required: true,
-                message: "请输入附件地址",
-                trigger: "blur",
-              },
-            ],
-          },{
+          },
+          {
             label: "附件名称",
             prop: "name",
             search: true,
-            rules: [
-              {
-                required: true,
-                message: "请输入附件名称",
-                trigger: "blur",
-              },
-            ],
-          },
-          {
-            label: "附件拓展名",
-            prop: "extension",
-            rules: [
-              {
-                required: true,
-                message: "请输入附件拓展名",
-                trigger: "blur",
-              },
-            ],
           },
           {
             label: "附件大小",
             prop: "attachSize",
-            slot: true,
-            rules: [
-              {
-                required: true,
-                message: "请输入附件大小",
-                trigger: "blur",
-              },
-            ],
+          },
+          {
+            label: "附件状态",
+            prop: "status",
           },
         ],
       },
-      data: [], // 列表地址
       pictUrl: [
         "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76",
       ], // 图片地址
-      attachForm: {},
-      attachOption: {
-        submitBtn: false,
-        emptyBtn: false,
-        column: [
-          {
-            label: "附件上传",
-            prop: "attachFile",
-            type: "upload",
-            drag: true,
-            loadText: "模板上传中，请稍等",
-            span: 24,
-            propsHttp: {
-              res: "data",
-            },
-            data: {
-              categoryIds: null,
-            },
-            action: "/api/fcb-resource/oss/endpoint/put-file-attach",
-          },
-        ],
-      },
+      fileList: [],
+      uploadLoading: false,
     };
   },
   mounted() {
-    this.loadCategoryTree();
+    this.getCategoryListForTheTree();
   },
   computed: {
     ...mapGetters(["permission"]),
     permissionList() {
+      const { attach_delete, attach_edit } = this.permission;
       return {
         addBtn: false,
-        editBtn: false,
         viewBtn: false,
-        delBtn: this.vaildData(this.permission.attach_delete, false),
+        delBtn: attach_delete,
+        editBtn: false,
       };
     },
     ids() {
@@ -333,149 +319,124 @@ export default {
     },
   },
   methods: {
-    // 新增
-    onCreateNew() {
-      this.nodeName = "";
-      this.showDialog = true;
-    },
-    rowSave() {
-      let parentId = null;
-      if (this.curSelectNode == null) {
-        parentId = 0;
-      } else {
-        parentId = this.curSelectNode.id;
-      }
-
-      let params = { name: this.nodeName, parentId: parentId };
-
-      if (func.isEmpty(this.nodeName)) {
-        this.alertif = true;
-        return;
-      }
-      // console.log("row", params);
-
-      add(params).then(
-        (res) => {
-          this.loadCategoryTree();
+    onCategoryFormSubmit({ categoryName, parentId }, done) {
+      addCategory({
+        name: categoryName,
+        parentId: parentId ? parentId : "0",
+      }).then(({ data: { code } }) => {
+        if (code == 200) {
+          this.$refs.categoryForm.resetForm();
+          this.showDialogForCategory = false;
+          this.getCategoryListForTheTree();
           this.$message({
             type: "success",
             message: "操作成功!",
           });
-          this.showDialog = false;
-        },
-        (error) => {
-          loading();
-          console.log(error);
-        }
-      );
-    },
-    //  编辑有问题
-    onEdit() {
-      if (this.curSelectNode == null) {
-        this.$confirm("请选则至少一条数据", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        });
-      } else {
-        // console.log('编辑')
-        this.nameupdate = this.curSelectNode.name;
-        this.dialogmodify = true;
-      }
-    },
-    rowUpdate() {
-      let params = this.curSelectNode;
-      if (
-        func.isEmpty(this.nameupdate) ||
-        this.nameupdate === this.curSelectNode.name
-      ) {
-        this.alertif = true;
-        return;
-      }
-      params.name = this.nameupdate;
-      // console.log(params)
-      update(params).then(
-        () => {
-          this.loadCategoryTree();
+          done();
+        } else {
           this.$message({
-            type: "success",
-            message: "操作成功!",
+            type: "error",
+            message: "操作失败!",
           });
-          this.dialogmodify = false;
-        },
-        (error) => {
-          console.log(error);
+        }
+      });
+    },
+    getCategoryListForTheTree() {
+      const { page } = this;
+      this.treeLoading = true;
+      getCategoryList(page.currentPage, page.pageSize).then(
+        ({ data: { code, data } }) => {
+          if (code == 200) {
+            this.categoryList = data;
+            this.$refs.tree.setCheckedKeys([]);
+            this.treeLoading = false;
+          }
         }
       );
     },
-
-    // 删除handleDelete rowDel
-    onRemove() {
-      if (this.curSelectNode == null) {
-        this.$confirm("请选则至少一条数据", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        });
-      } else {
-        this.$confirm("确定将选择数据删除?", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            return removeCategory(this.curSelectNode.id);
-          })
-          .then(() => {
-            this.loadCategoryTree();
+    getImageListByCategoryId(params = {}) {
+      const { page } = this;
+      this.crudloading = true;
+      getImageList(page.currentPage, page.pageSize, params).then(
+        ({ data: { code, data } }) => {
+          if (code == 200) {
+            this.page.total = data.total;
+            this.page.pageSize = data.size;
+            this.page.currentPage = data.current;
+            this.imageList = data.records;
+            this.$refs.crud.$refs.table.clearSelection();
+            this.crudloading = false;
+          }
+        }
+      );
+    },
+    onNodeClick({ id }) {
+      this.getImageListByCategoryId({ categoryIds: id });
+    },
+    addCategory() {
+      this.showDialogForCategory = true;
+    },
+    deleteCurrentCategoryById({ id }) {
+      this.$confirm("确定删除当前分类？", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        removeCategory(id).then(({ data: { code } }) => {
+          if (code == 200) {
+            this.getCategoryListForTheTree();
             this.$message({
               type: "success",
-              message: "操作成功!",
+              message: "操作成功！",
             });
-          });
+          }
+        });
+      });
+    },
+    attatchUpload() {
+      this.showDialogForAttach = true;
+    },
+    onDialogForAttachClose(done) {
+      if (this.uploadLoading) {
+        this.$refs.upload.abort();
+        this.uploadLoading = false;
       }
-    },
-    ////////////////////////////////////////////////
-    handleNodeClick(node) {
-      this.curSelectNode = node;
-
-      this.query["categoryIds"] = this.attachOption.column[0].data.categoryIds =
-        node.id;
-      this.loadDataList(this.page, this.query);
-    },
-    filterNode(value, list) {
-      if (!value) return true;
-      return list.name.indexOf(value) !== -1;
-    },
-    handleUpload() {
-      this.attachBox = true;
-    },
-    uploadAfter(res, done, loading, column) {
-      this.attachBox = false;
-      this.refreshChange();
+      this.$refs.upload.clearFiles();
+      this.showDialogForAttach = false;
       done();
     },
-    handleDownload(row) {
-      window.open(`${row.link}`);
+    onUploadProgress() {
+      this.uploadLoading = true;
     },
-    rowDel(row) {
+    onUploadSuccess(response) {
+      this.this.uploadLoading = false;
+      console.log("测试", response);
+      // onRefreshChange
+    },
+    onUploadExceed() {
+      this.$message.error("最大上传5个文件");
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    deleteAttach(row) {
       this.$confirm("确定将选择数据删除?", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
       })
         .then(() => {
-          return remove(row.id);
+          return removeImage(row.id);
         })
         .then(() => {
-          this.loadDataList(this.page);
+          this.getImageListByCategoryId();
           this.$message({
             type: "success",
             message: "操作成功!",
           });
         });
     },
-    handleDelete() {
+    deleteAttachs() {
       const that = this;
       if (that.selectionList.length === 0) {
         that.$message.warning("请选择至少一条数据");
@@ -488,10 +449,10 @@ export default {
           type: "warning",
         })
         .then(() => {
-          return remove(that.ids);
+          return removeImage(that.ids);
         })
         .then(() => {
-          that.loadDataList(that.page);
+          that.getImageListByCategoryId(that.page);
           that.$message({
             type: "success",
             message: "操作成功!",
@@ -499,82 +460,48 @@ export default {
           that.$refs.crud.toggleSelection();
         });
     },
-    beforeOpen(done, type) {
-      if (["edit", "view"].includes(type)) {
-        getDetail(that.form.id).then((res) => {
-          that.form = res.data.data;
-        });
-      }
-      done();
-    },
-    searchReset() {
+    resetSearchQueryObj() {
       this.query = {};
-      this.loadDataList(this.page);
+      this.getImageListByCategoryId();
     },
-    searchChange(params, done) {
+    onSearchChange(params, done) {
       this.query = params;
       this.page.currentPage = 1;
-      this.loadDataList(this.page, params);
+      this.getImageListByCategoryId(params);
       done();
     },
-    selectionChange(list) {
+    onSelectionChange(list) {
       this.selectionList = list;
     },
-    selectionClear() {
+    clearSelection() {
       this.selectionList = [];
       this.$refs.crud.toggleSelection();
     },
-    currentChange(currentPage) {
-      debugger;
+    onCurrentChange(currentPage) {
       this.page.currentPage = currentPage;
     },
-    sizeChange(pageSize) {
-      debugger;
+    onSizeChange(pageSize) {
       this.page.pageSize = pageSize;
     },
-    refreshChange() {
-      this.loadDataList(this.page, this.query);
-    },
-
-    loadCategoryTree(page, params = {}) {
-      const that = this;
-      that.loading = true;
-      getCategoryList(
-        that.page.currentPage,
-        that.page.pageSize,
-        Object.assign(params, that.query)
-      ).then((res) => {
-        this.list = res.data.data;
-        // console.log('list',res.data.data)
-
-        // this.data = data.records;
-        this.loading = false;
-        this.selectionClear();
-      });
-    },
-
-    loadDataList(page, params = {}) {
-      const that = this;
-      that.loading = true;
-      let tmpParam = Object.assign(params, that.query.id);
-      getList(page.currentPage, page.pageSize, tmpParam).then((res) => {
-        const data = res.data.data;
-        that.page.total = data.total;
-        that.data = data.records;
-        // 对数据做处理遍历data.records这个数组拿到每个数组里的url地址给img标签
-        // that.pictUrl = that.data.map(item => {
-        //   return item.domainUrl
-        // })
-        // console.log(that.pictUrl);
-        that.loading = false;
-        that.selectionClear();
-      });
+    onRefreshChange() {
+      this.clearSelection();
+      this.getImageListByCategoryId();
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.display-flex {
+  display: flex;
+  align-items: center;
+}
+.custom-tree-node {
+  flex: 1;
+  justify-content: space-between;
+  font-size: 14px;
+  padding-left: 8px;
+}
 .left-panel {
   height: 800px;
   // min-width: 250px;
