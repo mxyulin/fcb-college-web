@@ -32,32 +32,40 @@
             :data="categoryList"
             :expand-on-click-node="false"
             @node-click="onNodeClick"
-            @mouseleave="hideMenu"
           >
             <sapn
               class="custom-tree-node display-flex"
               slot-scope="{ node, data }"
+              @mouseleave="hideMenu"
               @mouseenter="showMenu(data)"
             >
               <input
                 type="text"
+                :ref="'input' + data.id"
                 :value="node.label"
-                :disabled="data.id == currentEditId ? false : true"
+                :disabled="currentEditId == data.id ? false : true"
                 :class="
                   data.id == currentEditId
                     ? 'custom-tree-node-input-active'
                     : 'custom-tree-node-input'
                 "
-                @blur="updateCategoryName(data, $event)"
               />
-              <span v-if="currentShowId == data.id">
+              <span v-show="currentShowId == data.id">
                 <el-button
                   type="text"
                   size="small"
-                  v-if="permission.attach_edit"
-                  @click.stop="EditCurrentCategoryById(data)"
+                  v-if="permission.attach_edit && currentEditId == null"
+                  @click.stop="EditCurrentCategoryById(data, $event)"
                 >
                   编辑
+                </el-button>
+                <el-button
+                  type="text"
+                  size="small"
+                  v-else-if="permission.attach_edit && currentEditId == data.id"
+                  @click.stop="updateCategoryName(data)"
+                >
+                  确定
                 </el-button>
                 <el-button
                   v-if="permission.attach_delete"
@@ -75,7 +83,6 @@
       <el-col :span="18">
         <avue-crud
           ref="crud"
-          v-model="crudForm"
           :data="imageList"
           :page.sync="page"
           :option="crudOptions"
@@ -206,15 +213,49 @@ import { getToken } from "@/util/auth";
 import website from "@/config/website";
 
 export default {
-  watch: {
-    filterText(val) {
-      this.$refs.tree.filter(val);
-    },
-  },
   data() {
     return {
-      categoryForm: {},
-      categoryList: [],
+      /* status */
+      treeLoading: false,
+      crudloading: false,
+      uploadLoading: false,
+      showDialogForAttach: false,
+      showDialogForCategory: false,
+      /* options */
+      page: {
+        pageSize: 10,
+        currentPage: 1,
+        total: 0,
+      },
+      crudOptions: {
+        size: "small",
+        height: "61vh",
+        header: true,
+        border: true,
+        searchShow: false,
+        searchMenuSpan: 5,
+        menuFixed: false,
+        selectionFixed: false,
+        rowKey: "id",
+        selection: true,
+        reserveSelection: true,
+        dialogClickModal: false,
+        column: [
+          {
+            label: "附件图片",
+            prop: "link",
+          },
+          {
+            label: "附件名称",
+            prop: "originalName",
+            search: true,
+          },
+          {
+            label: "附件大小",
+            prop: "attachSize",
+          },
+        ],
+      },
       categoryFormOptions: {
         size: "small",
         labelPosition: "right",
@@ -253,70 +294,16 @@ export default {
           },
         ],
       },
-      treeLoading: false,
-      crudloading: false,
-      page: {
-        pageSize: 10,
-        currentPage: 1,
-        total: 0,
-      },
-      crudForm: {},
-      imageList: [],
-      /*  */
-      formLabelWidth: "80px",
-      // 新增
-      showDialogForCategory: false,
-      // 编辑
-      dialogmodify: false,
-      nameupdate: null,
-
-      options: [],
-      selectvalue: [],
-
-      filterText: "",
-
+      /* data */
       query: {},
-
-      showDialogForAttach: false,
-      selectionList: [],
-      selectNodeId: 123,
-      crudOptions: {
-        size: "small",
-        height: "61vh",
-        header: true,
-        border: true,
-        searchShow: false,
-        searchMenuSpan: 5,
-        menuFixed: false,
-        selectionFixed: false,
-        rowKey: "id",
-        selection: true,
-        reserveSelection: true,
-        dialogClickModal: false,
-        column: [
-          {
-            label: "附件图片",
-            prop: "link",
-          },
-          {
-            label: "附件名称",
-            prop: "originalName",
-            search: true,
-          },
-          {
-            label: "附件大小",
-            prop: "attachSize",
-          },
-        ],
-      },
-      pictUrl: [
-        "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.mp.itc.cn%2Fupload%2F20170216%2F25f661a8abd043bf926128544b343d81_th.jpeg&refer=http%3A%2F%2Fimg.mp.itc.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1671358453&t=db91b4b31f6d663575288ab9e6713b76",
-      ], // 图片地址
       fileList: [],
-      uploadLoading: false,
-      currentCategoryId: "",
-      currentEditId: null,
+      imageList: [],
+      categoryForm: {},
+      categoryList: [],
+      selectionList: [],
       currentShowId: null,
+      currentEditId: null,
+      currentCategoryId: null,
     };
   },
   mounted() {
@@ -414,21 +401,23 @@ export default {
       this.currentShowId = id;
     },
     hideMenu() {
-      debugger;
       this.currentShowId = null;
     },
     EditCurrentCategoryById({ id }) {
       this.currentEditId = id;
+      this.$nextTick(() => {
+        this.$refs["input" + id].focus();
+      });
     },
-    updateCategoryName(row, e) {
-      console.log("测试", row, e);
-      Object.assign(row, { name: e.target.value });
-      updateCategory(row)
-      .then(({ data: { code }}) => {
+    updateCategoryName(row) {
+      let newVal = this.$refs["input" + row.id].value;
+      Object.assign(row, { name: newVal });
+      updateCategory(row).then(({ data: { code } }) => {
         if (code == 200) {
+          this.getCategoryListForTheTree();
           this.$message.success("操作成功!");
         }
-      })
+      });
       this.currentEditId = null;
     },
     deleteCurrentCategoryById({ id }) {
@@ -440,7 +429,7 @@ export default {
         removeCategory(id).then(({ data: { code } }) => {
           if (code == 200) {
             this.getCategoryListForTheTree();
-            this.$message.success("操作成功!")
+            this.$message.success("操作成功!");
           }
         });
       });
@@ -564,7 +553,6 @@ export default {
 }
 .left-panel {
   height: 800px;
-  // min-width: 250px;
 }
 .img-item {
   width: 100%;
