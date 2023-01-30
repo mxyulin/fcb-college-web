@@ -348,7 +348,7 @@
                   type: 'radio',
                   dicData: [
                     {
-                      label: "saber",
+                      label: "avue",
                       value: "saber"
                     },
                     {

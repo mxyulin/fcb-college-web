@@ -41,7 +41,7 @@
       <template slot-scope="{row}"
                 slot="source">
         <div style="text-align:center">
-          <i :class="row.source"/>
+          <!-- <i :class="row.source"/> -->
         </div>
       </template>
     </avue-crud>
