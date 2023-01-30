@@ -32,19 +32,25 @@
             :data="categoryList"
             :expand-on-click-node="false"
             @node-click="onNodeClick"
+            @mouseleave="hideMenu"
           >
             <sapn
               class="custom-tree-node display-flex"
               slot-scope="{ node, data }"
+              @mouseenter="showMenu(data)"
             >
-              <!-- <span>{{ node.label }}</span> -->
               <input
-                  type="text"
-                  class="custom-tree-node-input"
-                  :disabled="data.id == currentEditId ? false : true"
-                  :value="node.label"
+                type="text"
+                :value="node.label"
+                :disabled="data.id == currentEditId ? false : true"
+                :class="
+                  data.id == currentEditId
+                    ? 'custom-tree-node-input-active'
+                    : 'custom-tree-node-input'
+                "
+                @blur="updateCategoryName(data, $event)"
               />
-              <span>
+              <span v-if="currentShowId == data.id">
                 <el-button
                   type="text"
                   size="small"
@@ -193,7 +199,6 @@ import {
 } from "@/api/resource/attachcategory";
 import {
   getList as getImageList,
-  getDetail as getDetailOfImage,
   remove as removeImage,
 } from "@/api/resource/attach";
 import { mapGetters } from "vuex";
@@ -311,6 +316,7 @@ export default {
       uploadLoading: false,
       currentCategoryId: "",
       currentEditId: null,
+      currentShowId: null,
     };
   },
   mounted() {
@@ -404,9 +410,26 @@ export default {
     addCategory() {
       this.showDialogForCategory = true;
     },
+    showMenu({ id }) {
+      this.currentShowId = id;
+    },
+    hideMenu() {
+      debugger;
+      this.currentShowId = null;
+    },
     EditCurrentCategoryById({ id }) {
       this.currentEditId = id;
-      console.log("测试", id);
+    },
+    updateCategoryName(row, e) {
+      console.log("测试", row, e);
+      Object.assign(row, { name: e.target.value });
+      updateCategory(row)
+      .then(({ data: { code }}) => {
+        if (code == 200) {
+          this.$message.success("操作成功!");
+        }
+      })
+      this.currentEditId = null;
     },
     deleteCurrentCategoryById({ id }) {
       this.$confirm("确定删除当前分类？", {
@@ -417,10 +440,7 @@ export default {
         removeCategory(id).then(({ data: { code } }) => {
           if (code == 200) {
             this.getCategoryListForTheTree();
-            this.$message({
-              type: "success",
-              message: "操作成功！",
-            });
+            this.$message.success("操作成功!")
           }
         });
       });
@@ -554,9 +574,16 @@ export default {
   height: 35px;
 }
 .custom-tree-node-input {
-  width: 50%;
+  width: 60%;
   border: 0;
   padding: 1px 5px;
 }
 
+.custom-tree-node-input-active {
+  width: 60%;
+  border: 0;
+  border-radius: 3px;
+  outline: 1px solid #333;
+  padding: 1px 5px;
+}
 </style>
