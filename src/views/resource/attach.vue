@@ -20,10 +20,10 @@
           </div>
           <el-tree
             ref="tree"
-            show-checkbox
             check-strictly
             highlight-current
             render-after-expand
+            default-expand-all
             node-key="id"
             :props="{
               label: 'name',
@@ -37,12 +37,19 @@
               class="custom-tree-node display-flex"
               slot-scope="{ node, data }"
             >
-              <span>{{ node.label }}</span>
+              <!-- <span>{{ node.label }}</span> -->
+              <input
+                  type="text"
+                  class="custom-tree-node-input"
+                  :disabled="data.id == currentEditId ? false : true"
+                  :value="node.label"
+              />
               <span>
                 <el-button
                   type="text"
                   size="small"
                   v-if="permission.attach_edit"
+                  @click.stop="EditCurrentCategoryById(data)"
                 >
                   编辑
                 </el-button>
@@ -113,6 +120,7 @@
     </el-row>
     <el-dialog
       title="新增分类"
+      width="30%"
       :visible.sync="showDialogForCategory"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -128,7 +136,7 @@
     <el-dialog
       append-to-body
       title="附件上传"
-      width="25%"
+      width="30%"
       :visible.sync="showDialogForAttach"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
@@ -141,6 +149,8 @@
         accept="image/png, image/jpeg"
         action="/api/fcb-resource/oss/endpoint/put-file-attach"
         v-loading="uploadLoading"
+        :headers="uploadHeaders"
+        :data="{ categoryIds: currentCategoryId }"
         :limit="5"
         :auto-upload="false"
         :file-list="fileList"
@@ -149,16 +159,23 @@
         :on-progress="onUploadProgress"
         :on-exceed="onUploadExceed"
       >
-        <el-button slot="trigger" size="small" type="primary"
+        <el-button
+          slot="trigger"
+          size="small"
+          type="info"
+          plain
+          icon="el-icon-folder-opened"
           >选取文件</el-button
         >
         <el-button
           style="margin-left: 10px"
           size="small"
-          type="success"
+          type="primary"
+          icon="el-icon-upload"
           @click="submitUpload"
-          >上传到服务器</el-button
         >
+          上 传
+        </el-button>
         <div slot="tip" class="el-upload__tip">
           只能上传jpg/png文件，且不超过500kb
         </div>
@@ -180,6 +197,8 @@ import {
   remove as removeImage,
 } from "@/api/resource/attach";
 import { mapGetters } from "vuex";
+import { getToken } from "@/util/auth";
+import website from "@/config/website";
 
 export default {
   watch: {
@@ -276,16 +295,12 @@ export default {
           },
           {
             label: "附件名称",
-            prop: "name",
+            prop: "originalName",
             search: true,
           },
           {
             label: "附件大小",
             prop: "attachSize",
-          },
-          {
-            label: "附件状态",
-            prop: "status",
           },
         ],
       },
@@ -294,6 +309,8 @@ export default {
       ], // 图片地址
       fileList: [],
       uploadLoading: false,
+      currentCategoryId: "",
+      currentEditId: null,
     };
   },
   mounted() {
@@ -316,6 +333,11 @@ export default {
         ids.push(ele.id);
       });
       return ids.join(",");
+    },
+    uploadHeaders() {
+      let headers = {};
+      headers[website.tokenHeader] = "bearer " + getToken();
+      return headers;
     },
   },
   methods: {
@@ -350,6 +372,11 @@ export default {
             this.categoryList = data;
             this.$refs.tree.setCheckedKeys([]);
             this.treeLoading = false;
+            this.$nextTick(() => {
+              if (this.categoryList.length > 0) {
+                this.$refs.tree.$children[0].handleClick();
+              }
+            });
           }
         }
       );
@@ -371,10 +398,15 @@ export default {
       );
     },
     onNodeClick({ id }) {
+      this.currentCategoryId = id;
       this.getImageListByCategoryId({ categoryIds: id });
     },
     addCategory() {
       this.showDialogForCategory = true;
+    },
+    EditCurrentCategoryById({ id }) {
+      this.currentEditId = id;
+      console.log("测试", id);
     },
     deleteCurrentCategoryById({ id }) {
       this.$confirm("确定删除当前分类？", {
@@ -408,10 +440,17 @@ export default {
     onUploadProgress() {
       this.uploadLoading = true;
     },
-    onUploadSuccess(response) {
-      this.this.uploadLoading = false;
-      console.log("测试", response);
-      // onRefreshChange
+    onUploadSuccess(response, file, fileList) {
+      console.log("测试", response, file, fileList);
+      const { code } = response;
+      if (code == 200) {
+        this.uploadLoading = false;
+        this.$refs.upload.clearFiles();
+        this.showDialogForAttach = false;
+        this.$nextTick(() => {
+          this.onRefreshChange();
+        });
+      }
     },
     onUploadExceed() {
       this.$message.error("最大上传5个文件");
@@ -429,7 +468,7 @@ export default {
           return removeImage(row.id);
         })
         .then(() => {
-          this.getImageListByCategoryId();
+          this.onRefreshChange();
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -452,7 +491,7 @@ export default {
           return removeImage(that.ids);
         })
         .then(() => {
-          that.getImageListByCategoryId(that.page);
+          this.onRefreshChange();
           that.$message({
             type: "success",
             message: "操作成功!",
@@ -484,8 +523,9 @@ export default {
       this.page.pageSize = pageSize;
     },
     onRefreshChange() {
+      const { currentCategoryId } = this;
       this.clearSelection();
-      this.getImageListByCategoryId();
+      this.getImageListByCategoryId({ categoryIds: currentCategoryId });
     },
   },
 };
@@ -506,7 +546,6 @@ export default {
   height: 800px;
   // min-width: 250px;
 }
-
 .img-item {
   width: 100%;
 }
@@ -514,4 +553,10 @@ export default {
   margin-top: 4px;
   height: 35px;
 }
+.custom-tree-node-input {
+  width: 50%;
+  border: 0;
+  padding: 1px 5px;
+}
+
 </style>

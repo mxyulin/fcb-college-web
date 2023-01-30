@@ -116,18 +116,6 @@
             <span v-show="scope.row.state == 2">未发布</span>
           </template>
           <template slot="menuLeft">
-            <!-- 链接类别按钮组 -->
-            <el-radio-group
-              v-if="tableType == 'link'"
-              v-model="linkType"
-              size="small"
-              @input="onLinkTypeChange"
-            >
-              <el-radio-button label="goods" border>商品</el-radio-button>
-              <el-radio-button label="marketing" border>营销页</el-radio-button>
-              <el-radio-button label="article" border>文章</el-radio-button>
-            </el-radio-group>
-            <!-- 上传图片 -->
             <el-button
               v-if="tableType == 'image' || tableType == 'images'"
               type="primary"
@@ -215,7 +203,7 @@ import { getList as getImageCategory } from "@/api/resource/attachcategory";
 import { getList as getImageList } from "@/api/resource/attach";
 import { getList as getGoodsCategory } from "@/api/product/productcategory";
 import { getList as getGoodsList } from "@/api/product/product";
-import { getList as getPageList } from "@/api/decorate/decorate";
+import { getList as getLinkList } from "@/api/resource/link";
 import { getList as getCouponsList } from "@/api/promote/coupons";
 import { getList as getActivityList } from "@/api/promote/promote";
 import { getList as getArticleList } from "@/api/news/article";
@@ -234,8 +222,6 @@ export default {
       loading: false,
       // 图片上传
       upload: false,
-      linkType: "goods",
-
       /* 配置项 */
       page: {
         currentPage: 1,
@@ -263,6 +249,7 @@ export default {
         searchBtn: false,
         selection: false,
         reserveSelection: true,
+        menuFixed: false,
         search: {
           name: "",
         },
@@ -352,20 +339,7 @@ export default {
       if (tableType == "image" || tableType == "images") {
         result = await getImageList(page.currentPage, page.pageSize);
       } else if (tableType == "link") {
-        const { linkType } = this;
-        switch (linkType) {
-          case "goods":
-            result = await getGoodsList(page.currentPage, page.pageSize);
-            break;
-          case "marketing":
-            result = await getPageList(page.currentPage, page.pageSize, {
-              type: "page",
-            });
-            break;
-          case "article":
-            result = await getArticleList(page.currentPage, page.pageSize);
-            break;
-        }
+        result = await getLinkList(page.currentPage, page.pageSize);
       } else if (tableType == "goods-list") {
         result = await getGoodsList(page.currentPage, page.pageSize);
       } else if (tableType == "coupons") {
@@ -476,32 +450,28 @@ export default {
           getCategoryListPromise = this.getCategoryList("image");
           break;
         case "link":
+          this.layout.leftCol = 0;
+          this.layout.rightCol = 24;
           this.avueOption.menu = true;
           this.avueOption.selection = false;
           this.avueOption.column = [
             {
-              label: "商品",
-              prop: "goods",
+              label: "链接名称",
+              prop: "name",
               overHidden: true,
             },
             {
-              label: "商品类型",
-              prop: "type",
+              label: "链接分组",
+              prop: "linkGroup",
               overHidden: true,
             },
             {
-              label: "上架状态",
-              prop: "status",
+              label: "链接路径",
+              prop: "path",
               overHidden: true,
-            },
-            {
-              label: "更新时间",
-              prop: "updateTime",
-              overHidden: true,
-            },
+            }
           ];
-          this.linkType = "goods";
-          getCategoryListPromise = this.getCategoryList("goods");
+          this.getList();
           break;
         case "goods-group":
           this.cascaderProps.multiple = false;
@@ -725,80 +695,6 @@ export default {
       }
       this.$emit("update:dialogVisible", false);
     },
-    // 切换连接表
-    onLinkTypeChange(linkType) {
-      this.resetTheData();
-      switch (linkType) {
-        case "goods":
-          this.layout.leftCol = 3;
-          this.layout.rightCol = 20;
-          this.onDialogOpen(); // 复用初始化
-          break;
-        case "marketing":
-          this.layout.leftCol = 0;
-          this.layout.rightCol = 24;
-          this.avueOption.menu = true;
-          this.avueOption.selection = false;
-          this.avueOption.column = [
-            {
-              label: "模板名称",
-              prop: "name",
-              overHidden: true,
-            },
-            {
-              label: "预览",
-              prop: "image",
-              overHidden: true,
-            },
-            {
-              label: "备注",
-              prop: "memo",
-              overHidden: true,
-            },
-            {
-              label: "更新时间",
-              prop: "updateTime",
-              overHidden: true,
-            },
-          ];
-          this.getList();
-          break;
-        case "article":
-          this.layout.leftCol = 0;
-          this.layout.rightCol = 24;
-          this.avueOption.menu = true;
-          this.avueOption.selection = false;
-          this.avueOption.column = [
-            {
-              label: "封面",
-              prop: "picUrls",
-              overHidden: true,
-            },
-            {
-              label: "文章标题",
-              prop: "title",
-              overHidden: true,
-            },
-            {
-              label: "发布状态",
-              prop: "state",
-              overHidden: true,
-            },
-            {
-              label: "作者",
-              prop: "author",
-              overHidden: true,
-            },
-            {
-              label: "修改时间",
-              prop: "updateTime",
-              overHidden: true,
-            },
-          ];
-          this.getList();
-          break;
-      }
-    },
     // 搜索分类
     filterNodeTree(val, data, node) {
       if (!val) return true;
@@ -813,12 +709,8 @@ export default {
     onSelect(row) {
       const {
         tableType,
-        linkType,
         $attrs: { currentSelection, updateForm },
       } = this;
-      if (tableType == "link") {
-        row.linkType = linkType;
-      }
       updateForm(tableType, currentSelection, row);
       this.$emit("update:dialogVisible", false);
     },

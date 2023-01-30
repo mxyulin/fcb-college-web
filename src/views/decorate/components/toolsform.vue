@@ -1289,7 +1289,7 @@
                 ><el-button
                   size="small"
                   type="text"
-                  @click="openResourceTable('image', index)"
+                  @click="openResourceTable('image', -1)"
                   >选择图片</el-button
                 >
               </div>

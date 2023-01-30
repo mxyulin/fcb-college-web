@@ -602,7 +602,7 @@ export default {
               that.templateForm.content.list[index].name = name;
               that.templateForm.content.list[index].image = link;
             } else if (index == -1) {
-              // 悬浮主按钮、用户中心头部背景图
+              // 悬浮主按钮、用户中心头部背景图、标题栏背景图
               that.templateForm.content.image = link;
             } else {
               // 其他情况
@@ -617,17 +617,9 @@ export default {
           break;
         }
         case "link": {
-          const { id, linkType } = data;
-          if (linkType == "goods") {
-            that.templateForm.content.list[index].path_name = "goods";
-            that.templateForm.content.list[index].path = id;
-          } else if (linkType == "marketing") {
-            that.templateForm.content.list[index].path_name = "marketing";
-            that.templateForm.content.list[index].path = id;
-          } else {
-            that.templateForm.content.list[index].path_name = "article";
-            that.templateForm.content.list[index].path = id;
-          }
+          const { name, path } = data;
+          that.templateForm.content.list[index].path_name = name;
+          that.templateForm.content.list[index].path = path;
           break;
         }
         case "goods-list": {
@@ -1068,6 +1060,7 @@ export default {
       }
     },
     submitDecorateData() {
+      debugger;
       const {
         homeData,
         userData,
