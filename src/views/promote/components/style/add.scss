@@ -1,0 +1,166 @@
+#activityDetail {
+    background: #fff;
+    padding: 0 20px 60px;
+    font-size: 14px;
+    font-family: Source Han Sans SC;
+    font-weight: 500;
+}
+
+
+.display-flex {
+    display: flex;
+    align-items: center;
+}
+
+.marginauto{
+
+    width: 500px;
+    margin: auto;
+    margin-top: 12px;
+    margin-bottom: 20px;
+}
+
+
+.el-form-item__label {
+    color: #666;
+    font-weight: 500;
+}
+
+.el-table td,
+.el-table th {
+    padding: 12px 0;
+}
+
+.dialog-submit {
+    width: 88px;
+    height: 36px;
+    background: #F3EFFB;
+    border: 1px solid #7536d0;
+    color: #7536d0;
+    position: absolute;
+    right: 0px;
+    border-radius: 20px;
+    text-align: center;
+    line-height: 36px;
+}
+
+.dialog-submit-gray {
+    color: #999;
+    border: 1px solid #999;
+    background: #fff;
+}
+
+.table-good-status {
+    color: #7536D0;
+    margin-right: 14px;
+}
+
+.table-good-status-1 {
+    color: #21D7AE;
+}
+
+.table-good-status-delete {
+    color: #F54747;
+}
+
+.switch-flex {
+    display: flex;
+    align-items: center;
+}
+
+.switch-tip {
+    margin: 0 16px;
+}
+
+.el-icon-question {
+    font-size: 24px;
+    color: #d5d5d5;
+
+}
+
+.popover-item {
+    line-height: 42px;
+    position: relative;
+    top: 5px;
+}
+
+.activity-type {
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.activity-type-item {
+    width: 114px;
+    height: 40px;
+    background: #FFFFFF;
+    border: 1px solid #E6E6E6;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444444;
+    margin: 0 24px 30px 0;
+    cursor: pointer;
+}
+
+.activity-type-item:last-child {
+    margin-right: 0;
+}
+
+.activity-type-item-active {
+    background: rgba(110, 61, 200, 0.2);
+    border: 1px solid #6E3DC8;
+    color: #6E3DC8;
+}
+
+.activity-type-icon {
+    margin-right: 14px;
+    width: 22px;
+    height: 22px;
+}
+
+.activity-type-name {
+    font-size: 14px;
+    line-height: 1;
+}
+
+.discount-item {
+    margin: 0 0 10px 0;
+}
+
+.discount-input {
+    width: 200px;
+    margin: 0 20px 0 0;
+}
+
+.discount-input span {
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.discount-close-icon {
+    cursor: pointer;
+    color: #FE7C76;
+    font-size: 20px;
+}
+
+.table-goods-image {
+    width: 44px;
+    height: 44px;
+    margin-right: 15px;
+    flex-shrink: 0;
+    border: 1px solid #e6e6e6;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.hwmint{
+    height: 32px;
+    width: 140px;
+    display: flex;
+    align-items: center;
+    // color: #7536D0;
+}
