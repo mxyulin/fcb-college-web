@@ -1,18 +1,17 @@
 <template>
   <basic-container>
     <el-row :gutter="10" type="flex">
-      <el-col :span="6">
-        <el-card v-loading="treeLoading">
+      <el-col :span="6" v-loading="treeLoading">
           <div
-            slot="header"
             class="display-flex"
-            style="justify-content: space-between"
+            style="justify-content: space-between;padding-bottom:10px;"
           >
             <span>图片分类</span>
             <el-button
               v-if="permission.attach_add"
               type="primary"
               size="small"
+              plain
               icon="el-icon-plus"
               @click="addCategory"
               >新 增</el-button
@@ -55,7 +54,7 @@
                   type="text"
                   size="small"
                   v-if="permission.attach_edit && currentEditId == null"
-                  @click.stop="EditCurrentCategoryById(data, $event)"
+                  @click.stop="editCurrentCategoryById(data, $event)"
                 >
                   编辑
                 </el-button>
@@ -77,8 +76,7 @@
                 </el-button>
               </span>
             </sapn>
-          </el-tree>
-        </el-card>
+          </el-tree> 
       </el-col>
       <el-col :span="18">
         <avue-crud
@@ -131,7 +129,7 @@
         </avue-crud>
       </el-col>
     </el-row>
-    <el-dialog
+    <el-drawer
       title="新增分类"
       width="30%"
       :visible.sync="showDialogForCategory"
@@ -145,16 +143,18 @@
         @submit="onCategoryFormSubmit"
       >
       </avue-form>
-    </el-dialog>
-    <el-dialog
+    </el-drawer>
+
+    <el-drawer
       append-to-body
-      title="附件上传"
+      title="上传"
       width="30%"
       :visible.sync="showDialogForAttach"
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :before-close="onDialogForAttachClose"
-    >
+    ><div style="padding:10px;"> 
+    
       <el-upload
         multiple
         ref="upload"
@@ -175,15 +175,15 @@
         <el-button
           slot="trigger"
           size="small"
-          type="info"
+          type="primary"
           plain
           icon="el-icon-folder-opened"
           >选取文件</el-button
         >
         <el-button
-          style="margin-left: 10px"
+          style="float:right; "
           size="small"
-          type="primary"
+          type="primary" plain
           icon="el-icon-upload"
           @click="submitUpload"
         >
@@ -192,8 +192,8 @@
         <div slot="tip" class="el-upload__tip">
           只能上传jpg/png文件，且不超过500kb
         </div>
-      </el-upload>
-    </el-dialog>
+      </el-upload></div> 
+    </el-drawer>
   </basic-container>
 </template>
 
@@ -403,7 +403,7 @@ export default {
     hideMenu() {
       this.currentShowId = null;
     },
-    EditCurrentCategoryById({ id }) {
+    editCurrentCategoryById({ id }) {
       this.currentEditId = id;
       this.$nextTick(() => {
         this.$refs["input" + id].focus();
