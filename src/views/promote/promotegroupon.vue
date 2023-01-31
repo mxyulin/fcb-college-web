@@ -76,7 +76,7 @@
         </el-pagination>
       </el-row>
       <!-- 表单模块 -->
-      <el-dialog :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
+      <el-drawer :title="title" :visible.sync="box" width="50%" :before-close="beforeClose" append-to-body>
         <el-form :disabled="view" :size="option.size" ref="form" :model="form" label-width="80px">
           <!-- 表单字段 -->
           <el-form-item label="团长" prop="userId">
@@ -106,7 +106,7 @@
           <el-button type="primary" icon="el-icon-circle-check" :size="option.size" @click="handleSubmit">提 交</el-button>
           <el-button icon="el-icon-circle-close" :size="option.size" @click="box = false">取 消</el-button>
         </span>
-      </el-dialog>
+      </el-drawer>
     </div>
   </basic-container>
 </template>

@@ -141,7 +141,7 @@
           </div>
 
           <!-- 表单模块 -->
-          <el-dialog
+          <el-drawer
             :title="title"
             :visible.sync="box"
             width="50%"
@@ -154,6 +154,7 @@
               ref="form"
               :model="form"
               label-width="80px"
+              style="padding:1px 10px"
             >
               <!-- 表单字段 -->
               <el-form-item label="模板名称" prop="name">
@@ -185,9 +186,8 @@
                   <el-checkbox label="App">App</el-checkbox>
                 </el-checkbox-group>
               </el-form-item>
-            </el-form>
-            <!-- 表单按钮 -->
-            <span v-if="!view" slot="footer" class="dialog-footer">
+
+              <el-form-item > 
               <el-button
                 type="primary"
                 icon="el-icon-circle-check"
@@ -201,8 +201,11 @@
                 @click="box = false"
                 >取 消</el-button
               >
-            </span>
-          </el-dialog>
+            </el-form-item>
+            </el-form>
+            
+            
+          </el-drawer>
         </div>
       </el-row>
       <el-row style="margin-bottom: 20px">

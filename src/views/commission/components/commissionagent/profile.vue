@@ -853,7 +853,7 @@
     
     <!-- table表格内容 -->
     <!-- <div class="ChildUserCountContainer">
-      <el-dialog
+      <el-drawer
         :title="
           dialogType == 'change-parent-agent'
             ? '修改上级分销商'
@@ -1055,17 +1055,17 @@
             >
           </div>
         </span>
-      </el-dialog>
+      </el-drawer>
     </div> -->
     <!-- eldialog 跳转组件 -->
-      <el-dialog
+      <el-drawer
         append-to-body="ture"
         :visible.sync="centerdilogteam"
         width="60%"
         center
       >
       <team></team>
-      </el-dialog>
+      </el-drawer>
     <div style="height:50px;"></div>
   </div>
 </template>

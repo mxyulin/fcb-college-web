@@ -39,7 +39,7 @@
         <el-tag>{{ row.modelTable }}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog title="数据库模型配置"
+    <el-drawer title="数据库模型配置"
                :visible.sync="modelBox"
                :fullscreen="true"
                append-to-body>
@@ -48,7 +48,7 @@
         <el-button type="danger" @click="modelBox = false">关 闭</el-button>
         <el-button type="primary" @click="handleSubmit">提 交</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

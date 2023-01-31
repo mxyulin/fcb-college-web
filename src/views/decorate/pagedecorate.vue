@@ -142,7 +142,7 @@
           </div>
 
           <!-- 表单模块 -->
-          <el-dialog
+          <el-drawer
             :title="title"
             :visible.sync="box"
             width="50%"
@@ -192,7 +192,7 @@
                 >取 消</el-button
               >
             </span>
-          </el-dialog>
+          </el-drawer>
         </div>
       </el-row>
 

@@ -102,7 +102,7 @@
                   }}</el-button
                 >
                 <!-- append-to-body="ture"  解决el-dialog点击后的朦胧层 -->
-                <el-dialog
+                <el-drawer
                   append-to-body="ture"
                   :visible.sync="centerDialogVisible"
                   width="80%"
@@ -120,7 +120,7 @@
                       >确 定</el-button
                     >
                   </span> -->
-                </el-dialog>
+                </el-drawer>
 
 
                 <div style="max-width: 632px;border: 1px solid #e6e6e6;margin-top: 9px;">
@@ -240,14 +240,14 @@
                     <i class="el-icon-plus"></i>
                   </div>
                 </div>
-                <el-dialog
+                <el-drawer
                   append-to-body="ture"
                   :visible.sync="centerbackground"
                   width="80%"
                   center
                 >
                   <background></background>
-                </el-dialog>
+                </el-drawer>
               </el-form-item>
 
               <el-form-item label="表单内容：">
@@ -326,14 +326,14 @@
                         选择
                       </div>
 
-                      <el-dialog
+                      <el-drawer
                         append-to-body="ture"
                         :visible.sync="centerDialogVisiblethree"
                         width="80%"
                         height="60%"
                       >
                         <agreement></agreement>
-                      </el-dialog>
+                      </el-drawer>
                     </div>
                   </el-form-item>
                 </div>

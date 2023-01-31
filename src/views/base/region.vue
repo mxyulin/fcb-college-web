@@ -27,7 +27,7 @@
             </el-input>
           </template>
         </avue-form>
-        <el-dialog title="行政区划数据导入"
+        <el-drawer title="行政区划数据导入"
                    append-to-body
                    :visible.sync="excelBox"
                    width="555px">
@@ -38,13 +38,13 @@
               </el-button>
             </template>
           </avue-form>
-        </el-dialog>
-        <el-dialog title="行政区划数据调试"
+        </el-drawer>
+        <el-drawer title="行政区划数据调试"
                    append-to-body
                    :visible.sync="debugBox"
                    width="350px">
           <avue-form :option="debugOption" v-model="debugForm"/>
-        </el-dialog>
+        </el-drawer>
       </basic-container>
     </el-col>
   </el-row>

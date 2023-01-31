@@ -20,7 +20,7 @@
         <el-tag>{{row.suspensionState===1?'激活':'挂起'}}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog title="流程删除"
+    <el-drawer title="流程删除"
                append-to-body
                :visible.sync="followBox"
                width="20%">
@@ -38,7 +38,7 @@
         <el-button type="primary"
                    @click="handleDelete">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

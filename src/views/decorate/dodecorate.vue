@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <el-drawer
     :modal="false"
     :fullscreen="true"
     :visible.sync="dodecorateVisible"
@@ -265,7 +265,7 @@
         </el-aside>
       </el-container>
     </div>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>

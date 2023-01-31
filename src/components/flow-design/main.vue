@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog v-if="isDialog"
+    <el-drawer v-if="isDialog"
                :visible.sync="visible"
                append-to-body
                destroy-on-close
@@ -10,7 +10,7 @@
       <wf-design-base ref="bpmn"
                       style="height: 60vh;"
                       :options="option"></wf-design-base>
-    </el-dialog>
+    </el-drawer>
     <div v-else>
       <wf-design-base v-if="visible"
                       ref="bpmn"

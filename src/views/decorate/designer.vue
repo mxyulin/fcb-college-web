@@ -56,7 +56,7 @@
           </div>
 
 
-          <el-dialog title="模板预览" :visible.sync="previewDialog" :before-close="onPreviewClose" append-to-body>
+          <el-drawer title="模板预览" :visible.sync="previewDialog" :before-close="onPreviewClose" append-to-body>
             <div class="preview-body">
               <div class="web-preview">
                 <iframe id="preview" src="" frameborder="1" height="600px"></iframe>
@@ -78,7 +78,7 @@
                 </div>
               </div>
             </div>
-          </el-dialog>
+          </el-drawer>
         </div>
 
       </el-row>

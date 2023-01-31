@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="选择"
+    <el-drawer title="选择"
                append-to-body
                :visible.sync="box"
                width="50%">
@@ -16,7 +16,7 @@
           </el-col>
         </el-row>
       </el-radio-group>
-    </el-dialog>
+    </el-drawer>
 
     <span>
       <i class="icon-zhuti"

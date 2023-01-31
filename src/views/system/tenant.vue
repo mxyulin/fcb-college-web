@@ -68,30 +68,30 @@
         <el-tag>{{ row.expireTime ? row.expireTime : '不限制' }}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog title="租户授权配置"
+    <el-drawer title="租户授权配置"
                append-to-body
                :visible.sync="box"
                width="450px">
       <avue-form :option="settingOption" v-model="settingForm" @submit="handleSubmit"/>
-    </el-dialog>
-    <el-dialog title="租户数据源配置"
+    </el-drawer>
+    <el-drawer title="租户数据源配置"
                append-to-body
                :visible.sync="datasourceBox"
                width="450px">
       <avue-form :option="datasourceOption" v-model="datasourceForm" @submit="handleDatasourceSubmit"/>
-    </el-dialog>
-    <el-dialog title="租户产品包配置"
+    </el-drawer>
+    <el-drawer title="租户产品包配置"
                append-to-body
                :visible.sync="packageBox"
                width="450px">
       <avue-form ref="formPackage" :option="packageOption" v-model="packageForm" @submit="handlePackageSubmit"/>
-    </el-dialog>
-    <el-dialog title="租户产品包管理"
+    </el-drawer>
+    <el-drawer title="租户产品包管理"
                append-to-body
                :visible.sync="packageSettingBox"
                width="1000px">
       <tenant-package></tenant-package>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

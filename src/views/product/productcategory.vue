@@ -105,7 +105,7 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <el-dialog
+    <el-drawer
       width="50%"
       append-to-body
       :title="title"
@@ -190,7 +190,7 @@
           >提 交</el-button
         >
       </template>
-    </el-dialog>
+    </el-drawer>
     <resourceTable
       width="60%"
       dialogTitle="选择图片"

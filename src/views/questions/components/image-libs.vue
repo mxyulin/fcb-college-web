@@ -1,5 +1,5 @@
 <!-- <template>
-  <el-dialog
+  <el-drawer
           class="components-image-libs-wrapper"
           title="我的图片"
           :visible.sync="dialogVisible"
@@ -27,7 +27,7 @@
         <div class="padding60 text-center gray" v-else>暂无数据</div>
       </div>
     </div>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>

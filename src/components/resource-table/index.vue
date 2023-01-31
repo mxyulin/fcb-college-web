@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <el-drawer
     top="5vh"
     append-to-body
     :width="width"
@@ -141,7 +141,7 @@
             </el-col>
           </template>
         </avue-crud>
-        <el-dialog
+        <el-drawer
           append-to-body
           title="附件上传"
           width="30%"
@@ -188,7 +188,7 @@
               只能上传jpg/png文件，且不超过500kb
             </div>
           </el-upload>
-        </el-dialog>
+        </el-drawer>
       </el-col>
     </el-row>
     <!-- 商品分类级联选择器 -->
@@ -218,7 +218,7 @@
         </el-button>
       </el-col>
     </el-row>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>

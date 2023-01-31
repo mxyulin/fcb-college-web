@@ -33,7 +33,7 @@
         </el-button>
       </template>
     </avue-crud>
-    <el-dialog title="角色权限配置"
+    <el-drawer title="角色权限配置"
                append-to-body
                :visible.sync="box"
                width="345px">
@@ -73,7 +73,7 @@
         <el-button type="primary"
                    @click="submit">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

@@ -60,12 +60,12 @@
                  class="login-submit">{{$t('login.submit')}}
       </el-button>
     </el-form-item>
-    <el-dialog title="用户信息选择"
+    <el-drawer title="用户信息选择"
                append-to-body
                :visible.sync="userBox"
                width="350px">
       <avue-form :option="userOption" v-model="userForm" @submit="submitLogin"/>
-    </el-dialog>
+    </el-drawer>
   </el-form>
 </template>
 

@@ -98,7 +98,7 @@
             <el-tag>{{row.userTypeName}}</el-tag>
           </template>
         </avue-crud>
-        <el-dialog title="用户角色配置"
+        <el-drawer title="用户角色配置"
                    append-to-body
                    :visible.sync="roleBox"
                    width="345px">
@@ -118,8 +118,8 @@
             <el-button type="primary"
                        @click="submitRole">确 定</el-button>
           </span>
-        </el-dialog>
-        <el-dialog title="用户数据导入"
+        </el-drawer>
+        <el-drawer title="用户数据导入"
                    append-to-body
                    :visible.sync="excelBox"
                    width="555px">
@@ -130,8 +130,8 @@
               </el-button>
             </template>
           </avue-form>
-        </el-dialog>
-        <el-dialog title="用户平台配置"
+        </el-drawer>
+        <el-drawer title="用户平台配置"
                    append-to-body
                    :visible.sync="platformBox">
           <avue-crud :option="platformOption"
@@ -159,7 +159,7 @@
               <el-tag>{{row.userTypeName}}</el-tag>
             </template>
           </avue-crud>
-        </el-dialog>
+        </el-drawer>
       </basic-container>
     </el-col>
   </el-row>

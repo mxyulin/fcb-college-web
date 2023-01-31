@@ -4,13 +4,13 @@
               :max="99">
       <i class="icon-rizhi1"></i>
     </el-badge>
-    <el-dialog title="日志"
+    <el-drawer title="日志"
                fullscreen
                :visible.sync="box"
                width="100%"
                append-to-body>
       <logs></logs>
-    </el-dialog>
+    </el-drawer>
   </span>
 </template>
 

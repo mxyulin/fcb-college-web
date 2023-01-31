@@ -466,14 +466,14 @@
       </div>
 
       <!-- eldialog 跳转组件 -->
-      <el-dialog
+      <el-drawer
         append-to-body="ture"
         :visible.sync="centerdilogprofile"
         width="80%"
         center
       >
       <profile :profileid="this.logList"></profile>
-      </el-dialog>
+      </el-drawer>
     </div>
   </basic-container>
 </template>

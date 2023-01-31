@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="账号注册"
+  <el-drawer title="账号注册"
              append-to-body
              :visible.sync="accountBox"
              :close-on-click-modal="false"
@@ -26,7 +26,7 @@
     <span slot="footer" class="dialog-footer">
               <el-button type="primary" :loading="loading" @click="handleRegister">确 定</el-button>
             </span>
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>

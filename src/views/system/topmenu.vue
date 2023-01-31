@@ -42,7 +42,7 @@
         <el-input-number v-model="row.sort" @change="sortChange(row)" :min="1" :max="100"></el-input-number>
       </template>
     </avue-crud>
-    <el-dialog title="下级菜单配置"
+    <el-drawer title="下级菜单配置"
                append-to-body
                :visible.sync="box"
                width="345px">
@@ -61,7 +61,7 @@
         <el-button type="primary"
                    @click="submit">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

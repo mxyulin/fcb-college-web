@@ -55,7 +55,7 @@
         <el-tag>v{{ row.version }}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog title="流程配置"
+    <el-drawer title="流程配置"
                append-to-body
                destroy-on-close
                :visible.sync="flowBox"
@@ -90,8 +90,8 @@
                    type="primary"
                    @click="handleSubmitModel">确 定</el-button>
       </span>
-    </el-dialog>
-    <el-dialog title="流程部署"
+    </el-drawer>
+    <el-drawer title="流程部署"
                append-to-body
                :visible.sync="deployBox"
                width="20%">
@@ -106,7 +106,7 @@
                    @click="handleDoDeploy"
                    :loading="deployLoading">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

@@ -50,12 +50,12 @@
         <el-tag>{{row.categoryName}}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog title="手机短信发送调试"
+    <el-drawer title="手机短信发送调试"
                append-to-body
                :visible.sync="box"
                width="550px">
       <avue-form :option="debugOption" v-model="debugForm" @submit="handleSend"/>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

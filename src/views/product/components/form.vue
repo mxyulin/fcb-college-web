@@ -1,6 +1,6 @@
 <template>
   <!-- 表单模块（弹窗） -->
-  <el-dialog
+  <el-drawer
     width="60%"
     top="5vh"
     class="body"
@@ -356,7 +356,7 @@
       :currentSelection="currentSelection"
       v-bind="$attrs"
     />
-  </el-dialog>
+  </el-drawer>
 </template>
 
 <script>

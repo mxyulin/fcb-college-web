@@ -49,7 +49,7 @@
         <el-tag>{{ row.isSealed === 0 ? '否' : '是' }}</el-tag>
       </template>
     </avue-crud>
-    <el-dialog :title="`[${dictValue}]字典配置`"
+    <el-drawer :title="`[${dictValue}]字典配置`"
                append-to-body
                :visible.sync="box"
                width="1000px">
@@ -98,7 +98,7 @@
           <el-tag>{{ row.isSealed === 0 ? '否' : '是' }}</el-tag>
         </template>
       </avue-crud>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 

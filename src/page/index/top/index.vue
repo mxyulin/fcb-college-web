@@ -96,12 +96,12 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-dialog title="用户信息选择"
+      <el-drawer title="用户信息选择"
                  append-to-body
                  :visible.sync="userBox"
                  width="350px">
         <avue-form ref="form" :option="userOption" v-model="userForm" @submit="submitSwitch"/>
-      </el-dialog>
+      </el-drawer>
     </div>
   </div>
 </template>

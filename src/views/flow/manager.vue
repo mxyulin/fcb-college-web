@@ -58,7 +58,7 @@
       </template>
     </avue-crud>
     <flow-design is-dialog :is-display.sync="flowBox" :process-definition-id="processDefinitionId"></flow-design>
-    <el-dialog title="流程变更"
+    <el-drawer title="流程变更"
                append-to-body
                :visible.sync="stateBox"
                width="20%">
@@ -82,7 +82,7 @@
         <el-button type="primary"
                    @click="handleDoState">确 定</el-button>
       </span>
-    </el-dialog>
+    </el-drawer>
   </basic-container>
 </template>
 
