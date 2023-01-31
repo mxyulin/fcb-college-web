@@ -25,13 +25,14 @@
         >
         </el-input>
         <el-tree
-          accordion
           ref="tree"
           empty-text="暂无节点数据"
+          accordion
+          :highlight-current="true"
+          :expand-on-click-node="false"
           :node-key="id"
           :data="categoryList"
           :props="defaultProps"
-          :highlight-current="true"
           :filter-node-method="filterNodeTree"
           @node-click="onNodeClick"
         >
@@ -121,7 +122,7 @@
               type="primary"
               size="small"
               icon="el-icon-upload2"
-              @click="handleUpload"
+              @click="attatchUpload"
               >上传</el-button
             >
           </template>
@@ -141,26 +142,50 @@
           </template>
         </avue-crud>
         <el-dialog
-          title="图片上传"
           append-to-body
-          :visible.sync="upload"
-          width="555px"
+          title="附件上传"
+          width="30%"
+          :modal-append-to-body="false"
+          :close-on-click-modal="false"
+          :visible.sync="showDialogForAttach"
+          :before-close="onDialogForAttachClose"
         >
           <el-upload
-            action="/api/fcb-resource/oss/endpoint/put-file-attach"
-            :multiple="true"
-            :on-preview="handlePreview"
-            :on-success="uploadSuccess"
-            :on-error="uploadError"
-            :before-remove="handleBeforeRemove"
-            :on-remove="handleRemove"
-            :file-list="fileList"
-            list-type="picture"
+            multiple
             ref="upload"
+            list-type="picture"
+            accept="image/png, image/jpeg"
+            action="/api/fcb-resource/oss/endpoint/put-file-attach"
+            v-loading="uploadLoading"
+            :headers="uploadHeaders"
+            :data="{ categoryIds: currentCategoryId }"
+            :limit="5"
+            :auto-upload="false"
+            :file-list="fileList"
+            :on-success="onUploadSuccess"
+            :on-error="onUploadError"
+            :on-progress="onUploadProgress"
+            :on-exceed="onUploadExceed"
           >
-            <el-button size="small" type="primary">点击上传</el-button>
+            <el-button
+              slot="trigger"
+              size="small"
+              type="info"
+              plain
+              icon="el-icon-folder-opened"
+              >选取文件</el-button
+            >
+            <el-button
+              style="margin-left: 10px"
+              size="small"
+              type="primary"
+              icon="el-icon-upload"
+              @click="submitUpload"
+            >
+              上 传
+            </el-button>
             <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件, 且不超过500kb
+              只能上传jpg/png文件，且不超过500kb
             </div>
           </el-upload>
         </el-dialog>
@@ -197,8 +222,10 @@
 </template>
 
 <script>
+import website from "@/config/website";
 import { mapGetters } from "vuex";
 import { dateFormat } from "@/util/date";
+import { getToken } from "@/util/auth";
 import { getList as getImageCategory } from "@/api/resource/attachcategory";
 import { getList as getImageList } from "@/api/resource/attach";
 import { getList as getGoodsCategory } from "@/api/product/productcategory";
@@ -220,8 +247,9 @@ export default {
     return {
       /* 状态 */
       loading: false,
-      // 图片上传
-      upload: false,
+      uploadLoading: false,
+      showDialogForAttach: false,
+
       /* 配置项 */
       page: {
         currentPage: 1,
@@ -265,12 +293,13 @@ export default {
       },
 
       /* 数据源 */
-      filterText: "",
-      categoryList: [],
+      fileList: [],
       avueList: [],
+      categoryList: [],
       selectionList: [],
       goodsCategorySelection: [],
-      fileList: [],
+      filterText: "",
+      currentCategoryId: null,
     };
   },
   computed: {
@@ -305,6 +334,11 @@ export default {
         ? true
         : false;
     },
+    uploadHeaders() {
+      let headers = {};
+      headers[website.tokenHeader] = "bearer " + getToken();
+      return headers;
+    },
   },
   watch: {
     // 节点搜索
@@ -332,28 +366,28 @@ export default {
       }
       return Promise.reject(new Error("faile"));
     },
-    async getList() {
+    async getList(params) {
       const { tableType, page } = this;
       let result = null;
       this.loading = true;
       if (tableType == "image" || tableType == "images") {
-        result = await getImageList(page.currentPage, page.pageSize);
+        result = await getImageList(page.currentPage, page.pageSize, params);
       } else if (tableType == "link") {
-        result = await getLinkList(page.currentPage, page.pageSize);
+        result = await getLinkList(page.currentPage, page.pageSize, params);
       } else if (tableType == "goods-list") {
-        result = await getGoodsList(page.currentPage, page.pageSize);
+        result = await getGoodsList(page.currentPage, page.pageSize, params);
       } else if (tableType == "coupons") {
-        result = await getCouponsList(page.currentPage, page.pageSize);
+        result = await getCouponsList(page.currentPage, page.pageSize, params);
       } else if (tableType == "groupon") {
-        result = await getActivityList(page.currentPage, page.pageSize, {
+        result = await getActivityList(page.currentPage, page.pageSize, params, {
           type: "groupon",
         });
       } else if (tableType == "seckill") {
-        result = await getActivityList(page.currentPage, page.pageSize, {
+        result = await getActivityList(page.currentPage, page.pageSize, params, {
           type: "seckill",
         });
       } else if (tableType == "rich-text") {
-        result = await getArticleList(page.currentPage, page.pageSize);
+        result = await getArticleList(page.currentPage, page.pageSize, params);
       }
       const {
         data: { code, data },
@@ -377,18 +411,13 @@ export default {
           this.avueOption.column = [
             {
               label: "标题",
-              prop: "name",
+              prop: "originalName",
               sortable: true,
               overHidden: true,
             },
             {
               label: "预览",
               prop: "link",
-              overHidden: true,
-            },
-            {
-              label: "文件类型",
-              prop: "extension",
               overHidden: true,
             },
             {
@@ -469,7 +498,7 @@ export default {
               label: "链接路径",
               prop: "path",
               overHidden: true,
-            }
+            },
           ];
           this.getList();
           break;
@@ -701,9 +730,9 @@ export default {
       return data.name.indexOf(val) != -1 ? true : false;
     },
     // 获取一个分类的数据
-    onNodeClick(data, node) {
-      const { id } = data;
-      this.getList(this.page, { categoryIds: id });
+    onNodeClick({ id }) {
+      this.currentCategoryId = id;
+      this.getList({ categoryIds: id });
     },
     // 单选
     onSelect(row) {
@@ -813,21 +842,38 @@ export default {
       }
       return picUrls;
     },
-    /*
-     *上传图片
-     */
-    // 打开上传
-    handleUpload() {
-      this.upload = true;
+    attatchUpload() {
+      this.showDialogForAttach = true;
     },
-    // 上传成功
-    uploadSuccess(res, file, fileList) {},
-    // 上传失败
-    uploadError(err, file, fileList) {},
-    // 预览图片
-    handlePreview(file) {},
-    // 删除文件前
-    handleBeforeRemove(file, fileList) {},
+    onDialogForAttachClose(done) {
+      if (this.uploadLoading) {
+        this.$refs.upload.abort();
+        this.uploadLoading = false;
+      }
+      this.$refs.upload.clearFiles();
+      this.showDialogForAttach = false;
+      done();
+    },
+    onUploadSuccess(response, file, fileList) {
+      const { code } = response;
+      if (code == 200) {
+        this.uploadLoading = false;
+        this.$refs.upload.clearFiles();
+        this.showDialogForAttach = false;
+        this.$nextTick(() => {
+          this.onRefreshChange();
+        });
+      }
+    },
+    onUploadProgress() {
+      this.uploadLoading = true;
+    },
+    onUploadExceed() {
+      this.$message.error("最大上传5个文件");
+    },
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
   },
 };
 </script>

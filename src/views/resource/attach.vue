@@ -450,7 +450,6 @@ export default {
       this.uploadLoading = true;
     },
     onUploadSuccess(response, file, fileList) {
-      console.log("测试", response, file, fileList);
       const { code } = response;
       if (code == 200) {
         this.uploadLoading = false;

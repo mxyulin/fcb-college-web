@@ -590,7 +590,7 @@ export default {
       const that = this;
       switch (type) {
         case "image": {
-          const { name, link } = data;
+          const { originalName, link } = data;
           /*
            *由于底部导航的数据结构是两个图片链接字段在一个对象里，
            *所以针对该特殊情况传入的 index 不再是索引而是一个“索引对象”
@@ -599,7 +599,7 @@ export default {
            */
           if (typeof index == "number") {
             if (index > -1) {
-              that.templateForm.content.list[index].name = name;
+              that.templateForm.content.list[index].name = originalName;
               that.templateForm.content.list[index].image = link;
             } else if (index == -1) {
               // 悬浮主按钮、用户中心头部背景图、标题栏背景图
@@ -611,7 +611,7 @@ export default {
           // 底部导航图标 + 悬浮按钮
           else {
             const { idx, key } = index;
-            that.templateForm.content.list[idx].name = name;
+            that.templateForm.content.list[idx].name = originalName;
             that.templateForm.content.list[idx][key] = link;
           }
           break;
@@ -647,12 +647,11 @@ export default {
           break;
         }
         case "groupon": {
-          const { id, title, rules, goods } = data;
-          console.log('测试', id)
+          const { id, title, rules, skuPriceList } = data;
           that.templateForm.content.id = id;
-          that.templateForm.content.grouponName = title;
-          // that.templateForm.content.teamNum = rules.teamNum;
-          // that.templateForm.content.timeData = goods;
+          that.templateForm.content.name = title;
+          that.templateForm.content.teamNum = JSON.parse(rules).team_num;
+          that.templateForm.content.timeData = skuPriceList;
           break;
         }
         case "seckill": {

@@ -904,7 +904,7 @@
                           {{ it.title }}
                         </div>
                         <div class="compotent-activity-item-price">
-                          ￥{{ it.grouponPrice }}
+                          ￥{{ it.price }}
                         </div>
                         <div class="compotent-activity-item-pin">
                           <span>9527人正在拼</span>
@@ -960,7 +960,7 @@
                           <div class="compotent-goods-list-message">
                             <div class="compotent-goods-list-price-container">
                               <div class="compotent-goods-list-price">
-                                ￥{{ gitem.grouponPrice }}
+                                ￥{{ gitem.price }}
                               </div>
                               <div class="compotent-goods-list-originalprice">
                                 ￥{{ gitem.originalPrice }}
