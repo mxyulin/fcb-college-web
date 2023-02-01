@@ -623,15 +623,9 @@
                           <div class="coupons-enough">
                             满{{ it.enough }}可用
                           </div>
-                          <!-- <div class="coupons-time">
-                            有效期：{{
-                              moment(it.usetimestart * 1000).format(
-                                "YYYY.MM.DD"
-                              )
-                            }}至{{
-                              moment(it.usetimeend * 1000).format("YYYY.MM.DD")
-                            }}
-                          </div> -->
+                          <div class="coupons-time">
+                            {{ it.usetime }}
+                          </div>
                         </div>
                         <div>
                           <div
