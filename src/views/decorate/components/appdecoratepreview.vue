@@ -1716,7 +1716,7 @@ export default {
   data() {
     return {
       // 表单配置
-      option: option,
+      option: option, 
       // 商城名
       shoproName: "辅成帮",
     };

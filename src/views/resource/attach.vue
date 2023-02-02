@@ -50,18 +50,20 @@
                 "
               />
               <span v-show="currentShowId == data.id">
+                <!-- permission.attach_edit && currentEditId == null -->
                 <el-button
                   type="text"
                   size="small"
-                  v-if="permission.attach_edit && currentEditId == null"
+                  v-if="currentEditId == null"
                   @click.stop="editCurrentCategoryById(data, $event)"
                 >
                   编辑
                 </el-button>
+                <!-- permission.attach_edit && currentEditId == data.id -->
                 <el-button
                   type="text"
                   size="small"
-                  v-else-if="permission.attach_edit && currentEditId == data.id"
+                  v-else-if="currentEditId == data.id"
                   @click.stop="updateCategoryName(data)"
                 >
                   确定

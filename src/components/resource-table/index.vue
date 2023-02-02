@@ -1,6 +1,7 @@
 <template>
   <el-drawer
     top="5vh"
+    size="100%"
     append-to-body
     :width="width"
     :visible.sync="dialogVisible"
@@ -144,8 +145,8 @@
         <el-drawer
           append-to-body
           title="附件上传"
-          width="30%"
-          :modal-append-to-body="false"
+          width="50%"
+          :modal-append-to-body="true"
           :close-on-click-modal="false"
           :visible.sync="showDialogForAttach"
           :before-close="onDialogForAttachClose"

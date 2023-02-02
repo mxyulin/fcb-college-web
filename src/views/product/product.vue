@@ -50,6 +50,7 @@
         <el-table
           stripe
           ref="table"
+          height="70vh"
           style="width: 100%"
           tooltip-effect="dark"
           :data="goodsData"

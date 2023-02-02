@@ -1,25 +1,26 @@
 <template>
   <el-drawer
+    size="100%"
     :modal="false"
     :fullscreen="true"
     :visible.sync="dodecorateVisible"
     :before-close="onDialogBeforeClose"
     @open="onDialogOpen"
   >
+    <div slot="title">
+      <el-row :gutter="0" type="flex" justify="space-between" align="center">
+        <el-col :span="21">
+          <div class="title-msg">{{ decorateTitle }}</div>
+        </el-col>
+        <el-col :span="3">
+          <el-button type="primary" size="small" plain>预 览</el-button>
+          <el-button type="primary" size="small" @click="submitDecorateData"
+            >保 存</el-button
+          >
+        </el-col>
+      </el-row>
+    </div>
     <div v-cloak class="laoding" style="height: calc(100vh - 90px)">
-      <el-heade height="40px">
-        <el-row :gutter="0" type="flex" justify="space-between" align="center">
-          <el-col :span="21">
-            <div class="title-msg">{{ decorateTitle }}</div>
-          </el-col>
-          <el-col :span="3">
-            <el-button type="primary" size="small" plain>预 览</el-button>
-            <el-button type="primary" size="small" @click="submitDecorateData"
-              >保 存</el-button
-            >
-          </el-col>
-        </el-row>
-      </el-heade>
       <el-container style="height: calc(100vh - 100px)">
         <!-- 左边栏 toolsBox -->
         <el-aside
@@ -1059,7 +1060,6 @@ export default {
       }
     },
     submitDecorateData() {
-      debugger;
       const {
         homeData,
         userData,
