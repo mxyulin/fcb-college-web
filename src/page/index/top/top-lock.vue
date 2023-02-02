@@ -2,9 +2,10 @@
   <span>
     <i class="icon-suoping"
        @click="handleLock"></i>
-    <el-drawer title="设置锁屏密码"
+    <el-dialog title="设置锁屏密码"
                :visible.sync="box"
                width="30%"
+               :wrapperClosable="false"
                append-to-body>
       <el-form :model="form"
                ref="form"
@@ -21,7 +22,7 @@
         <el-button type="primary"
                    @click="handleSetLock">确 定</el-button>
       </span>
-    </el-drawer>
+    </el-dialog>
   </span>
 </template>
 

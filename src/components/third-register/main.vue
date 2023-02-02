@@ -1,6 +1,7 @@
 <template>
   <el-drawer title="账号注册"
              append-to-body
+             :wrapperClosable="false"
              :visible.sync="accountBox"
              :close-on-click-modal="false"
              :close-on-press-escape="false"

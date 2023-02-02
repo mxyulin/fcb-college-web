@@ -7,7 +7,7 @@
     <el-drawer title="日志"
                fullscreen
                :visible.sync="box"
-               width="100%"
+               size="80%"
                append-to-body>
       <logs></logs>
     </el-drawer>

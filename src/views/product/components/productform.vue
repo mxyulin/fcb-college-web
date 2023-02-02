@@ -4,6 +4,7 @@
     size="60%"
     top="5vh"
     class="body"
+    :wrapperClosable="false"
     append-to-body
     :title="title"
     :visible.sync="dialogFormVisible"
@@ -143,7 +144,7 @@
                 :size="option.size"
               ></el-input>
             </el-form-item>
-            <el-form-item label="收藏人数：" prop="likes">
+            <el-form-item label="收藏人数：" prop="likes" >
               <el-input type="number" v-model="form.likes" :size="option.size">
               </el-input>
             </el-form-item>
@@ -332,7 +333,7 @@
             </el-form-item>  
           </div>
 
-          <el-form-item  style="text-align:right;">
+          <el-form-item  style="text-align:right;padding-bottom: 10px;">
               <el-button :size="option.size" plain v-if="stepActive > 0" @click="goBack"
                 >上一步</el-button
               >
@@ -356,7 +357,7 @@
     </div>
     <!-- 资源表 -->
     
-    <resourceTable
+    <resource-table
       width="60%"
       dialogTitle="选择图片"
       :tableType="tableType"
@@ -920,19 +921,9 @@ export default {
     padding: 20px 25px 10px 5px;
     // height: calc(100vh - 100px);
     height: 600px;
-    overflow: auto;
+    overflow: none;
 }
-
-.good-detail-body::-webkit-scrollbar {
-    width: 6px;
-}
-
-.good-detail-body::-webkit-scrollbar-thumb {
-    width: 6px;
-    background: #e6e6e6;
-    height: 20px;
-    border-radius: 3px;
-}
+ 
 
 .goods-type {
     width: 162px;
@@ -1300,9 +1291,9 @@ label {
 .steps-display /deep/ .el-step__title {
   font-size: 14px;
 }
-.body /deep/ .el-dialog__body {
-  padding: 0;
-}
+// .body /deep/ .el-dialog__body {
+//   padding: 0;
+// }
 .top-right-error {
   position: absolute;
   top: -7px;
@@ -1323,5 +1314,8 @@ label {
     // border-radius: 4px;
     background-color: #fff;
 }
+
+ 
+
 </style>
 

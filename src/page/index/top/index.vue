@@ -98,6 +98,7 @@
       </el-dropdown>
       <el-drawer title="用户信息选择"
                  append-to-body
+                 :wrapperClosable="false"
                  :visible.sync="userBox"
                  width="350px">
         <avue-form ref="form" :option="userOption" v-model="userForm" @submit="submitSwitch"/>

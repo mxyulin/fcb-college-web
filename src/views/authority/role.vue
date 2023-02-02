@@ -36,9 +36,11 @@
     <el-drawer title="角色权限配置"
                append-to-body
                :visible.sync="box"
-               width="345px">
-      <el-tabs type="border-card">
-        <el-tab-pane label="菜单权限">
+               size="50%">
+               <div style="padding:10px;">
+      <el-tabs type="card" >
+        <el-tab-pane label="菜单权限" >
+          <div style=" overflow-y: auto;height:400px;">
           <el-tree :data="menuGrantList"
                    show-checkbox
                    node-key="id"
@@ -46,8 +48,10 @@
                    :default-checked-keys="menuTreeObj"
                    :props="props">
           </el-tree>
+        </div>
         </el-tab-pane>
         <el-tab-pane label="数据权限">
+          <div style=" overflow-y: auto;height:400px;">
           <el-tree :data="dataScopeGrantList"
                    show-checkbox
                    node-key="id"
@@ -55,8 +59,10 @@
                    :default-checked-keys="dataScopeTreeObj"
                    :props="props">
           </el-tree>
+        </div>
         </el-tab-pane>
         <el-tab-pane label="接口权限">
+          <div style=" overflow-y: auto;height:400px;">
           <el-tree :data="apiScopeGrantList"
                    show-checkbox
                    node-key="id"
@@ -64,15 +70,16 @@
                    :default-checked-keys="apiScopeTreeObj"
                    :props="props">
           </el-tree>
+        </div>
         </el-tab-pane>
       </el-tabs>
 
-      <span slot="footer"
-            class="dialog-footer">
+      <div   style="text-align:right;padding:10px;">
         <el-button @click="box = false">取 消</el-button>
         <el-button type="primary"
                    @click="submit">确 定</el-button>
-      </span>
+    </div>
+  </div>
     </el-drawer>
   </basic-container>
 </template>

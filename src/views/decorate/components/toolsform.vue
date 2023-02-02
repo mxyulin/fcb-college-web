@@ -2196,7 +2196,7 @@
     <!--  -->
     <!--  -->
     <!-- 资源表弹窗组件 -->
-    <resourceTable
+    <resource-table
       width="75%"
       :dialogTitle="dialogTitle"
       :dialogVisible.sync="dialogVisible"

@@ -87,7 +87,7 @@
       </template>
     </avue-form>
 
-    <resourceTable width="75%" dialogTitle="选择图片" tableType="image" :dialogVisible.sync="resourceVisible"
+    <resource-table width="75%" dialogTitle="选择图片" tableType="image" :dialogVisible.sync="resourceVisible"
       :updateForm="resourceCallback" v-bind="$attrs" />
     <div slot="title">
       <el-button @click="handleSubmit" size="small" icon="el-icon-s-promotion" type="primary">浏览并发布</el-button>

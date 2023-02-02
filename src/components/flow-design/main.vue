@@ -5,6 +5,7 @@
                append-to-body
                destroy-on-close
                title="流程图展示"
+               :wrapperClosable="false"
                width="70%"
                custom-class="flow-design-dialog">
       <wf-design-base ref="bpmn"

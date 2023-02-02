@@ -116,7 +116,7 @@
         </el-table>
       </template>
     </avue-form>
-    <resourceTable
+    <resource-table
       width="60%"
       :dialogTitle="dialogTitle"
       :tableType="tableType"

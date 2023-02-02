@@ -464,12 +464,11 @@
         >
         </el-pagination>
       </div>
-
-      <!-- eldialog 跳转组件 -->
+ 
       <el-drawer
         append-to-body="ture"
         :visible.sync="centerdilogprofile"
-        width="80%"
+        size="80%"
         center
       >
       <profile :profileid="this.logList"></profile>

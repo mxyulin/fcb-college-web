@@ -191,7 +191,7 @@
         >
       </template>
     </el-drawer>
-    <resourceTable
+    <resource-table
       width="60%"
       dialogTitle="选择图片"
       tableType="image"

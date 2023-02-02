@@ -29,7 +29,7 @@
             <fullfreeshipping></fullfreeshipping>
         </div>
         <!-- <button @click="test">dsfsd</button> -->
-        <resourceTable
+        <resource-table
         width="60%"
         :dialogTitle="dialogTitle"
         :tableType="tableType"

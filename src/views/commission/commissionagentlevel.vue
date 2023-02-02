@@ -12,8 +12,7 @@
         <div class="shopro-add-button shopro-screen-button" @click="operationa()">
           <i class="el-icon-plus"></i>添加等级
         </div>
-        <el-drawer append-to-body="ture"   :visible.sync="operation" width="60%"  center>
-          <!-- <addvue></addvue> -->
+        <el-drawer append-to-body="ture"   :visible.sync="operation" size="80%"   > 
           <editvue></editvue>
         </el-drawer>
       </div>
@@ -84,7 +83,7 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-drawer append-to-body="ture"   :visible.sync="operationb" width="60%"  center>
+      <el-drawer append-to-body="ture"   :visible.sync="operationb" size="80%"  center>
           <addvue></addvue>
       </el-drawer>
     </div>

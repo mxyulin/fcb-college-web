@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-drawer title="选择"
+    <el-dialog title="选择样式"
                append-to-body
                :visible.sync="box"
                width="50%">
@@ -9,15 +9,15 @@
         <el-row :span="24">
           <el-col v-for="(item,index) in list"
                   :key="index"
-                  :md="4"
+                  :md="6"
                   :xs="12"
-                  :sm="4">
-            <el-radio :label="item.value">{{item.name}}</el-radio>
+                  :sm="6"
+                  >                
+            <el-radio :label="item.value" border>{{item.name}}</el-radio>
           </el-col>
         </el-row>
       </el-radio-group>
-    </el-drawer>
-
+    </el-dialog>
     <span>
       <i class="icon-zhuti"
          @click="open"></i>
