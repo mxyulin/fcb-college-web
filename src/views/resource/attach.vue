@@ -2,83 +2,83 @@
   <basic-container>
     <el-row :gutter="10" type="flex">
       <el-col :span="6" v-loading="treeLoading">
-          <div
-            class="display-flex"
-            style="justify-content: space-between;padding-bottom:10px;"
+        <div
+          class="display-flex"
+          style="justify-content: space-between; padding-bottom: 10px"
+        >
+          <span>图片分类</span>
+          <el-button
+            v-if="permission.attach_add"
+            type="primary"
+            size="small"
+            plain
+            icon="el-icon-plus"
+            @click="addCategory"
+            >新 增</el-button
           >
-            <span>图片分类</span>
-            <el-button
-              v-if="permission.attach_add"
-              type="primary"
-              size="small"
-              plain
-              icon="el-icon-plus"
-              @click="addCategory"
-              >新 增</el-button
-            >
-          </div>
-          <el-tree
-            ref="tree"
-            check-strictly
-            highlight-current
-            render-after-expand
-            default-expand-all
-            node-key="id"
-            :props="{
-              label: 'name',
-              children: 'children',
-            }"
-            :data="categoryList"
-            :expand-on-click-node="false"
-            @node-click="onNodeClick"
+        </div>
+        <el-tree
+          ref="tree"
+          check-strictly
+          highlight-current
+          render-after-expand
+          default-expand-all
+          node-key="id"
+          :props="{
+            label: 'name',
+            children: 'children',
+          }"
+          :data="categoryList"
+          :expand-on-click-node="false"
+          @node-click="onNodeClick"
+        >
+          <sapn
+            class="custom-tree-node display-flex"
+            slot-scope="{ node, data }"
+            @mouseleave="hideMenu"
+            @mouseenter="showMenu(data)"
           >
-            <sapn
-              class="custom-tree-node display-flex"
-              slot-scope="{ node, data }"
-              @mouseleave="hideMenu"
-              @mouseenter="showMenu(data)"
-            >
-              <input
+            <input
+              type="text"
+              :ref="'input' + data.id"
+              :value="node.label"
+              :disabled="currentEditId == data.id ? false : true"
+              :class="
+                data.id == currentEditId
+                  ? 'custom-tree-node-input-active'
+                  : 'custom-tree-node-input'
+              "
+            />
+            <span v-show="currentShowId == data.id">
+              <!-- permission.attach_edit && currentEditId == null -->
+              <el-button
                 type="text"
-                :ref="'input' + data.id"
-                :value="node.label"
-                :disabled="currentEditId == data.id ? false : true"
-                :class="
-                  data.id == currentEditId
-                    ? 'custom-tree-node-input-active'
-                    : 'custom-tree-node-input'
-                "
-              />
-              <span v-show="currentShowId == data.id">
-                <!-- permission.attach_edit && currentEditId == null -->
-                <el-button
-                  type="text"
-                  size="small"
-                  v-if="currentEditId == null"
-                  @click.stop="editCurrentCategoryById(data, $event)"
-                >
-                  编辑
-                </el-button>
-                <!-- permission.attach_edit && currentEditId == data.id -->
-                <el-button
-                  type="text"
-                  size="small"
-                  v-else-if="currentEditId == data.id"
-                  @click.stop="updateCategoryName(data)"
-                >
-                  确定
-                </el-button>
-                <el-button
-                  v-if="permission.attach_delete"
-                  type="text"
-                  size="small"
-                  @click.stop="deleteCurrentCategoryById(data)"
-                >
-                  删除
-                </el-button>
-              </span>
-            </sapn>
-          </el-tree> 
+                size="small"
+                v-if="currentEditId == null"
+                @click.stop="editCurrentCategoryById(data, $event)"
+              >
+                编辑
+              </el-button>
+              <!-- permission.attach_edit && currentEditId == data.id -->
+              <el-button
+                type="text"
+                size="small"
+                v-else-if="currentEditId == data.id"
+                @click.stop="updateCategoryName(data)"
+              >
+                确定
+              </el-button>
+              <el-button
+                v-if="permission.attach_delete"
+                type="text"
+                size="small"
+                @click.stop="deleteCurrentCategoryById(data)"
+              >
+                删除
+              </el-button>
+            </span>
+          </sapn>
+        </el-tree>
       </el-col>
       <el-col :span="18">
         <avue-crud
@@ -97,14 +97,6 @@
           @refresh-change="onRefreshChange"
           @on-load="getImageListByCategoryId"
         >
-          <template slot="link" slot-scope="scope">
-            <el-image
-              style="width: 50px; height: 50px"
-              :src="scope.row.link"
-              :preview-src-list="[scope.row.link]"
-              :fit="fit"
-            ></el-image>
-          </template>
           <template slot="menuLeft">
             <el-button
               type="primary"
@@ -125,8 +117,25 @@
               >删 除
             </el-button>
           </template>
+          <template slot="link" slot-scope="scope">
+            <el-image
+              style="width: 50px; height: 50px"
+              :src="scope.row.link"
+              :preview-src-list="[scope.row.link]"
+              :fit="fit"
+            ></el-image>
+          </template>
           <template slot-scope="{ row }" slot="attachSize">
             <el-tag>{{ `${row.attachSize / 1000} KB` }}</el-tag>
+          </template>
+          <template slot-scope="{ type, size, row }" slot="menu">
+            <el-button
+              icon="el-icon-copy-document"
+              :size="size"
+              :type="type"
+              @click="copyImgUrl(row)"
+              >复制地址</el-button
+            >
           </template>
         </avue-crud>
       </el-col>
@@ -155,47 +164,47 @@
       :modal-append-to-body="false"
       :close-on-click-modal="false"
       :before-close="onDialogForAttachClose"
-    ><div style="padding:10px;"> 
-    
-      <el-upload
-        multiple
-        ref="upload"
-        list-type="picture"
-        accept="image/png, image/jpeg"
-        action="/api/fcb-resource/oss/endpoint/put-file-attach"
-        v-loading="uploadLoading"
-        :headers="uploadHeaders"
-        :data="{ categoryIds: currentCategoryId }"
-        :limit="5"
-        :auto-upload="false"
-        :file-list="fileList"
-        :on-success="onUploadSuccess"
-        :on-error="onUploadError"
-        :on-progress="onUploadProgress"
-        :on-exceed="onUploadExceed"
-      >
-        <el-button
-          slot="trigger"
-          size="small"
-          type="primary"
-          plain
-          icon="el-icon-folder-opened"
-          >选取文件</el-button
+      ><div style="padding: 10px">
+        <el-upload
+          multiple
+          ref="upload"
+          list-type="picture"
+          accept="image/png, image/jpeg"
+          action="/api/fcb-resource/oss/endpoint/put-file-attach"
+          v-loading="uploadLoading"
+          :headers="uploadHeaders"
+          :data="{ categoryIds: currentCategoryId }"
+          :limit="5"
+          :auto-upload="false"
+          :file-list="fileList"
+          :on-success="onUploadSuccess"
+          :on-error="onUploadError"
+          :on-progress="onUploadProgress"
+          :on-exceed="onUploadExceed"
         >
-        <el-button
-          style="float:right; "
-          size="small"
-          type="primary" plain
-          icon="el-icon-upload"
-          @click="submitUpload"
-        >
-          上 传
-        </el-button>
-        <div slot="tip" class="el-upload__tip">
-          只能上传jpg/png文件，且不超过500kb
-        </div>
-      </el-upload>
-    </div> 
+          <el-button
+            slot="trigger"
+            size="small"
+            type="primary"
+            plain
+            icon="el-icon-folder-opened"
+            >选取文件</el-button
+          >
+          <el-button
+            style="float: right"
+            size="small"
+            type="primary"
+            plain
+            icon="el-icon-upload"
+            @click="submitUpload"
+          >
+            上 传
+          </el-button>
+          <div slot="tip" class="el-upload__tip">
+            只能上传jpg/png文件，且不超过500kb
+          </div>
+        </el-upload>
+      </div>
     </el-drawer>
   </basic-container>
 </template>
@@ -537,6 +546,27 @@ export default {
       const { currentCategoryId } = this;
       this.clearSelection();
       this.getImageListByCategoryId({ categoryIds: currentCategoryId });
+    },
+    // 复制
+    copyImgUrl({ link }) {
+      navigator.permissions
+        .query({ name: "clipboard-write" })
+        .then(({ state, onchange }) => {
+          if (state == "granted") {
+            navigator.clipboard.writeText(link).then(
+              () => {
+                this.$message.success("操作成功！");
+              },
+              () => {
+                this.$message.error("操作失败！");
+              }
+            );
+          } else if (state == "prompt") {
+            this.$message.warning("请在浏览器设置中打开剪切板写入权限！");
+          } else if (state == "denied") {
+            this.$message.error("无法获取剪切板写入权限！");
+          }
+        });
     },
   },
 };
