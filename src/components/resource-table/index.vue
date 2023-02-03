@@ -282,6 +282,7 @@ export default {
         selection: false,
         reserveSelection: true,
         menuFixed: false,
+        selectionFixed: false,
         search: {
           name: "",
         },

@@ -1,5 +1,7 @@
 export default {
   size: 'small',
+  height:"65vh",
+  menuFixed: false,
   expand: false,
   index: false,
   border: true,

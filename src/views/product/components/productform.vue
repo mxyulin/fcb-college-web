@@ -4,27 +4,29 @@
     size="60%"
     top="5vh"
     class="body"
-    :wrapperClosable="false"
     append-to-body
     :title="title"
+    :wrapperClosable="false"
     :visible.sync="dialogFormVisible"
     :before-close="onBeforeClose"
   >
     <el-row slot="title">
-      <el-col :span="4">{{title}}</el-col>
-      <el-col :span="20"> <el-steps class="steps-display" :active="stepActive" simple>
-            <el-step title="1、基础信息"></el-step>
-            <el-step title="2、规格/价格"></el-step>
-            <el-step title="3、商品详情"></el-step>
-          </el-steps>
+      <el-col :span="4">{{ title }}</el-col>
+      <el-col :span="20">
+        <el-steps class="steps-display" :active="stepActive" simple>
+          <el-step title="1、基础信息"></el-step>
+          <el-step title="2、规格/价格"></el-step>
+          <el-step title="3、商品详情"></el-step>
+        </el-steps>
       </el-col>
-    </el-row>    
+    </el-row>
 
-    <div class="product-form" >  
+    <div class="product-form">
       <div class="good-detail-body">
         <el-form
           ref="form"
           label-width="15%"
+          v-loading="formLoading"
           :model="form"
           :rules="rules"
           :size="option.size"
@@ -144,7 +146,7 @@
                 :size="option.size"
               ></el-input>
             </el-form-item>
-            <el-form-item label="收藏人数：" prop="likes" >
+            <el-form-item label="收藏人数：" prop="likes">
               <el-input type="number" v-model="form.likes" :size="option.size">
               </el-input>
             </el-form-item>
@@ -211,7 +213,7 @@
                 划线价在商品列表及详情会以划线形式显示
               </span>
             </el-form-item>
-            <el-form-item label="商品库存：" prop="stock">
+            <el-form-item v-if="!form.isSku" label="商品库存：" prop="stock">
               <div class="display-flex">
                 <el-input
                   v-positive-integer
@@ -225,17 +227,18 @@
                 </el-input>
               </div>
             </el-form-item>
-            <el-form-item label="商品重量：">
+            <el-form-item v-if="!form.isSku" label="商品重量：">
               <el-input
                 disabled
-                type="input"
+                type="number"
                 v-model="form.weight"
                 style="width: 300px"
                 :size="option.size"
               >
+                <template slot="append">kg</template>
               </el-input>
             </el-form-item>
-            <el-form-item label="商品编号：">
+            <el-form-item v-if="!form.isSku" label="商品编号：">
               <el-input
                 disabled
                 type="input"
@@ -244,6 +247,66 @@
                 :size="option.size"
               >
               </el-input>
+            </el-form-item>
+            <el-form-item v-if="form.isSku" label="多规格：">
+              <div class="add-sku-box">
+                <div
+                  class="add-sku-box"
+                  style="margin-bottom: 10px"
+                  v-for="(sku, skuIdx) of form.skuInfo"
+                  :key="skuIdx"
+                >
+                  <div
+                    class="display-flex sku-item"
+                    style="justify-content: space-between"
+                  >
+                    <div class="display-flex">
+                      <div>规格名称：</div>
+                      <div style="width: 100px">
+                        <el-input v-model="sku.name"></el-input>
+                      </div>
+                    </div>
+                    <div class="">
+                      <el-button type="text" @click="delSku(skuIdx)"
+                        >删 除</el-button
+                      >
+                    </div>
+                  </div>
+                  <div
+                    class="display-flex sku-item"
+                    style="height: auto; background: #fff; padding-bottom: 0"
+                  >
+                    <div class="display-flex">
+                      <div style="margin-left: 14px; width: 56px">规格值：</div>
+                      <div class="display-flex sku-item-level2">
+                        <div
+                          class="sku-children"
+                          v-for="(skuVal, skuValIdx) in sku.content"
+                          :key="skuValIdx"
+                        >
+                          <el-input v-model="skuVal.name"></el-input>
+                          <i
+                            class="el-icon-error del-image-btn"
+                            @click="delSkuContentName(skuIdx, skuValIdx)"
+                          ></i>
+                        </div>
+                        <el-button
+                          type="text"
+                          size="medium"
+                          @click="addSkuContentName(skuIdx)"
+                          >添加</el-button
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="sku-item" style="margin-bottom: 10px">
+                  <el-button type="primary" icon="el-icon-plus" @click="addSku"
+                    >添加规格</el-button
+                  >
+                </div>
+              </div>
+              <div class="add-sku-box" style="margin-top: 10px">测试</div>
             </el-form-item>
           </div>
           <!-- 商品详情 -->
@@ -321,42 +384,42 @@
               >
             </el-form-item>
             <el-form-item label="图文详情：">
-              <!-- <el-input
-                type="textarea"
-                placeholder="请输入内容"
-                :rows="5"
-                :size="option.size"
+              <AvueUeditor
                 v-model="form.content"
-              ></el-input> -->
-              <AvueUeditor v-model="form.content" :options="contentOption"></AvueUeditor>
-
-            </el-form-item>  
+                :options="contentOption"
+              ></AvueUeditor>
+            </el-form-item>
           </div>
 
-          <el-form-item  style="text-align:right;padding-bottom: 10px;">
-              <el-button :size="option.size" plain v-if="stepActive > 0" @click="goBack"
-                >上一步</el-button
-              >
-              <el-button
-                type="primary"
-                :size="option.size"
-                v-if="stepActive < 2"
-                @click="goNext"
-                >下一步</el-button
-              >
-              <el-button
-                type="primary"
-                v-if="stepActive == 2"
-                :size="option.size"
-                @click="handleSubmit"
-                >提 交</el-button
-              >
-            </el-form-item>
+          <el-form-item style="text-align: right; padding-bottom: 10px">
+            <el-button
+              :size="option.size"
+              plain
+              v-if="stepActive > 0"
+              @click="goBack"
+              >上一步</el-button
+            >
+            <el-button
+              type="primary"
+              :size="option.size"
+              v-if="stepActive < 2"
+              @click="goNext"
+              >下一步</el-button
+            >
+            <el-button
+              type="primary"
+              v-if="stepActive == 2"
+              :size="option.size"
+              :loading="submitBtnLoading"
+              @click="handleSubmit"
+              >提 交</el-button
+            >
+          </el-form-item>
         </el-form>
       </div>
     </div>
     <!-- 资源表 -->
-    
+
     <resource-table
       width="60%"
       dialogTitle="选择图片"
@@ -390,12 +453,14 @@ export default {
     return {
       // 资源表状态
       dialogVisible: false,
+      submitBtnLoading: false,
+      formLoading: false,
       // 资源表类型
       tableType: "",
       // 用于组图的选择，表示数组中第几张图片
       currentSelection: null,
       // 步骤状态
-      stepActive: 0,
+      stepActive: 1,
 
       // *表单状态
       // 商品分类
@@ -414,9 +479,7 @@ export default {
         { value: "4", label: "七天退换" },
         { value: "5", label: "正品保证" },
       ],
-      contentOption: {
-
-      },
+      contentOption: {},
       // 表单
       form: {
         // 基本信息
@@ -443,6 +506,86 @@ export default {
         serviceIds: [], // 提交时需要整理成字符串
         params: [], // 提交时需要整理成字符串
         content: "",
+        skuInfo: [
+          {
+            name: "颜色",
+            content: [
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "黑色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "白色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "紫色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "红色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "黑色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "白色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "紫色",
+              },
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "红色",
+              },
+            ],
+          },
+          {
+            name: "尺寸",
+            content: [
+              {
+                id: 0,
+                pid: 0,
+                disabled: false,
+                name: "XL",
+              },
+              {
+                id: 1,
+                pid: 1,
+                disabled: false,
+                name: "XLL",
+              },
+            ],
+          },
+          // {
+          //   name: "厚度",
+          //   content: ["普通", "加绒"],
+          // },
+          // {
+          //   name: "套餐类型",
+          //   content: ["官方标配"],
+          // },
+        ],
       },
       // 验证规则
       rules: {
@@ -671,7 +814,7 @@ export default {
         price: "",
         originalPrice: "",
         stock: "1",
-        weight: null,
+        weight: 0,
         sn: "",
         // 商品详情
         serviceIds: [],
@@ -698,20 +841,24 @@ export default {
     },
     // 提交表单
     handleSubmit() {
+      let form = Object.assign({}, this.form);
       // 格式化表单
-      const { categoryIds, serviceIds, images, params } = this.form;
-      this.form.categoryIds = categoryIds.join(",");
-      this.form.serviceIds = serviceIds.join(",");
-      this.form.images = JSON.stringify(images);
-      this.form.params = JSON.stringify(params);
-      add(this.form).then(() => {
-        this.resetForm();
-        this.$emit("loadProductList");
-        this.$emit("update:dialogFormVisible", false);
-        this.$message({
-          type: "success",
-          message: "操作成功！",
-        });
+      const { categoryIds, serviceIds, images, params } = form;
+      this.submitBtnLoading = true;
+      this.formLoading = true;
+      form.categoryIds = categoryIds.join(",");
+      form.serviceIds = serviceIds.join(",");
+      form.images = JSON.stringify(images);
+      form.params = JSON.stringify(params);
+      add(form).then(({ data: { code } }) => {
+        if (code == 200) {
+          this.submitBtnLoading = false;
+          this.formLoading = false;
+          this.resetForm();
+          this.$emit("loadProductList");
+          this.$emit("update:dialogFormVisible", false);
+          this.$message.success("操作成功！");
+        }
       });
     },
     // 关闭表单
@@ -769,299 +916,308 @@ export default {
           break;
       }
     },
+    addSku() {
+      this.form.skuInfo.push({ name: "", content: [] });
+    },
+    delSku(index) {
+      this.form.skuInfo.splice(index, 1);
+    },
+    addSkuContentName(skuIdx) {
+      this.form.skuInfo[skuIdx].content.push({ name: "", disabled: false });
+    },
+    delSkuContentName(skuIdx, skuValIdx) {
+       this.form.skuInfo[skuIdx].content.splice(skuValIdx, 1);
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
- #productform {
-    background: #fff;
-    padding: 0 20px;
-    overflow: auto;
-    color: #666;
+#productform {
+  background: #fff;
+  padding: 0 20px;
+  overflow: auto;
+  color: #666;
 }
-//////////////////////////////////////////////////////
 .display-flex {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 .display-flex-c {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .shopro-screen-button {
-    background: #409eff;
-    color: #fff;
+  background: #409eff;
+  color: #fff;
 }
 
 //////////////////////////////////////////////////////
 .display-flex-c /deep/ .el-input__inner {
-    display: block;
-    padding: 0;
-    margin-top: 3px;
-    border: 0px;
+  display: block;
+  padding: 0;
+  margin-top: 3px;
+  border: 0px;
 }
 
 .commodity-classification {
-    flex-wrap: wrap;
-    border: 1px solid #e6e6e6;
-    border-radius: 4px;
-    padding: 0 5px;
+  flex-wrap: wrap;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+  padding: 0 5px;
 }
 
 .btn-common {
-    line-height: 32px;
-    height: 32px;
-    cursor: pointer;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  line-height: 32px;
+  height: 32px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-box {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-between;
 }
 
 .refresh-btn {
-    width: 32px;
-    border: 1px solid #e6e6e6;
-    font-size: 14px;
-    margin-right: 20px;
+  width: 32px;
+  border: 1px solid #e6e6e6;
+  font-size: 14px;
+  margin-right: 20px;
 }
 
 .create-goods,
 .add-params,
 .add-level1-sku {
-    width: 98px;
-    color: #fff;
+  width: 98px;
+  color: #fff;
 }
 
 .create-goods span,
 .add-params span,
 .add-level1-sku span {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 .goods-name {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .goods-img {
-    width: 34px;
-    height: 34px;
-    margin-right: 10px;
+  width: 34px;
+  height: 34px;
+  margin-right: 10px;
 }
 
 .el-table,
 .el-table thead,
 .el-table th {
-    color: #444;
-    font-weight: 500 !important;
+  color: #444;
+  font-weight: 500 !important;
 }
 
 /* el-dialog */
 .el-dialog {
-    width: 800px;
-    height: 70vh;
-    margin: 15vh auto;
+  width: 800px;
+  height: 70vh;
+  margin: 15vh auto;
 }
 
 .el-dialog__header {
-    padding: 16px 20px 10px;
+  padding: 16px 20px 10px;
 }
 
 .el-dialog__title {
-    font-size: 14px;
-    color: #444;
+  font-size: 14px;
+  color: #444;
 }
 
 .el-dialog__headerbtn {
-    font-size: 14px;
-    color: #999;
+  font-size: 14px;
+  color: #999;
 }
 
 .el-dialog__body {
-    padding: 0;
+  padding: 0;
 }
 
 .el-step.is-simple .el-step__title {
-    font-size: 14px;
-    font-weight: 600;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .el-step.is-simple .el-step__icon {
-    display: none;
+  display: none;
 }
 
 .el-step__title.is-finish {
-    color: #7438d5;
+  color: #7438d5;
 }
 
 .el-step__title.is-process {
-    color: #666;
-    font-weight: 500;
+  color: #666;
+  font-weight: 500;
 }
 
 .el-step__title.is-wait {
-    color: #999;
+  color: #999;
 }
 
 .el-form-item {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .good-detail-body {
-    padding: 20px 25px 10px 5px;
-    // height: calc(100vh - 100px);
-    height: 600px;
-    overflow: none;
+  padding: 20px 25px 10px 5px;
+  // height: calc(100vh - 100px);
+  height: 600px;
+  overflow: none;
 }
- 
 
 .goods-type {
-    width: 162px;
-    height: 58px;
-    border-radius: 4px;
-    position: relative;
-    margin-right: 20px;
+  width: 162px;
+  height: 58px;
+  border-radius: 4px;
+  position: relative;
+  margin-right: 20px;
 }
 
 .goods-type-img {
-    border-radius: 4px;
+  border-radius: 4px;
 }
 
 .goods-type-selected {
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    text-align: center;
-    border-radius: 50%;
-    background: #7438d5;
-    color: #fff;
-    font-weight: 600;
-    font-size: 14px;
-    display: none;
-    position: absolute;
-    top: -8px;
-    right: -8px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  background: #7438d5;
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  display: none;
+  position: absolute;
+  top: -8px;
+  right: -8px;
 }
 
 .el-input__inner,
 .el-input__icon {
-    line-height: 34px;
-    height: 34px;
+  line-height: 34px;
+  height: 34px;
 }
 
 .display-flex {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .add-img {
-    width: 60px;
-    height: 60px;
-    border: 1px dashed #e6e6e6;
-    border-radius: 4px;
-    justify-content: center;
-    margin-right: 30px;
-    margin-bottom: 10px;
+  width: 60px;
+  height: 60px;
+  border: 1px dashed #e6e6e6;
+  border-radius: 4px;
+  justify-content: center;
+  margin-right: 30px;
+  margin-bottom: 10px;
 }
 
 label {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .msg-tip {
-    margin-left: 30px;
-    color: #999;
+  margin-left: 30px;
+  color: #999;
 }
 
 .dialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0 30px;
-    padding-bottom: 10px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 30px;
+  padding-bottom: 10px;
 }
 
 .back-btn {
-    width: 88px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    margin-right: 20px;
-    color: #999;
-    cursor: pointer;
+  width: 88px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  margin-right: 20px;
+  color: #999;
+  cursor: pointer;
 }
 
 .sub-btn {
-    width: 88px;
-    height: 36px;
-    line-height: 36px;
-    text-align: center;
-    font-size: 14px;
-    color: #fff;
-    cursor: pointer;
+  width: 88px;
+  height: 36px;
+  line-height: 36px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
 }
 
 .goods-detail-table {
-    border: 1px solid #e6e6e6;
-    border-bottom: none;
-    margin-bottom: 20px;
+  border: 1px solid #e6e6e6;
+  border-bottom: none;
+  margin-bottom: 20px;
 }
 
 .goods-detail-item {
-    border-bottom: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .goods-detail-item > div {
-    padding: 5px 10px;
+  padding: 5px 10px;
 }
 
 .goods-detail-name {
-    width: 120px;
+  width: 120px;
 }
 
 .goods-detail-msg {
-    width: 378px;
+  width: 378px;
 }
 
 .goods-detail-del,
 .goods-detail-move {
-    width: 50px;
-    display: flex;
-    justify-content: center;
-    cursor: move;
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  cursor: move;
 }
 
 .goods-detail-del-icon {
-    color: #ff5959;
+  color: #ff5959;
 }
 
 .del-image-btn {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    line-height: 14px;
-    text-align: center;
-    border-radius: 50%;
-    font-size: 12px;
-    font-weight: 600;
-    background: #7438d5;
-    color: #fff;
-    top: -7px;
-    right: -7px;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  line-height: 14px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 100;
+  color: #f56c6c;
+  top: -9px;
+  right: -9px;
 }
 
 .label-auto {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .el-radio__input.is-checked + .el-radio__label,
@@ -1073,217 +1229,217 @@ label {
 .el-cascader-node.is-selectable.in-checked-path,
 .el-checkbox__input.is-checked + .el-checkbox__label,
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
-    color: #7438d5;
+  color: #7438d5;
 }
 
 .el-radio__input.is-checked .el-radio__inner,
 .el-tabs__active-bar,
 .el-checkbox__input.is-checked .el-checkbox__inner,
 .el-checkbox__input.is-indeterminate .el-checkbox__inner {
-    background: #7438d5;
-    border-color: #7438d5;
+  background: #7438d5;
+  border-color: #7438d5;
 }
 
 .add-sku-box {
-    padding: 10px 8px;
-    border: 1px solid #e6e6e6;
+  padding: 10px 8px 0 8px;
+  border: 1px solid #e6e6e6;
 }
 
 .sku-item {
-    background: #f9f9f9;
-    height: 50px;
-    padding: 10px;
+  background: #f9f9f9;
+  height: 50px;
+  padding: 10px;
 }
 
 .sku-item-level {
-    height: auto;
+  height: auto;
 }
 
 .sku-item-level2 {
-    height: auto;
-    padding: 0;
-    width: 600px;
-    background: #fff;
-    display: flex;
-    flex-wrap: wrap;
-    line-height: 30px;
+  height: auto;
+  padding: 0;
+  width: 600px;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 30px;
 }
 
 .sku-children {
-    margin-right: 18px;
-    position: relative;
-    width: 120px;
-    margin-bottom: 10px;
+  display: flex;
+  position: relative;
+  width: 100px;
+  margin-bottom: 10px;
+  margin-right: 18px;
 }
 
 .sku-children-del {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background: #7536d0;
-    color: #fff;
-    font-weight: 600;
-    justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #7536d0;
+  color: #fff;
+  font-weight: 600;
+  justify-content: center;
 }
 
 .sku-img {
-    width: 34px;
-    height: 34px;
-    border-radius: 4px;
-    position: relative;
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  position: relative;
 }
 
 .sku-img i {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    position: absolute;
-    top: -7px;
-    right: -7px;
-    background: #7536d0;
-    color: #fff;
-    font-weight: 600;
-    justify-content: center;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  background: #7536d0;
+  color: #fff;
+  font-weight: 600;
+  justify-content: center;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .table-box {
-    border: 1px solid #e6e6e6;
-    margin: 20px 0;
-    overflow-x: auto;
+  border: 1px solid #e6e6e6;
+  margin: 20px 0;
+  overflow-x: auto;
 }
 
 .table-box .table {
-    table-layout: auto;
-    margin: 0;
+  table-layout: auto;
+  margin: 0;
 }
 
 .table-box .table td,
 .table-box .table th {
-    white-space: nowrap;
-    min-width: 80px;
+  white-space: nowrap;
+  min-width: 80px;
 }
 
 .table-upload-img {
-    width: 34px;
-    height: 34px;
-    color: #e6e6e6;
-    border-radius: 2px;
-    border: 1px solid #e6e6e6;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 34px;
+  height: 34px;
+  color: #e6e6e6;
+  border-radius: 2px;
+  border: 1px solid #e6e6e6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .all-edit-img {
-    width: 14px;
-    height: 14px;
-    margin-left: 6px;
+  width: 14px;
+  height: 14px;
+  margin-left: 6px;
 }
 
 .sku-status {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .el-dialog__body .table {
-    font-size: 12px;
-    margin-bottom: 0;
+  font-size: 12px;
+  margin-bottom: 0;
 }
 
 .th-center {
-    height: 34px;
-    line-height: 34px;
+  height: 34px;
+  line-height: 34px;
 }
 
 .w-e-toolbar {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .el-cascader,
 .el-select {
-    width: 100%;
+  width: 100%;
 }
 
 .el-popover .el-input {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .color-999 {
-    color: #999;
+  color: #999;
 }
 
 .popover-container > p {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .question-tip {
-    font-size: 24px;
-    color: #ccc;
-    margin-left: 18px;
+  font-size: 24px;
+  color: #ccc;
+  margin-left: 18px;
 }
 
 .el-radio {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .flex-1 {
-    flex: 1;
+  flex: 1;
 }
 
 .create-template {
-    margin-left: 44px;
-    cursor: pointer;
-    color: #7536d0;
+  margin-left: 44px;
+  cursor: pointer;
+  color: #7536d0;
 }
 
 .el-tabs__content {
-    height: 190px;
-    overflow: auto;
+  height: 190px;
+  overflow: auto;
 }
 
 .category-inputs input,
 .category-inputs:focus input,
 .category-inputs:hover input {
-    background: none;
-    border: none;
-    border-color: rgba(0, 0, 0, 0) !important;
+  background: none;
+  border: none;
+  border-color: rgba(0, 0, 0, 0) !important;
 }
 
 .nice-validator .el-input__inner {
-    vertical-align: baseline !important;
+  vertical-align: baseline !important;
 }
 
 .table-stock-warning-switch {
-    line-height: 32px;
-    height: 32px;
-    margin-right: 8px;
+  line-height: 32px;
+  height: 32px;
+  margin-right: 8px;
 }
 
 .table-input {
-    width: 80px;
+  width: 80px;
 }
 
 .stock-warning-switch-tip {
-    margin-left: 30px;
-    color: #999;
-    font-size: 12px;
+  margin-left: 30px;
+  color: #999;
+  font-size: 12px;
 }
 
 .table-stock-warning-switch-tip {
-    margin-left: 8px;
+  margin-left: 8px;
 }
 
 [v-cloak] {
-    display: none;
+  display: none;
 }
-
 
 .steps-display /deep/ .el-step__icon {
   display: none;
@@ -1296,6 +1452,7 @@ label {
 // }
 .top-right-error {
   position: absolute;
+  color: #f56c6c;
   top: -7px;
   right: -7px;
 }
@@ -1310,12 +1467,9 @@ label {
 }
 
 .el-steps--simple {
-    padding: 5px 8%;
-    // border-radius: 4px;
-    background-color: #fff;
+  padding: 5px 8%;
+  // border-radius: 4px;
+  background-color: #fff;
 }
-
- 
-
 </style>
 
