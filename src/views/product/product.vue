@@ -1,20 +1,59 @@
 <template>
   <basic-container>
-    <!-- 查询 -->
-    <Query :page="page" :search="search" @getGoodsData="getGoodsData" />
-    <!--  -->
-    <el-row :gutter="0" type="flex" justify="space-between">
-      <el-col :span="2">
+    <avue-crud :option="option"
+               :table-loading="loading"
+               :data="productList"
+               :page.sync="page"
+               :permission="permissionList"
+               :before-open="beforeOpen"
+               v-model="form"
+               ref="crud"
+               @row-update="rowUpdate"
+               @row-save="rowSave"
+               @row-del="rowDel"
+               @search-change="searchChange"
+               @search-reset="searchReset"
+               @selection-change="selectionChange"
+               @current-change="currentChange"
+               @size-change="sizeChange"
+               @refresh-change="refreshChange"
+               @on-load="onLoad">
+      <template slot="menuLeft">
+        <el-button type="primary"
+                   size="small"
+                   icon="el-icon-plus"
+                   plain
+                   v-if="permission.product_add"
+                   @click="addHandler">新 建
+        </el-button>
         <el-button
+          plain
+          type="success"
           :size="option.size"
-          type="primary"
-          icon="el-icon-plus"
-          @click="addHandler"
-          class="create-btn"
-          >新增</el-button
+          @click="slectedAction('up')"
+          v-if="activeStatus != 1"
+          >上架</el-button
         >
-      </el-col>
-      <el-col :span="20">
+
+        <el-button
+          plain
+          type="warning"
+          :size="option.size"
+          @click="slectedAction('down')"
+          v-if="activeStatus != 2"
+          >下架</el-button
+        >
+        <el-button
+          plain
+          type="danger"
+          :size="option.size"
+          @click="selectionsDelete()"
+          >删除</el-button
+        >
+
+        
+      </template>
+      <template slot="menuRight">
         <el-radio-group
           v-model="activeStatus"
           :size="option.size"
@@ -26,48 +65,15 @@
           <el-radio-button :label="2">已下架</el-radio-button>
           <el-radio-button :label="0">已隐藏</el-radio-button>
         </el-radio-group>
-      </el-col>
-      <el-col :span="2">
-        <el-button
-          :size="option.size"
-          icon="el-icon-refresh"
-          @click="getGoodsData"
-          class="refresh-btn"
-          circle
-        ></el-button>
-        <el-button
-          :size="option.size"
-          icon="el-icon-search"
-          @click="search = !search"
-          class="refresh-btn"
-          circle
-        ></el-button>
-      </el-col>
-    </el-row>
-    <!-- 列表模块 -->
-    <el-row :gutter="0">
-      <div v-loading="loading">
-        <el-table
-          stripe
-          ref="table"
-          height="70vh"
-          style="width: 100%"
-          tooltip-effect="dark"
-          :data="goodsData"
-          :size="option.size"
-          :header-cell-style="{ background: '#FAFAFA' }"
-          @selection-change="selectionChange"
-        >
-          <el-table-column type="selection" width="50"></el-table-column>
-          <el-table-column label="商品" min-width="100">
-            <template slot-scope="scope">
-              <div class="display-flex goods-name">
+        <el-button icon="el-icon-search"  style="margin-left:10px;"  :size="option.size"  @click="dialogSearchVisible = true" circle></el-button>
+      </template>
+      <template slot-scope="scope" slot="image">
+        <div class="display-flex goods-name">
                 <!-- 商品图 -->
                 <div>
                   <el-image
-                    fit="contain"
-                    class="image-slot"
-                    style="width: 58px; height: 58px"
+                    fit="contain" 
+                    style="width: 100px; height: auto"
                     :src="scope.row.image"
                     :preview-src-list="[scope.row.image]"
                   >
@@ -76,6 +82,10 @@
                     </div>
                   </el-image>
                 </div>
+          </div>
+        </template>
+        <template slot-scope="scope" slot="title">
+          <div>
                 <!-- 商品名和规格 -->
                 <div>
                   <div
@@ -131,25 +141,28 @@
                   </div>
                 </div>
               </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="price" label="价格" min-width="100" sortable>
-          </el-table-column>
-          <el-table-column prop="sales" label="销量" min-width="100" sortable>
-          </el-table-column>
-          <el-table-column prop="views" label="浏览量" min-width="100" sortable>
-          </el-table-column>
-          <el-table-column prop="stock" label="库存" min-width="100" sortable>
-          </el-table-column>
-          <el-table-column label="更新时间" min-width="100">
-            <template slot-scope="scope">
-              <div>
-                {{ scope.row.updateTime }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column fixed="right" label="操作" min-width="180">
-            <template slot-scope="scope">
+      </template>
+      
+      <template slot-scope="scope" slot="price">
+        原价：<s>{{ scope.row.originalPrice }}</s><br> 
+        售价：{{ scope.row.price }}
+      </template> 
+      <template slot-scope="scope" slot="likes">
+        收藏：{{ scope.row.likes }}<br> 
+        浏览：{{ scope.row.views }}
+      </template> 
+
+      <template slot-scope="scope" slot="price">
+        原价：<s>{{ scope.row.originalPrice }}</s><br> 
+        售价：{{ scope.row.price }}
+      </template> 
+      <template slot-scope="scope" slot="sales">
+        销量：{{ scope.row.sales }}<br> 
+        显示销量：{{ scope.row.showSales }}
+      </template> 
+
+      
+      <template slot-scope="scope" slot="menu">
               <!-- 上架的下拉菜单 -->
               <el-popover placement="bottom" trigger="hover" width="150">
                 <div class="display-flex status-box">
@@ -213,6 +226,7 @@
                 @click="handleEdit(scope.row)"
                 >编辑
               </el-button>
+              <br/>
               <!-- 复制 -->
               <el-button
                 type="text"
@@ -228,69 +242,21 @@
                 >删除</el-button
               >
             </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-row>
-    <el-row
-      :gutter="0"
-      type="flex"
-      justify="space-between"
-      style="margin-top: 20px"
-    >
-      <!-- 底部按钮组 -->
-      <el-col :span="12">
-        <el-button
-          plain
-          type="success"
-          :size="option.size"
-          @click="slectedAction('up')"
-          v-if="activeStatus != 1"
-          >上架</el-button
-        >
-        <el-button
-          plain
-          type="warning"
-          :size="option.size"
-          @click="slectedAction('down')"
-          v-if="activeStatus != 2"
-          >下架</el-button
-        >
-        <el-button
-          plain
-          type="danger"
-          :size="option.size"
-          @click="selectionsDelete()"
-          >删除</el-button
-        >
-      </el-col>
-      <!-- 分页模块 -->
-      <el-col :span="9">
-        <el-pagination
-          background
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="page.total"
-          :page-size="page.pageSize"
-          :current-page="page.currentPage"
-          :page-sizes="[10, 20, 30, 40, 50, 100]"
-          @size-change="onSizeChange"
-          @current-change="onCurrentChange"
-        >
-        </el-pagination>
-      </el-col>
-    </el-row>
-    <!-- 表单模块 -->
+    </avue-crud>
     <product-form
       ref="form"
       :title="title"
       :currentRow="currentRow"
       :dialogFormVisible.sync="dialogFormVisible"
-      @getGoodsData="getGoodsData"
+      @loadProductList="onLoad"
     />
+    <search-panel :page="page"   :dialogSearchVisible.sync="dialogSearchVisible"  @loadProductList="onLoad" />
   </basic-container>
 </template>
 
 <script>
+ 
+
 import {
   getList,
   add,
@@ -298,22 +264,22 @@ import {
   remove,
 } from "@/api/product/product";
 import option from "@/const/product/product";
-import Query from "@/views/product/components/query";
+import SearchPanel from "@/views/product/components/search";
 import ProductForm from "@/views/product/components/productform";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
-    Query,
+    SearchPanel,
     ProductForm,
   },
   data() {
     return {
       title: "",
       dialogFormVisible: false,
-      currentRow: null,
-      // 是否查询
-      search: true,
+      dialogSearchVisible: false,
+      currentRow: null, 
+
       // 加载中
       loading: true,
       // 商品上架状态(3是全部展示)
@@ -331,11 +297,11 @@ export default {
       // 是否展示筛选面板
       chooseType: false,
       // 商品源数据
-      goodsData: [],
+      productList: [],
     };
   },
   mounted() {
-    this.getGoodsData();
+    this.onLoad();
   },
   computed: {
     ...mapGetters(["permission"]),
@@ -350,12 +316,12 @@ export default {
   watch: {
     // 根据上架状态拉取商品数据
     activeStatus() {
-      this.getGoodsData();
+      this.onLoad();
     },
   },
   methods: {
     // 获取商品数据
-    getGoodsData(params = {}) {
+    onLoad(params = {}) {
       let that = this; 
       let { activeStatus } = that;
       that.loading = true;
@@ -364,10 +330,10 @@ export default {
         that.page.total = data.total;
         // 全部
         if (activeStatus == 3) {
-          that.goodsData = data.records;
+          that.productList = data.records;
         } else {
           // 非全部
-          that.goodsData = data.records.filter((good) => {
+          that.productList = data.records.filter((good) => {
             return good.status == activeStatus;
           });
         }
@@ -384,7 +350,7 @@ export default {
     updateStatus(id, status) {
       slectionsUpdate(id, status).then((res) => {
         if (res.data.code == 200) {
-          this.getGoodsData();
+          this.onLoad();
         }
       });
     },
@@ -398,7 +364,7 @@ export default {
     copyGoods(row) {
       delete row.id;
       add(row).then(() => {
-        this.getGoodsData();
+        this.onLoad();
         this.$message({
           type: "success",
           message: "操作成功！",
@@ -416,7 +382,7 @@ export default {
           return remove(row.id);
         })
         .then(() => {
-          this.getGoodsData();
+          this.onLoad();
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -435,12 +401,12 @@ export default {
     // 分页器当前页
     onCurrentChange(currentPage) {
       this.page.currentPage = currentPage;
-      this.getGoodsData();
+      this.onLoad();
     },
     // 一页显示数量
     onSizeChange(pageSize) {
       this.page.pageSize = pageSize;
-      this.getGoodsData();
+      this.onLoad();
     },
     // 删除所有选中行
     selectionsDelete() {
@@ -458,7 +424,7 @@ export default {
         })
         .then(() => {
           this.selectionClear();
-          this.getGoodsData();
+          this.onLoad();
           this.$message({
             type: "success",
             message: "操作成功!",
@@ -474,7 +440,7 @@ export default {
       let statusCode = (action == "up") ? 1 : 2;
       slectionsUpdate(this.ids, statusCode).then(({ data: { code } }) => {
         if (code == 200) {
-          this.getGoodsData();
+          this.onLoad();
           this.$message({
             type: "success",
             message: "操作成功！",

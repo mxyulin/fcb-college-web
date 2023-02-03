@@ -152,6 +152,7 @@
           :visible.sync="showDialogForAttach"
           :before-close="onDialogForAttachClose"
         >
+        <div style="padding:10px 20px;">
           <el-upload
             multiple
             ref="upload"
@@ -178,7 +179,7 @@
               >选取文件</el-button
             >
             <el-button
-              style="margin-left: 10px"
+              style="float:right; "
               size="small"
               type="primary"
               icon="el-icon-upload"
@@ -190,6 +191,7 @@
               只能上传jpg/png文件，且不超过500kb
             </div>
           </el-upload>
+        </div>
         </el-drawer>
       </el-col>
     </el-row>

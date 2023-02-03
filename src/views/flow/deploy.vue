@@ -1,6 +1,8 @@
 <template>
   <basic-container>
+    <div style="padding:10px 20px;">
     <avue-form ref="form" :option="option" v-model="form" :upload-before="uploadBefore" :upload-after="uploadAfter"/>
+  </div>
   </basic-container>
 </template>
 

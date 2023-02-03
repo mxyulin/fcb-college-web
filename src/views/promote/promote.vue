@@ -18,7 +18,11 @@
                @size-change="sizeChange"
                @refresh-change="refreshChange"
                @on-load="onLoad">
+
       <template slot="menuLeft">
+        <el-button type="primary" size="small" v-if="permission.coupons_add" icon="el-icon-plus"
+          @click="handleOpen(null)">新增
+        </el-button>
         <el-button type="danger"
                    size="small"
                    icon="el-icon-delete"
@@ -27,52 +31,110 @@
                    @click="handleDelete">删 除
         </el-button>
       </template>
+      
     </avue-crud>
+
+    <el-drawer :title="formTitle" :before-close="handleClose" :visible.sync="dialogVisible" size="60%"
+      append-to-body="true">
+      <newlyAdded />
+      
+      
+    </el-drawer> 
   </basic-container>
 </template>
 
 <script>
-  import {getList, getDetail, add, update, remove} from "@/api/promote/promote";
-  import option from "@/const/promote/promote";
-  import {mapGetters} from "vuex";
+import { getList, getDetail, add, update, remove } from "@/api/promote/promote";
+import option from "@/const/promote/promote";
+import { mapGetters } from "vuex";
+import newlyAdded from "./components/add.vue";
 
-  export default {
-    data() {
+
+export default {
+  components:{newlyAdded},
+  data() {
+    return {
+      dialogVisible:false,
+      form: {},
+      formTitle: "新增活动",
+      query: {},
+      loading: true,
+      page: {
+        pageSize: 10,
+        currentPage: 1,
+        total: 0,
+      },
+      selectionList: [],
+      option: option,
+      data: [],
+    };
+  },
+  computed: {
+    ...mapGetters(["permission"]),
+    permissionList() {
       return {
-        form: {},
-        query: {},
-        loading: true,
-        page: {
-          pageSize: 10,
-          currentPage: 1,
-          total: 0
-        },
-        selectionList: [],
-        option: option,
-        data: []
+        addBtn: this.vaildData(this.permission.promote_add, false),
+        viewBtn: this.vaildData(this.permission.promote_view, false),
+        delBtn: this.vaildData(this.permission.promote_delete, false),
+        editBtn: this.vaildData(this.permission.promote_edit, false),
       };
     },
-    computed: {
-      ...mapGetters(["permission"]),
-      permissionList() {
-        return {
-          addBtn: this.vaildData(this.permission.promote_add, false),
-          viewBtn: this.vaildData(this.permission.promote_view, false),
-          delBtn: this.vaildData(this.permission.promote_delete, false),
-          editBtn: this.vaildData(this.permission.promote_edit, false)
+    ids() {
+      let ids = [];
+      this.selectionList.forEach((ele) => {
+        ids.push(ele.id);
+      });
+      return ids.join(",");
+    },
+  },
+  methods: {
+    handleOpen(row) {
+      console.log(row)
+      if (row) {
+        //   getDetail(row.id).then(res => {
+        //     let data = res.data.data;
+        //     let gettime = data.gettime;
+        //     if (gettime) {
+        //       gettime = gettime.split("~");
+        //       data.gettime = gettime;
+        //     }
+        //     let usetime = data.usetime;
+        //     if (usetime) {
+        //       usetime = usetime.split("~");
+        //       data.usetime = usetime;
+        //     }
+        //     this.useScope = func.isEmpty(data.goodsIds) ? "all" : "some";
+        //     this.form = data;
+        //     this.dialogVisible = true;
+        //     this.formTitle = '编辑优惠券';
+        //   });
+      } else {
+        this.form = {
+          type: "cash",
         };
-      },
-      ids() {
-        let ids = [];
-        this.selectionList.forEach(ele => {
-          ids.push(ele.id);
-        });
-        return ids.join(",");
+        this.formTitle = "新增优惠券";
+        this.dialogVisible = true;
       }
     },
-    methods: {
-      rowSave(row, done, loading) {
-        add(row).then(() => {
+    handleSubmit() {
+      const that = this;
+
+      // submit(that.form).then(res => {
+      //   this.$message({
+      //     type: "success",
+      //     message: "操作成功!"
+      //   });
+      //   that.handleClose();
+      //   this.onLoad(this.page);
+      // });
+    },
+    handleClose() {
+      this.dialogVisible = false;
+    },
+
+    rowSave(row, done, loading) {
+      add(row).then(
+        () => {
           this.onLoad(this.page);
           this.$message({
             type: "success",

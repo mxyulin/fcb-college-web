@@ -706,7 +706,7 @@ export default {
       this.form.params = JSON.stringify(params);
       add(this.form).then(() => {
         this.resetForm();
-        this.$emit("getGoodsData");
+        this.$emit("loadProductList");
         this.$emit("update:dialogFormVisible", false);
         this.$message({
           type: "success",

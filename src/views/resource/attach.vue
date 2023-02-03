@@ -194,7 +194,8 @@
         <div slot="tip" class="el-upload__tip">
           只能上传jpg/png文件，且不超过500kb
         </div>
-      </el-upload></div> 
+      </el-upload>
+    </div> 
     </el-drawer>
   </basic-container>
 </template>

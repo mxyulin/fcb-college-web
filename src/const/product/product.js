@@ -1,34 +1,46 @@
 export default {
   size: 'small',
   expand: false,
-  index: true,
+  index: false,
   border: true,
+  viewBtn: false,
+  addBtn: false,
+  editBtn:false,
+  delBtn:false,
   selection: true,
   column: [
     {
       label: "主键",
       prop: "id",
-      display: false,
+      hide: true,
     },
     {
       label: "商品类型",
       prop: "type",
       hide: true,
-      search: true,
+      search: false,
+    },
+
+    {
+      label: "封面",
+      prop: "image", 
     },
     {
-      label: "标题",
+      label: "名称",
       prop: "title",
-      search: true,
+      search: false,
+      span:12,
     },
     {
       label: "副标题",
+      hide: true,
       prop: "subtitle",
     },
     {
       label: "商品状态",
       prop: "status",
-      search: true,
+      hide: true,
+      search: false,
     },
     {
       label: "排序(从大到小)",
@@ -42,12 +54,9 @@ export default {
       hide: true,
     },
     {
-      label: "商品主图",
-      prop: "image",
-    },
-    {
       label: "轮播图",
       prop: "images",
+      hide: true,
     },
     {
       label: "参数详情",
@@ -67,45 +76,47 @@ export default {
     {
       label: "原价",
       prop: "originalPrice",
-    },
-    {
-      label: "是否多规格",
-      prop: "isSku",
       hide: true,
     },
     {
-      label: "收藏人数",
+      label: "规格",
+      prop: "isSku", 
+    },
+    {
+      label: "人气",
       prop: "likes",
-      display: false,
-      hide: true,
+      display: false 
     },
     {
       label: "浏览人数",
       prop: "views",
-      display: false,
       hide: true,
     },
     {
       label: "销量",
       prop: "sales",
       display: false,
-      hide: true,
+      
     },
     {
       label: "显示销量",
       prop: "showSales",
+      hide: true,
     },
     {
       label: "服务标签",
       prop: "serviceIds",
+      hide: true,
     },
     {
       label: "发货方式",
       prop: "dispatchType",
+      hide: true,
     },
     {
       label: "发货模板",
       prop: "dispatchIds",
+      hide: true,
     },
     {
       label: "创建人",
