@@ -349,7 +349,7 @@
                 v-if="stepActive == 2"
                 :size="option.size"
                 @click="handleSubmit"
-                >提交</el-button
+                >提 交</el-button
               >
             </el-form-item>
         </el-form>

@@ -45,8 +45,8 @@
           align="center"
           type="selection"
         ></el-table-column>
-        <template v-for="(item, index) of column">
-          <el-table-column :key="index" :prop="item.prop" :label="item.label">
+        <div v-for="(item, index) of column" :key="index" >
+          <el-table-column :prop="item.prop" :label="item.label">
             <div
               style="display: inline-block; width: 60%;"
               v-if="item.prop == 'name'"
@@ -84,7 +84,7 @@
               <span>{{ row.description }}</span>
             </div>
           </el-table-column>
-        </template>
+        </div>
         <el-table-column prop="menu" label="操作" align="center">
           <template slot-scope="{ row }">
             <el-button
@@ -115,6 +115,7 @@
       @open="onDialogFormOpen"
       @close="onDialogFormClose"
     >
+    <div style="padding:10px 20px">
       <el-form
         ref="form"
         size="small"
@@ -180,16 +181,26 @@
         <el-form-item label="分类描述：" prop="description">
           <el-input v-model="form.description" placeholder="请输入描述" />
         </el-form-item>
+        <el-form-item style="text-align:right;padding-bottom: 10px;">
+           
+          <el-button
+                icon="el-icon-circle-close"
+                size="small"
+                @click="box = false"
+                >取 消</el-button
+              >
+              <el-button
+                type="primary"
+                icon="el-icon-circle-check"
+                size="small"
+                @click="handleSubmit"
+                >提 交
+              </el-button>
+
+        </el-form-item>
       </el-form>
-      <template slot="footer">
-        <el-button
-          type="primary"
-          icon="el-icon-circle-check"
-          size="small"
-          @click="submitTheForm"
-          >提 交</el-button
-        >
-      </template>
+    </div>
+       
     </el-drawer>
     <resource-table
       width="60%"
@@ -410,7 +421,7 @@ export default {
     updateForm(tableType, selection, data) {
       this.form.image = data.link;
     },
-    submitTheForm() {
+    handleSubmit() {
       const { isEditMode, form } = this;
       this.$refs.form.validate().then((isPassValidate) => {
         if (isPassValidate) {

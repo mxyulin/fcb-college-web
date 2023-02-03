@@ -179,18 +179,19 @@
             <!-- 表单按钮 -->
             <span v-if="!view" slot="footer" class="dialog-footer">
               <el-button
+                icon="el-icon-circle-close"
+                :size="option.size"
+                @click="box = false"
+                >取 消</el-button
+              >
+              <el-button
                 type="primary"
                 icon="el-icon-circle-check"
                 :size="option.size"
                 @click="handleSubmit"
                 >提 交
               </el-button>
-              <el-button
-                icon="el-icon-circle-close"
-                :size="option.size"
-                @click="box = false"
-                >取 消</el-button
-              >
+              
             </span>
           </el-drawer>
         </div>
