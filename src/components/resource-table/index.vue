@@ -1,8 +1,8 @@
 <template>
   <el-drawer
     top="5vh"
-    size="70%"
-    append-to-body 
+    size="60%"
+    append-to-body
     :wrapperClosable="false"
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
@@ -383,13 +383,23 @@ export default {
       } else if (tableType == "coupons") {
         result = await getCouponsList(page.currentPage, page.pageSize, params);
       } else if (tableType == "groupon") {
-        result = await getActivityList(page.currentPage, page.pageSize, params, {
-          type: "groupon",
-        });
+        result = await getActivityList(
+          page.currentPage,
+          page.pageSize,
+          params,
+          {
+            type: "groupon",
+          }
+        );
       } else if (tableType == "seckill") {
-        result = await getActivityList(page.currentPage, page.pageSize, params, {
-          type: "seckill",
-        });
+        result = await getActivityList(
+          page.currentPage,
+          page.pageSize,
+          params,
+          {
+            type: "seckill",
+          }
+        );
       } else if (tableType == "rich-text") {
         result = await getArticleList(page.currentPage, page.pageSize, params);
       }
@@ -822,7 +832,7 @@ export default {
       }
     },
     onPageChange() {
-      this.getList();
+      this.getList({ categoryIds: this.currentCategoryId });
     },
     resetTheData() {
       // 重置分页器
