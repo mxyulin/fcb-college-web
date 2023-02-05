@@ -306,7 +306,24 @@
                   >
                 </div>
               </div>
-              <div class="add-sku-box" style="margin-top: 10px">测试</div>
+              <div class="add-sku-box" style="margin-top: 10px">
+                <el-table :data="skuList">
+                  <el-table-column prop="goods_sku_id_arr" label="测试" width="180">
+                    <template slot-scope="scope">
+                      <el-table-column
+                        v-for="(id, pid) of scope.row.goods_sku_id_arr"
+                        :key="pid"
+                        header-align="center"
+                        align="center"
+                        :label="form.skuInfo[pid].name"
+                      >
+                        {{ form.skuInfo[pid].content[id].name }}
+                      </el-table-column>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <!-- {{ skuList }} -->
+              </div>
             </el-form-item>
           </div>
           <!-- 商品详情 -->
@@ -507,6 +524,7 @@ export default {
         params: [], // 提交时需要整理成字符串
         content: "",
         skuInfo: [
+          // * pid 应该是数组项索引
           {
             name: "颜色",
             content: [
@@ -517,47 +535,23 @@ export default {
                 name: "黑色",
               },
               {
-                id: 0,
+                id: 1,
                 pid: 0,
                 disabled: false,
                 name: "白色",
               },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "紫色",
-              },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "红色",
-              },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "黑色",
-              },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "白色",
-              },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "紫色",
-              },
-              {
-                id: 0,
-                pid: 0,
-                disabled: false,
-                name: "红色",
-              },
+              // {
+              //   id: 2,
+              //   pid: 0,
+              //   disabled: false,
+              //   name: "紫色",
+              // },
+              // {
+              //   id: 3,
+              //   pid: 0,
+              //   disabled: false,
+              //   name: "红色",
+              // },
             ],
           },
           {
@@ -565,26 +559,29 @@ export default {
             content: [
               {
                 id: 0,
-                pid: 0,
+                pid: 1,
                 disabled: false,
-                name: "XL",
+                name: "XML",
               },
               {
                 id: 1,
                 pid: 1,
                 disabled: false,
-                name: "XLL",
+                name: "XL",
               },
             ],
           },
           // {
-          //   name: "厚度",
-          //   content: ["普通", "加绒"],
+          //   name: "款式",
+          //   content: [
+          //     { id: 0, pid: 2, disabled: false, name: "普通" },
+          //     { id: 1, pid: 2, disabled: false, name: "加绒" },
+          //   ],
           // },
-          // {
-          //   name: "套餐类型",
-          //   content: ["官方标配"],
-          // },
+          {
+            name: "套餐类型",
+            content: [{ id: 0, pid: 3, disabled: false, name: "官方标配" }],
+          },
         ],
       },
       // 验证规则
@@ -761,6 +758,50 @@ export default {
     imagesLength() {
       return this.form.images.length;
     },
+    skuList() {
+      let skuInfo = this.form.skuInfo;
+      let skuIds_arr = [];
+      for (let sku of skuInfo) {
+        let content = sku.content;
+        if (content.length != 0) {
+          let skuIds = content.map(({ id }) => {
+            return id;
+          });
+          skuIds_arr.push(skuIds);
+        } else {
+          continue;
+        }
+      }
+
+      if (skuIds_arr.length < 2) return skuIds_arr;
+      /* 
+       [
+        { goods_sku_id_arr: [0, 0, 0], .... },
+        { goods_sku_id_arr: [1, 1, 1], .... },
+        { goods_sku_id_arr: [2, 2, 2], .... },
+       ]
+      */
+      const Combination = function (chunks) {
+        let res = [];
+        // * 规格组合核心算法：二维穷举
+        const twoDimensionalExhaustion = function (startIdx, prev) {
+          let chunk = chunks[startIdx];
+          let isLast = startIdx == chunks.length - 1;
+          for (let i of chunk) {
+            let cur = prev.concat(i); // 此处不能用 prev.push，因为需要返回数组
+            if (isLast) {
+              res.push({ goods_sku_id_arr: cur, image: "", sku_price: "" });
+            } else {
+              twoDimensionalExhaustion(startIdx + 1, cur);
+            }
+          }
+        };
+        twoDimensionalExhaustion(0, []);
+        return res;
+      };
+
+      return Combination(skuIds_arr);
+    },
   },
   watch: {
     dialogFormVisible(newVal) {
@@ -789,6 +830,24 @@ export default {
           }
         });
       }
+    },
+    "form.skuInfo": {
+      immediate: true,
+      deep: true,
+      handler(newVal) {
+        if (newVal.length == 0) return;
+        // 整理数组，没有规格值的不参与
+        let skuInfo = newVal.filter(({ content }) => {
+          return content.length != 0;
+        });
+        if (skuInfo.length == 0) return;
+        skuInfo.forEach((sku, pidx) => {
+          sku.content.forEach((skuVal, idx) => {
+            skuVal.pid = pidx;
+            skuVal.id = idx;
+          });
+        });
+      },
     },
   },
   methods: {
@@ -926,8 +985,8 @@ export default {
       this.form.skuInfo[skuIdx].content.push({ name: "", disabled: false });
     },
     delSkuContentName(skuIdx, skuValIdx) {
-       this.form.skuInfo[skuIdx].content.splice(skuValIdx, 1);
-    }
+      this.form.skuInfo[skuIdx].content.splice(skuValIdx, 1);
+    },
   },
 };
 </script>
