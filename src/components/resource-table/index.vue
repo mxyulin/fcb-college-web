@@ -152,46 +152,46 @@
           :visible.sync="showDialogForAttach"
           :before-close="onDialogForAttachClose"
         >
-        <div style="padding:10px 20px;">
-          <el-upload
-            multiple
-            ref="upload"
-            list-type="picture"
-            accept="image/png, image/jpeg"
-            action="/api/fcb-resource/oss/endpoint/put-file-attach"
-            v-loading="uploadLoading"
-            :headers="uploadHeaders"
-            :data="{ categoryIds: currentCategoryId }"
-            :limit="5"
-            :auto-upload="false"
-            :file-list="fileList"
-            :on-success="onUploadSuccess"
-            :on-error="onUploadError"
-            :on-progress="onUploadProgress"
-            :on-exceed="onUploadExceed"
-          >
-            <el-button
-              slot="trigger"
-              size="small"
-              type="info"
-              plain
-              icon="el-icon-folder-opened"
-              >选取文件</el-button
+          <div style="padding: 10px 20px">
+            <el-upload
+              multiple
+              ref="upload"
+              list-type="picture"
+              accept="image/png, image/jpeg"
+              action="/api/fcb-resource/oss/endpoint/put-file-attach"
+              v-loading="uploadLoading"
+              :headers="uploadHeaders"
+              :data="{ categoryIds: currentCategoryId }"
+              :limit="5"
+              :auto-upload="false"
+              :file-list="fileList"
+              :on-success="onUploadSuccess"
+              :on-error="onUploadError"
+              :on-progress="onUploadProgress"
+              :on-exceed="onUploadExceed"
             >
-            <el-button
-              style="float:right; "
-              size="small"
-              type="primary"
-              icon="el-icon-upload"
-              @click="submitUpload"
-            >
-              上 传
-            </el-button>
-            <div slot="tip" class="el-upload__tip">
-              只能上传jpg/png文件，且不超过500kb
-            </div>
-          </el-upload>
-        </div>
+              <el-button
+                slot="trigger"
+                size="small"
+                type="info"
+                plain
+                icon="el-icon-folder-opened"
+                >选取文件</el-button
+              >
+              <el-button
+                style="float: right"
+                size="small"
+                type="primary"
+                icon="el-icon-upload"
+                @click="submitUpload"
+              >
+                上 传
+              </el-button>
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件，且不超过500kb
+              </div>
+            </el-upload>
+          </div>
         </el-drawer>
       </el-col>
     </el-row>

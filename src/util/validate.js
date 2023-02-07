@@ -62,26 +62,26 @@ export function validatAlphabets(str) {
     return reg.test(str)
 }
 /*验证pad还是pc*/
-export const vaildatePc = function() {
-        const userAgentInfo = navigator.userAgent;
-        const Agents = ["Android", "iPhone",
-            "SymbianOS", "Windows Phone",
-            "iPad", "iPod"
-        ];
-        let flag = true;
-        for (var v = 0; v < Agents.length; v++) {
-            if (userAgentInfo.indexOf(Agents[v]) > 0) {
-                flag = false;
-                break;
-            }
+export const vaildatePc = function () {
+    const userAgentInfo = navigator.userAgent;
+    const Agents = ["Android", "iPhone",
+        "SymbianOS", "Windows Phone",
+        "iPad", "iPod"
+    ];
+    let flag = true;
+    for (var v = 0; v < Agents.length; v++) {
+        if (userAgentInfo.indexOf(Agents[v]) > 0) {
+            flag = false;
+            break;
         }
-        return flag;
     }
-    /**
-     * validate email
-     * @param email
-     * @returns {boolean}
-     */
+    return flag;
+}
+/**
+ * validate email
+ * @param email
+ * @returns {boolean}
+ */
 export function validateEmail(email) {
     const re = /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return re.test(email)
@@ -250,4 +250,62 @@ export function validatenull(val) {
         return false;
     }
     return false;
+}
+
+/**
+ * 判断字符串是否为中文
+ * 2023年02月07日 yulin
+ * @param {String} str 不能为空
+ */
+
+export const isAllChinse = function (str) {
+    if (typeof (str) != "String" && str == "") return false;
+    return /^[\u4e00-\u9fa5]{0,}$/.test(str);
+}
+
+/**
+ * 判断字符串是否为英文,
+ * 2023年02月07日 yulin
+ * @param {String} str 不能为空
+ */
+
+export const isAllEnglish = function (str) {
+    if (typeof (str) != "String" && str == "") return false;
+    return /^[A-Za-z]+$/.test(str);
+}
+
+/**
+ * 限制输入仅中文、英文、数字
+ * 2023年02月07日 yulin
+ * @param {String} str
+ */
+
+export const isOnlyChiNumEen = function (val) {
+    val = val.toString();
+    let strArr = val.split("");
+    strArr = strArr.filter((s) => {
+        if (s == "") return false;
+        return /^[\u4E00-\u9FA5A-Za-z0-9]+$/.test(s);
+    });
+    return strArr.join("");
+}
+
+/**
+ * 限制输入仅为正整数（含0）
+ * 2023年02月07日 yulin
+ * @param {String || Number} val
+ */
+
+export const onlyPosIntNum = function (val) {
+    let str = val.toString();
+    let num = Number(val);
+    if (num <= 0 || str == "") {
+        return "0";
+    }
+    // 正小数处理
+    if (!(/^\d+$/.test(str))) {
+        return Math.floor(num).toString();
+    }
+    // 正整数
+    return str;
 }

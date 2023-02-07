@@ -1,4 +1,4 @@
-import {validatenull} from './validate'
+import { validatenull } from './validate';
 //表单序列化
 export const serialize = data => {
   let list = [];
@@ -372,7 +372,7 @@ export const downloadFileBase64 = (path, name) => {
  * @param {String} filename 文件名称
  */
 export const downloadXls = (fileArrayBuffer, filename) => {
-  let data = new Blob([fileArrayBuffer], {type: 'application/vnd.ms-excel,charset=utf-8'});
+  let data = new Blob([fileArrayBuffer], { type: 'application/vnd.ms-excel,charset=utf-8' });
   if (typeof window.chrome !== 'undefined') {
     // Chrome
     var link = document.createElement('a');
@@ -381,11 +381,11 @@ export const downloadXls = (fileArrayBuffer, filename) => {
     link.click();
   } else if (typeof window.navigator.msSaveBlob !== 'undefined') {
     // IE
-    var blob = new Blob([data], {type: 'application/force-download'});
+    var blob = new Blob([data], { type: 'application/force-download' });
     window.navigator.msSaveBlob(blob, filename);
   } else {
     // Firefox
-    var file = new File([data], filename, {type: 'application/force-download'});
+    var file = new File([data], filename, { type: 'application/force-download' });
     window.open(URL.createObjectURL(file));
   }
 }
