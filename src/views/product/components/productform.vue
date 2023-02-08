@@ -261,7 +261,7 @@
                 <div
                   class="add-sku-box"
                   style="margin-bottom: 10px"
-                  v-for="(sku, skuIdx) of form.skuList"
+                  v-for="(sku, skuIdx) of skuList"
                   :key="skuIdx"
                 >
                   <div
@@ -316,19 +316,19 @@
               </div>
             </el-form-item>
             <el-form-item
-              v-if="form.skuPriceList.length != 0 && form.isSku"
+              v-if="skuPriceList != 0 && form.isSku"
               prop="skuPriceList"
             >
               <div class="add-sku-box" style="margin-top: 10px">
                 <el-table
                   size="mini"
                   style="width: 100%"
-                  v-if="form.skuPriceList"
-                  :data="form.skuPriceList"
+                  v-if="skuPriceList"
+                  :data="skuPriceList"
                 >
                   <el-table-column
                     min-width="75"
-                    v-for="(sku, idx) of form.skuList"
+                    v-for="(sku, idx) of skuList"
                     :key="idx"
                     :label="sku.name"
                   >
@@ -509,8 +509,9 @@
             </el-form-item>
             <el-form-item label="图文详情：">
               <AvueUeditor
+                ref="editor"
                 v-model="form.content"
-                :options="contentOption"
+                :options="ueditorOption"
               ></AvueUeditor>
             </el-form-item>
           </div>
@@ -534,7 +535,7 @@
               v-if="stepActive == 2"
               :size="option.size"
               :loading="submitBtnLoading"
-              @click="handleSubmit"
+              @click="submitForm"
               >提 交</el-button
             >
           </el-form-item>
@@ -545,7 +546,7 @@
       width="60%"
       dialogTitle="选择图片"
       :tableType="tableType"
-      :dialogVisible.sync="dialogVisible"
+      :dialogVisible.sync="tableVisible"
       :updateForm="updateForm"
       :currentSelection="currentSelection"
       v-bind="$attrs"
@@ -568,14 +569,14 @@ export default {
   },
   props: {
     title: String,
-    dialogFormVisible: Boolean,
     currentRow: Object,
+    dialogFormVisible: Boolean,
   },
   data() {
     return {
       /* status */
       stepActive: 0,
-      dialogVisible: false,
+      tableVisible: false,
       submitBtnLoading: false,
       formLoading: false,
       tableType: "",
@@ -707,7 +708,6 @@ export default {
           {
             trigger: "change",
             validator: (r, v, cb) => {
-              console.log("测试", v);
               if (v.length == 0) return cb();
               v.forEach((sp) => {
                 sp.price = this.valiPrice(sp.price);
@@ -720,7 +720,9 @@ export default {
           },
         ],
       },
-      contentOption: {},
+      ueditorOption: {
+        excludeKeys: ["headerSelect"]
+      },
 
       /* data */
       goodsCategory: [],
@@ -764,6 +766,12 @@ export default {
     imagesLength() {
       return this.form.images.length;
     },
+    skuList() {
+      return this.form.skuList || [];
+    },
+    skuPriceList() {
+      return this.form.skuPriceList || [];
+    },
   },
   watch: {
     dialogFormVisible(newVal) {
@@ -779,6 +787,7 @@ export default {
               views,
               likes,
               images,
+              skuPriceList,
             } = data;
             this.getCategory(true);
             data.categoryIds = categoryIds ? categoryIds.split(",") : [];
@@ -788,12 +797,18 @@ export default {
             data.showSales = showSales.toString();
             data.views = views.toString();
             data.likes = likes.toString();
+            data.skuPriceList = skuPriceList
+              ? skuPriceList.forEach((sp) => {
+                  sp.goodsSkuText = sp.goodsSkuText.split(",");
+                  return sp;
+                })
+              : [];
             Object.assign(this.form, data);
           }
         });
       }
     },
-    "form.skuList": {
+    skuList: {
       deep: true,
       immediate: true,
       handler(newVal) {
@@ -824,14 +839,14 @@ export default {
               if (isLast) {
                 res.push({
                   goodsSkuText: cur, // 需转义字符串提交
-                  goodsSkuIds: [], // 需转义字符串提交
+                  goodsSkuIds: "", // 需转义字符串提交
                   image: "",
                   stock: "0",
                   stockWarning: "10",
                   sales: "0",
                   sn: "",
                   price: "0",
-                  status: "0",
+                  status: "1",
                   weight: "0",
                 });
               } else {
@@ -848,7 +863,6 @@ export default {
     },
   },
   methods: {
-    // 重置表单
     resetForm() {
       this.$refs.form.clearValidate();
       Object.assign(this.form, {
@@ -878,13 +892,12 @@ export default {
       });
       this.stepActive = 0;
     },
-    // 更新表单
     updateForm(tableType, currentSelection, data) {
       switch (tableType) {
         case "image":
           const { link } = data;
           if (currentSelection != undefined) {
-            this.form.skuPriceList[currentSelection].image = link;
+            this.skuPriceList[currentSelection].image = link;
           } else {
             this.form.image = link;
           }
@@ -899,7 +912,7 @@ export default {
       }
     },
     // 提交表单
-    handleSubmit() {
+    submitForm() {
       let form = Object.assign({}, this.form);
       // 格式化表单
       const { categoryIds, serviceIds, images, params } = form;
@@ -911,7 +924,6 @@ export default {
       form.params = JSON.stringify(params);
       form.skuPriceList.forEach((sp) => {
         sp.goodsSkuText = sp.goodsSkuText.join(",");
-        sp.goodsSkuIds = JSON.stringify(sp.goodsSkuIds);
         return sp;
       });
       add(form).then(({ data: { code } }) => {
@@ -968,7 +980,7 @@ export default {
     addImage(type, index) {
       this.tableType = type;
       this.currentSelection = index;
-      this.dialogVisible = true;
+      this.tableVisible = true;
     },
     // 移除图片
     removeImage(type, index) {
@@ -982,19 +994,19 @@ export default {
       }
     },
     addSku() {
-      this.form.skuList.push({ name: "", content: [] });
+      this.skuList.push({ name: "", content: [] });
     },
     delSku(index) {
-      this.form.skuList.splice(index, 1);
+      this.skuList.splice(index, 1);
     },
     addSkuContentName(skuIdx) {
-      this.form.skuList[skuIdx].content.push({ name: "", disabled: false });
+      this.skuList[skuIdx].content.push({ name: "", disabled: false });
     },
     delSkuContentName(skuIdx, skuValIdx) {
-      this.form.skuList[skuIdx].content.splice(skuValIdx, 1);
+      this.skuList[skuIdx].content.splice(skuValIdx, 1);
     },
     changeSkuStatus(status, index) {
-      let sp = this.form.skuPriceList[index];
+      let sp = this.skuPriceList[index];
       status == "1" ? (sp.status = "0") : (sp.status = "1");
     },
     valiPrice(val) {
