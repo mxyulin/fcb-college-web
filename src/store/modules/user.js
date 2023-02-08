@@ -49,7 +49,7 @@ const user = {
     LoginByUsername({commit}, userInfo) {
       return new Promise((resolve, reject) => {
         loginByUsername(userInfo.tenantId, userInfo.deptId, userInfo.roleId, userInfo.username, md5(userInfo.password), userInfo.type, userInfo.key, userInfo.code).then(res => {
-          const data = res.data;
+          const data = res.data.data;
           if (data.error_description) {
             Message({
               message: data.error_description,

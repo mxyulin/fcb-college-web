@@ -196,7 +196,7 @@
       refreshCode() {
         if (this.website.captchaMode) {
           getCaptcha().then(res => {
-            const data = res.data;
+            const data = res.data.data;
             this.loginForm.key = data.key;
             this.loginForm.image = data.image;
           })
