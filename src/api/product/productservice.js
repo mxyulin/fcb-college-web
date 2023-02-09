@@ -48,3 +48,14 @@ export const update = (row) => {
   })
 }
 
+
+export const remove = (ids) => {
+  return request({
+    url: '/api/fcb-product/service/getbyids',
+    method: 'post',
+    params: {
+      ids,
+    }
+  })
+}
+ 
