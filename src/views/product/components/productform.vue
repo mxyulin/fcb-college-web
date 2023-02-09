@@ -561,6 +561,7 @@ import { mapGetters } from "vuex";
 import option from "@/const/product/product";
 import draggable from "vuedraggable";
 import { onlyPosIntNum, isOnlyChiNumEen } from "@/util/validate";
+import { deepClone } from "@/util/util";
 
 export default {
   name: "Form",
@@ -575,7 +576,7 @@ export default {
   data() {
     return {
       /* status */
-      stepActive: 0,
+      stepActive: 1,
       tableVisible: false,
       submitBtnLoading: false,
       formLoading: false,
@@ -913,7 +914,7 @@ export default {
     },
     // 提交表单
     submitForm() {
-      let form = Object.assign({}, this.form);
+      let form = deepClone(this.form);
       // 格式化表单
       const { categoryIds, serviceIds, images, params } = form;
       this.submitBtnLoading = true;
@@ -922,6 +923,7 @@ export default {
       form.serviceIds = serviceIds.join(",");
       form.images = JSON.stringify(images);
       form.params = JSON.stringify(params);
+      debugger;
       form.skuPriceList.forEach((sp) => {
         sp.goodsSkuText = sp.goodsSkuText.join(",");
         return sp;
