@@ -9,6 +9,7 @@
     :wrapperClosable="false"
     :visible.sync="dialogFormVisible"
     :before-close="onBeforeClose"
+    @open="onDrawerOpen"
   >
     <el-row slot="title">
       <el-col :span="4">{{ title }}</el-col>
@@ -301,6 +302,7 @@
                         <el-button
                           type="text"
                           size="medium"
+                          v-if="getSkuValsLen(skuIdx) < 5"
                           @click="addSkuContentName(skuIdx)"
                           >添加</el-button
                         >
@@ -308,7 +310,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="sku-item" style="margin-bottom: 10px">
+                <div
+                  class="sku-item"
+                  style="margin-bottom: 10px"
+                  v-if="skuListLength < 3"
+                >
                   <el-button type="primary" icon="el-icon-plus" @click="addSku"
                     >添加规格</el-button
                   >
@@ -443,7 +449,13 @@
                 placeholder="点击选择服务标签"
                 :size="option.size"
                 :options="serviceOptions"
-                :props="{ multiple: true, emitPath: false }"
+                :props="{
+                  multiple: true,
+                  emitPath: false,
+                  label: 'name',
+                  value: 'id',
+                }"
+                @visible-change="onCascaderShow"
               >
               </el-cascader>
             </el-form-item>
@@ -557,6 +569,7 @@
 <script>
 import { getDetail, add } from "@/api/product/product";
 import { getTree as getGoodsCategory } from "@/api/product/productcategory";
+import { getList as getServiceList } from "@/api/product/productservice";
 import { mapGetters } from "vuex";
 import option from "@/const/product/product";
 import draggable from "vuedraggable";
@@ -576,7 +589,7 @@ export default {
   data() {
     return {
       /* status */
-      stepActive: 1,
+      stepActive: 0,
       tableVisible: false,
       submitBtnLoading: false,
       formLoading: false,
@@ -589,13 +602,7 @@ export default {
         { value: "selfetch", name: "自提/到店" },
         { value: "store", name: "商家配送" },
       ],
-      serviceOptions: [
-        { value: "1", label: "consulting" },
-        { value: "2", label: "急速退款" },
-        { value: "3", label: "退货保证" },
-        { value: "4", label: "七天退换" },
-        { value: "5", label: "正品保证" },
-      ],
+      serviceOptions: [],
       rules: {
         title: [
           {
@@ -722,7 +729,7 @@ export default {
         ],
       },
       ueditorOption: {
-        excludeKeys: ["headerSelect"]
+        excludeKeys: ["headerSelect"],
       },
 
       /* data */
@@ -773,42 +780,11 @@ export default {
     skuPriceList() {
       return this.form.skuPriceList || [];
     },
+    skuListLength() {
+      return this.form.skuList.length;
+    },
   },
   watch: {
-    dialogFormVisible(newVal) {
-      const { currentRow, title } = this;
-      if (newVal && title == "编辑商品") {
-        getDetail(currentRow.id).then(({ data: { code, data } }) => {
-          if (code == 200) {
-            const {
-              categoryIds,
-              serviceIds,
-              params,
-              showSales,
-              views,
-              likes,
-              images,
-              skuPriceList,
-            } = data;
-            this.getCategory(true);
-            data.categoryIds = categoryIds ? categoryIds.split(",") : [];
-            data.serviceIds = serviceIds ? serviceIds.split(",") : [];
-            data.params = params ? JSON.parse(params) : [];
-            data.images = images ? JSON.parse(images) : [];
-            data.showSales = showSales.toString();
-            data.views = views.toString();
-            data.likes = likes.toString();
-            data.skuPriceList = skuPriceList
-              ? skuPriceList.forEach((sp) => {
-                  sp.goodsSkuText = sp.goodsSkuText.split(",");
-                  return sp;
-                })
-              : [];
-            Object.assign(this.form, data);
-          }
-        });
-      }
-    },
     skuList: {
       deep: true,
       immediate: true,
@@ -864,6 +840,38 @@ export default {
     },
   },
   methods: {
+    onDrawerOpen() {
+      const { dialogFormVisible, currentRow, title } = this;
+      if (dialogFormVisible && title == "编辑商品") {
+        getDetail(currentRow.id).then(({ data: { code, data } }) => {
+          if (code == 200) {
+            const {
+              categoryIds,
+              serviceIds,
+              params,
+              showSales,
+              views,
+              likes,
+              images,
+              skuPriceList,
+            } = data;
+            this.getCategory(true);
+            data.categoryIds = categoryIds ? categoryIds.split(",") : [];
+            data.serviceIds = serviceIds ? serviceIds.split(",") : [];
+            data.params = params ? JSON.parse(params) : [];
+            data.images = images ? JSON.parse(images) : [];
+            data.showSales = showSales.toString();
+            data.views = views.toString();
+            data.likes = likes.toString();
+            skuPriceList.forEach((sp) => {
+              sp.goodsSkuText = sp.goodsSkuText.split(",");
+              return sp;
+            });
+            Object.assign(this.form, data);
+          }
+        });
+      }
+    },
     resetForm() {
       this.$refs.form.clearValidate();
       Object.assign(this.form, {
@@ -914,7 +922,7 @@ export default {
     },
     // 提交表单
     submitForm() {
-      let form = deepClone(this.form);
+      const form = deepClone(this.form);
       // 格式化表单
       const { categoryIds, serviceIds, images, params } = form;
       this.submitBtnLoading = true;
@@ -923,7 +931,6 @@ export default {
       form.serviceIds = serviceIds.join(",");
       form.images = JSON.stringify(images);
       form.params = JSON.stringify(params);
-      debugger;
       form.skuPriceList.forEach((sp) => {
         sp.goodsSkuText = sp.goodsSkuText.join(",");
         return sp;
@@ -996,12 +1003,14 @@ export default {
       }
     },
     addSku() {
+      if (this.skuListLength > 2) return;
       this.skuList.push({ name: "", content: [] });
     },
     delSku(index) {
       this.skuList.splice(index, 1);
     },
     addSkuContentName(skuIdx) {
+      if (this.getSkuValsLen(skuIdx) > 4) return;
       this.skuList[skuIdx].content.push({ name: "", disabled: false });
     },
     delSkuContentName(skuIdx, skuValIdx) {
@@ -1019,6 +1028,25 @@ export default {
         str = str.slice(0, str.indexOf(".") + 3);
       }
       return str;
+    },
+    onCascaderShow(isShow) {
+      if (isShow) {
+        getServiceList().then(
+          ({
+            data: {
+              code,
+              data: { records },
+            },
+          }) => {
+            if (code == 200) {
+            }
+            this.serviceOptions = records;
+          }
+        );
+      }
+    },
+    getSkuValsLen(skuIdx) {
+      return this.skuList[skuIdx].content.length;
     },
   },
 };

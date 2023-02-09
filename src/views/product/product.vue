@@ -343,6 +343,9 @@ export default {
       this.title = "新增商品";
       this.dialogFormVisible = true;
     },
+    refreshChange() {
+      this.onLoad();
+    },
     // 修改上架状态
     updateStatus(id, status) {
       slectionsUpdate(id, status).then((res) => {

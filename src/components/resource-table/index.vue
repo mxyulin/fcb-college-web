@@ -460,7 +460,7 @@ export default {
           this.avueOption.column = [
             {
               label: "标题",
-              prop: "name",
+              prop: "originalName",
               sortable: true,
               overHidden: true,
             },
