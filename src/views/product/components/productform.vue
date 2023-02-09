@@ -12,6 +12,7 @@
     @open="onDrawerOpen"
   >
     <el-row slot="title">
+      <div>{{ form.skuPriceList }}</div>
       <el-col :span="4">{{ title }}</el-col>
       <el-col :span="20">
         <el-steps class="steps-display" :active="stepActive" simple>
@@ -143,6 +144,7 @@
             </el-form-item>
             <el-form-item label="虚增销量：" prop="showSales">
               <el-input
+                min="0"
                 type="number"
                 v-model.number="form.showSales"
                 :size="option.size"
@@ -150,6 +152,7 @@
             </el-form-item>
             <el-form-item label="浏览人数：" prop="views">
               <el-input
+                min="0"
                 type="number"
                 v-model.number="form.views"
                 :size="option.size"
@@ -157,6 +160,7 @@
             </el-form-item>
             <el-form-item label="收藏人数：" prop="likes">
               <el-input
+                min="0"
                 type="number"
                 v-model.number="form.likes"
                 :size="option.size"
@@ -192,7 +196,11 @@
           <!-- 规格和价格 -->
           <div v-show="stepActive == 1">
             <el-form-item label="商品规格：" prop="isSku">
-              <el-radio-group v-model="form.isSku" :size="option.size">
+              <el-radio-group
+                v-model="form.isSku"
+                :size="option.size"
+                @input="onSkuTypeChange"
+              >
                 <el-radio :label="false">单规格</el-radio>
                 <el-radio :label="true">多规格</el-radio>
               </el-radio-group>
@@ -202,6 +210,7 @@
             </el-form-item>
             <el-form-item label="售卖价格：" prop="price">
               <el-input
+                min="0"
                 type="number"
                 v-model="form.price"
                 style="width: 300px"
@@ -213,6 +222,7 @@
             </el-form-item>
             <el-form-item label="划线价格：" prop="originalPrice">
               <el-input
+                min="0"
                 type="number"
                 v-model="form.originalPrice"
                 style="width: 300px"
@@ -224,34 +234,36 @@
                 划线价在商品列表及详情会以划线形式显示
               </span>
             </el-form-item>
-            <el-form-item v-if="!form.isSku" label="商品库存：" prop="stock">
+            <el-form-item v-if="!form.isSku" label="商品库存：">
               <div class="display-flex">
                 <el-input
-                  type="number"
                   min="0"
-                  v-model.number="form.stock"
+                  type="number"
+                  v-model.number="skuPriceList[0].stock"
                   style="width: 300px"
                   :size="option.size"
+                  @input="valiPosIntNum(skuPriceList[0].stock, 'stock')"
                 >
                   <template slot="append">个</template>
                 </el-input>
               </div>
             </el-form-item>
-            <el-form-item v-if="!form.isSku" label="商品重量：" prop="weight">
+            <el-form-item v-if="!form.isSku" label="商品重量：">
               <el-input
+                min="0"
                 type="number"
-                v-model.number="form.weight"
+                v-model.number="skuPriceList[0].weight"
                 style="width: 300px"
                 :size="option.size"
+                @input="valiPosIntNum(skuPriceList[0].weight, 'weight')"
               >
                 <template slot="append">kg</template>
               </el-input>
             </el-form-item>
             <el-form-item v-if="!form.isSku" label="商品编号：">
               <el-input
-                disabled
                 type="input"
-                v-model="form.sn"
+                v-model="skuPriceList[0].sn"
                 style="width: 300px"
                 :size="option.size"
               >
@@ -369,9 +381,10 @@
                   >
                     <template slot-scope="scope">
                       <el-input
-                        v-model="scope.row.price"
+                        min="0"
                         type="number"
                         size="medium"
+                        v-model="scope.row.price"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -382,9 +395,10 @@
                   >
                     <template slot-scope="scope">
                       <el-input
-                        v-model="scope.row.stock"
+                        min="0"
                         type="number"
                         size="medium"
+                        v-model="scope.row.stock"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -395,9 +409,10 @@
                   >
                     <template slot-scope="scope">
                       <el-input
-                        v-model="scope.row.stockWarning"
+                        min="0"
                         type="number"
                         size="medium"
+                        v-model="scope.row.stockWarning"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -408,9 +423,10 @@
                   >
                     <template slot-scope="scope">
                       <el-input
-                        v-model="scope.row.weight"
+                        min="0"
                         type="number"
                         size="medium"
+                        v-model="scope.row.weight"
                       ></el-input>
                     </template>
                   </el-table-column>
@@ -680,24 +696,6 @@ export default {
             },
           },
         ],
-        stock: [
-          {
-            trigger: "change",
-            validator: (r, v, cb) => {
-              this.form.stock = onlyPosIntNum(v);
-              cb();
-            },
-          },
-        ],
-        weight: [
-          {
-            trigger: "change",
-            validator: (r, v, cb) => {
-              this.form.weight = onlyPosIntNum(v);
-              cb();
-            },
-          },
-        ],
         skuList: [
           {
             trigger: "change",
@@ -720,7 +718,7 @@ export default {
               v.forEach((sp) => {
                 sp.price = this.valiPrice(sp.price);
                 sp.stock = onlyPosIntNum(sp.stock);
-                sp.stockWarning = onlyPosIntNum(sp.stockWarning);
+                // sp.stockWarning = onlyPosIntNum(sp.stockWarning);
                 sp.weight = onlyPosIntNum(sp.weight);
               });
               cb();
@@ -753,11 +751,11 @@ export default {
         isSku: false,
         price: "1",
         originalPrice: "",
-        stock: "0",
-        weight: "0",
-        sn: "", // 未用
+        // stock: "0",
+        // weight: "0",
+        // sn: "",
         skuList: [],
-        skuPriceList: [],
+        skuPriceList: [{ stock: "0", weight: "0", sn: "" }],
 
         // 商品详情
         serviceIds: [], // 提交时需要整理成字符串
@@ -789,6 +787,7 @@ export default {
       deep: true,
       immediate: true,
       handler(newVal) {
+        if (this.dialogFormVisible && this.title == "编辑商品") return;
         // debugger;
         let scNameArr = [];
         for (let sku of newVal) {
@@ -842,6 +841,7 @@ export default {
   methods: {
     onDrawerOpen() {
       const { dialogFormVisible, currentRow, title } = this;
+      this.onCascaderShow(true);
       if (dialogFormVisible && title == "编辑商品") {
         getDetail(currentRow.id).then(({ data: { code, data } }) => {
           if (code == 200) {
@@ -854,6 +854,7 @@ export default {
               likes,
               images,
               skuPriceList,
+              isSku,
             } = data;
             this.getCategory(true);
             data.categoryIds = categoryIds ? categoryIds.split(",") : [];
@@ -863,18 +864,22 @@ export default {
             data.showSales = showSales.toString();
             data.views = views.toString();
             data.likes = likes.toString();
-            skuPriceList.forEach((sp) => {
-              sp.goodsSkuText = sp.goodsSkuText.split(",");
-              return sp;
-            });
-            Object.assign(this.form, data);
+            if (isSku) {
+              skuPriceList.forEach((sp) => {
+                sp.goodsSkuText = sp.goodsSkuText.split(",");
+                return sp;
+              });
+            }
+            this.form = data;
+            // Object.assign(this.form, data);
           }
         });
       }
     },
     resetForm() {
       this.$refs.form.clearValidate();
-      Object.assign(this.form, {
+      this.form = {
+        // 基本信息
         type: "normal",
         title: "",
         subtitle: "",
@@ -885,20 +890,24 @@ export default {
         showSales: "0",
         views: "0",
         likes: "0",
-        categoryIds: [],
+        categoryIds: [], // 提交时需要整理成字符串
         dispatchType: "express",
+
+        // 规格和价格
         isSku: false,
         price: "1",
         originalPrice: "",
-        stock: "0",
-        weight: "0",
-        sn: "",
+        // stock: "0",
+        // weight: "0",
+        // sn: "",
         skuList: [],
-        skuPriceList: [],
-        serviceIds: [],
-        params: [],
+        skuPriceList: [{ stock: "0", weight: "0", sn: "" }],
+
+        // 商品详情
+        serviceIds: [], // 提交时需要整理成字符串
+        params: [], // 提交时需要整理成字符串
         content: "",
-      });
+      };
       this.stepActive = 0;
     },
     updateForm(tableType, currentSelection, data) {
@@ -924,17 +933,19 @@ export default {
     submitForm() {
       const form = deepClone(this.form);
       // 格式化表单
-      const { categoryIds, serviceIds, images, params } = form;
+      const { categoryIds, serviceIds, images, params, isSku } = form;
       this.submitBtnLoading = true;
       this.formLoading = true;
       form.categoryIds = categoryIds.join(",");
       form.serviceIds = serviceIds.join(",");
       form.images = JSON.stringify(images);
       form.params = JSON.stringify(params);
-      form.skuPriceList.forEach((sp) => {
-        sp.goodsSkuText = sp.goodsSkuText.join(",");
-        return sp;
-      });
+      if (isSku) {
+        form.skuPriceList.forEach((sp) => {
+          sp.goodsSkuText = sp.goodsSkuText.join(",");
+          return sp;
+        });
+      }
       add(form).then(({ data: { code } }) => {
         if (code == 200) {
           this.submitBtnLoading = false;
@@ -1029,6 +1040,17 @@ export default {
       }
       return str;
     },
+    valiPosIntNum(v, tp) {
+      // debugger;
+      switch (tp) {
+        case "stock":
+          this.form.skuPriceList[0].stock = onlyPosIntNum(v);
+          break;
+        case "weight":
+          this.form.skuPriceList[0].weight = onlyPosIntNum(v);
+          break;
+      }
+    },
     onCascaderShow(isShow) {
       if (isShow) {
         getServiceList().then(
@@ -1047,6 +1069,14 @@ export default {
     },
     getSkuValsLen(skuIdx) {
       return this.skuList[skuIdx].content.length;
+    },
+    onSkuTypeChange(isSku) {
+      this.form.skuList = [];
+      if (isSku) {
+        this.form.skuPriceList = [];
+      } else {
+        this.form.skuPriceList = [{ stock: "0", weight: "0", sn: "" }];
+      }
     },
   },
 };
