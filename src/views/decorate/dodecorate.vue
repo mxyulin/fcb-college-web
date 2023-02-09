@@ -271,10 +271,12 @@
 
 <script>
 import { Loading } from "element-ui";
-import { submit, getList } from "@/api/decorate/decoratecontent";
 import ToolsBox from "@/views/decorate/components/toolsbox";
 import ToolsForm from "@/views/decorate/components/toolsform";
 import AppDecoratePreview from "@/views/decorate/components/appdecoratepreview";
+import { submit, getList } from "@/api/decorate/decoratecontent";
+import { getList as getGoodsList } from "@/api/product/product";
+import { deepClone } from "@/util/util";
 
 export default {
   data() {
@@ -382,204 +384,223 @@ export default {
       });
       // 获取当前模板数据
       const { decorateId, fromtype } = this;
-      getList(decorateId).then(({ data: { code, msg, data } }) => {
-        if (code == 200) {
-          const { homeData, userData, tabbarData, popupData, floatButtonData } =
-            data;
-          // 默认渲染首页装修数据
-          if (fromtype == "shop") {
-            this.homeData = homeData
-              ? homeData
-              : {
-                  content: [
-                    {
-                      name: "轮播图",
-                      type: "banner",
-                      icon: "icon-carousel",
-                      content: {
-                        name: "",
-                        style: 1,
-                        height: 520,
-                        radius: 0,
-                        x: 0,
-                        y: 0,
-                        list: [
-                          {
-                            name: "",
-                            bgcolor: "",
-                            image: "",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                };
-            this.userData = userData
-              ? userData
-              : {
-                  content: [
-                    {
-                      name: "个人中心",
-                      type: "user",
-                      content: {
-                        name: "",
-                        style: 2,
-                        image: "",
-                      },
-                    },
-                  ],
-                };
-            this.tabbarData = tabbarData
-              ? tabbarData
-              : {
-                  content: [
-                    {
-                      type: "tabbar",
-                      name: "底部导航",
-                      content: {
-                        style: 1,
-                        color: "#000",
-                        activeColor: "#999",
-                        bgcolor: "#fff",
-                        list: [
-                          {
-                            name: "标题",
-                            image:
-                              "http://file.shopro.top/uploads/20210527/c4591c74c27a49bda021257d3c889225.png",
-                            activeImage:
-                              "http://file.shopro.top/uploads/20210527/558feb98726495d17128d07694d7ff47.png",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                            selected: false,
-                          },
-                          {
-                            name: "标题",
-                            image:
-                              "http://file.shopro.top/uploads/20210527/d6e987bb27013691478ddce7ce700288.png",
-                            activeImage:
-                              "http://file.shopro.top/uploads/20210527/f280b7f9ea18db0c80337d1c1cac6075.png",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                            selected: false,
-                          },
-                          {
-                            name: "标题",
-                            image:
-                              "http://file.shopro.top/uploads/20210527/0ab4659f44404d6d4723c265ccd21f94.png",
-                            activeImage:
-                              "http://file.shopro.top/uploads/20210527/5273d6e90fb45e3d9189fba9fcbea47c.png",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                            selected: false,
-                          },
-                          {
-                            name: "标题",
-                            image:
-                              "http://file.shopro.top/uploads/20210527/406848d5827325fead27224decffd141.png",
-                            activeImage:
-                              "http://file.shopro.top/uploads/20210527/8eca666cc43686d292113244b31e0664.png",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                            selected: false,
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                };
-            this.popupData = popupData
-              ? popupData
-              : {
-                  content: [
-                    {
-                      type: "popup",
-                      name: "弹窗提醒",
-                      content: {
-                        list: [
-                          {
-                            name: "",
-                            style: 1,
-                            image:
-                              "http://file.shopro.top/uploads/20210522/9136ecddcddf6607184fab689207e7e3.png",
-                            btnimage: "",
-                            path: "",
-                            path_name: "",
-                            path_type: 1,
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                };
-            this.floatButtonData = floatButtonData
-              ? floatButtonData
-              : {
-                  content: [
-                    {
-                      type: "float-button",
-                      name: "悬浮按钮",
-                      content: {
-                        image:
-                          "http://file.shopro.top/uploads/20210518/f6b9c9d20d21df541ac52e9548486e1a.png",
-                        list: [
-                          {
-                            name: "关注",
-                            btnimage:
-                              "http://file.shopro.top/uploads/20210522/875dd6d2b1980dbccbec0895f757cdff.png",
-                            style: 1,
-                            image: "",
-                            path_type: 1,
-                            path_name: "",
-                            path: "",
-                          },
-                          {
-                            name: "收藏",
-                            btnimage:
-                              "http://file.shopro.top/uploads/20210522/5c50e0b17d64f448d271cfaac5039e00.png",
-                            style: 1,
-                            image: "",
-                            path_type: 1,
-                            path_name: "",
-                            path: "",
-                          },
-                          {
-                            name: "客服",
-                            btnimage:
-                              "http://file.shopro.top/uploads/20210522/73234ab79bd6164b11f09a1b11df3f55.png",
-                            style: 1,
-                            image: "",
-                            path_type: 1,
-                            path_name: "",
-                            path: "",
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                };
+      getList(decorateId)
+        .then(async ({ data: { code, msg, data } }) => {
+          if (code == 200) {
+            const { homeData } = data;
+            await homeData.content.map(async (item) => {
+              if (item.type == "goods-group" || item.type == "category-tabs") {
+                const { id, ids } = item.content;
+                let res = await getGoodsList(1, 6, { categoryIds: id || ids });
+                const {
+                  data: { code, msg, data },
+                } = res;
+                if (code == 200) {
+                  item.content.timeData = data;
+                } else {
+                  throw new Error(msg);
+                }
+              }
+            });
+            return data;
           } else {
-            // 自定义装修数据仅放 homeData
-            this.homeData = homeData ? homeData : { content: [] };
+            throw new Error(msg);
           }
-          this.loadTemplateDateByPageType("home");
-          // 关闭 loading
-          this.$nextTick(() => {
-            loadingInstance.close();
-          });
-        } else {
-          this.$message({
-            type: "error",
-            message: msg,
-          });
-        }
-      });
+        })
+        .then(
+          ({ homeData, userData, tabbarData, popupData, floatButtonData }) => {
+            // 默认渲染首页装修数据
+            if (fromtype == "shop") {
+              this.homeData = homeData
+                ? homeData
+                : {
+                    content: [
+                      {
+                        name: "轮播图",
+                        type: "banner",
+                        icon: "icon-carousel",
+                        content: {
+                          name: "",
+                          style: 1,
+                          height: 520,
+                          radius: 0,
+                          x: 0,
+                          y: 0,
+                          list: [
+                            {
+                              name: "",
+                              bgcolor: "",
+                              image: "",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  };
+              this.userData = userData
+                ? userData
+                : {
+                    content: [
+                      {
+                        name: "个人中心",
+                        type: "user",
+                        content: {
+                          name: "",
+                          style: 2,
+                          image: "",
+                        },
+                      },
+                    ],
+                  };
+              this.tabbarData = tabbarData
+                ? tabbarData
+                : {
+                    content: [
+                      {
+                        type: "tabbar",
+                        name: "底部导航",
+                        content: {
+                          style: 1,
+                          color: "#000",
+                          activeColor: "#999",
+                          bgcolor: "#fff",
+                          list: [
+                            {
+                              name: "标题",
+                              image:
+                                "http://file.shopro.top/uploads/20210527/c4591c74c27a49bda021257d3c889225.png",
+                              activeImage:
+                                "http://file.shopro.top/uploads/20210527/558feb98726495d17128d07694d7ff47.png",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                              selected: false,
+                            },
+                            {
+                              name: "标题",
+                              image:
+                                "http://file.shopro.top/uploads/20210527/d6e987bb27013691478ddce7ce700288.png",
+                              activeImage:
+                                "http://file.shopro.top/uploads/20210527/f280b7f9ea18db0c80337d1c1cac6075.png",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                              selected: false,
+                            },
+                            {
+                              name: "标题",
+                              image:
+                                "http://file.shopro.top/uploads/20210527/0ab4659f44404d6d4723c265ccd21f94.png",
+                              activeImage:
+                                "http://file.shopro.top/uploads/20210527/5273d6e90fb45e3d9189fba9fcbea47c.png",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                              selected: false,
+                            },
+                            {
+                              name: "标题",
+                              image:
+                                "http://file.shopro.top/uploads/20210527/406848d5827325fead27224decffd141.png",
+                              activeImage:
+                                "http://file.shopro.top/uploads/20210527/8eca666cc43686d292113244b31e0664.png",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                              selected: false,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  };
+              this.popupData = popupData
+                ? popupData
+                : {
+                    content: [
+                      {
+                        type: "popup",
+                        name: "弹窗提醒",
+                        content: {
+                          list: [
+                            {
+                              name: "",
+                              style: 1,
+                              image:
+                                "http://file.shopro.top/uploads/20210522/9136ecddcddf6607184fab689207e7e3.png",
+                              btnimage: "",
+                              path: "",
+                              path_name: "",
+                              path_type: 1,
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  };
+              this.floatButtonData = floatButtonData
+                ? floatButtonData
+                : {
+                    content: [
+                      {
+                        type: "float-button",
+                        name: "悬浮按钮",
+                        content: {
+                          image:
+                            "http://file.shopro.top/uploads/20210518/f6b9c9d20d21df541ac52e9548486e1a.png",
+                          list: [
+                            {
+                              name: "关注",
+                              btnimage:
+                                "http://file.shopro.top/uploads/20210522/875dd6d2b1980dbccbec0895f757cdff.png",
+                              style: 1,
+                              image: "",
+                              path_type: 1,
+                              path_name: "",
+                              path: "",
+                            },
+                            {
+                              name: "收藏",
+                              btnimage:
+                                "http://file.shopro.top/uploads/20210522/5c50e0b17d64f448d271cfaac5039e00.png",
+                              style: 1,
+                              image: "",
+                              path_type: 1,
+                              path_name: "",
+                              path: "",
+                            },
+                            {
+                              name: "客服",
+                              btnimage:
+                                "http://file.shopro.top/uploads/20210522/73234ab79bd6164b11f09a1b11df3f55.png",
+                              style: 1,
+                              image: "",
+                              path_type: 1,
+                              path_name: "",
+                              path: "",
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  };
+            } else {
+              // 自定义装修数据仅放 homeData
+              this.homeData = homeData ? homeData : { content: [] };
+            }
+            this.loadTemplateDateByPageType("home");
+            // 关闭 loading
+            this.$nextTick(() => {
+              loadingInstance.close();
+            });
+          }
+        )
+        .catch((res) => {
+          this.$message.error(res);
+        });
     },
     // 展示组件表单
     showDecorateForm(idx) {
@@ -1061,7 +1082,6 @@ export default {
     },
     submitDecorateData() {
       const {
-        homeData,
         userData,
         tabbarData,
         popupData,
@@ -1069,6 +1089,16 @@ export default {
         decorateId,
         fromtype,
       } = this;
+
+      // 单独处理 homeData 满足后端接口要求
+      let homeData = deepClone(this.homeData);
+      homeData.content.forEach((item) => {
+        if (item.type == "goods-group" || item.type == "category-tabs") {
+          // 删除接口拒绝的数据
+          delete item.content.timeData;
+        }
+      });
+
       let decorateData = {};
       if (fromtype == "shop") {
         decorateData = {
